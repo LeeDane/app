@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mood_list_more_menu_collection"
+        android:title="@string/personal_collection"
+        android:icon="@color/white"/>
+    <item
+        android:id="@+id/mood_list_more_menu_no_friend"
+        android:title="@string/personal_no_friend"
+        android:icon="@color/white"/>
+    <item
+        android:id="@+id/mood_list_more_menu_shielding"
+        android:title="@string/personal_shielding"/>
+    <item
+        android:id="@+id/mood_list_more_menu_report"
+        android:title="@string/personal_report"/>
+</menu>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/mood_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/mood_content_hint"
+        android:layout_margin="5dp"
+        android:singleLine="false"
+        android:gravity="top"
+        android:background="@drawable/bg_mood_edittext"
+        android:minLines="8"/>
+    <LinearLayout
+        android:id="@+id/mood_transmit_comment_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="@string/old_mood"/>
+        <TextView
+            android:id="@+id/mood_show_old"
+            android:layout_marginLeft="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/mood_add"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="8dp"
+        android:layout_gravity="right"
+        android:visibility="gone"
+        android:background="@mipmap/add"/>
+    <GridView
+        android:id="@+id/mood_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"></GridView>
+</LinearLayout>

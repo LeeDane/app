@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_find" android:icon="@mipmap/personal_center"
+            android:title="@string/find" />
+        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
+            android:title="@string/nav_gallery" />
+        <item android:id="@+id/nav_message" android:icon="@android:drawable/star_off"
+            android:title="@string/nav_message" />
+        <item android:id="@+id/nav_file" android:icon="@android:drawable/menu_frame"
+            android:title="@string/nav_file" />
+
+    </group>
+
+    <item android:title="@string/nav_system">
+        <menu>
+            <item android:id="@+id/nav_download" android:icon="@mipmap/download"
+                android:title="@string/nav_download" />
+            <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
+                android:title="@string/nav_share" />
+            <item android:id="@+id/nav_help" android:icon="@android:drawable/ic_menu_help"
+                android:title="@string/nav_help" />
+            <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
+                android:title="@string/settings" />
+            <item android:id="@+id/nav_loginout" android:icon="@android:drawable/ic_menu_manage"
+                android:title="@string/nav_loginout" android:visible="false" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,849 @@
+package com.leedane.cn.activity;
+
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.leedane.cn.adapter.HomeAdapter;
+import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.bean.BlogBean;
+import com.leedane.cn.bean.HttpResponseBlogBean;
+import com.leedane.cn.customview.CircularImageView;
+import com.leedane.cn.handler.AttentionHandler;
+import com.leedane.cn.handler.BlogHandler;
+import com.leedane.cn.handler.CollectionHandler;
+import com.leedane.cn.handler.CommentHandler;
+import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.handler.TransmitHandler;
+import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.ImageUtil;
+import com.leedane.cn.util.SharedPreferenceUtil;
+import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.util.ToastUtil;
+import com.leedane.cn.volley.ImageCacheManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
+
+public class MainActivity extends NavigationActivity
+        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
+
+    public static final String TAG = "MainActivity";
+
+    //跳转到登录页面的请求码
+    public static final int LOGIN_REQUEST_CODE = 100;
+
+    /**
+     * 头像的imageview
+     */
+    private CircularImageView mHeadPortraitImageView;
+
+    /**
+     * 用户名的文本
+     */
+    private TextView mTextViewUsername;
+
+    /**
+     * 用户邮箱的文本
+     */
+    private TextView mTextViewEmail;
+
+    /**
+     * 登录按钮
+     */
+    private Button mButtonLogin;
+
+    /**
+     * 欢迎登录的提示文字
+     */
+    private TextView mTextviewWelcomeLogin;
+
+    //展示所有博客信息的ListView对象
+    private ListView mlistViewBlogs;
+
+    //自定义的适配器对象
+    HomeAdapter mAdapter;
+
+    //所有的博客对象
+    private List<BlogBean> mBlogs = new ArrayList<BlogBean>();
+
+    //当前listview中最旧一篇文章的id
+    private int mFirstId;
+
+    //当前listview中最新一篇文章的id
+    private int mLastId;
+
+    //当前的加载方式
+    private String mPreLoadMethod;
+
+    //下拉刷新的对象
+    private SwipeRefreshLayout mySwipeRefreshLayout;
+
+    //长按的项的索引(位置)
+    private int mClickPosition;
+
+    /**
+     * ListView底部控制
+     */
+    private TextView mListViewFooter;
+    private View viewFooter;
+
+    private boolean isLoading;
+
+    //加载DiaLog
+    private ProgressDialog mProgressDialog;
+
+    private JSONObject mUserInfo;
+    private int mLoginAccountId;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        checkedIsLogin();
+
+        //registerMessageReceiver();
+        //Toast.makeText(MainActivity.this, "宽："+ BaseApplication.newInstance().getScreenWidthAndHeight()[0]+",高："+BaseApplication.newInstance().getScreenWidthAndHeight()[1], Toast.LENGTH_LONG).show();
+        //初始化控件
+        init();
+    }
+
+    /**
+     * 检查是否登录
+     */
+    private void checkedIsLogin() {
+        //判断是否有缓存用户信息
+        if(BaseApplication.getLoginUserId() > 0 ){
+            try {
+                mLoginAccountId = BaseApplication.getLoginUserId();
+            }catch (Exception e){
+                Log.i(TAG, "获取缓存的用户名称为空");
+            }
+        }
+        initJPush();
+    }
+
+    private void initJPush(){
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
+        JPushInterface.setAlias(getApplicationContext(), "leedane_user_" + mLoginAccountId, new TagAliasCallback() {
+            @Override
+            public void gotResult(int responseCode, String s, Set<String> set) {
+                ToastUtil.success(getApplicationContext(), mLoginAccountId + ",responseCode=" + responseCode + ",s=" + s + ",set=" + set);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateShowUserinfo();
+        JPushInterface.onResume(getApplicationContext());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JPushInterface.onPause(getApplicationContext());
+    }
+
+    /**
+     * 检查是否加载远程服务器上的数据
+     */
+    private boolean checkedIsLoadServerBlog() {
+        return true;
+    }
+
+    /**
+     * 初始化控件
+     */
+    private void init() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                /*mBlogs.clear();
+                mFirstId = 0;
+                mLastId = 0;
+                sendFirstLoading();*/
+                //启动用户中心
+                CommonHandler.startUserInfoActivity(MainActivity.this);
+            }
+        });
+        //registerForContextMenu(fab);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        mButtonLogin = (Button)findViewById(R.id.button_login);
+        mHeadPortraitImageView = (CircularImageView)findViewById(R.id.imageview_head_portrait);
+        mTextViewUsername = (TextView)findViewById(R.id.textview_username);
+        mTextViewEmail = (TextView)findViewById(R.id.textview_email);
+        mTextviewWelcomeLogin = (TextView)findViewById(R.id.textview_welcomelogin);
+
+        updateShowUserinfo();
+
+        mlistViewBlogs = (ListView)findViewById(R.id.list_blog);
+        mlistViewBlogs.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+        //listview下方的显示
+        viewFooter = LayoutInflater.from(MainActivity.this).inflate(R.layout.listview_footer_item, null);
+        mlistViewBlogs.addFooterView(viewFooter, null, false);
+        mListViewFooter = (TextView)viewFooter.findViewById(R.id.listview_footer_reLoad);
+        mListViewFooter.setOnClickListener(this);//添加点击事件
+        mListViewFooter.setText(getResources().getString(R.string.loading));
+
+        mAdapter = new HomeAdapter(mBlogs, MainActivity.this, mlistViewBlogs);
+        mlistViewBlogs.setAdapter(mAdapter);
+        mlistViewBlogs.setOnScrollListener(new ListViewOnScrollListener());
+        mlistViewBlogs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if(mBlogs != null && mBlogs.size() > 1 && position != mBlogs.size() -1) {
+                    mClickPosition = position;
+                    //查看全文详情
+                    startLookDetailActivity();
+                }
+            }
+        });
+
+        mlistViewBlogs.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i(TAG, "触发Listview的长按事件");
+                mClickPosition = position;
+                //这里返回值必须是false,否则无法触发弹出上下文菜单
+                return false;
+            }
+        });
+        registerForContextMenu(mlistViewBlogs);
+
+        //下拉刷新
+        mySwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
+        mySwipeRefreshLayout.setOnRefreshListener(this);
+        mySwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light);
+
+        //检查是否加载远程服务器上的数据
+        if(checkedIsLoadServerBlog()){
+            sendFirstLoading();
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        //mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        //mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 更新展示用户的信息
+     */
+    private void updateShowUserinfo() {
+
+        mUserInfo = SharedPreferenceUtil.getUserInfo(getApplicationContext());
+
+        //判断是否有缓存用户信息
+        if(mUserInfo != null && mUserInfo.has("account")){
+            mButtonLogin.setVisibility(View.GONE);
+            mTextviewWelcomeLogin.setVisibility(View.GONE);
+
+            mHeadPortraitImageView.setVisibility(View.VISIBLE);
+            mTextViewUsername.setVisibility(View.VISIBLE);
+            mTextViewEmail.setVisibility(View.VISIBLE);
+
+            try {
+                if(mUserInfo.has("pic_base64") && !StringUtil.isNull(mUserInfo.getString("pic_base64"))){
+                   Bitmap bitmap = ImageUtil.getInstance().getBitmapByBase64(mUserInfo.getString("pic_base64"));
+                    if(bitmap != null){
+                        mHeadPortraitImageView.setImageBitmap(bitmap);
+                    }else{
+                        mHeadPortraitImageView.setImageResource(R.mipmap.head);
+                    }
+                }
+
+                if(mUserInfo.has("head_path") && !StringUtil.isNull(mUserInfo.getString("head_path"))){
+                    ImageCacheManager.loadImage(mUserInfo.getString("head_path"), mHeadPortraitImageView );
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mHeadPortraitImageView.setOnClickListener(this);
+            try {
+                mLoginAccountId = mUserInfo.getInt("id");
+                mTextViewUsername.setText(StringUtil.changeNotNull(mUserInfo.getString("account")));
+                mTextViewEmail.setText(StringUtil.changeNotNull(mUserInfo.getString("email")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //启动消息推送服务
+           /* ServiceManager serviceManager = new ServiceManager(this);
+            serviceManager.setNotificationIcon(R.drawable.notification);
+            serviceManager.startService();*/
+
+            if(pMenu != null){
+                for(int i = 0; i < pMenu.size(); i++){
+                    if(pMenu.getItem(i).getItemId() == R.id.nav_loginout){
+                        pMenu.getItem(i).setVisible(true);
+                        break;
+                    }
+                }
+            }
+        }else{
+            mHeadPortraitImageView.setVisibility(View.GONE);
+            mTextViewUsername.setVisibility(View.GONE);
+            mTextViewEmail.setVisibility(View.GONE);
+
+            mButtonLogin.setVisibility(View.VISIBLE);
+            mTextviewWelcomeLogin.setVisibility(View.VISIBLE);
+            mButtonLogin.setOnClickListener(this);
+        }
+    }
+
+    @Override
+    public void taskCanceled(TaskType type) {
+
+    }
+
+    @Override
+    public void taskFinished(TaskType type, Object result) {
+        if(type == TaskType.HOME_LOADBLOGS){
+            isLoading = false;
+            if(mySwipeRefreshLayout !=null && mySwipeRefreshLayout.isRefreshing())
+                mySwipeRefreshLayout.setRefreshing(false);//下拉刷新组件停止刷新
+        }
+        dismissLoadingDialog();
+        if(result instanceof Error){
+            Toast.makeText(MainActivity.this, ((Error) result).getMessage(), Toast.LENGTH_SHORT).show();
+            if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
+                mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                mListViewFooter.setOnClickListener(this);
+            }
+            return;
+        }
+        try{
+            if(result instanceof String){
+                try{
+                    JSONObject jsonObject = new JSONObject(String.valueOf(result));
+                    if(jsonObject.has("isSuccess")){
+                        //删除
+                        if(TaskType.DELETE_BLOG == type){
+                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                                ToastUtil.success(MainActivity.this, "删除成功");
+                                List<BlogBean> temList = new ArrayList<>();
+                                for(BlogBean blogBean: mBlogs){
+                                    temList.add(blogBean);
+                                }
+                                temList.remove(mClickPosition);
+                                mAdapter.refreshData(temList);
+                                Log.i(TAG, "删除后文章的数量：" + mBlogs.size());
+                            }else {
+                                ToastUtil.failure(MainActivity.this, jsonObject);
+                            }
+                        }
+                        //评论
+                        if(TaskType.ADD_COMMENT == type){
+                            dismissLoadingDialog();
+                            dismissCommentOrTransmitDialog();
+                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                                ToastUtil.success(MainActivity.this, "评论成功");
+                            }else{
+                                ToastUtil.failure(MainActivity.this, jsonObject);
+                            }
+                        }
+                        //转发
+                        if(TaskType.ADD_TRANSMIT == type){
+                            dismissLoadingDialog();
+                            dismissCommentOrTransmitDialog();
+                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                                ToastUtil.success(MainActivity.this, "转发成功");
+                            }else{
+                                ToastUtil.failure(MainActivity.this, jsonObject);
+                            }
+                        }
+
+                        //收藏
+                        if(TaskType.ADD_COLLECTION == type){
+                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                                ToastUtil.success(MainActivity.this, "收藏成功");
+                            }else{
+                                ToastUtil.failure(MainActivity.this, jsonObject);
+                            }
+                            //关注
+                        }else if(TaskType.ADD_ATTENTION == type){
+                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                                ToastUtil.success(MainActivity.this, "关注成功");
+                            }else{
+                                ToastUtil.failure(MainActivity.this, jsonObject);
+                            }
+                        }else if(type == TaskType.GET_APP_VERSION){
+                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                                ToastUtil.success(MainActivity.this, "获取新版本成功" + jsonObject.toString(), Toast.LENGTH_SHORT);
+                            }else{
+                                ToastUtil.failure(MainActivity.this, "获取新版本失败", Toast.LENGTH_SHORT);
+                            }
+                            return;
+                        }
+                    }
+                }catch (Exception e){
+                    Toast.makeText(MainActivity.this, "响应的数据解析异常" +result , Toast.LENGTH_SHORT).show();
+                    if(mPreLoadMethod.equalsIgnoreCase("lowloading")){
+                        mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                        mListViewFooter.setOnClickListener(this);
+                    }
+                    e.printStackTrace();
+                }
+            }
+            if(result instanceof HttpResponseBlogBean){
+                HttpResponseBlogBean httpResponseBlogBean = (HttpResponseBlogBean)result;
+                if(httpResponseBlogBean != null && httpResponseBlogBean.isSuccess()){
+                    List<BlogBean> blogBeans = httpResponseBlogBean.getMessage();
+                    if(blogBeans != null && blogBeans.size() > 0){
+                        //临时list
+                        List<BlogBean> temList = new ArrayList<>();
+                        if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
+                            mlistViewBlogs.removeAllViewsInLayout();
+                            mBlogs.clear();
+                        }
+                        //将新的数据和以前的数据进行叠加
+                        if(mPreLoadMethod.equalsIgnoreCase("uploading")){
+                            for(int i = blogBeans.size() -1; i>= 0 ; i--){
+                                temList.add(blogBeans.get(i));
+                            }
+                            temList.addAll(mBlogs);
+                        }else{
+                            temList.addAll(mBlogs);
+                            temList.addAll(blogBeans);
+                        }
+                        //Log.i(TAG, "原来的大小：" + mBlogs.size());
+                        if(mAdapter == null) {
+                            mAdapter = new HomeAdapter(mBlogs, MainActivity.this, mlistViewBlogs);
+                            mlistViewBlogs.setAdapter(mAdapter);
+                        }
+                        mAdapter.refreshData(temList);
+                        //Log.i(TAG, "后来的大小：" + mBlogs.size());
+
+                        //Toast.makeText(MainActivity.this, "成功加载"+ blogBeans.size() + "条数据,总数是："+mBlogs.size(), Toast.LENGTH_SHORT).show();
+                        int size = mBlogs.size();
+                        if(size > 0){
+                            mFirstId = mBlogs.get(0).getId();
+                            mLastId = mBlogs.get(size - 1).getId();
+                        }
+                        //将ListView的位置设置为0
+                        if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
+                            //mlistViewBlogs.smoothScrollToPosition(0);
+                            //mlistViewBlogs.setSelection(0);
+                        }
+
+                    }else{
+                        if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
+                            mBlogs.clear();
+                            mAdapter.refreshData(new ArrayList<BlogBean>());
+                        }
+                        if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
+                            mlistViewBlogs.removeFooterView(viewFooter);
+                            mlistViewBlogs.addFooterView(viewFooter, null, false);
+                            mListViewFooter.setText(getResources().getString(R.string.no_load_more));
+                        }else {
+                            ToastUtil.success(MainActivity.this, getResources().getString(R.string.no_load_more));
+                        }
+                    }
+                }else{
+                    if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
+                        if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
+                            mBlogs.clear();
+                            mAdapter.refreshData(new ArrayList<BlogBean>());
+                        }
+                        mlistViewBlogs.removeFooterView(viewFooter);
+                        mlistViewBlogs.addFooterView(viewFooter, null, false);
+                        mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                    }else{
+                        ToastUtil.failure(MainActivity.this);
+                    }
+                }
+                return;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void taskStarted(TaskType type) {
+
+    }
+
+    class ListViewOnScrollListener implements AbsListView.OnScrollListener {
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            //滚动停止
+            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+
+                //当倒数第三个数据出现的时候就开始加载
+                if (view.getLastVisiblePosition() == view.getCount() -1) {
+                    if(!isLoading){
+                        //刷新之前先把以前的任务取消
+                        taskCanceled(TaskType.HOME_LOADBLOGS);
+                        sendLowLoading();
+                    }
+                }
+            }
+        }
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        }
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            // return true;//返回真表示返回键被屏蔽掉
+            createLeaveAlertDialog();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 发送第一次刷新的任务
+     */
+    private void sendFirstLoading(){
+        //第一次操作取消全部数据
+        taskCanceled(TaskType.HOME_LOADBLOGS);
+        mPreLoadMethod = "firstloading";
+        mFirstId = 0;
+        mLastId = 0;
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pageSize", "10");
+        params.put("method", mPreLoadMethod);
+        BlogHandler.getBlogsRequest(this, params);
+    }
+
+    /**
+     * 发送向上刷新的任务
+     */
+    private void sendUpLoading(){
+        //没有fistID时当作第一次请求加载
+        if(mFirstId == 0){
+            sendFirstLoading();
+            return;
+        }
+        //向上刷新也先取消所有的加载操作
+        taskCanceled(TaskType.HOME_LOADBLOGS);
+        mPreLoadMethod = "uploading";
+        isLoading = true;
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pageSize", "5");
+        params.put("first_id", mFirstId);
+        params.put("method",mPreLoadMethod );
+        BlogHandler.getBlogsRequest(this, params);
+    }
+
+    /**
+     * 发送向下刷新的任务
+     */
+    private void sendLowLoading(){
+        //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
+        if(getResources().getString(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
+            return;
+        }
+        //没有lastID时当作第一次请求加载
+        if(mLastId == 0){
+            sendFirstLoading();
+            return;
+        }
+        mListViewFooter.setText(getResources().getString(R.string.loading));
+        mPreLoadMethod = "lowloading";
+        isLoading = true;
+
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pageSize", "5");
+        params.put("last_id", mLastId);
+        params.put("method", mPreLoadMethod);
+        BlogHandler.getBlogsRequest(this, params);
+    }
+
+    //下拉刷新监听需要实现的方法
+    @Override
+    public void onRefresh() {
+        sendUpLoading();
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        int clickViewId = v.getId();
+        switch (clickViewId){
+            case R.id.imageview_head_portrait:
+                /*ToastUtil.success(MainActivity.this, "点击头像");*/
+                CommonHandler.startUserInfoActivity(MainActivity.this);
+                break;
+            case R.id.button_login:
+                ToastUtil.success(MainActivity.this, "将跳转到登录页面");
+                Intent it = new Intent();
+                it.setClass(MainActivity.this, LoginActivity.class);
+                startActivityForResult(it, MainActivity.LOGIN_REQUEST_CODE);
+                break;
+            case R.id.listview_footer_reLoad:
+                sendLoadAgain(v);
+                break;
+            default:
+                ToastUtil.success(MainActivity.this, "未知点击事件");
+                break;
+        }
+    }
+
+    /**
+     * 加载失败后点击加载更多
+     * @param view
+     */
+    public void sendLoadAgain(View view){
+        //只有在加载失败或者点击加载更多的情况下点击才有效
+        if(getResources().getString(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
+                || getResources().getString(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
+            taskCanceled(TaskType.HOME_LOADBLOGS);
+            isLoading = true;
+            HashMap<String, Object> params = new HashMap<String, Object>();
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10: 5);
+            params.put("first_id", mFirstId);
+            params.put("last_id", mLastId);
+            params.put("method", mPreLoadMethod);
+            mListViewFooter.setText(getResources().getString(R.string.loading));
+            BlogHandler.getBlogsRequest(this, params);
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case MainActivity.LOGIN_REQUEST_CODE:
+                updateShowUserinfo();
+                initJPush();
+                //Toast.makeText(MainActivity.this, "登录返回成功", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        //添加菜单项
+        menu.add(0, Menu.FIRST, 0, "查看");
+        menu.add(0, Menu.FIRST+1, 0, "删除");
+        menu.add(0, Menu.FIRST+2, 0, "收藏");
+        menu.add(0, Menu.FIRST+3, 0, "关注");
+        menu.add(0, Menu.FIRST+4, 0, "评论");
+        menu.add(0, Menu.FIRST+5, 0, "转发");
+        menu.add(0, Menu.FIRST+6, 0, "不喜欢");
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case 1://查看详情
+                startLookDetailActivity();
+                break;
+            case 2://删除
+                HashMap<String, Object> params = new HashMap<>();
+                params.put("b_id", mBlogs.get(mClickPosition).getId());
+                BlogHandler.deleteBlog(this, params);
+                showLoadingDialog();
+                break;
+            case 3://收藏
+                executeCollection();
+                break;
+            case 4://关注
+                executeAttention();
+                break;
+            case 5: //评论
+                showCommentOrTransmitDialog(true);
+                break;
+            case 6://转发
+                showCommentOrTransmitDialog(false);
+                break;
+            case 7: //不喜欢
+                Toast.makeText(MainActivity.this, mClickPosition + "-----"+ item.getTitle(), Toast.LENGTH_LONG).show();
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    private Dialog commentOrTransmitDialog;
+    /**
+     * 显示弹出自定义评论或者转发view
+     * @param isComment
+     */
+    public void showCommentOrTransmitDialog(final boolean isComment){
+        //判断是否已经存在菜单，存在则把以前的记录取消
+        dismissCommentOrTransmitDialog();
+
+        commentOrTransmitDialog = new Dialog(MainActivity.this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_comment_or_transmit_dialog, null);
+
+        final EditText editText = (EditText)view.findViewById(R.id.comment_or_transmit_dialog_text);
+        TextView submitBtn = (TextView)view.findViewById(R.id.comment_or_transmit_dialog_submit);
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String content = editText.getText().toString();
+                if(StringUtil.isNull(content) && isComment){
+                    editText.setFocusable(true);
+                    ToastUtil.failure(MainActivity.this, "请先输入您想评论的话吧");
+                    return;
+                }
+                HashMap<String, Object> params = new HashMap<String, Object>();
+                params.put("table_name", "t_blog");
+                params.put("table_id", mBlogs.get(mClickPosition).getId());
+                if(isComment){
+                    params.put("content", content);
+                    params.put("level", 1);
+                    CommentHandler.sendComment(MainActivity.this,params);
+                }else{
+                    params.put("content", StringUtil.isNull(content)? "转发了这条心情" :content);
+                    TransmitHandler.sendTransmit(MainActivity.this, params);
+                }
+
+                showLoadingDialog();
+            }
+        });
+
+        commentOrTransmitDialog.setTitle("操作");
+        commentOrTransmitDialog.setCancelable(true);
+        commentOrTransmitDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dismissCommentOrTransmitDialog();
+            }
+        });
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(800,500);
+        commentOrTransmitDialog.setContentView(view, layoutParams);
+        commentOrTransmitDialog.show();
+    }
+
+    private void dismissCommentOrTransmitDialog(){
+        if(commentOrTransmitDialog != null && commentOrTransmitDialog.isShowing()){
+            commentOrTransmitDialog.dismiss();
+        }
+    }
+
+    /**
+     * 启动查看全文详情的activity
+     */
+    private void startLookDetailActivity(){
+        //传递获取博客id
+        int blog_id = mBlogs.get(mClickPosition).getId();
+        //传递获取标题
+        String title = mBlogs.get(mClickPosition).getTitle();
+
+        if (StringUtil.isNull(title) || blog_id < 1) {
+            Toast.makeText(getApplicationContext(), "不能点击，请核实博客id是否大于0并且标题不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        /*Intent it_detail = new Intent();
+        it_detail.setClass(MainActivity.this, DetailActivity.class);
+        //it_detail.setClass(MainActivity.this, DetailNewActivity.class);
+        it_detail.putExtra("blog_id", blog_id);
+        it_detail.putExtra("title", title);
+        startActivity(it_detail);*/
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("title", title);
+        CommonHandler.startDetailActivity(MainActivity.this, "t_blog", blog_id, params);
+    }
+
+    /**
+     * 执行收藏
+     */
+    public void executeCollection(){
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("table_id", mBlogs.get(mClickPosition).getId());
+        params.put("table_name", "t_blog");
+        CollectionHandler.sendCollection(this, params);
+        showLoadingDialog();
+    }
+
+    /**
+     * 执行关注
+     */
+    public void executeAttention(){
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("table_id", mBlogs.get(mClickPosition).getId());
+        params.put("table_name", "t_blog");
+        AttentionHandler.sendAttention(this, params);
+        showLoadingDialog();
+    }
+
+    /**
+     * 显示加载Dialog
+     */
+    private void showLoadingDialog(){
+        dismissLoadingDialog();
+        mProgressDialog = ProgressDialog.show(MainActivity.this, "", "Loading. Please wait...", true);
+    }
+
+    /**
+     * 隐藏加载的Dialog
+     */
+    private void dismissLoadingDialog(){
+        if(mProgressDialog != null && mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
+        }
+    }
+}

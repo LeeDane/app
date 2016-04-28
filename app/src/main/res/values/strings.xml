@@ -1,0 +1,224 @@
+<resources>
+    <string name="app_name">LeeDane</string>
+    <string name="app_dirsname">leedane</string>
+    <string name="temp_filepath">temp</string>
+    <string name="qr_code_filepath">qrcode</string>
+    <string name="action_settings">设置</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="hello">Hello Android, DemoAppActivity!</string>
+    <string name="welcome">您好，欢迎您使用leedane，本系统目前还在开发测试阶段，难免存在很多问题，希望多多谅解，谢谢。。。。。。</string>
+
+    <!-- 系统级别 -->
+    <string name="dane">leedane</string>
+    <string name="dane_email">email:leedane9@gmail.com</string>
+    <string name="out">退出</string>
+
+    <string name="image_detail">查看图片</string>
+    <string name="search">搜索</string>
+    <string name="settings">设置</string>
+    <string name="select_local_image">选择本地图片</string>
+    <string name="custom_title">自定义标题</string>
+    <string name="save">保存</string>
+    <string name="draft">草稿</string>
+    <string name="article">正文</string>
+    <string name="comment">评论</string>
+    <string name="transmit">转发</string>
+    <string name="loading">数据加载中。。。</string>
+    <string name="load_more">点击加载更多</string>
+    <string name="load_finish">数据加载完成</string>
+    <string name="no_load_more">没有更多数据</string>
+    <string name="load_more_error">加载失败,点击重新加载</string>
+    <string name="submit">提交</string>
+    <string name="copyText">复制文字</string>
+    <string name="copyLink">复制链接</string>
+    <string name="setWallpaper">设为壁纸</string>
+    <string name="delete">删除</string>
+
+    <!-- 异常相关 -->
+    <string name="crash_file_path">"/crash"</string>
+    <string name="crash_toast_message">程序出现异常,即将退出</string>
+    <string name="crash_write_error">文件写入时出现错误</string>
+
+    <!-- 登录相关 -->
+    <string name="hint_username">用户名</string>
+    <string name="hint_password">密码</string>
+    <string name="hint_login">登录</string>
+    <string name="hint_system_desc">好文字 心开始</string>
+    <string name="hint_system">LeeDane</string>
+    <string name="no_login">欢迎,您还未登录</string>
+    <string name="please_login">请登录</string>
+    <string name="login">登录</string>
+    <string name="version">系统更新</string>
+    <string name="outLogin">退出登录</string>
+    <string name="login_username_null">请输入用户名</string>
+    <string name="login_password_null">请输入密码</string>
+    <string name="login_success">登录成功</string>
+    <string name="login_error">登录失败</string>
+    <string name="phone_login">手机号码登录</string>
+    <string name="forgot_password">忘记密码</string>
+    <string name="register">手机注册</string>
+    <string name="hint_your_phone">请输入正确的手机号码</string>
+    <string name="send_message">获取验证码</string>
+    <string name="hint_validation_code">请输入6位短信验证码</string>
+
+    <!-- 导航相关的 -->
+    <string name="nav_gallery">我的图库</string>
+    <string name="nav_attention">我的关注</string>
+    <string name="nav_message">我的消息</string>
+    <string name="nav_file">我的文件</string>
+    <string name="nav_personnal_centre">个人中心</string>
+    <string name="nav_system">系统</string>
+    <string name="nav_help">帮助</string>
+    <string name="nav_share">分享</string>
+    <string name="nav_loginout">退出登录</string>
+    <string name="nav_download">下载</string>
+    <!-- 设置相关 -->
+    <string name="system_settings">设置</string>
+    <string name="setting_loginout">退出登录</string>
+
+    <!-- 个人中心相关 -->
+    <string name="personal_title">个人中心</string>
+    <string name="personal_is_friend">已加好友</string>
+    <string name="personal_friend_wait">等待确认</string>
+    <string name="personal_add_friend">加好友</string>
+    <string name="personal_is_fan">已关注</string>
+    <string name="personal_add_fan">关注Ta</string>
+    <string name="personal_no_friend">解除好友关系</string>
+    <string name="personal_is_sign_in">已签到</string>
+    <string name="personal_sign_in">签到</string>
+    <string name="personal_mood">心情</string>
+    <string name="personal_attention">关注</string>
+    <string name="personal_fans">粉丝</string>
+    <string name="personal_comment">评论</string>
+    <string name="personal_transmit">转发</string>
+    <string name="personal_look">查看</string>
+    <string name="personal_praise">赞</string>
+    <string name="personal_collection">收藏</string>
+    <string name="personal_notification">通知</string>
+    <string name="personal_chat">私信</string>
+    <string name="personal_gallery">图库</string>
+    <string name="personal_info">基本信息</string>
+    <string name="personal_shielding">屏蔽</string>
+    <string name="personal_report">举报</string>
+    <string name="no_text">无内容</string>
+
+    <!-- 心情相关 -->
+    <string name="mood_publish">立即发表</string>
+    <string name="mood_transmit">立即转发</string>
+    <string name="mood_comment">立即评论</string>
+    <string name="mood_content_hint">请输入不大于140个文字</string>
+    <string name="old_mood">原文：</string>
+    <string name="comment_hint">说点什么吧</string>
+
+    <!-- 基本信息 -->
+    <string name="info_age">年龄：</string>
+    <string name="info_email">邮箱：</string>
+    <string name="info_mobile_phone">手机号码：</string>
+    <string name="info_qq">QQ号码：</string>
+    <string name="info_sex">性别：</string>
+    <string name="info_personal_introduction">个人介绍：</string>
+
+    <!-- 下载相关 -->
+    <string name="system_download">文件下载</string>
+    <string name="all_start">全部开始</string>
+    <string name="all_stop">全部暂停</string>
+    <string name="cancel">取消</string>
+    <string name="download_per">0%</string>
+    <string name="download_now">正在下载</string>
+    <string name="download_stop">暂停下载</string>
+
+    <!--  上传文件相关  -->
+    <string name="system_upload">文件上传</string>
+    <string name="upload_file_tip">提示：一次性只能上传5个文件</string>
+    <string name="upload_file_normal">普通上传</string>
+    <string name="upload_file_app_version">APP版本上传</string>
+    <string name="app_version_desc_hint">版本描述信息</string>
+    <string name="app_version_number_hint">版本的编号</string>
+    <!-- 多图查看详情 -->
+    <string name="image_detail_current">0/0</string>
+
+    <!-- 菜单相关 -->
+
+    <!-- TAG相关的 -->
+    <string name="border_top">border_top</string>
+    <string name="border_bottom">border_bottom</string>
+    <string name="image_url">image_url</string>
+
+    <!-- 图库 -->
+    <string name="gallery">我的图库</string>
+    <string name="gallery_add_tip">添加网络图片到"我的图库"中</string>
+    <string name="gallery_add_network_link">能直接访问的图片链接(必须填)</string>
+    <string name="gallery_add_width">宽度(不确定请不填写)</string>
+    <string name="gallery_add_height">高度(不确定请不填写)</string>
+    <string name="gallery_add_length">大小(kb换算，不确定请不填写)</string>
+    <string name="gallery_add_submit">添加图库</string>
+    <string name="gallery_menu_delete">移出图库</string>
+    <string name="gallery_menu_report">举报</string>
+    <string name="gallery_menu_share">分享</string>
+
+    <!-- 关注 -->
+    <string name="attention">我的关注</string>
+
+    <!-- 我的消息  -->
+    <string name="message">我的消息</string>
+
+    <!-- 举报  -->
+    <string name="report_tip">请选择举报项：</string>
+    <string name="report_seqing">色情低俗</string>
+    <string name="report_guanggao">广告骚扰</string>
+    <string name="report_zhengzhi">政治敏感</string>
+    <string name="report_weifa">违法(暴力恐怖、违禁品等)</string>
+    <string name="report_qingsu">倾诉投诉(诽谤、抄袭、冒用...)</string>
+    <string name="report_hint">请填写具体的举报内容</string>
+
+    <!--  心情详情 -->
+    <string name="mood_detail">心情详情</string>
+
+    <!-- 粉丝相关 -->
+    <string name="fan_my_fans">我的粉丝</string>
+    <string name="fan_to_fans">Ta的粉丝</string>
+    <string name="fan_my_attention">我的关注</string>
+    <string name="fan_to_attention">Ta的关注</string>
+    <string name="fan_each_other">互相关注</string>
+
+    <!--  用户中心  -->
+    <string name="user_info">用户中心</string>
+
+    <!-- zxing  -->
+    <string name="menu_settings">Settings</string>
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <string name="mipca_user_info_personal">查看个人中心</string>
+    <string name="mipca_user_info_tip">检测到这是一个用户：</string>
+    <string name="mipca_user_info_add">关注Ta</string>
+    <string name="mipca_user_name">用户名称</string>
+    <string name="scan_image">扫描本地图片</string>
+
+    <!-- 发现  -->
+    <string name="find">我的发现</string>
+    <string name="sao_yi_sao">扫一扫</string>
+    <string name="yao_yi_yao">摇一摇</string>
+    <string name="close_to_you">附近的人</string>
+    <string name="address_list">通讯录</string>
+
+    <!--  朋友圈  -->
+    <string name="circle_of_friend">朋友圈</string>
+
+    <!--  我的朋友  -->
+    <string name="my_friends">我的好友</string>
+    <string name="my_add_friends">我加的好友</string>
+    <string name="add_my_friends">加我的好友</string>
+
+    <!--  JPush  -->
+    <string name="tag_hint">Tag为大小写字母，数字，下划线,中文， 多个用以逗号分隔</string>
+    <string name="alias_hint">Alias为大小写字母，数字，下划线</string>
+    <string name="style_hint">style为数字</string>
+    <string name="error_style_empty">style不能为空</string>
+    <string name="error_alias_empty">alias不能为空</string>
+    <string name="error_tag_empty">tag不能为空</string>
+    <string name="error_tag_gs_empty">格式不对</string>
+    <string name="error_network">网络连接异常,初始化失败 请检查网络！</string>
+    <string name="logining">程序在后台执行, 请查看日志！</string>
+    <string name="setting_su">设置成功</string>
+
+</resources>

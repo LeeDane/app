@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/action_bar_search"
+        android:icon="@mipmap/search"
+        app:showAsAction="always"
+        android:title="@string/search"/>
+    <item
+        android:id="@+id/action_bar_login"
+        app:showAsAction="never"
+        android:title="@string/login"/>
+    <item
+        android:id="@+id/action_bar_version"
+        app:showAsAction="never"
+        android:title="@string/version"/>
+    <item
+        android:id="@+id/action_bar_settings"
+        app:showAsAction="never"
+        android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/action_bar_out"
+        app:showAsAction="never"
+        android:title="@string/out"/>
+</menu>
