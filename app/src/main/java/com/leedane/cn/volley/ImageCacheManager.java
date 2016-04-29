@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.leedane.cn.application.BaseApplication;
 
@@ -50,9 +51,9 @@ public class ImageCacheManager {
             public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
                 //回调成功
                 if(imageContainer.getBitmap() != null && view != null){
-                    //view.setImageBitmap(imageContainer.getBitmap());
+                    view.setImage(ImageSource.bitmap(imageContainer.getBitmap()));
                 }else if(defaultImage != null && view != null){
-                    //view.setImageBitmap(defaultImage);
+                    view.setImage(ImageSource.bitmap(defaultImage));
                 }
             }
 
@@ -60,7 +61,7 @@ public class ImageCacheManager {
             public void onErrorResponse(VolleyError volleyError) {
                 //回调失败
                 if(errorImage != null && view != null){
-                    //view.setImageBitmap(errorImage);
+                    view.setImage(ImageSource.bitmap(errorImage));
                 }
             }
         };

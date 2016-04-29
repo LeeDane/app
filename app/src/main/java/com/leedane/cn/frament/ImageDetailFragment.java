@@ -90,20 +90,16 @@ public class ImageDetailFragment extends Fragment{
         int width = mImageDetailBean.getWidth() == 0 ||  mImageDetailBean.getWidth() > acreenWidth ? acreenWidth: mImageDetailBean.getWidth();
         int height = mImageDetailBean.getHeight() == 0 ||  mImageDetailBean.getHeight() > screenHeight ? screenHeight: mImageDetailBean.getHeight();
         if(currentImageUrl.startsWith("http://") || currentImageUrl.startsWith("https://")){
-           ImageCacheManager.loadImage(currentImageUrl, (ImageView) getView().findViewById(R.id.image_detail_imageview), width, height);
-            /*SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)getView().findViewById(R.id.image_detail_imageview);
-            ImageCacheManager.loadImage(currentImageUrl, imageView, width, height);*/
+           //ImageCacheManager.loadImage(currentImageUrl, (ImageView) getView().findViewById(R.id.image_detail_imageview), width, height);
+            SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)getView().findViewById(R.id.image_detail_imageview);
+            ImageCacheManager.loadImage(currentImageUrl, imageView, width, height);
         }else{
             Map<String, Object> map = new HashMap<>();
 
             //请求的文件的名称(这里是图片)
             map.put("filename", currentImageUrl);
             //获取所有的请求基本参数
-            map.putAll(getBaseRequestParams());
-
-            //ImageView imageView = (ImageView)getView().findViewById(R.id.image_detail_imageview);
-            //imageView.setTag(mCurrentImageUrl);
-
+            map.putAll(BaseApplication.newInstance().getBaseRequestParams());
             String imageUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/download_getLocalBase64Image.action";
             String imageTag = "imagedetail" + currentImageUrl;
             //执行网络加载post请求图片
@@ -121,27 +117,6 @@ public class ImageDetailFragment extends Fragment{
                     }
                 }
             }, ConstantsUtil.REQUEST_METHOD_POST, map);
-        }
-    }
-
-    /**
-     * 构建基本的请求参数
-     * @return
-     */
-    private HashMap<String, Object> getBaseRequestParams(){
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("login_mothod", "android");
-        try{
-            JSONObject userInfo = SharedPreferenceUtil.getUserInfo(mContext);
-            if(userInfo != null){
-                if(userInfo.has("no_login_code"))
-                    params.put("no_login_code", userInfo.getString("no_login_code"));
-                if(userInfo.has("account"))
-                    params.put("account", userInfo.getString("account"));
-            }
-            return params;
-        }catch (Exception e){
-            return null;
         }
     }
 }

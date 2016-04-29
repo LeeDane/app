@@ -415,6 +415,7 @@ public class MoodDetailActivity extends BaseActivity implements View.OnLongClick
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null ,false);
                         mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                        mListViewFooter.setOnClickListener(this);
                     }
                 }
             }else if(type == TaskType.ADD_COMMENT || type == TaskType.ADD_TRANSMIT){

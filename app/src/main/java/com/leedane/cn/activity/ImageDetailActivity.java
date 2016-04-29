@@ -16,6 +16,7 @@ import com.leedane.cn.adapter.ImageDetailFragmentPagerAdapter;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.frament.ImageDetailFragment;
 import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.util.ToastUtil;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -70,15 +71,15 @@ public class ImageDetailActivity extends BaseActivity {
             //当前位置
             mCurrentTab = it.getIntExtra("current", 0);
             if(mImageDetailBeans == null || mImageDetailBeans.size() == 0){
-                Toast.makeText(getApplicationContext(), "查看图片参数有误", Toast.LENGTH_SHORT).show();
+                ToastUtil.failure(getApplicationContext(), "查看图片参数有误", Toast.LENGTH_SHORT);
                 finish();
             }
         }catch (Exception e){
-            Toast.makeText(getApplicationContext(), "查看图片参数有误", Toast.LENGTH_SHORT).show();
+            ToastUtil.failure(getApplicationContext(), "查看图片参数有误", Toast.LENGTH_SHORT);
             finish();
         }
         mTotalTabs = mImageDetailBeans.size();
-        setTitleViewText(getResources().getString(R.string.image_detail) + "(" +(mCurrentTab + 1) + "/" + mTotalTabs +")");
+        setTitleViewText(getStringResource(R.string.image_detail) + "(" +(mCurrentTab + 1) + "/" + mTotalTabs +")");
         backLayoutVisible();
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         initView();
@@ -114,8 +115,8 @@ public class ImageDetailActivity extends BaseActivity {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 //fragmentTransaction.show(list.get(position));
                 //fragmentTransaction.commit();
-                Toast.makeText(ImageDetailActivity.this, "位置：" +position + ", 总的：" + mTotalTabs +"，总："+ list.size(), Toast.LENGTH_SHORT).show();
-                setTitleViewText(getResources().getString(R.string.image_detail) + "(" +(mCurrentTab + 1) + "/" + mTotalTabs +")");
+                //ToastUtil.success(ImageDetailActivity.this, "位置：" + position + ", 总的：" + mTotalTabs + "，总：" + list.size(), Toast.LENGTH_SHORT);
+                setTitleViewText(getStringResource(R.string.image_detail) + "(" +(mCurrentTab + 1) + "/" + mTotalTabs +")");
                 //mTextViewCurrent.setText((mCurrentTab +1) + "/" + mTotalTabs);
             }
 

@@ -17,6 +17,7 @@ import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.util.SharedPreferenceUtil;
+import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,7 +90,7 @@ public class NavigationActivity extends AppCompatActivity
                 finish();
                 return true;
             case R.id.action_bar_version:
-                Toast.makeText(this, "系统更新", Toast.LENGTH_SHORT).show();
+                //ToastUtil.success(this, "系统更新");
                 AppVersionHandler.getNewestVersion(this, new HashMap<String, Object>());
                 return true;
             default:
