@@ -41,7 +41,6 @@ public class CollectionHandler {
         requestBean.setParams(params);
         requestBean.setRequestMethod("POST");
         requestBean.setServerMethod("leedane/collection_paging.action");
-
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_COLLECTION, listener, requestBean);
     }
 

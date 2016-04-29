@@ -53,9 +53,8 @@ public class CommentHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod("POST");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setServerMethod("leedane/comment_paging.action");
-
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_COMMENT, listener, requestBean);
     }
 
@@ -72,7 +71,6 @@ public class CommentHandler {
         }
         requestBean.setParams(params);
         requestBean.setServerMethod("leedane/comment_add.action");
-        requestBean.setRequestMethod("POST");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_COMMENT, listener, requestBean);
     }
@@ -91,7 +89,6 @@ public class CommentHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setServerMethod("leedane/comment_delete.action");
-        requestBean.setRequestMethod("POST");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_COMMENT, listener, requestBean);
     }

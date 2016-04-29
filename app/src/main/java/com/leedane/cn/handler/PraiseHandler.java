@@ -42,7 +42,7 @@ public class PraiseHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod("POST");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setServerMethod("leedane/zan_paging.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_ZAN, listener, requestBean);
     }

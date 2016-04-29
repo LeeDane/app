@@ -2,6 +2,7 @@ package com.leedane.cn.activity;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,11 +34,13 @@ import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.BlogBean;
 import com.leedane.cn.bean.HttpResponseBlogBean;
 import com.leedane.cn.customview.CircularImageView;
+import com.leedane.cn.handler.AppVersionHandler;
 import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.BlogHandler;
 import com.leedane.cn.handler.CollectionHandler;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.handler.DialogHandler;
 import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
@@ -47,6 +50,7 @@ import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -128,6 +132,8 @@ public class MainActivity extends NavigationActivity
 
     private JSONObject mUserInfo;
     private int mLoginAccountId;
+
+    public static boolean isForeground = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +160,9 @@ public class MainActivity extends NavigationActivity
         initJPush();
     }
 
+    /**
+     * 初始化极光推送
+     */
     private void initJPush(){
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
@@ -167,6 +176,7 @@ public class MainActivity extends NavigationActivity
 
     @Override
     protected void onResume() {
+        isForeground = true;
         super.onResume();
         updateShowUserinfo();
         JPushInterface.onResume(getApplicationContext());
@@ -174,10 +184,10 @@ public class MainActivity extends NavigationActivity
 
     @Override
     protected void onPause() {
+        isForeground = false;
         super.onPause();
         JPushInterface.onPause(getApplicationContext());
     }
-
     /**
      * 检查是否加载远程服务器上的数据
      */
@@ -233,7 +243,7 @@ public class MainActivity extends NavigationActivity
         mlistViewBlogs.addFooterView(viewFooter, null, false);
         mListViewFooter = (TextView)viewFooter.findViewById(R.id.listview_footer_reLoad);
         mListViewFooter.setOnClickListener(this);//添加点击事件
-        mListViewFooter.setText(getResources().getString(R.string.loading));
+        mListViewFooter.setText(getStringResource(R.string.loading));
 
         mAdapter = new HomeAdapter(mBlogs, MainActivity.this, mlistViewBlogs);
         mlistViewBlogs.setAdapter(mAdapter);
@@ -368,7 +378,7 @@ public class MainActivity extends NavigationActivity
         if(result instanceof Error){
             Toast.makeText(MainActivity.this, ((Error) result).getMessage(), Toast.LENGTH_SHORT).show();
             if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                mListViewFooter.setText(getStringResource(R.string.load_more_error));
                 mListViewFooter.setOnClickListener(this);
             }
             return;
@@ -430,7 +440,9 @@ public class MainActivity extends NavigationActivity
                             }
                         }else if(type == TaskType.GET_APP_VERSION){
                             if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
-                                ToastUtil.success(MainActivity.this, "获取新版本成功" + jsonObject.toString(), Toast.LENGTH_SHORT);
+                                //ToastUtil.success(MainActivity.this, "获取新版本成功" + jsonObject.toString(), Toast.LENGTH_SHORT);
+                                JSONArray jsonArray = jsonObject.getJSONArray("message");
+                                DialogHandler.showNewestVersion(MainActivity.this, jsonArray.getJSONObject(0));
                             }else{
                                 ToastUtil.failure(MainActivity.this, "获取新版本失败", Toast.LENGTH_SHORT);
                             }
@@ -438,9 +450,11 @@ public class MainActivity extends NavigationActivity
                         }
                     }
                 }catch (Exception e){
-                    Toast.makeText(MainActivity.this, "响应的数据解析异常" +result , Toast.LENGTH_SHORT).show();
+                    ToastUtil.failure(MainActivity.this, "响应的数据解析异常" + result, Toast.LENGTH_SHORT);
                     if(mPreLoadMethod.equalsIgnoreCase("lowloading")){
-                        mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                        mlistViewBlogs.removeFooterView(viewFooter);
+                        mlistViewBlogs.addFooterView(viewFooter, null, false);
+                        mListViewFooter.setText(getStringResource(R.string.load_more_error));
                         mListViewFooter.setOnClickListener(this);
                     }
                     e.printStackTrace();
@@ -495,9 +509,9 @@ public class MainActivity extends NavigationActivity
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                             mlistViewBlogs.removeFooterView(viewFooter);
                             mlistViewBlogs.addFooterView(viewFooter, null, false);
-                            mListViewFooter.setText(getResources().getString(R.string.no_load_more));
+                            mListViewFooter.setText(getStringResource(R.string.no_load_more));
                         }else {
-                            ToastUtil.success(MainActivity.this, getResources().getString(R.string.no_load_more));
+                            ToastUtil.success(MainActivity.this, getStringResource(R.string.no_load_more));
                         }
                     }
                 }else{
@@ -508,7 +522,7 @@ public class MainActivity extends NavigationActivity
                         }
                         mlistViewBlogs.removeFooterView(viewFooter);
                         mlistViewBlogs.addFooterView(viewFooter, null, false);
-                        mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                        mListViewFooter.setText(getStringResource(R.string.load_more_error));
                     }else{
                         ToastUtil.failure(MainActivity.this);
                     }
@@ -519,6 +533,15 @@ public class MainActivity extends NavigationActivity
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 获取字符串资源
+     * @param resourseId
+     * @return
+     */
+    protected String getStringResource(int resourseId){
+        return getResources().getString(resourseId);
     }
 
     @Override
@@ -597,7 +620,7 @@ public class MainActivity extends NavigationActivity
      */
     private void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getResources().getString(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
+        if(getStringResource(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
             return;
         }
         //没有lastID时当作第一次请求加载
@@ -605,7 +628,7 @@ public class MainActivity extends NavigationActivity
             sendFirstLoading();
             return;
         }
-        mListViewFooter.setText(getResources().getString(R.string.loading));
+        mListViewFooter.setText(getStringResource(R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
@@ -652,8 +675,8 @@ public class MainActivity extends NavigationActivity
      */
     public void sendLoadAgain(View view){
         //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getResources().getString(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
-                || getResources().getString(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
+        if(getStringResource(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
+                || getStringResource(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
             taskCanceled(TaskType.HOME_LOADBLOGS);
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
@@ -661,7 +684,7 @@ public class MainActivity extends NavigationActivity
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
-            mListViewFooter.setText(getResources().getString(R.string.loading));
+            mListViewFooter.setText(getStringResource(R.string.loading));
             BlogHandler.getBlogsRequest(this, params);
         }
 
@@ -684,13 +707,13 @@ public class MainActivity extends NavigationActivity
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         //添加菜单项
-        menu.add(0, Menu.FIRST, 0, "查看");
-        menu.add(0, Menu.FIRST+1, 0, "删除");
-        menu.add(0, Menu.FIRST+2, 0, "收藏");
-        menu.add(0, Menu.FIRST+3, 0, "关注");
-        menu.add(0, Menu.FIRST+4, 0, "评论");
-        menu.add(0, Menu.FIRST+5, 0, "转发");
-        menu.add(0, Menu.FIRST+6, 0, "不喜欢");
+        menu.add(0, Menu.FIRST, 0, getStringResource(R.string.personal_look));
+        menu.add(0, Menu.FIRST+1, 0, getStringResource(R.string.delete));
+        menu.add(0, Menu.FIRST+2, 0, getStringResource(R.string.personal_collection));
+        menu.add(0, Menu.FIRST+3, 0, getStringResource(R.string.attention));
+        menu.add(0, Menu.FIRST+4, 0, getStringResource(R.string.comment));
+        menu.add(0, Menu.FIRST+5, 0, getStringResource(R.string.transmit));
+        menu.add(0, Menu.FIRST+6, 0, getStringResource(R.string.unlike));
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
@@ -793,16 +816,9 @@ public class MainActivity extends NavigationActivity
         String title = mBlogs.get(mClickPosition).getTitle();
 
         if (StringUtil.isNull(title) || blog_id < 1) {
-            Toast.makeText(getApplicationContext(), "不能点击，请核实博客id是否大于0并且标题不能为空", Toast.LENGTH_SHORT).show();
+            ToastUtil.failure(getApplicationContext(), "不能点击，请核实博客id是否大于0并且标题不能为空", Toast.LENGTH_SHORT);
             return;
         }
-        /*Intent it_detail = new Intent();
-        it_detail.setClass(MainActivity.this, DetailActivity.class);
-        //it_detail.setClass(MainActivity.this, DetailNewActivity.class);
-        it_detail.putExtra("blog_id", blog_id);
-        it_detail.putExtra("title", title);
-        startActivity(it_detail);*/
-
         HashMap<String, Object> params = new HashMap<>();
         params.put("title", title);
         CommonHandler.startDetailActivity(MainActivity.this, "t_blog", blog_id, params);

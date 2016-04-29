@@ -1,7 +1,7 @@
 package com.leedane.cn.task;
 
 /**
- * Created by Administrator on 2015/10/11.
+ * Created by LeeDane on 2015/10/11.
  */
 public enum TaskType {
 
@@ -52,6 +52,7 @@ public enum TaskType {
     LOAD_REQUEST_PAGING, //获取我发送的好友请求列表
     LOAD_RESPONSE_PAGING, //获取等待我同意的好友关系列表
     LOAD_NOTIFICATION,  //获取通知列表
+    LOAD_USER_INFO_DATA, //加载用户的基本数据
     CANCEL_FAN, //不再成为TA的粉丝
     DELETE_COMMENT, //删除评论
     DELETE_TRANSMIT, //删除转发

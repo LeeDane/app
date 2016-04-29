@@ -31,7 +31,9 @@ import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.EncodingHandler;
 import com.leedane.cn.handler.MoodHandler;
 import com.leedane.cn.handler.PraiseHandler;
+import com.leedane.cn.handler.UserHandler;
 import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.service.LoadUserInfoDataService;
 import com.leedane.cn.util.Base64Util;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
@@ -79,8 +81,19 @@ public class UserInfoActivity extends BaseActivity{
         setContentView(R.layout.activity_user_info);
         //检查是否登录
         checkedIsLogin();
-
+        getUserInfoData();
         initView();
+    }
+
+    /**
+     * 后台获取该用户的基本信息
+     */
+    private void getUserInfoData() {
+        Intent it_service = new Intent();
+        it_service.setClass(getApplicationContext(), LoadUserInfoDataService.class);
+        it_service.setAction("com.leedane.cn.LoadUserInfoDataService");
+        it_service.putExtra("toUserId", BaseApplication.getLoginUserId());
+        getApplicationContext().startService(it_service);
     }
 
     /**
@@ -119,10 +132,10 @@ public class UserInfoActivity extends BaseActivity{
 
         mListView = (ListView)findViewById(R.id.user_info_listview);
         List<MenuBean> menuBeans = new ArrayList<>();
-        menuBeans.add(new MenuBean(R.drawable.menu_base_info, "基本信息"));
+        menuBeans.add(new MenuBean(R.drawable.menu_base_info, getStringResource(R.string.personal_info)));
         menuBeans.add(new MenuBean(R.drawable.menu_personal_center, getStringResource(R.string.personal_title)));
-        menuBeans.add(new MenuBean(R.drawable.menu_message, "我的消息"));
-        menuBeans.add(new MenuBean(R.drawable.menu_feedback, "问题反馈"));
+        menuBeans.add(new MenuBean(R.drawable.menu_message, getStringResource(R.string.nav_message)));
+        menuBeans.add(new MenuBean(R.drawable.menu_feedback, getStringResource(R.string.feedback)));
         mAdapter = new UserInfoMenuAdapter(UserInfoActivity.this, menuBeans);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -131,6 +144,8 @@ public class UserInfoActivity extends BaseActivity{
                 String title = ((TextView)view.findViewById(R.id.recyclerview_title)).getText().toString();
                 if(title.equalsIgnoreCase(getStringResource(R.string.personal_title))){
                     CommonHandler.startPersonalActivity(UserInfoActivity.this, BaseApplication.getLoginUserId());
+                }else if(title.equalsIgnoreCase(getStringResource(R.string.nav_message))){
+                    CommonHandler.startMyMessageActivity(UserInfoActivity.this);
                 }else{
                     ToastUtil.success(UserInfoActivity.this, ((TextView)view.findViewById(R.id.recyclerview_title)).getText().toString());
                 }
@@ -146,7 +161,7 @@ public class UserInfoActivity extends BaseActivity{
                 if(isLogin){
                     showQrCodeDialog();
                 }else{
-                    ToastUtil.failure(UserInfoActivity.this, "请先登录");
+                    ToastUtil.failure(UserInfoActivity.this, getStringResource(R.string.please_login));
                 }
                 break;
         }
@@ -198,7 +213,7 @@ public class UserInfoActivity extends BaseActivity{
                 return true;
             }
         });
-        mQrCodeDialog.setTitle("我的二维码");
+        mQrCodeDialog.setTitle(getStringResource(R.string.my_qr_code));
         mQrCodeDialog.setCancelable(true);
         mQrCodeDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override

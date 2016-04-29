@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
@@ -43,6 +44,7 @@ import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.MD5Util;
 import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
@@ -430,13 +432,22 @@ public class MoodDetailActivity extends BaseActivity implements View.OnLongClick
                         mTVTransmit.setText("转发("+(transmitNumber +1)+")");
                     }
                     mETCommentOrTransmit.setText("");
-                    sendFirstLoading();
-                }else{
+                    /**
+                     * 延迟1秒钟后去加载数据
+                     */
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendFirstLoading();
+                        }
+                    }, 1000);
+
+                } else {
                     new NotificationUtil(1, MoodDetailActivity.this).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0);
                 }
-            }else  if(type == TaskType.ADD_ZAN){
+            } else if (type == TaskType.ADD_ZAN) {
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
                     Toast.makeText(MoodDetailActivity.this, "点赞成功", Toast.LENGTH_SHORT).show();
                     int zanNumber = detail.getInt("zan_number");
                     detail.put("zan_number", (zanNumber + 1));

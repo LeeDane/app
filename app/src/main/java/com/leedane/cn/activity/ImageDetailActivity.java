@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -17,7 +16,6 @@ import com.leedane.cn.adapter.ImageDetailFragmentPagerAdapter;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.frament.ImageDetailFragment;
 import com.leedane.cn.leedaneAPP.R;
-import com.leedane.cn.util.StringUtil;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

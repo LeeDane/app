@@ -9,7 +9,7 @@
         android:layout_height="113dp"
         android:background="@drawable/personal_bg">
         <com.leedane.cn.customview.CircularImageView
-            android:id="@+id/personal_pic"
+            android:id="@+id/user_info_pic"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -29,17 +29,16 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/personal_sign_in"
+                    android:id="@+id/user_info_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:text="12"/>
                 <TextView
-                    android:id="@+id/personal_add_fan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:text="@string/personal_add_fan"/>
+                    android:text="@string/score"/>
                 </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -48,17 +47,16 @@
                 android:orientation="vertical"
                 android:gravity="center">
                 <TextView
-                    android:id="@+id/personal_info"
+                    android:id="@+id/user_info_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:text="33"/>
                 <TextView
-                    android:id="@+id/personal_fans"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:text="@string/personal_fans"/>
+                    android:text="@string/comment"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -67,17 +65,16 @@
                 android:orientation="vertical"
                 android:gravity="center">
                 <TextView
-                    android:id="@+id/personal_info2"
+                    android:id="@+id/user_info_transmit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:text="24"/>
                 <TextView
-                    android:id="@+id/personal_fans2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:text="@string/personal_fans"/>
+                    android:text="@string/transmit"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -86,13 +83,12 @@
                 android:orientation="vertical"
                 android:gravity="center">
                 <TextView
-                    android:id="@+id/personal_info1"
+                    android:id="@+id/user_info_fans"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:text="17"/>
+                    android:text="24"/>
                 <TextView
-                    android:id="@+id/personal_fans1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
@@ -100,11 +96,6 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    <CheckBox
-        android:id="@+id/cb_receive_notice"
-        android:clickable="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
     <ListView
         android:id="@+id/user_info_listview"
         android:layout_width="match_parent"

@@ -26,9 +26,8 @@ public class TransmitHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod("POST");
         requestBean.setServerMethod("leedane/transmit_paging.action");
-
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_TRANSMIT, listener, requestBean);
     }
 
@@ -45,7 +44,6 @@ public class TransmitHandler {
         }
         requestBean.setParams(params);
         requestBean.setServerMethod("leedane/transmit_add.action");
-        requestBean.setRequestMethod("POST");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_TRANSMIT, listener, requestBean);
     }
@@ -64,7 +62,6 @@ public class TransmitHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setServerMethod("leedane/transmit_delete.action");
-        requestBean.setRequestMethod("POST");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_TRANSMIT, listener, requestBean);
     }

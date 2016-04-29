@@ -245,7 +245,6 @@
                 <action android:name="cn.jpush.android.intent.DaemonService" />
                 <category android:name="com.leedane.cn.leedaneAPP" />
             </intent-filter>
-
         </service>
 
         <!-- Required SDK核心功能-->
@@ -275,7 +274,7 @@
 
         <!-- User defined.  For test only  用户自定义的广播接收器-->
         <receiver
-            android:name="com.leedane.cn.broadcast.MyReceiver"
+            android:name="com.leedane.cn.broadcast.JPushReceiver"
             android:exported="false"
             android:enabled="true">
             <intent-filter>
@@ -342,6 +341,12 @@
         <service android:name="com.leedane.cn.service.SendMoodService">
             <intent-filter>
                 <action android:name="com.leedane.cn.sendMoodService"></action>
+            </intent-filter>
+        </service>
+
+        <service android:name="com.leedane.cn.service.LoadUserInfoDataService">
+            <intent-filter>
+                <action android:name="com.leedane.cn.LoadUserInfoDataService"></action>
             </intent-filter>
         </service>
         <service android:enabled="true"

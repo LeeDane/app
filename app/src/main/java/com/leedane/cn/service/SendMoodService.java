@@ -1,8 +1,5 @@
 package com.leedane.cn.service;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +8,6 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.leedane.cn.application.BaseApplication;
@@ -230,18 +226,6 @@ public class SendMoodService extends Service implements TaskListener {
                 }
             }
         }
-        /*boolean isOne = true;
-
-        for(int i = 0; i < mItems.size() ;i++){
-            if(mItems.get(i).getStatus() != EnumUtil.FileStatus.完成.value && mItems.get(i).getStatus() != EnumUtil.FileStatus.文件不存在.value){//未完成并且文件存在
-
-                if(isOne){
-                    itemIndex = i;
-                    item = mItems.get(i);
-                    isOne = false;
-                }
-            }
-        }*/
     }
     @Override
     public boolean onUnbind(Intent intent) {

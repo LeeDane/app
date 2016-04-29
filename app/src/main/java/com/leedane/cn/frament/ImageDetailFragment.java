@@ -90,8 +90,9 @@ public class ImageDetailFragment extends Fragment{
         int width = mImageDetailBean.getWidth() == 0 ||  mImageDetailBean.getWidth() > acreenWidth ? acreenWidth: mImageDetailBean.getWidth();
         int height = mImageDetailBean.getHeight() == 0 ||  mImageDetailBean.getHeight() > screenHeight ? screenHeight: mImageDetailBean.getHeight();
         if(currentImageUrl.startsWith("http://") || currentImageUrl.startsWith("https://")){
-           // ImageCacheManager.loadImage(currentImageUrl, (ImageView) getView().findViewById(R.id.image_detail_imageview), width, height);
-            SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)findViewById(id.imageView);
+           ImageCacheManager.loadImage(currentImageUrl, (ImageView) getView().findViewById(R.id.image_detail_imageview), width, height);
+            /*SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)getView().findViewById(R.id.image_detail_imageview);
+            ImageCacheManager.loadImage(currentImageUrl, imageView, width, height);*/
         }else{
             Map<String, Object> map = new HashMap<>();
 

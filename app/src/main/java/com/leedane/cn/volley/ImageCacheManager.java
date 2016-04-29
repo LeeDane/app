@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.leedane.cn.application.BaseApplication;
 
 /**
@@ -43,6 +44,28 @@ public class ImageCacheManager {
         };
     }
 
+    public static ImageLoader.ImageListener getSubsamplingScaleImageListener(final SubsamplingScaleImageView view, final Bitmap defaultImage, final Bitmap errorImage){
+        return new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                //回调成功
+                if(imageContainer.getBitmap() != null && view != null){
+                    //view.setImageBitmap(imageContainer.getBitmap());
+                }else if(defaultImage != null && view != null){
+                    //view.setImageBitmap(defaultImage);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                //回调失败
+                if(errorImage != null && view != null){
+                    //view.setImageBitmap(errorImage);
+                }
+            }
+        };
+    }
+
     /**
      * 提供给外部调用的方法
      * @param url
@@ -74,6 +97,17 @@ public class ImageCacheManager {
      */
     public static void loadImage(String url, ImageView view, Bitmap defaultImage, Bitmap errorImage, int maxWidth, int maxHeight ) {
         mImageLoader.get(url, ImageCacheManager.getImageListener(view, defaultImage, errorImage), maxWidth, maxHeight);
+    }
+
+    /**
+     * 提供给外部使用的，加载网络图片，返回BitMap
+     * @param url
+     * @param maxWidth
+     * @param maxHeight
+     * @return
+     */
+    public static void loadImage(String url, SubsamplingScaleImageView view, int maxWidth, int maxHeight){
+        mImageLoader.get(url, ImageCacheManager.getSubsamplingScaleImageListener(view, BaseApplication.getDefaultImage(), BaseApplication.getErrorImage()), maxWidth, maxHeight).getBitmap();
     }
 
     /**

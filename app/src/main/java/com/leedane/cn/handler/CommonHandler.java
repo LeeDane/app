@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import com.leedane.cn.activity.DetailActivity;
 import com.leedane.cn.activity.MoodDetailActivity;
+import com.leedane.cn.activity.NotificationActivity;
 import com.leedane.cn.activity.PersonalActivity;
 import com.leedane.cn.activity.UserInfoActivity;
 import com.leedane.cn.application.BaseApplication;
@@ -34,6 +35,15 @@ public class CommonHandler {
     public static void startPersonalActivity(Context context, int toUserId){
         Intent it = new Intent(context, PersonalActivity.class);
         it.putExtra("userId", toUserId);
+        context.startActivity(it);
+    }
+
+    /**
+     * 触发我的消息activity
+     * @param context
+     */
+    public static void startMyMessageActivity(Context context){
+        Intent it = new Intent(context, NotificationActivity.class);
         context.startActivity(it);
     }
 

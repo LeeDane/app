@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.leedane.cn.handler.AppVersionHandler;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.util.SharedPreferenceUtil;
@@ -152,8 +153,7 @@ public class NavigationActivity extends AppCompatActivity
                 startActivity(it_attention);
                 break;*/
             case R.id.nav_message: //消息
-                Intent it_message = new Intent(NavigationActivity.this, NotificationActivity.class);
-                startActivity(it_message);
+                CommonHandler.startMyMessageActivity(NavigationActivity.this);
                 break;
             case R.id.nav_file: //文件
                 Intent it_file = new Intent(NavigationActivity.this, FileActivity.class);
