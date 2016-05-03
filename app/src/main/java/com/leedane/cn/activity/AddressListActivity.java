@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.leedane.cn.adapter.CommonString;
 import com.leedane.cn.adapter.ContactAdapter;
 import com.leedane.cn.adapter.expandRecyclerviewadapter.StickyRecyclerHeadersDecoration;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ContactBean;
 import com.leedane.cn.bean.LocalContactBean;
 import com.leedane.cn.leedaneAPP.R;
@@ -53,10 +54,26 @@ public class AddressListActivity extends Activity implements ContactAdapter.OnRe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkedIsLogin();
         setContentView(R.layout.activity_address_list);
         //getPermission();
         initView();
 
+    }
+
+    /**
+     * 检查是否登录
+     */
+    private void checkedIsLogin() {
+        //判断是否有缓存用户信息
+        if(BaseApplication.getLoginUserId() < 1){
+            Intent it = new Intent(AddressListActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.AddressListActivity");
+            startActivity(it);
+            finish();
+            return;
+        }
     }
 
     /*private void getPermission() {

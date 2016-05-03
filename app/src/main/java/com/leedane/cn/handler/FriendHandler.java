@@ -58,4 +58,18 @@ public class FriendHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_RESPONSE_PAGING, listener, requestBean);
     }
+
+    /**
+     * 获取登录用户的全部好友信息
+     * @param listener
+     */
+    public static void sendGetAllFriends(TaskListener listener){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/friend_friends.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_USER_FRIENS, listener, requestBean);
+    }
 }

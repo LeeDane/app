@@ -67,6 +67,46 @@ public class SharedPreferenceUtil {
         editor.clear();
         editor.commit();
     }
+
+    /**
+     * 保存登录用户的好友的列表
+     *
+     * @param context
+     * @param friendJSONObject
+     * @throws Exception
+     */
+    public static void saveFriends(Context context, String friendJSONObject) throws Exception {
+        SharedPreferences preferences = context.getSharedPreferences(ConstantsUtil.STRING_FRIENDS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(ConstantsUtil.FRIENDS, friendJSONObject);
+        editor.commit();
+    }
+
+    /**
+     * 获取登录用户的好友的列表，以jsonObject对象封装
+     *
+     * @param context
+     * @return
+     */
+    public static String getFriends(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(ConstantsUtil.STRING_FRIENDS, Context.MODE_PRIVATE);
+        String friends = preferences.getString(ConstantsUtil.FRIENDS, null);
+        if (StringUtil.isNull(friends)) {
+            return null;
+        }
+        return friends;
+    }
+
+    /**
+     * 清除缓存的用户信息
+     * @param context
+     */
+    public static void clearFriends(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(ConstantsUtil.STRING_FRIENDS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+    }
     /**
      * 保存用户名称的历史输入信息
      *

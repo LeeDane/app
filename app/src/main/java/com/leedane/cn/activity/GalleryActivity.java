@@ -3,6 +3,7 @@ package com.leedane.cn.activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -47,6 +48,7 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkedIsLogin();
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_gallery);
 
@@ -67,6 +69,21 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
         mRightImg.setVisibility(View.VISIBLE);
         mRightImg.setImageResource(R.mipmap.add);
         mRightImg.setOnClickListener(this);
+    }
+
+    /**
+     * 检查是否登录
+     */
+    private void checkedIsLogin() {
+        //判断是否有缓存用户信息
+        if(BaseApplication.getLoginUserId() < 1){
+            Intent it = new Intent(GalleryActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.GalleryActivity");
+            startActivity(it);
+            finish();
+            return;
+        }
     }
 
     private View addGalleryView = null;

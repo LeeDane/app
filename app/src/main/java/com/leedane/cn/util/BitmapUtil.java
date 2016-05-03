@@ -107,4 +107,16 @@ public class BitmapUtil {
         }
         return result;
     }
+
+    /**
+     * 回收bitmap
+     * @param bitmap
+     */
+    public static void recycled(Bitmap bitmap){
+        if(bitmap != null && !bitmap.isRecycled()){
+            bitmap.recycle();
+            System.gc();
+            bitmap = null;
+        }
+    }
 }

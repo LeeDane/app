@@ -124,6 +124,7 @@ public class MoodDetailActivity extends BaseActivity implements View.OnLongClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkedIsLogin();
         setContentView(R.layout.activity_mood_detail);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.mood_detail);
@@ -132,6 +133,22 @@ public class MoodDetailActivity extends BaseActivity implements View.OnLongClick
         initData();
         synchronizedData();//同步数据
     }
+
+    /**
+     * 检查是否登录
+     */
+    private void checkedIsLogin() {
+        //判断是否有缓存用户信息
+        if(BaseApplication.getLoginUserId() < 1){
+            Intent it = new Intent(MoodDetailActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.MoodDetailActivity");
+            startActivity(it);
+            finish();
+            return;
+        }
+    }
+
 
     /**
      * 初始化数据

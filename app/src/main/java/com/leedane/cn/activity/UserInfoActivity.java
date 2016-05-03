@@ -104,6 +104,11 @@ public class UserInfoActivity extends BaseActivity{
         //判断是否有缓存用户信息
         if(mUserInfo == null || !mUserInfo.has("account") ){
             ToastUtil.failure(UserInfoActivity.this, "未登录");
+            Intent it = new Intent(UserInfoActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.UserInfoActivity");
+            startActivity(it);
+            finish();
             return;
         }
         isLogin = true;

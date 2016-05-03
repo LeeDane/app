@@ -15,6 +15,7 @@ import com.leedane.cn.bean.HttpResponseFriendBean;
 import com.leedane.cn.bean.HttpResponseGalleryBean;
 import com.leedane.cn.bean.HttpResponseMoodBean;
 import com.leedane.cn.bean.HttpResponseMoodImagesBean;
+import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.bean.HttpResponseNotificationBean;
 import com.leedane.cn.bean.HttpResponseZanBean;
 
@@ -238,6 +239,22 @@ public class BeanConvertUtil {
             return gson.fromJson(str, HttpResponseNotificationBean.class);
         }catch (Exception e){
             Log.d(TAG, "响应HttpResponseNotificationBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将响应请求的字符串转化成HttpResponseMyFriendsBean对象
+     * @param str
+     * @return
+     */
+    public static HttpResponseMyFriendsBean strConvertToMyFriendsBeans(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应HttpResponseMyFriendsBean对象开始转换。。。");
+            return gson.fromJson(str, HttpResponseMyFriendsBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应HttpResponseMyFriendsBean对象转换失败");
         }
         return null;
     }

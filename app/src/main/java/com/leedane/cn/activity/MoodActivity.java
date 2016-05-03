@@ -1,10 +1,13 @@
 package com.leedane.cn.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +26,7 @@ import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.handler.CommentHandler;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.service.SendMoodService;
@@ -121,24 +125,23 @@ public class MoodActivity extends BaseActivity {
             try{
                 mOldMoodBean = (MoodBean) it_mood.getSerializableExtra("moodObj");
                 if(mOldMoodBean != null){
-                    //Toast.makeText(MoodActivity.this, "该心情图像："+mOldMoodBean.getImgs(), Toast.LENGTH_LONG).show();
                     if(mOperateType == EnumUtil.MoodOperateType.转发.value)
-                        Toast.makeText(MoodActivity.this, "该心情可以转发"+mOldMoodBean.getContent(), Toast.LENGTH_LONG).show();
+                        ToastUtil.success(MoodActivity.this, "该心情可以转发" + mOldMoodBean.getContent());
                     else
-                        Toast.makeText(MoodActivity.this, "该心情可以评论"+mOldMoodBean.getContent(), Toast.LENGTH_LONG).show();
+                        ToastUtil.success(MoodActivity.this, "该心情可以评论" + mOldMoodBean.getContent());
                 }else{
                     if(mOperateType == EnumUtil.MoodOperateType.转发.value)
-                        Toast.makeText(MoodActivity.this, "无法转发", Toast.LENGTH_LONG).show();
+                        ToastUtil.success(MoodActivity.this, "无法转发");
                     else
-                        Toast.makeText(MoodActivity.this, "无法评论", Toast.LENGTH_LONG).show();
+                        ToastUtil.success(MoodActivity.this, "无法评论");
                     finish();
                     return;
                 }
             }catch(Exception e){
                 if(mOperateType ==EnumUtil.MoodOperateType.转发.value)
-                    Toast.makeText(MoodActivity.this, "心情json对象转化出错，无法转发", Toast.LENGTH_LONG).show();
+                    ToastUtil.success(MoodActivity.this, "心情json对象转化出错，无法转发");
                 else
-                    Toast.makeText(MoodActivity.this, "心情json对象转化出错，无法评论", Toast.LENGTH_LONG).show();
+                    ToastUtil.success(MoodActivity.this, "心情json对象转化出错，无法评论");
                 finish();
                 return;
             }
@@ -158,46 +161,32 @@ public class MoodActivity extends BaseActivity {
         //内容
         mMoodContent = (EditText)findViewById(R.id.mood_content);
         mMoodContent.setHint("在此写下您想说的");
+        mMoodContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String value = String.valueOf(s);
+                //只有一个@字符启动好友选择
+                if(value.equals("@")){
+                    startATFriendActivity();
+                }
+
+                if(value.endsWith(" @")){
+                    //startATFriendActivity();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         if(mOperateType == 0){
             setTitleViewText("发表" + getStringResource(R.string.personal_mood));
-            /*sqLiteDatabase = new BaseSQLiteDatabase(MoodActivity.this);
-            Cursor cursor = sqLiteDatabase.rowQuery("select * from " + BaseSQLiteOpenHelper.TABLE_MOOD_DRAFT + " where create_user_id =? order by id desc", new String[]{String.valueOf(BaseApplication.getLoginUserId())});
-            if(cursor != null){
-                String content,uris;
-                while(cursor.moveToNext()){
-                    content = cursor.getString(cursor.getColumnIndex("content"));
-                    uris = cursor.getString(cursor.getColumnIndex("uris"));
-                    String[] uriArr = uris.split(",");
-                    if(uriArr != null && uriArr.length > 0){
-                        for(String u: uriArr){
-                            mUris.add(u);
-                        }
-                    }
-                    mMoodContent.setText(content);
-                    break;
-                }
-                cursor.close();
-                sqLiteDatabase.closeDataBase();
-            }*/
-
-
-          /*Map<String, String> map =  SharedPreferenceUtil.getMoodDraft(getApplicationContext());
-            if(map != null && !map.isEmpty()){
-                String content = StringUtil.changeNotNull(map.get("content"));
-                if(StringUtil.isNotNull(content))
-                    mMoodContent.setText(content);
-
-                String uris =  StringUtil.changeNotNull(map.get("uris"));
-                if(StringUtil.isNotNull(uris)){
-                    String[] uriArr = uris.split(",");
-                    if(uriArr != null && uriArr.length > 0){
-                        for(String u: uriArr){
-                            mUris.add(u);
-                        }
-                    }
-                }
-            }*/
-
         }else if(mOperateType == 1){
             setTitleViewText("转发" + getStringResource(R.string.personal_mood));
         }else if(mOperateType == 2){
@@ -211,9 +200,9 @@ public class MoodActivity extends BaseActivity {
         mBtnPublish.setOnClickListener(this);
 
         if(mOperateType == 1){
-            mBtnPublish.setText(getResources().getString(R.string.mood_transmit));
+            mBtnPublish.setText(getStringResource(R.string.mood_transmit));
         }else if(mOperateType == 2){
-            mBtnPublish.setText(getResources().getString(R.string.mood_comment));
+            mBtnPublish.setText(getStringResource(R.string.mood_comment));
         }
         if(mOperateType == 0){
             //添加照片
@@ -246,14 +235,20 @@ public class MoodActivity extends BaseActivity {
         //mGridview.setColumnWidth(getGridViewColumnWidth());
     }
 
-    /*private int getGridViewColumnWidth(){
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        //获得当前设备的屏幕宽度
-        int screenWidth = dm.widthPixels;
-        return (screenWidth -10)/3;
-    }*/
-
+    /**
+     * 选择好友
+     * @param view
+     */
+    public void selectFriend(View view){
+        startATFriendActivity();
+    }
+    /**
+     * 触发AT朋友的activity
+     */
+    public void startATFriendActivity(){
+        Intent it = new Intent(MoodActivity.this, AtFriendActivity.class);
+        startActivityForResult(it, AtFriendActivity.SELECT_AT_FRIENDS_CODE);
+    }
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -564,7 +559,20 @@ public class MoodActivity extends BaseActivity {
                 Toast.makeText(getBaseContext(), "获取的图片路径是：" + MediaUtil.getImageAbsolutePath(MoodActivity.this, uri), Toast.LENGTH_LONG).show();
             }
         }
-
+        //更新选择
+        if(requestCode == AtFriendActivity.SELECT_AT_FRIENDS_CODE && data != null){
+            String select = data.getStringExtra("select");
+            if(StringUtil.isNotNull(select)){
+                String oldContent = mMoodContent.getText().toString();
+                if(StringUtil.isNotNull(oldContent)){
+                    if(oldContent.endsWith("@"))
+                    oldContent = oldContent.substring(0, oldContent.length() -1);
+                    mMoodContent.setText(oldContent + select);
+                }else{
+                    mMoodContent.setText(select);
+                }
+            }
+        }
     }
 
     /**

@@ -15,7 +15,15 @@ public class StringUtil {
      * @return
      */
     public static String changeNotNull(Object origin){
-        return origin == null ? "" : String.valueOf(origin);
+        if(origin == null){
+            return "";
+        }else{
+            String s = String.valueOf(origin);
+            if(s.equals("null")){
+                return "";
+            }
+            return s;
+        }
     }
 
     /**

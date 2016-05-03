@@ -36,16 +36,18 @@
     <string name="delete">删除</string>
     <string name="unlike">不喜欢</string>
     <string name="score">积分</string>
-
+    <string name="comlpete">完成</string>
 
     <!-- 异常相关 -->
     <string name="crash_file_path">"/crash"</string>
     <string name="crash_toast_message">程序出现异常,即将退出</string>
     <string name="crash_write_error">文件写入时出现错误</string>
 
-    <!-- 登录相关 -->
+    <!-- 登录注册相关 -->
+    <string name="hint_welcome_register">欢迎您注册</string>
     <string name="hint_username">用户名</string>
     <string name="hint_password">密码</string>
+    <string name="hint_confirm_password">确认密码</string>
     <string name="hint_login">登录</string>
     <string name="hint_system_desc">好文字 心开始</string>
     <string name="hint_system">LeeDane</string>
@@ -54,10 +56,15 @@
     <string name="login">登录</string>
     <string name="version">系统更新</string>
     <string name="outLogin">退出登录</string>
-    <string name="login_username_null">请输入用户名</string>
-    <string name="login_password_null">请输入密码</string>
+    <string name="username_null">请输入用户名</string>
+    <string name="password_null">请输入密码</string>
+    <string name="confirm_password_null">请输入确认密码</string>
+    <string name="mobile_phone_null">请输入手机号码</string>
+    <string name="password_no_match">两次密码不一致</string>
     <string name="login_success">登录成功</string>
     <string name="login_error">登录失败</string>
+    <string name="register_success">注册成功</string>
+    <string name="register_error">注册失败</string>
     <string name="phone_login">手机号码登录</string>
     <string name="forgot_password">忘记密码</string>
     <string name="register">手机注册</string>
@@ -105,6 +112,11 @@
     <string name="personal_shielding">屏蔽</string>
     <string name="personal_report">举报</string>
     <string name="no_text">无内容</string>
+
+    <!--  更新用户头像  -->
+    <string name="update_header">更换头像</string>
+    <string name="select_gallery">选择系统图库</string>
+    <string name="confirm_upload_hander">确定上传图像</string>
 
     <!-- 心情相关 -->
     <string name="mood_publish">立即发表</string>

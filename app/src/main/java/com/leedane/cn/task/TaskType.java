@@ -9,6 +9,7 @@ public enum TaskType {
     HOME_LOADBLOGIMAGES,		//首页加载博客的图片
     DELETE_BLOG,             //删除文章
     LOGIN_DO,     //登录
+    REGISTER_DO, //注册
     DOWNLOAD_FILE, //下载文件信息
     UPLOAD_FILE, //上传文件信息
     MERGE_PORT_FILE, //合并断点文件信息
@@ -53,10 +54,13 @@ public enum TaskType {
     LOAD_RESPONSE_PAGING, //获取等待我同意的好友关系列表
     LOAD_NOTIFICATION,  //获取通知列表
     LOAD_USER_INFO_DATA, //加载用户的基本数据
+    LOAD_USER_FRIENS, //加载用户的好友列表
+    LOAD_HEAD_PATH, //加载用户新头像
     CANCEL_FAN, //不再成为TA的粉丝
     DELETE_COMMENT, //删除评论
     DELETE_TRANSMIT, //删除转发
     DELETE_COLLECTION, //删除收藏记录
     DELETE_ZAN, //删除点赞记录
     DELETE_ATTENTION, //删除关注记录
+    UPDATE_HANDER, //更新用户头像
 }

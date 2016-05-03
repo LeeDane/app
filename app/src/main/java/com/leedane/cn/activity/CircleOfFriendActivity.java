@@ -1,6 +1,7 @@
 package com.leedane.cn.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.CircleOfFriendAdapter;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpResponseCircleOfFriendBean;
 import com.leedane.cn.bean.TimeLineBean;
 import com.leedane.cn.handler.CircleOfFriendHandler;
@@ -49,6 +51,8 @@ public class CircleOfFriendActivity  extends BaseActivity implements SwipeRefres
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        checkedIsLogin();
         setContentView(R.layout.fragment_listview);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.circle_of_friend);
@@ -78,6 +82,21 @@ public class CircleOfFriendActivity  extends BaseActivity implements SwipeRefres
                 android.R.color.holo_orange_light,
                 android.R.color.holo_green_light);
         sendFirstLoading();
+    }
+
+    /**
+     * 检查是否登录
+     */
+    private void checkedIsLogin() {
+        //判断是否有缓存用户信息
+        if(BaseApplication.getLoginUserId() < 1){
+            Intent it = new Intent(CircleOfFriendActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.CircleOfFriendActivity");
+            startActivity(it);
+            finish();
+            return;
+        }
     }
     @Override
     public void taskFinished(TaskType type, Object result) {

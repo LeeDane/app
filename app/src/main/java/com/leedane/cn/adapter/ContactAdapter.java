@@ -51,9 +51,9 @@ public class ContactAdapter extends RecyclerviewBaseAdapter<ContactAdapter.Conta
                 this.onRecyclerViewListener = onRecyclerViewListener;
         }
 
-        public ContactAdapter(Context ct, List<ContactBean.MembersEntity> mLists/*, int permission, String createrID*/) {
-                this.mLists = mLists;
-                mContext = ct;
+        public ContactAdapter(Context context, List<ContactBean.MembersEntity> lists/*, int permission, String createrID*/) {
+                this.mLists = lists;
+                mContext = context;
                // mPermission = permission;
                 this.addAll(mLists);
                 /*this.createrID = createrID;
@@ -74,8 +74,7 @@ public class ContactAdapter extends RecyclerviewBaseAdapter<ContactAdapter.Conta
         @Override
         public void onBindViewHolder(ContactAdapter.ContactViewHolder holder, final int position) {
                 SwipeItemLayout swipeRoot = holder.mRoot;
-                ContactViewHolder contactViewHolder = (ContactViewHolder)holder;
-                contactViewHolder.position = position;
+                holder.position = position;
                 /*if (getItem(position).getId().equals(OWNER)) {
                         swipeRoot.setSwipeAble(false);
                 }*//* else if (isCreator) {

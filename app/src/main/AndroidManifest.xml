@@ -96,6 +96,20 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+
+        <activity
+            android:name="com.leedane.cn.activity.RegisterActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name="com.leedane.cn.activity.UpdateUserHeaderActivity"
+            android:label="@string/update_header"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
         <activity
             android:name="com.leedane.cn.activity.SettingActivity"
             android:label="@string/settings"
@@ -197,6 +211,13 @@
         <activity
             android:name="com.leedane.cn.activity.AttentionActivity"
             android:label="@string/attention"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
+        <activity
+            android:name="com.leedane.cn.activity.AtFriendActivity"
+            android:label="@string/my_friends"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
@@ -349,6 +370,13 @@
                 <action android:name="com.leedane.cn.LoadUserInfoDataService"></action>
             </intent-filter>
         </service>
+
+        <service android:name="com.leedane.cn.service.LoadUserFriendService">
+            <intent-filter>
+                <action android:name="com.leedane.cn.LoadUserFriendService"></action>
+            </intent-filter>
+        </service>
+
         <service android:enabled="true"
             android:name="org.androidpn.client.NotificationService"
             android:label="NotificationService">

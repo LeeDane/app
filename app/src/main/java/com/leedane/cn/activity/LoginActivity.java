@@ -26,8 +26,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.service.LoadUserFriendService;
+import com.leedane.cn.service.LoadUserInfoDataService;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
@@ -104,11 +108,11 @@ public class LoginActivity extends Activity implements TaskListener {
         final String password = ((EditText)findViewById(R.id.editview_password)).getText().toString();
 
         if(username == null || username.length() == 0 || username.replaceAll(" ", "").length() == 0){
-            Toast.makeText(LoginActivity.this, getResources().getString(R.string.login_username_null), Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.username_null), Toast.LENGTH_SHORT).show();
             return;
         }
         if(password == null || password.length() == 0 || password.replaceAll(" ", "").length() == 0){
-            Toast.makeText(LoginActivity.this, getResources().getString(R.string.login_password_null), Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, getResources().getString(R.string.password_null), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -150,7 +154,7 @@ public class LoginActivity extends Activity implements TaskListener {
                 if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
                     SharedPreferenceUtil.saveUserInfo(getApplicationContext(), resultObject.getString("userinfo"));
                     Toast.makeText(LoginActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT).show();
-
+                    CommonHandler.startUserFreidnsService(getApplicationContext(), true);
                     //把信息返回到上一个activity
                     if(StringUtil.isNull(mReturnClass)){
                         Intent intent = new Intent();
@@ -183,7 +187,7 @@ public class LoginActivity extends Activity implements TaskListener {
                 if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
                     SharedPreferenceUtil.saveUserInfo(getApplicationContext(), resultObject.getString("userinfo"));
                     Toast.makeText(LoginActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT).show();
-
+                    CommonHandler.startUserFreidnsService(getApplicationContext(), true);
                     //把信息返回到上一个activity
                     if(StringUtil.isNull(mReturnClass)){
                         Intent intent = new Intent();
@@ -235,6 +239,7 @@ public class LoginActivity extends Activity implements TaskListener {
 
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferenceUtil.clearUserInfo(LoginActivity.this);
+                        SharedPreferenceUtil.clearFriends(LoginActivity.this);
                     }
 
                 })
@@ -295,7 +300,9 @@ public class LoginActivity extends Activity implements TaskListener {
      * @param view
      */
     public void registerClick(View view){
-
+        Intent it = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(it);
+        finish();
     }
 
     /**

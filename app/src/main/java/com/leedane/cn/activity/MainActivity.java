@@ -176,17 +176,17 @@ public class MainActivity extends NavigationActivity
 
     @Override
     protected void onResume() {
+        JPushInterface.onResume(getApplicationContext());
         isForeground = true;
         super.onResume();
         updateShowUserinfo();
-        JPushInterface.onResume(getApplicationContext());
     }
 
     @Override
     protected void onPause() {
+        JPushInterface.onPause(getApplicationContext());
         isForeground = false;
         super.onPause();
-        JPushInterface.onPause(getApplicationContext());
     }
     /**
      * 检查是否加载远程服务器上的数据
@@ -334,6 +334,8 @@ public class MainActivity extends NavigationActivity
             try {
                 mLoginAccountId = mUserInfo.getInt("id");
                 mTextViewUsername.setText(StringUtil.changeNotNull(mUserInfo.getString("account")));
+                Object obj = mUserInfo.getString("email");
+                String str = StringUtil.changeNotNull(obj);
                 mTextViewEmail.setText(StringUtil.changeNotNull(mUserInfo.getString("email")));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -652,7 +654,7 @@ public class MainActivity extends NavigationActivity
         switch (clickViewId){
             case R.id.imageview_head_portrait:
                 /*ToastUtil.success(MainActivity.this, "点击头像");*/
-                CommonHandler.startUserInfoActivity(MainActivity.this);
+                CommonHandler.startUpdateHeaderActivity(MainActivity.this);
                 break;
             case R.id.button_login:
                 ToastUtil.success(MainActivity.this, "将跳转到登录页面");

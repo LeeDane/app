@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.leedane.cn.activity.AtFriendActivity;
 import com.leedane.cn.activity.DetailActivity;
 import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.activity.NotificationActivity;
 import com.leedane.cn.activity.PersonalActivity;
+import com.leedane.cn.activity.UpdateUserHeaderActivity;
 import com.leedane.cn.activity.UserInfoActivity;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.service.LoadUserFriendService;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
@@ -54,6 +57,29 @@ public class CommonHandler {
     public static void startUserInfoActivity(Context context){
         Intent it = new Intent(context, UserInfoActivity.class);
         context.startActivity(it);
+    }
+
+    /**
+     * 触发修改个人头像的activity
+     * @param context
+     */
+    public static void startUpdateHeaderActivity(Context context){
+        Intent it = new Intent(context, UpdateUserHeaderActivity.class);
+        context.startActivity(it);
+    }
+
+    /**
+     * 后台获取该用户的好友信息
+     * @param context
+     * @param isShowErrorNotification 控制是否展示获取失败后的通知
+     */
+    public static void startUserFreidnsService(Context context, boolean isShowErrorNotification) {
+        Intent it_service = new Intent();
+        it_service.setClass(context, LoadUserFriendService.class);
+        it_service.setAction("com.leedane.cn.LoadUserFriendService");
+        it_service.putExtra("toUserId", BaseApplication.getLoginUserId());
+        it_service.putExtra("isShowErrorNotification", isShowErrorNotification);
+        context.startService(it_service);
     }
 
     /**
