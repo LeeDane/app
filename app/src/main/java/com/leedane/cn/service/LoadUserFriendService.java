@@ -41,6 +41,7 @@ public class LoadUserFriendService extends Service implements TaskListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //service被杀死后重启将没有intent，这里不做进一步处理即可
         if(intent == null){
             return super.onStartCommand(intent, flags, startId);
         }

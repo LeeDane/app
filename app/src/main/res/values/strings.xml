@@ -237,4 +237,8 @@
     <string name="logining">程序在后台执行, 请查看日志！</string>
     <string name="setting_su">设置成功</string>
 
+    <!--  聊天   -->
+    <string name="chat">聊天</string>
+    <string name="chat_detail">聊天详情</string>
+
 </resources>

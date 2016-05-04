@@ -211,6 +211,24 @@ public class BaseApplication extends Application {
     }
 
     /**
+     * 获取登录的用户头像路径
+     * @return
+     */
+    public static String getLoginUserPicPath(){
+
+        String picPath = null;
+        try {
+            JSONObject jsonObject = getLoginUserInfo();
+            if(jsonObject != null && jsonObject.has("user_pic_path")){
+                picPath = jsonObject.getString("user_pic_path");
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return picPath;
+    }
+
+    /**
      * 获取登录的用户名称
      * @return
      */

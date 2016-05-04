@@ -241,9 +241,9 @@ public class NotificationFragment extends BaseFragment{
         Bundle bundle = getArguments();
         if(bundle != null){
             mType = bundle.getString("type");
-            if(mContext == null)
-                mContext = getActivity();
         }
+        if(mContext == null)
+            mContext = getActivity();
 
         if(isFirstLoading){
             sendFirstLoading();

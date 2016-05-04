@@ -270,10 +270,9 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         if(bundle != null){
             this.mPreUid = bundle.getInt("toUserId");
             this.mIsLoginUser = bundle.getBoolean("isLoginUser");
-            if(mContext == null)
-                mContext = getActivity();
         }
-
+        if(mContext == null)
+            mContext = getActivity();
 
         if(isFirstLoading){
             ToastUtil.success(getContext(), "第一次加载");

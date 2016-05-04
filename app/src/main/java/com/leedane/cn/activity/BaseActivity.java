@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
@@ -38,6 +39,22 @@ public class BaseActivity extends FragmentActivity implements TaskListener, View
 
     private LinearLayout mMainLayout;
 
+    /**
+     * 检查是否登录
+     * @param classFullName 当前activity全路径
+     */
+    protected void checkedIsLogin(String classFullName) {
+        //判断是否有缓存用户信息
+        if(BaseApplication.getLoginUserId() < 1){
+            Intent it = new Intent(BaseActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", classFullName);
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+            return;
+        }
+    }
     /**
      * 弹出加载ProgressDiaLog
      */

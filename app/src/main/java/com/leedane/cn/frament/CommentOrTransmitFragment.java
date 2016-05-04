@@ -342,9 +342,10 @@ public class CommentOrTransmitFragment extends BaseFragment{
             this.isComment = bundle.getBoolean("isComment");
             this.itemSingleClick = bundle.getBoolean("itemSingleClick");
             this.isLoginUser = bundle.getBoolean("isLoginUser");
-            if(mContext == null)
-                mContext = getActivity();
         }
+        if(mContext == null)
+            mContext = getActivity();
+
         if(isFirstLoading){
             //ToastUtil.success(mContext, "评论");
             //isFirstLoading = false;

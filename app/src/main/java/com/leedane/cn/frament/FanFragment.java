@@ -303,9 +303,9 @@ public class FanFragment extends BaseFragment{
             this.itemSingleClick = true;
             this.fanOrAttention = bundle.getInt("fanOrAttention");
             this.isLoginUser = bundle.getBoolean("isLoginUser");
-            if(mContext == null)
-                mContext = getActivity();
         }
+        if(mContext == null)
+            mContext = getActivity();
 
         if(isFirstLoading){
             sendFirstLoading();

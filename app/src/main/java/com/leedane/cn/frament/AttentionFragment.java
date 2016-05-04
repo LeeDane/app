@@ -264,9 +264,9 @@ public class AttentionFragment extends BaseFragment{
         if(bundle != null){
             this.toUserId = bundle.getInt("toUserId");
             this.isLoginUser = bundle.getBoolean("isLoginUser");
-            if(mContext == null)
-                mContext = getActivity();
         }
+        if(mContext == null)
+            mContext = getActivity();
 
         if(isFirstLoading){
             //ToastUtil.success(mContext, "评论");

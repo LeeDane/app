@@ -102,11 +102,6 @@ public class PersonalActivity extends BaseActivity {
     private int mUserId;
 
     /**
-     * 登录的账号
-     */
-    //private String mLoginAccountName;
-
-    /**
      * 登录的账号id
      */
     private int mLoginAccountId;
@@ -256,8 +251,17 @@ public class PersonalActivity extends BaseActivity {
             setTitleViewText(mUserInfo.getString("account"));
         }
 
-        HttpRequestBean httpRequestBean = new  HttpRequestBean();
-        HashMap<String, Object> params = new HashMap<>();
+        if(mCurrentTab > 0 ){
+            //将第一个的背景颜色变成默认的
+            TextView preTextView = (TextView) mRadioGroup.getChildAt(0);
+            preTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.default_font));
+        }
+
+
+        //将当前tab的背景颜色变成默认的
+        TextView currentTextView = (TextView) mRadioGroup.getChildAt(mCurrentTab);
+        currentTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
+
         isCheckFanOrSignIn = true;
         if(mIsLoginUser){
             mTotalTabs = mRadioGroup.getChildCount();
@@ -266,7 +270,7 @@ public class PersonalActivity extends BaseActivity {
             mPersonalFan.setVisibility(View.GONE);
             SignInHandler.isSignIn(PersonalActivity.this);
         }else{
-            ToastUtil.success(PersonalActivity.this, "非登录用户");
+            //ToastUtil.success(PersonalActivity.this, "非登录用户");
             //把关注，收藏,私信隐藏掉
             mRadioGroup.removeViewsInLayout(4, 2);
             mTotalTabs = mRadioGroup.getChildCount();//获取当前剩下的标签数量

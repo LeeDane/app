@@ -93,10 +93,11 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
         if(bundle != null){
-            if(mContext == null)
-                mContext = getActivity();
             this.mid = bundle.getInt("tableId", 0);
         }
+        if(mContext == null)
+            mContext = getActivity();
+
         if(mContext == null)
             mContext = getActivity();
         if(activity == null)

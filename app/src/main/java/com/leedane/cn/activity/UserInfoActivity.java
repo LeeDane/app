@@ -28,6 +28,7 @@ import com.leedane.cn.adapter.UserInfoMenuAdapter;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.MenuBean;
 import com.leedane.cn.broadcast.UserInfoDataReceiver;
+import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.CollectionHandler;
 import com.leedane.cn.handler.CommonHandler;
@@ -42,6 +43,7 @@ import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
+import com.leedane.cn.volley.ImageCacheManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +60,7 @@ import java.util.List;
 public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiver.UpdateUserInfoDataListener {
 
     public static final String TAG = "UserInfoActivity";
+    private CircularImageView mUserPic;
     private TextView mScore;
     private TextView mComment;
     private TextView mFan;
@@ -161,10 +164,18 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         setTitleViewText(R.string.user_info);
         backLayoutVisible();
 
+        mUserPic = (CircularImageView)findViewById(R.id.user_info_pic);
         mScore = (TextView)findViewById(R.id.user_info_score);
         mComment = (TextView)findViewById(R.id.user_info_comment);
         mTransmit = (TextView)findViewById(R.id.user_info_transmit);
         mFan = (TextView)findViewById(R.id.user_info_fans);
+
+        String userPicPath = BaseApplication.getLoginUserPicPath();
+        if(StringUtil.isNotNull(userPicPath)){
+            ImageCacheManager.loadImage(userPicPath, mUserPic);
+        }else{
+            ToastUtil.failure(UserInfoActivity.this, "用户还没有上传头像");
+        }
 
         mListView = (ListView)findViewById(R.id.user_info_listview);
         List<MenuBean> menuBeans = new ArrayList<>();

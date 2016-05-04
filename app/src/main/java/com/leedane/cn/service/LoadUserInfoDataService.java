@@ -40,6 +40,11 @@ public class LoadUserInfoDataService  extends Service implements TaskListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        //service被杀死后重启将没有intent，这里不做进一步处理即可
+        if(intent == null){
+            return super.onStartCommand(intent, flags, startId);
+        }
         int userId = intent.getIntExtra("toUserId", 0);
         if(userId == toUserId){
             return super.onStartCommand(intent, flags, startId);

@@ -182,11 +182,12 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
         if(bundle != null){
-            if(mContext == null)
-                mContext = getActivity();
             this.mid = bundle.getInt("tableId", 0);
             this.hasImg = bundle.getBoolean("hasImg", false);
         }
+        if(mContext == null)
+            mContext = getActivity();
+
         initView();
         synchronizedData();
     }

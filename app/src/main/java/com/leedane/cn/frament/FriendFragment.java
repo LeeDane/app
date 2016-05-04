@@ -271,9 +271,10 @@ public class FriendFragment extends BaseFragment{
             this.itemSingleClick = true;
             this.type = bundle.getInt("type");
             this.toUserId = BaseApplication.getLoginUserId();
-            if(mContext == null)
-                mContext = getActivity();
         }
+        if(mContext == null)
+            mContext = getActivity();
+
         if(isFirstLoading){
             this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
             mAdapter = new FriendAdapter( mContext, mFriendBeans);

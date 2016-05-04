@@ -222,6 +222,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name="com.leedane.cn.activity.ChatActivity"
+            android:label="@string/chat"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name="com.leedane.cn.activity.ChatDetailActivity"
+            android:label="@string/chat_detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
         <!--  Jpush  -->
         <!-- Required SDK核心功能-->

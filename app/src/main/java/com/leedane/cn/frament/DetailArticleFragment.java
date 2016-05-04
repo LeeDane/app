@@ -61,9 +61,10 @@ public class DetailArticleFragment extends Fragment{
         if(bundle != null){
             mBlogId = bundle.getInt("blogId");
             mIndex = bundle.getInt("index");
-            if(mContext == null)
-                mContext = getActivity();
         }
+        if(mContext == null)
+            mContext = getActivity();
+
         if(isFirstLoading){
             mWebView = (WebView)mRootView.findViewById(R.id.detail_webview);
             mProgressBar = (ProgressBar)mRootView.findViewById(R.id.detail_progressbar);

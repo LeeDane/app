@@ -2,7 +2,6 @@ package com.leedane.cn.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -12,21 +11,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.leedane.cn.bean.HttpRequestBean;
-import com.leedane.cn.database.BaseSQLiteDatabase;
 import com.leedane.cn.File.FileBean;
 import com.leedane.cn.adapter.FileAdapter;
+import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.database.BaseSQLiteDatabase;
 import com.leedane.cn.database.BaseSQLiteOpenHelper;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
-import com.leedane.cn.util.SharedPreferenceUtil;
-
-import org.json.JSONObject;
+import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,10 +48,7 @@ public class FileActivity extends BaseActivity {
     private FileAdapter mAdapter;
     private List<FileBean> mFiles;
     private BaseSQLiteDatabase sqLiteDatabase;
-
-    private JSONObject mUserInfo;
     private Intent currentIntent;
-    private int mLoginAccountId;
 
     /**
      * 上传文件的imageview
@@ -66,7 +60,7 @@ public class FileActivity extends BaseActivity {
         setContentView(R.layout.activity_file);
         currentIntent = getIntent();
         //检查是否登录
-        checkedIsLogin();
+        checkedIsLogin("com.leedane.cn.activity.FileActivity");
 
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.nav_file);
@@ -116,7 +110,7 @@ public class FileActivity extends BaseActivity {
         params.put("create_time", DateUtil.DateToString(new Date()));
         params.put("create_user_id", 1);
         sqLiteDatabase.insert("t_file", params);
-        Cursor cursor = sqLiteDatabase.rowQuery("select * from "+ BaseSQLiteOpenHelper.TABLE_FILE+" where create_user_id =? order by id desc", new String[]{String.valueOf(mLoginAccountId)});
+        Cursor cursor = sqLiteDatabase.rowQuery("select * from "+ BaseSQLiteOpenHelper.TABLE_FILE+" where create_user_id =? order by id desc", new String[]{String.valueOf(BaseApplication.getLoginUserId())});
         if(cursor != null){
             String fileName,createTime;
             String id = "";
@@ -153,31 +147,6 @@ public class FileActivity extends BaseActivity {
 
     }
 
-    /**
-     * 检查是否登录
-     */
-    private void checkedIsLogin() {
-        mUserInfo = SharedPreferenceUtil.getUserInfo(getApplicationContext());
-        //判断是否有缓存用户信息
-        if(mUserInfo == null || !mUserInfo.has("account") ){
-            Intent it = new Intent(FileActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.FileActivity");
-            it.setData(currentIntent.getData());
-            startActivity(it);
-            FileActivity.this.finish();
-            return;
-        }
-
-        try {
-            //mLoginAccountName = mUserInfo.getString("account");
-            mLoginAccountId = mUserInfo.getInt("id");
-            Toast.makeText(getBaseContext(), "mLoginAccountId" +mLoginAccountId, Toast.LENGTH_SHORT).show();
-        }catch (Exception e){
-            Log.i(TAG, "获取缓存的用户名称为空");
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -204,7 +173,7 @@ public class FileActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == IS_UPLOAD_FILE) {
 
-                Toast.makeText(FileActivity.this, "是否有上传了文件?", Toast.LENGTH_LONG).show();
+                ToastUtil.failure(FileActivity.this, "是否有上传了文件?");
             }
         }
 
@@ -223,10 +192,10 @@ public class FileActivity extends BaseActivity {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case 1:
-                Toast.makeText(FileActivity.this, mClickPosition + "-----"+ item.getTitle(), Toast.LENGTH_LONG).show();
+                ToastUtil.success(FileActivity.this, mClickPosition + "-----" + item.getTitle());
                 break;
             case 2:
-                Toast.makeText(FileActivity.this, mClickPosition + "-----"+ item.getTitle(), Toast.LENGTH_LONG).show();
+                ToastUtil.success(FileActivity.this, mClickPosition + "-----" + item.getTitle());
                 break;
         }
         return super.onContextItemSelected(item);

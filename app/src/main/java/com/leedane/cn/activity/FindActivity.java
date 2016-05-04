@@ -50,11 +50,12 @@ public class FindActivity extends BaseActivity implements FindAdapter.OnRecycler
         mRecyclerView.setLayoutManager(layoutManager);
 
         findBeans.add(new MenuBean(R.drawable.menu_circle_of_friends, getStringResource(R.string.circle_of_friend)));
+        findBeans.add(new MenuBean(R.drawable.no_user_pic, getStringResource(R.string.chat)));
         findBeans.add(new MenuBean(R.drawable.menu_friends, getStringResource(R.string.my_friends)));
         findBeans.add(new MenuBean(R.drawable.qr_code, getStringResource(R.string.sao_yi_sao)));
         findBeans.add(new MenuBean(R.drawable.no_user, getStringResource(R.string.yao_yi_yao)));
         findBeans.add(new MenuBean(R.drawable.menu_address_list, getStringResource(R.string.address_list)));
-        findBeans.add(new MenuBean(R.drawable.no_user_pic, getStringResource(R.string.close_to_you)));
+
         mAdapter = new FindAdapter(findBeans);
         mAdapter.setOnRecyclerViewListener(this);
         mRecyclerView.setAdapter(mAdapter);
@@ -79,6 +80,10 @@ public class FindActivity extends BaseActivity implements FindAdapter.OnRecycler
         }else if(title.equalsIgnoreCase(getStringResource(R.string.address_list))){//通讯录
             Intent intent = new Intent();
             intent.setClass(FindActivity.this, AddressListActivity.class);
+            startActivity(intent);
+        }else if(title.equalsIgnoreCase(getStringResource(R.string.chat))){//聊天
+            Intent intent = new Intent();
+            intent.setClass(FindActivity.this, ChatActivity.class);
             startActivity(intent);
         }
     }
