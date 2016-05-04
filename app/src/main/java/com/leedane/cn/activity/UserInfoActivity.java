@@ -6,10 +6,12 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.adapter.UserInfoMenuAdapter;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.MenuBean;
+import com.leedane.cn.broadcast.UserInfoDataReceiver;
 import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.CollectionHandler;
 import com.leedane.cn.handler.CommonHandler;
@@ -52,10 +55,13 @@ import java.util.List;
  * 用户中心的activity
  * Created by LeeDane on 2016/4/14.
  */
-public class UserInfoActivity extends BaseActivity{
+public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiver.UpdateUserInfoDataListener {
 
     public static final String TAG = "UserInfoActivity";
-    //private ListView mUserInfoListView;
+    private TextView mScore;
+    private TextView mComment;
+    private TextView mFan;
+    private TextView mTransmit;
 
     /**
      * 发送心情的imageview
@@ -75,6 +81,8 @@ public class UserInfoActivity extends BaseActivity{
 
     private ListView mListView;
     private UserInfoMenuAdapter mAdapter;
+
+    private UserInfoDataReceiver userInfoDataReceive = new UserInfoDataReceiver();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +91,21 @@ public class UserInfoActivity extends BaseActivity{
         checkedIsLogin();
         getUserInfoData();
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userInfoDataReceive.setUpdateUserInfoDataListener(this);
+        //注册广播
+        IntentFilter counterActionFilter = new IntentFilter("com.leedane.cn.broadcast.UserInfoDataReceiver");
+        registerReceiver(userInfoDataReceive, counterActionFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(userInfoDataReceive);
     }
 
     /**
@@ -124,6 +147,9 @@ public class UserInfoActivity extends BaseActivity{
      * 初始化控件
      */
     private void initView() {
+
+        JSONObject jsonObject = SharedPreferenceUtil.getUserInfoData(getApplicationContext());
+        updateUserInfoData(jsonObject);
         //mUserInfoListView = (ListView)findViewById(R.id.user_info_listview);
         //显示标题栏的发送心情的图片按钮
         mRightImg = (ImageView)findViewById(R.id.view_right_img);
@@ -134,6 +160,11 @@ public class UserInfoActivity extends BaseActivity{
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.user_info);
         backLayoutVisible();
+
+        mScore = (TextView)findViewById(R.id.user_info_score);
+        mComment = (TextView)findViewById(R.id.user_info_comment);
+        mTransmit = (TextView)findViewById(R.id.user_info_transmit);
+        mFan = (TextView)findViewById(R.id.user_info_fans);
 
         mListView = (ListView)findViewById(R.id.user_info_listview);
         List<MenuBean> menuBeans = new ArrayList<>();
@@ -270,5 +301,33 @@ public class UserInfoActivity extends BaseActivity{
     public void dismissQrCodeDialog(){
         if(mQrCodeDialog != null && mQrCodeDialog.isShowing())
             mQrCodeDialog.dismiss();
+    }
+
+    @Override
+    public void updateUserInfoData(final JSONObject jsonObject) {
+            if(jsonObject != null){
+                /**
+                 * 延迟1秒钟后去加载数据
+                 */
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+                            if(jsonObject.has("scores"))
+                                mScore.setText(String.valueOf(jsonObject.getInt("scores")));
+                            if(jsonObject.has("fans"))
+                                mFan.setText(String.valueOf(jsonObject.getInt("fans")));
+                            if(jsonObject.has("comments"))
+                                mComment.setText(String.valueOf(jsonObject.getInt("comments")));
+                            if(jsonObject.has("transmits"))
+                                mTransmit.setText(String.valueOf(jsonObject.getInt("transmits")));
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, 100);
+
+            }
+
     }
 }

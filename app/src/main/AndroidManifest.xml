@@ -147,7 +147,8 @@
         <!--  暂时使用这个adjustPan来解决，感觉不是很好的方式  -->
         <activity
             android:name="com.leedane.cn.activity.MoodDetailActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:configChanges="keyboardHidden|orientation"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:label="@string/mood_detail"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -315,6 +316,12 @@
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
         <meta-data android:name="JPUSH_APPKEY" android:value="24a548f53d47a3d68498dbcc" /> <!--  </>值来自开发者平台取得的AppKey-->
 
+        <!-- 无序广播注册获取用户的数据信息 -->
+        <receiver android:name="com.leedane.cn.broadcast.UserInfoDataReceiver">
+            <intent-filter >
+                <action android:name="com.leedane.cn.broadcast.UserInfoDataReceiver"/>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name="com.leedane.cn.activity.MipcaActivityCapture"

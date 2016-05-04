@@ -10,6 +10,7 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
@@ -43,7 +44,7 @@ public abstract class BaseFragment extends Fragment implements TaskListener, Vie
     @Override
     public void taskFinished(TaskType type, Object result) {
         if(result instanceof Error){
-            Toast.makeText(getActivity(), ((Error) result).getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(BaseApplication.newInstance(), ((Error) result).getMessage(), Toast.LENGTH_SHORT).show();
             dismissLoadingDialog();
             return;
         }

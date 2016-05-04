@@ -13,6 +13,7 @@ import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.NotificationUtil;
+import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -72,12 +73,19 @@ public class LoadUserInfoDataService  extends Service implements TaskListener {
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 //获取到数据
                 if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
-                    saveError(jsonObject.getString("message"));
+                    //saveError(jsonObject.getString("message"));
+                    SharedPreferenceUtil.saveUserInfoData(getApplicationContext(), jsonObject.toString());
+                    //使用静态的方式注册广播，可以使用显示意图进行发送广播
+                    Intent broadcast = new Intent("com.leedane.cn.broadcast.UserInfoDataReceiver");
+                    broadcast.putExtra("data", jsonObject.getString("message"));
+                    sendBroadcast(broadcast,null);
                 }else{
                     ToastUtil.failure(LoadUserInfoDataService.this, jsonObject);
                     saveError(jsonObject.getString("message"));
                 }
             }catch (JSONException e){
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

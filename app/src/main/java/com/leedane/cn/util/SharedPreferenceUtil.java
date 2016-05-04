@@ -255,4 +255,39 @@ public class SharedPreferenceUtil {
         editor.commit();*/
         saveMoodDraft(context, "" , "");
     }
+
+    /**
+     * 保存用户数据
+     *
+     * @param context
+     * @param userInfo
+     * @throws Exception
+     */
+    public static void saveUserInfoData(Context context, String userInfo) throws Exception {
+        SharedPreferences preferences = context.getSharedPreferences(ConstantsUtil.STRING_USERINFODATA, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(ConstantsUtil.USERINFODATA, userInfo);
+        editor.commit();
+    }
+
+    /**
+     * 获取用户数据，以jsonObject对象封装
+     *
+     * @param context
+     * @return
+     */
+    public static JSONObject getUserInfoData(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(ConstantsUtil.STRING_USERINFODATA, Context.MODE_PRIVATE);
+        String userinfo = preferences.getString(ConstantsUtil.USERINFODATA, null);
+        if (StringUtil.isNull(userinfo)) {
+            return null;
+        }
+        try {
+            return new JSONObject(userinfo);
+        } catch (JSONException e) {
+            Log.i(TAG, "获取缓存的用户信息出现异常");
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
