@@ -425,8 +425,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                             mBeans.addAll(temList);
                             first_id = mBeans.get(0).getId();
                             last_id = mBeans.get(mBeans.size() -1).getId();
-                            ToastUtil.success(getContext(), "此时图库开始ID：" + first_id + ",结束ID:" + last_id, Toast.LENGTH_LONG);
-
+                            //ToastUtil.success(getContext(), "此时图库开始ID：" + first_id + ",结束ID:" + last_id, Toast.LENGTH_LONG);
                             if(mPreMethod.equalsIgnoreCase("firstloading")){
                                 try {
                                     Thread.sleep(2000);
@@ -436,40 +435,39 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                             }
                             checkVisibility();
                         }
-
                         //checkVisibility();
                     }else{
 
                         if(mPreMethod.equalsIgnoreCase("firstloading")){
-                            Toast.makeText(getContext(), "您的图库还没有数据", Toast.LENGTH_LONG).show();
+                            ToastUtil.success(getContext(), "您的图库还没有数据");
                         }else{
-                            Toast.makeText(getContext(), "没有更多数据", Toast.LENGTH_LONG).show();
+                            ToastUtil.success(getContext(), "没有更多数据");
                         }
                     }
                 }else if(type == TaskType.DELETE_GALLERY){
                     JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
                     if(jsonObject != null && jsonObject.has("isSuccess")){
-                        Toast.makeText(getContext(), "移出图库成功!", Toast.LENGTH_LONG).show();
+                        ToastUtil.success(getContext(), "移出图库成功!");
                         loadMoreImage("firstloading", null);
                     }else{
-                        Toast.makeText(getContext(), "移出图库失败", Toast.LENGTH_LONG).show();
+                        ToastUtil.success(getContext(), "移出图库失败");
                     }
                 }else if(type == TaskType.ADD_REPORT){
                     JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
                     if(jsonObject != null && jsonObject.has("isSuccess")){
-                        Toast.makeText(getContext(), "已成功举报，我们会尽快处理", Toast.LENGTH_LONG).show();
+                        ToastUtil.success(getContext(), "已成功举报，我们会尽快处理");
                         //Toast.makeText(getContext(), "举报失败，请稍后重试"+(jsonObject.has("message") ? ",原因是：" + jsonObject.getString("message"):""), Toast.LENGTH_LONG).show();
                     }else{
-                        Toast.makeText(getContext(), "举报失败，请稍后重试"+(jsonObject.has("message") ? ",原因是：" + jsonObject.getString("message"):""), Toast.LENGTH_LONG).show();
+                        ToastUtil.success(getContext(), "举报失败，请稍后重试" + (jsonObject.has("message") ? ",原因是：" + jsonObject.getString("message") : ""));
                         //Toast.makeText(getContext(), "举报失败，请稍后重试", Toast.LENGTH_LONG).show();
                     }
                 }
             }else{
-                Toast.makeText(getContext(), "服务器返回信息为空", Toast.LENGTH_LONG).show();
+                ToastUtil.success(getContext(), "服务器返回信息为空");
             }
         }catch (JSONException e){
             e.printStackTrace();
-            Toast.makeText(getContext(), "服务器返回信息解析失败", Toast.LENGTH_LONG).show();
+            ToastUtil.success(getContext(), "服务器返回信息解析失败");
         }
 
     }

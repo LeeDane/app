@@ -23,6 +23,7 @@ import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.SystemUtil;
+import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONObject;
 
@@ -97,7 +98,7 @@ public class BaseActivity extends FragmentActivity implements TaskListener, View
     @Override
     public void taskFinished(TaskType type, Object result) {
         if(result instanceof Error){
-            Toast.makeText(getBaseContext(), ((Error) result).getMessage(), Toast.LENGTH_SHORT).show();
+            ToastUtil.failure(getBaseContext(), ((Error) result).getMessage(), Toast.LENGTH_SHORT);
             dismissLoadingDialog();
             return;
         }

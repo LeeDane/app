@@ -74,7 +74,7 @@ public class LoadUserInfoDataService  extends Service implements TaskListener {
                 //获取到数据
                 if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
                     //saveError(jsonObject.getString("message"));
-                    SharedPreferenceUtil.saveUserInfoData(getApplicationContext(), jsonObject.toString());
+                    SharedPreferenceUtil.saveUserInfoData(getApplicationContext(), jsonObject.getJSONArray("message").getJSONObject(0).toString());
                     //使用静态的方式注册广播，可以使用显示意图进行发送广播
                     Intent broadcast = new Intent("com.leedane.cn.broadcast.UserInfoDataReceiver");
                     broadcast.putExtra("data", jsonObject.getString("message"));

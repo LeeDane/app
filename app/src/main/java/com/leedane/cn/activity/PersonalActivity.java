@@ -148,6 +148,7 @@ public class PersonalActivity extends BaseActivity {
         mRightImg.setOnClickListener(this);
 
         mUserId = currentIntent.getIntExtra("userId", 0);
+        mCurrentTab = currentIntent.getIntExtra("currentTab", 0);
 
         if(mUserId <= 0){
             ToastUtil.success(PersonalActivity.this, "该用户不存在");
@@ -269,9 +270,6 @@ public class PersonalActivity extends BaseActivity {
             //把关注，收藏,私信隐藏掉
             mRadioGroup.removeViewsInLayout(4, 2);
             mTotalTabs = mRadioGroup.getChildCount();//获取当前剩下的标签数量
-//            mRadioGroup.removeViewAt(6);
-//            mRadioGroup.removeViewAt(7);
-//            mRadioGroup.removeViewAt(8);
             //当前不是登录用户，即是查看别人的个人中心，异步判断和登录用户是否是好友
             mPersonalSignIn.setVisibility(View.GONE);
             mPersonalFan.setVisibility(View.VISIBLE);
@@ -333,6 +331,7 @@ public class PersonalActivity extends BaseActivity {
         }
 
         mViewPager.setAdapter(new PersonalFragmentPagerAdapter(getSupportFragmentManager(), getBaseContext(), mFragments));
+        mViewPager.setCurrentItem(mCurrentTab);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {

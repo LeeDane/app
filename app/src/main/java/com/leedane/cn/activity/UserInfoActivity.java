@@ -305,29 +305,62 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
 
     @Override
     public void updateUserInfoData(final JSONObject jsonObject) {
-            if(jsonObject != null){
-                /**
-                 * 延迟1秒钟后去加载数据
-                 */
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try{
-                            if(jsonObject.has("scores"))
-                                mScore.setText(String.valueOf(jsonObject.getInt("scores")));
-                            if(jsonObject.has("fans"))
-                                mFan.setText(String.valueOf(jsonObject.getInt("fans")));
-                            if(jsonObject.has("comments"))
-                                mComment.setText(String.valueOf(jsonObject.getInt("comments")));
-                            if(jsonObject.has("transmits"))
-                                mTransmit.setText(String.valueOf(jsonObject.getInt("transmits")));
-                        }catch (JSONException e){
-                            e.printStackTrace();
+        if(jsonObject != null){
+            /**
+             * 延迟1秒钟后去加载数据
+             */
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try{
+                        if(jsonObject.has("userId")){
+                            if(BaseApplication.getLoginUserId() == jsonObject.getInt("userId")){
+                                if(jsonObject.has("scores"))
+                                    mScore.setText(String.valueOf(jsonObject.getInt("scores")));
+                                if(jsonObject.has("fans"))
+                                    mFan.setText(String.valueOf(jsonObject.getInt("fans")));
+                                if(jsonObject.has("comments"))
+                                    mComment.setText(String.valueOf(jsonObject.getInt("comments")));
+                                if(jsonObject.has("transmits"))
+                                    mTransmit.setText(String.valueOf(jsonObject.getInt("transmits")));
+                            }
                         }
+                    }catch (JSONException e){
+                        e.printStackTrace();
                     }
-                }, 100);
+                }
+            }, 100);
+        }
+    }
 
-            }
+    /**
+     * 启动个人中心的评论
+     * @param view
+     */
+    public void startPersonalComment(View view){
+        Intent it = new Intent(UserInfoActivity.this, PersonalActivity.class);
+        it.putExtra("currentTab", 1);
+        it.putExtra("userId", BaseApplication.getLoginUserId());
+        startActivity(it);
+    }
 
+    /**
+     * 启动个人中心的转发
+     * @param view
+     */
+    public void startPersonalTransmit(View view){
+        Intent it = new Intent(UserInfoActivity.this, PersonalActivity.class);
+        it.putExtra("currentTab", 2);
+        it.putExtra("userId", BaseApplication.getLoginUserId());
+        startActivity(it);
+    }
+
+    /**
+     * 启动个人中心的粉丝
+     * @param view
+     */
+    public void startPersonalFan(View view){
+        Intent it = new Intent(UserInfoActivity.this, FanActivity.class);
+        startActivity(it);
     }
 }
