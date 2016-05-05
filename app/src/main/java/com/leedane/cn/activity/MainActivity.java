@@ -322,8 +322,8 @@ public class MainActivity extends NavigationActivity
                     }
                 }
 
-                if(mUserInfo.has("head_path") && !StringUtil.isNull(mUserInfo.getString("head_path"))){
-                    ImageCacheManager.loadImage(mUserInfo.getString("head_path"), mHeadPortraitImageView );
+                if(mUserInfo.has("user_pic_path") && !StringUtil.isNull(mUserInfo.getString("user_pic_path"))){
+                    ImageCacheManager.loadImage(mUserInfo.getString("user_pic_path"), mHeadPortraitImageView );
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

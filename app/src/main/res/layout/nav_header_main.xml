@@ -36,9 +36,8 @@
         android:visibility="gone"
         android:layout_gravity="center"
         android:gravity="center"
-        android:src="@drawable/no_pic"
-        app:border_width="2dp"
-        app:border_color="#ffffff"/>
+        android:src="@drawable/error_cat"
+        app:border_width="2dp"/>
 
     <TextView
         android:id="@+id/textview_username"

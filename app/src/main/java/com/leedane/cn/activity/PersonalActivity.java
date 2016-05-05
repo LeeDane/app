@@ -236,7 +236,7 @@ public class PersonalActivity extends BaseActivity {
 
         mPersonalFans.setOnClickListener(this);
         //mPersonalPic.setImageBitmap(ImageUtil.getInstance().getBitmapByBase64());
-        String headPath = mUserInfo.getString("head_path");
+        String headPath = mUserInfo.getString("user_pic_path");
         if(StringUtil.isNotNull(headPath)){
             ImageCacheManager.loadImage(headPath, mPersonalPic);
         }else{
