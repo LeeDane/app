@@ -59,6 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import cn.jpush.android.api.BasicPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -166,6 +167,9 @@ public class MainActivity extends NavigationActivity
     private void initJPush(){
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+        /*BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(MainActivity.this);
+        builder.
+        JPushInterface.setDefaultPushNotificationBuilder();*/
         JPushInterface.setAlias(getApplicationContext(), "leedane_user_" + mLoginAccountId, new TagAliasCallback() {
             @Override
             public void gotResult(int responseCode, String s, Set<String> set) {

@@ -64,7 +64,8 @@ public class ChatAdapter extends BaseAdapter{
             myHolder.setmCreateTime((TextView) convertView.findViewById(R.id.chat_time));
             myHolder.setmAccount((TextView) convertView.findViewById(R.id.chat_account));
             myHolder.setmUserPicPath((CircularImageView) convertView.findViewById(R.id.chat_user_pic));
-            myHolder.setmContent((TextView)convertView.findViewById(R.id.chat_content));
+            myHolder.setmContent((TextView) convertView.findViewById(R.id.chat_content));
+            myHolder.setmNoReadNumber((TextView)convertView.findViewById(R.id.chat_no_read));
             convertView.setTag(myHolder);
         }else{
             myHolder = (MyHolder)convertView.getTag();
@@ -84,6 +85,7 @@ public class ChatAdapter extends BaseAdapter{
         }
         myHolder.getmAccount().setText(chatBean.getAccount());
         myHolder.getmContent().setText(chatBean.getContent());
+        myHolder.getmNoReadNumber().setText(String.valueOf(chatBean.getNoReadNumber()));
         return convertView;
     }
 
@@ -108,6 +110,10 @@ public class ChatAdapter extends BaseAdapter{
          */
         private TextView mCreateTime;
 
+        /**
+         * 未读取数量
+         */
+        private TextView mNoReadNumber;
 
         public TextView getmAccount() {
             return mAccount;
@@ -139,6 +145,14 @@ public class ChatAdapter extends BaseAdapter{
 
         public void setmUserPicPath(CircularImageView mUserPicPath) {
             this.mUserPicPath = mUserPicPath;
+        }
+
+        public TextView getmNoReadNumber() {
+            return mNoReadNumber;
+        }
+
+        public void setmNoReadNumber(TextView mNoReadNumber) {
+            this.mNoReadNumber = mNoReadNumber;
         }
     }
 }

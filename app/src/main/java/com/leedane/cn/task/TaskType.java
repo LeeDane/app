@@ -46,6 +46,8 @@ public enum TaskType {
     LOAD_MY_ATTENTION, //加载我关注的用户列表
     LOAD_COLLECTION, //加载收藏列表
     LOAD_CIRCLEOFFRIEND, //加载朋友圈数据
+    LOAD_SCORE, //加载积分历史列表
+    LOAD_LOGIN_HISTORY, //加载登录历史列表
     DO_LOGIN_PHONE, //手机登录
     DO_GET_LOGIN_CODE, //获取手机登录的验证码
     GET_APP_VERSION, //检查APP版本

@@ -29,6 +29,12 @@ public class ChatBean extends IdBean {
 	@SerializedName("create_time")
 	private String createTime;
 
+	/**
+	 * 未读取数量
+	 */
+	@SerializedName("no_read_number")
+	private int noReadNumber;
+
 	public String getContent() {
 		return content;
 	}
@@ -61,4 +67,11 @@ public class ChatBean extends IdBean {
 		this.createTime = createTime;
 	}
 
+	public int getNoReadNumber() {
+		return noReadNumber;
+	}
+
+	public void setNoReadNumber(int noReadNumber) {
+		this.noReadNumber = noReadNumber;
+	}
 }

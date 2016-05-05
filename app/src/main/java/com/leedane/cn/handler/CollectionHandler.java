@@ -31,7 +31,7 @@ public class CollectionHandler {
     }
 
     /**
-     * 获取赞的请求
+     * 获取收藏的请求
      * @param listener
      * @param params
      */

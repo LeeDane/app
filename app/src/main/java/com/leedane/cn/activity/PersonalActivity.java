@@ -27,8 +27,10 @@ import com.leedane.cn.customview.RightBorderTextView;
 import com.leedane.cn.frament.AttentionFragment;
 import com.leedane.cn.frament.CollectionFragment;
 import com.leedane.cn.frament.CommentOrTransmitFragment;
+import com.leedane.cn.frament.LoginHistoryFragment;
 import com.leedane.cn.frament.PersonalFragment;
 import com.leedane.cn.frament.PersonalMoodFragment;
+import com.leedane.cn.frament.ScoreFragment;
 import com.leedane.cn.frament.ZanFragment;
 import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.handler.SignInHandler;
@@ -272,7 +274,7 @@ public class PersonalActivity extends BaseActivity {
         }else{
             //ToastUtil.success(PersonalActivity.this, "非登录用户");
             //把关注，收藏,私信隐藏掉
-            mRadioGroup.removeViewsInLayout(4, 2);
+            mRadioGroup.removeViewsInLayout(4, 4);
             mTotalTabs = mRadioGroup.getChildCount();//获取当前剩下的标签数量
             //当前不是登录用户，即是查看别人的个人中心，异步判断和登录用户是否是好友
             mPersonalSignIn.setVisibility(View.GONE);
@@ -329,6 +331,10 @@ public class PersonalActivity extends BaseActivity {
                 bundle.putInt("toUserId", mUserInfo.getInt("id"));
                 bundle.putBoolean("isLoginUser", mIsLoginUser);
                 mFragments.add(CollectionFragment.newInstance(bundle));
+            }else if(tabText.equalsIgnoreCase(getStringResource(R.string.personal_login_history))) {//登录历史
+                mFragments.add(LoginHistoryFragment.newInstance(new Bundle()));
+            }else if(tabText.equalsIgnoreCase(getStringResource(R.string.personal_score))) {//积分历史
+                mFragments.add(ScoreFragment.newInstance(new Bundle()));
             }else{
                 mFragments.add(new PersonalFragment(i, PersonalActivity.this));
             }

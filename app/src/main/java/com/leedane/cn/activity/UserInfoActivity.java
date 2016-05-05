@@ -345,6 +345,17 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
     }
 
     /**
+     * 启动个人中心积分
+     * @param view
+     */
+    public void startPersonalScore(View view){
+        Intent it = new Intent(UserInfoActivity.this, PersonalActivity.class);
+        it.putExtra("currentTab", 7);
+        it.putExtra("userId", BaseApplication.getLoginUserId());
+        startActivity(it);
+    }
+
+    /**
      * 启动个人中心的评论
      * @param view
      */

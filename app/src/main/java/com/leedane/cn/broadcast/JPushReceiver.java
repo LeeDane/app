@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.leedane.cn.activity.MainActivity;
 import com.leedane.cn.activity.NotificationActivity;
+import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONException;
@@ -110,7 +111,7 @@ public class JPushReceiver extends BroadcastReceiver {
 			String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
 			Intent msgIntent = new Intent(MainActivity.MESSAGE_RECEIVED_ACTION);
 			msgIntent.putExtra(MainActivity.KEY_MESSAGE, message);
-			if (!ExampleUtil.isEmpty(extras)) {
+			if (StringUtil.isNotNull(extras)) {
 				try {
 					JSONObject extraJson = new JSONObject(extras);
 					if (null != extraJson && extraJson.length() > 0) {

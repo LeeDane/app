@@ -143,6 +143,26 @@
                 android:onClick="tabClick"
                 android:textColor="@color/default_font"
                 android:text="@string/personal_collection"/>
+            <com.leedane.cn.customview.RightBorderTextView
+                android:id="@+id/personal_login_history"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:onClick="tabClick"
+                android:textColor="@color/default_font"
+                android:text="@string/personal_login_history"/>
+            <com.leedane.cn.customview.RightBorderTextView
+                android:id="@+id/personal_sign_in_history"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:clickable="true"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:onClick="tabClick"
+                android:textColor="@color/default_font"
+                android:text="@string/personal_score"/>
         </RadioGroup>
     </HorizontalScrollView >
     <android.support.v4.view.ViewPager

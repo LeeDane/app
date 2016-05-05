@@ -13,10 +13,12 @@ import com.leedane.cn.bean.HttpResponseCommonBean;
 import com.leedane.cn.bean.HttpResponseFanBean;
 import com.leedane.cn.bean.HttpResponseFriendBean;
 import com.leedane.cn.bean.HttpResponseGalleryBean;
+import com.leedane.cn.bean.HttpResponseLoginHistoryBean;
 import com.leedane.cn.bean.HttpResponseMoodBean;
 import com.leedane.cn.bean.HttpResponseMoodImagesBean;
 import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.bean.HttpResponseNotificationBean;
+import com.leedane.cn.bean.HttpResponseScoreBean;
 import com.leedane.cn.bean.HttpResponseZanBean;
 
 /**
@@ -75,10 +77,42 @@ public class BeanConvertUtil {
     public static HttpResponseCommentOrTransmitBean strConvertToCommentOrTransmitBeans(String str){
         if(StringUtil.isNull(str)) return null;
         try{
-            Log.d(TAG, "响应HttpResponseCommentOrTransmitBeanBean对象开始转换。。。");
+            Log.d(TAG, "响应HttpResponseCommentOrTransmitBean对象开始转换。。。");
             return gson.fromJson(str, HttpResponseCommentOrTransmitBean.class);
         }catch (Exception e){
             Log.d(TAG, "响应HttpResponseCommentOrTransmitBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将字符串转化成List<ScoreBean>集合
+     * @param str
+     * @return
+     */
+    public static HttpResponseScoreBean strConvertToScoreBeans(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应HttpResponseScoreBean对象开始转换。。。");
+            return gson.fromJson(str, HttpResponseScoreBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应HttpResponseScoreBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将字符串转化成List<LoginHistoryBean>集合
+     * @param str
+     * @return
+     */
+    public static HttpResponseLoginHistoryBean strConvertToLoginHistoryBeans(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应HttpResponseLoginHistoryBean对象开始转换。。。");
+            return gson.fromJson(str, HttpResponseLoginHistoryBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应HttpResponseLoginHistoryBean对象转换失败");
         }
         return null;
     }

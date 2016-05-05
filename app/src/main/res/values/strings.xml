@@ -106,6 +106,8 @@
     <string name="personal_praise">赞</string>
     <string name="personal_collection">收藏</string>
     <string name="personal_notification">通知</string>
+    <string name="personal_score">积分</string>
+    <string name="personal_login_history">登录历史</string>
     <string name="personal_chat">私信</string>
     <string name="personal_gallery">图库</string>
     <string name="personal_info">基本信息</string>
