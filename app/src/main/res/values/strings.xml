@@ -242,5 +242,7 @@
     <!--  聊天   -->
     <string name="chat">聊天</string>
     <string name="chat_detail">聊天详情</string>
+    <string name="chat_detail_layout_left">layout_left</string>
+    <string name="chat_detail_layout_right">layout_right</string>
 
 </resources>

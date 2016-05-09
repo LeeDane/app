@@ -2,7 +2,6 @@ package com.leedane.cn.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +25,7 @@ import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.customview.AutoLinkTextView;
 import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.customview.RightBorderTextView;
-import com.leedane.cn.frament.PersonalMoodFragment;
+import com.leedane.cn.fragment.PersonalMoodFragment;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.ConstantsUtil;

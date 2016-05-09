@@ -6,13 +6,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.frament.FriendFragment;
+import com.leedane.cn.fragment.FriendFragment;
 import com.leedane.cn.leedaneAPP.R;
-
-import java.util.HashMap;
 
 /**
  * 我的好友Activity

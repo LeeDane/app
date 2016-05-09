@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
-import com.leedane.cn.frament.DetailArticleFragment;
-import com.leedane.cn.frament.CommentOrTransmitFragment;
+import com.leedane.cn.fragment.DetailArticleFragment;
+import com.leedane.cn.fragment.CommentOrTransmitFragment;
 import com.leedane.cn.util.SerializableMap;
 
 import java.util.HashMap;

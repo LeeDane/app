@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.frament.NotificationFragment;
+import com.leedane.cn.fragment.NotificationFragment;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.EnumUtil;
 

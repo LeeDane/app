@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="@dimen/default_padding">
+    <com.leedane.cn.customview.CircularImageView
+        android:id="@+id/chat_detail_user_pic"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:maxWidth="40dp"
+        android:maxHeight="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:src="@drawable/head"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="5"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/chat_detail_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:text="@string/no_text"/>
+        <TextView
+            android:id="@+id/chat_detail_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="@string/no_text"/>
+    </LinearLayout>
+
+    <com.leedane.cn.customview.CircularImageView
+        android:id="@+id/chat_detail_hidden"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:maxWidth="40dp"
+        android:maxHeight="40dp"
+        android:layout_height="40dp"
+        android:visibility="invisible"/>
+
+</LinearLayout>

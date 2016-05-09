@@ -1,4 +1,4 @@
-package com.leedane.cn.frament;
+package com.leedane.cn.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,13 +7,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.leedane.cn.adapter.LoginHistotyAdapter;
-import com.leedane.cn.bean.HttpResponseLoginHistoryBean;
-import com.leedane.cn.bean.LoginHistoryBean;
-import com.leedane.cn.handler.LoginHistoryHandler;
+import com.leedane.cn.adapter.NotificationAdapter;
+import com.leedane.cn.bean.HttpResponseNotificationBean;
+import com.leedane.cn.bean.NotificationBean;
+import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.handler.NotificationHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
@@ -24,25 +27,33 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 登录历史记录列表的fragment类
- * Created by LeeDane on 2016/5/5.
+ * 通知消息列表的fragment类
+ * Created by LeeDane on 2016/4/27.
  */
-public class LoginHistoryFragment extends BaseFragment{
+public class NotificationFragment extends BaseFragment{
 
-    public static final String TAG = "LoginHistoryFragment";
+    public static final String TAG = "NotificationFragment";
     private Context mContext;
     private ListView mListView;
-    private LoginHistotyAdapter mAdapter;
-    private List<LoginHistoryBean> mLoginHistoryBeans = new ArrayList<>();
+    private NotificationAdapter mAdapter;
+    private List<NotificationBean> mNotificationBeans = new ArrayList<>();
 
     private SwipeRefreshLayout mSwipeLayout;
     private View mRootView;
 
-    public LoginHistoryFragment() {
+    //是否是第一次加载
+    private boolean isFirstLoading = true;
+
+    /**
+     * 通知消息的类型
+     */
+    private String mType;
+
+    public NotificationFragment(){
     }
 
-    public static final LoginHistoryFragment newInstance(Bundle bundle){
-        LoginHistoryFragment fragment = new LoginHistoryFragment();
+    public static final NotificationFragment newInstance(Bundle bundle){
+        NotificationFragment fragment = new NotificationFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -61,48 +72,45 @@ public class LoginHistoryFragment extends BaseFragment{
     public void taskFinished(TaskType type, Object result) {
         isLoading = false;
         if(result instanceof Error){
-            if((type == TaskType.LOAD_LOGIN_HISTORY) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
+            if(type == TaskType.LOAD_NOTIFICATION && !mPreLoadMethod.equalsIgnoreCase("uploading")){
                 mListViewFooter.setText(getResources().getString(R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
         try{
-            if(type == TaskType.LOAD_LOGIN_HISTORY){
-                if(mSwipeLayout !=null && mSwipeLayout.isRefreshing())
-                    mSwipeLayout.setRefreshing(false);//下拉刷新组件停止刷新
-
-                HttpResponseLoginHistoryBean httpResponseLoginHistoryBean = BeanConvertUtil.strConvertToLoginHistoryBeans(String.valueOf(result));
-                if(httpResponseLoginHistoryBean != null && httpResponseLoginHistoryBean.isSuccess()){
-                    List<LoginHistoryBean> loginHistoryBeans = httpResponseLoginHistoryBean.getMessage();
-                    if(loginHistoryBeans != null && loginHistoryBeans.size() > 0){
+            if(type == TaskType.LOAD_NOTIFICATION){
+                mSwipeLayout.setRefreshing(false);
+                HttpResponseNotificationBean responseNotificationBean = BeanConvertUtil.strConvertToNotificationBeans(String.valueOf(result));
+                if(responseNotificationBean != null && responseNotificationBean.isSuccess()){
+                    List<NotificationBean> NotificationBeans =  responseNotificationBean.getMessage();
+                    if(NotificationBeans != null && NotificationBeans.size() > 0){
                         //临时list
-                        List<LoginHistoryBean> temList = new ArrayList<>();
+                        List<NotificationBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.removeAllViewsInLayout();
-                            mLoginHistoryBeans.clear();
+                            mNotificationBeans.clear();
                         }
                         //将新的数据和以前的数据进行叠加
                         if(mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            for(int i = loginHistoryBeans.size() -1; i>= 0 ; i--){
-                                temList.add(loginHistoryBeans.get(i));
+                            for(int i = NotificationBeans.size() -1; i>= 0 ; i--){
+                                temList.add(NotificationBeans.get(i));
                             }
-                            temList.addAll(mLoginHistoryBeans);
+                            temList.addAll(mNotificationBeans);
                         }else{
-                            temList.addAll(mLoginHistoryBeans);
-                            temList.addAll(loginHistoryBeans);
+                            temList.addAll(mNotificationBeans);
+                            temList.addAll(NotificationBeans);
                         }
-                        Log.i(TAG, "原来的大小：" + mLoginHistoryBeans.size());
+                        Log.i(TAG, "原来的大小：" + mNotificationBeans.size());
                         if(mAdapter == null) {
-                            mAdapter = new LoginHistotyAdapter(mContext, mLoginHistoryBeans);
+                            mAdapter = new NotificationAdapter(mContext, mNotificationBeans);
                             mListView.setAdapter(mAdapter);
                         }
                         mAdapter.refreshData(temList);
-                        //Log.i(TAG, "后来的大小：" + mCollectionBeans.size());
-                        //ToastUtil.success(mContext, "成功加载" + CollectionBeans.size() + "条数据,总数是：" + mCollectionBeans.size(), Toast.LENGTH_SHORT);
-                        int size = mLoginHistoryBeans.size();
 
-                        mFirstId = mLoginHistoryBeans.get(0).getId();
-                        mLastId = mLoginHistoryBeans.get(size - 1).getId();
+                        int size = mNotificationBeans.size();
+
+                        mFirstId = mNotificationBeans.get(0).getId();
+                        mLastId = mNotificationBeans.get(size - 1).getId();
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
@@ -112,33 +120,31 @@ public class LoginHistoryFragment extends BaseFragment{
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mLoginHistoryBeans.clear();
-                            mAdapter.refreshData(new ArrayList<LoginHistoryBean>());
-                            //mListView.addHeaderView(viewHeader);
+                            mNotificationBeans.clear();
+                            mAdapter.refreshData(new ArrayList<NotificationBean>());
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                             mListView.removeFooterView(viewFooter);
                             mListView.addFooterView(viewFooter, null, false);
                             mListViewFooter.setText(getResources().getString(R.string.no_load_more));
                         }else {
-                            ToastUtil.success(mContext, getResources().getString(R.string.no_load_more));
+                            ToastUtil.success(mContext, getResources().getString(R.string.no_load_more), Toast.LENGTH_LONG);
                         }
                     }
                 }else{
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mLoginHistoryBeans.clear();
-                            mAdapter.refreshData(new ArrayList<LoginHistoryBean>());
+                            mNotificationBeans.clear();
+                            mAdapter.refreshData(new ArrayList<NotificationBean>());
                         }
                         mListView.removeFooterView(viewFooter);
-                        mListView.addFooterView(viewFooter, null, false);
+                        mListView.addFooterView(viewFooter, null,false);
                         mListViewFooter.setText(getResources().getString(R.string.load_more_error));
                         mListViewFooter.setOnClickListener(this);
-                    }else{
-                        ToastUtil.failure(mContext);
                     }
                 }
-                return;
+            }else{
+                ToastUtil.failure(mContext, "数据加载失败", Toast.LENGTH_SHORT);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -147,23 +153,21 @@ public class LoginHistoryFragment extends BaseFragment{
     /**
      * 发送第一次刷新的任务
      */
-    @Override
     protected void sendFirstLoading(){
-
         mPreLoadMethod = "firstloading";
         mFirstId = 0;
         mLastId = 0;
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageSize", 10);
         params.put("method", mPreLoadMethod);
-        //第一次操作取消全部数据
-        taskCanceled(TaskType.LOAD_LOGIN_HISTORY);
-        LoginHistoryHandler.getLoginHistorysRequest(this, params);
+        params.put("type", mType);
+        taskCanceled(TaskType.LOAD_NOTIFICATION);
+        NotificationHandler.getNotificationsRequest(NotificationFragment.this, params);
     }
+
     /**
      * 发送向上刷新的任务
      */
-    @Override
     protected void sendUpLoading(){
         //没有fistID时当作第一次请求加载
         if(mFirstId == 0){
@@ -178,14 +182,14 @@ public class LoginHistoryFragment extends BaseFragment{
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
-        //向上刷新也先取消所有的加载操作
-        taskCanceled(TaskType.LOAD_LOGIN_HISTORY);
-        LoginHistoryHandler.getLoginHistorysRequest(this, params);
+        params.put("type", mType);
+        //获取当前是评论还是转发
+        taskCanceled(TaskType.LOAD_NOTIFICATION);
+        NotificationHandler.getNotificationsRequest(NotificationFragment.this, params);
     }
     /**
      * 发送向下刷新的任务
      */
-    @Override
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
         if(getResources().getString(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
@@ -200,59 +204,74 @@ public class LoginHistoryFragment extends BaseFragment{
         mListViewFooter.setText(getResources().getString(R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
-
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("pageSize", 5);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
-        taskCanceled(TaskType.LOAD_LOGIN_HISTORY);
-        LoginHistoryHandler.getLoginHistorysRequest(this, params);
+        params.put("type", mType);
+        taskCanceled(TaskType.LOAD_NOTIFICATION);
+        NotificationHandler.getNotificationsRequest(NotificationFragment.this, params);
     }
 
     /**
      * 加载失败后点击加载更多
      * @param view
      */
-    @Override
-    protected void sendLoadAgain(View view){
+    public void sendLoadAgain(View view){
         //只有在加载失败或者点击加载更多的情况下点击才有效
         if(getResources().getString(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
                 || getResources().getString(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
-
+            ToastUtil.success(mContext, "请求重新加载", Toast.LENGTH_SHORT);
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10: 5);
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10 : 5);
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
+            params.put("type", mType);
             mListViewFooter.setText(getResources().getString(R.string.loading));
-            taskCanceled(TaskType.LOAD_LOGIN_HISTORY);
-            LoginHistoryHandler.getLoginHistorysRequest(this, params);
+            taskCanceled(TaskType.LOAD_NOTIFICATION);
+            NotificationHandler.getNotificationsRequest(NotificationFragment.this, params);
         }
-
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            mType = bundle.getString("type");
+        }
         if(mContext == null)
             mContext = getActivity();
-        sendFirstLoading();
-        //initFirstData();
-        this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
-        mAdapter = new LoginHistotyAdapter(mContext, mLoginHistoryBeans);
-        mListView.setOnScrollListener(new ListViewOnScrollListener());
-        //listview下方的显示
-        viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
-        mListView.addFooterView(viewFooter, null, false);
-        mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-        mListViewFooter.setOnClickListener(LoginHistoryFragment.this);//添加点击事件
-        mListViewFooter.setText(getResources().getString(R.string.loading));
 
-        mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_green_light);
+        if(isFirstLoading){
+            sendFirstLoading();
+            this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
+            mAdapter = new NotificationAdapter(mContext, mNotificationBeans);
+            mListView.setOnScrollListener(new ListViewOnScrollListener());
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    ToastUtil.success(mContext, "点击的位置是：" + position + ",内容：" + mNotificationBeans.get(position).getToUserAccount());
+                    CommonHandler.startDetailActivity(mContext, mNotificationBeans.get(position).getTableName(), mNotificationBeans.get(position).getTableId(), null);
+                }
+            });
+
+            //listview下方的显示
+            viewFooter = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer_item, null);
+            mListView.addFooterView(viewFooter, null, false);
+            mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
+            mListViewFooter.setOnClickListener(NotificationFragment.this);//添加点击事件
+            mListViewFooter.setText(getResources().getString(R.string.loading));
+
+            mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
+            mSwipeLayout.setOnRefreshListener(this);
+            mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                    android.R.color.holo_orange_light,
+                    android.R.color.holo_green_light);
+
+        }
         mListView.setAdapter(mAdapter);
        // mListView.setOnItemClickListener(this);
     }

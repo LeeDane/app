@@ -32,7 +32,8 @@ public class RelativeDateFormat {
         if (delta < 1L * ONE_MINUTE) {
             long seconds = toSeconds(delta);
             if(seconds <= 0){
-                return DateUtil.DateToString(date);
+               // return DateUtil.DateToString(date);
+                return JUST_NOW;
             }
             if(seconds < 10)
                 return JUST_NOW;

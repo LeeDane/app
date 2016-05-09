@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.activity.MainActivity;
 import com.leedane.cn.activity.NotificationActivity;
+import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -106,23 +108,32 @@ public class JPushReceiver extends BroadcastReceiver {
 	//send msg to MainActivity
 	private void processCustomMessage(Context context, Bundle bundle) {
 		ToastUtil.success(context, "极光推送这块代码被注释掉");
-		/*if (MainActivity.isForeground) {
-			String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-			String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-			Intent msgIntent = new Intent(MainActivity.MESSAGE_RECEIVED_ACTION);
-			msgIntent.putExtra(MainActivity.KEY_MESSAGE, message);
-			if (StringUtil.isNotNull(extras)) {
-				try {
-					JSONObject extraJson = new JSONObject(extras);
-					if (null != extraJson && extraJson.length() > 0) {
-						msgIntent.putExtra(MainActivity.KEY_EXTRAS, extras);
+		String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
+		String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
+		if(StringUtil.isNotNull(extras)){
+			try{
+				JSONObject jsonObject = new JSONObject(extras);
+				if (ChatDetailActivity.isForeground && ChatDetailActivity.toUserId == jsonObject.getInt("toUserId")) {
+					Intent msgIntent = new Intent(ChatDetailActivity.MESSAGE_RECEIVED_ACTION);
+					msgIntent.putExtra(ChatDetailActivity.KEY_MESSAGE, message);
+					if (StringUtil.isNotNull(extras)) {
+						try {
+							JSONObject extraJson = new JSONObject(extras);
+							if (null != extraJson && extraJson.length() > 0) {
+								msgIntent.putExtra(ChatDetailActivity.KEY_EXTRAS, extras);
+							}
+						} catch (JSONException e) {
+
+						}
+
 					}
-				} catch (JSONException e) {
-
+					context.sendBroadcast(msgIntent);
+				}else{
+					new NotificationUtil(1, context).sendActionNotification("聊天信息提示", message, "测试", 16, 0);
 				}
-
+			}catch (JSONException e){
+				e.printStackTrace();
 			}
-			context.sendBroadcast(msgIntent);
-		}*/
+		}
 	}
 }

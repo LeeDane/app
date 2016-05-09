@@ -1,12 +1,9 @@
-package com.leedane.cn.frament;
+package com.leedane.cn.fragment;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -25,7 +22,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.zxing.WriterException;
 import com.leedane.cn.activity.ImageDetailActivity;
 import com.leedane.cn.adapter.CommentOrTransmitAdapter;
 import com.leedane.cn.application.BaseApplication;
@@ -37,25 +33,21 @@ import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.bean.MoodImagesBean;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.handler.EncodingHandler;
 import com.leedane.cn.handler.PraiseHandler;
 import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
-import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
-import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;

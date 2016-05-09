@@ -21,6 +21,7 @@ public class BaseSQLiteDatabase {
 	private Context context;
 	private BaseSQLiteOpenHelper helper;
 	private int openType = 0; // 默认是getWritableDatabase()
+	private int friendId;//好友ID
 
 	// 返回的map集合提示信息，格式如{"isSuccess":true,"message":"操作成功！","other":"暂无附加信息"}
 	Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -50,6 +51,20 @@ public class BaseSQLiteDatabase {
 		this.helper = new BaseSQLiteOpenHelper(context, ConstantsUtil.DB_NAME);
 		this.openType = openType;
 	}
+
+	/**
+	 * 创建聊天详情表的专用构造器
+	 * @param context
+	 * @param openType
+	 * @param friendId 好友ID
+	 */
+	public BaseSQLiteDatabase(Context context, int openType, int friendId) {
+		this.context = context;
+		this.helper = new BaseSQLiteOpenHelper(context, ConstantsUtil.DB_NAME, friendId);
+		this.openType = openType;
+		this.friendId = friendId;
+	}
+
 	/**
 	 * 打开数据库，就是为Database db赋值
 	 * @return
@@ -127,7 +142,7 @@ public class BaseSQLiteDatabase {
 					this.openDatebase();  //打开数据库
 					db.beginTransaction(); //开始事务
 					db.update(tableName, values, whereClause, whereArgs);
-					db.endTransaction(); //结束事务
+					db.setTransactionSuccessful();//设置是为了将事务标记为成功，当结束事务时就会提交事务，不设将直接回滚
 				}else{
 					resultMap.put("message", "params转化成ContentValues有误!");
 					resultMap.put("isSuccess", this.isSuccess);
@@ -137,6 +152,7 @@ public class BaseSQLiteDatabase {
 			}catch(SQLException e){
 				Log.i(TAG, "更新表"+ tableName +"出错：" +e.getMessage()); // 打印异常信息
 			}finally{
+				db.endTransaction(); //结束事务
 				this.closeDataBase(); //关闭数据库连接
 			}
 		}
@@ -159,10 +175,11 @@ public class BaseSQLiteDatabase {
 				this.openDatebase();  //打开数据库
 				db.beginTransaction(); //开始事务
 				int i = db.delete(tableName, whereClause, whereArgs);
-				db.endTransaction();  //结束事务
+				db.setTransactionSuccessful();//设置是为了将事务标记为成功，当结束事务时就会提交事务，不设将直接回滚
 			}catch(SQLException e){
 				Log.i(TAG, "删除表"+ tableName +"的"+ whereClause +"数据出错：" +e.getMessage()); // 打印异常信息
 			}finally{
+				db.endTransaction();  //结束事务
 				this.closeDataBase(); //关闭数据库连接
 			}
 		}
@@ -205,10 +222,11 @@ public class BaseSQLiteDatabase {
 				this.openDatebase(); //打开数据库连接
 				db.beginTransaction();  //开始事务
 				db.execSQL(sql, args);
-				db.endTransaction();  //结束事务
+				db.setTransactionSuccessful();//设置是为了将事务标记为成功，当结束事务时就会提交事务，不设将直接回滚
 			} catch (SQLException e) {
 				Log.i(TAG, "执行SQL语句'"+ sql +"'出错：" + e.getMessage()); // 打印异常信息
 			}finally{
+				db.endTransaction();  //结束事务
 				this.closeDataBase(); //关闭数据库
 			}
 		}

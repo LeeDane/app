@@ -1,21 +1,17 @@
-package com.leedane.cn.frament;
+package com.leedane.cn.fragment;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
-
-import java.util.HashMap;
 
 /**
  * 公共的fragment类

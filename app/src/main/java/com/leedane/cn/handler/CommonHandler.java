@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.leedane.cn.activity.AtFriendActivity;
+import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.activity.DetailActivity;
 import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.activity.NotificationActivity;
@@ -29,6 +30,19 @@ import java.util.Map;
  * Created by LeeDane on 2016/4/5.
  */
 public class CommonHandler {
+
+    /**
+     * 触发聊天详情的activity
+     * @param context
+     * @param toUserId
+     * @param toUserAccount
+     */
+    public static void startChatDetailActivity(Context context, int toUserId, String toUserAccount){
+        Intent it = new Intent(context, ChatDetailActivity.class);
+        it.putExtra("toUserId", toUserId);
+        it.putExtra("toUserAccount", toUserAccount);
+        context.startActivity(it);
+    }
 
     /**
      * 触发个人中心的activity

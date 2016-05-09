@@ -21,17 +21,16 @@ import android.widget.TextView;
 
 import com.leedane.cn.adapter.PersonalFragmentPagerAdapter;
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.customview.RightBorderTextView;
-import com.leedane.cn.frament.AttentionFragment;
-import com.leedane.cn.frament.CollectionFragment;
-import com.leedane.cn.frament.CommentOrTransmitFragment;
-import com.leedane.cn.frament.LoginHistoryFragment;
-import com.leedane.cn.frament.PersonalFragment;
-import com.leedane.cn.frament.PersonalMoodFragment;
-import com.leedane.cn.frament.ScoreFragment;
-import com.leedane.cn.frament.ZanFragment;
+import com.leedane.cn.fragment.AttentionFragment;
+import com.leedane.cn.fragment.CollectionFragment;
+import com.leedane.cn.fragment.CommentOrTransmitFragment;
+import com.leedane.cn.fragment.LoginHistoryFragment;
+import com.leedane.cn.fragment.PersonalFragment;
+import com.leedane.cn.fragment.PersonalMoodFragment;
+import com.leedane.cn.fragment.ScoreFragment;
+import com.leedane.cn.fragment.ZanFragment;
 import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.handler.SignInHandler;
 import com.leedane.cn.leedaneAPP.R;
@@ -263,6 +262,19 @@ public class PersonalActivity extends BaseActivity {
         //将当前tab的背景颜色变成默认的
         TextView currentTextView = (TextView) mRadioGroup.getChildAt(mCurrentTab);
         currentTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
+
+        //获取当前点击tab的索引
+        mCurrentTab = getTabPosition(currentTextView);
+
+        //获得当前tab的坐标
+        getCurrentTabCoordinate(currentTextView);
+
+        new Handler().postDelayed((new Runnable() {
+            @Override
+            public void run() {
+                mScrollview.scrollTo(mTabWidth * mCurrentTab, 0);
+            }
+        }), 5);
 
         isCheckFanOrSignIn = true;
         if(mIsLoginUser){

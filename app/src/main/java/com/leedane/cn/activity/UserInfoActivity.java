@@ -383,6 +383,8 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
      */
     public void startPersonalFan(View view){
         Intent it = new Intent(UserInfoActivity.this, FanActivity.class);
+        it.putExtra("toUserId", BaseApplication.getLoginUserId());
+        it.putExtra("isLoginUser", true);
         startActivity(it);
     }
 }

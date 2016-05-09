@@ -2,7 +2,6 @@ package com.leedane.cn.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,26 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leedane.cn.activity.FanActivity;
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.bean.CommentOrTransmitBean;
 import com.leedane.cn.bean.FanBean;
-import com.leedane.cn.bean.HttpRequestBean;
-import com.leedane.cn.bean.HttpResponseCommentOrTransmitBean;
-import com.leedane.cn.bean.MoodImagesBean;
-import com.leedane.cn.frament.FanFragment;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
-import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
-import com.leedane.cn.util.BeanConvertUtil;
-import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
-import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.RelativeDateFormat;
-import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
@@ -38,8 +26,6 @@ import com.leedane.cn.volley.ImageCacheManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**

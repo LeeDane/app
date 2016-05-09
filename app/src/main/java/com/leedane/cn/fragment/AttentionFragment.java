@@ -1,12 +1,9 @@
-package com.leedane.cn.frament;
+package com.leedane.cn.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,20 +13,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leedane.cn.adapter.CommentOrTransmitAdapter;
-import com.leedane.cn.bean.CommentOrTransmitBean;
-import com.leedane.cn.bean.HttpResponseCommentOrTransmitBean;
-import com.leedane.cn.handler.CommentHandler;
+import com.leedane.cn.adapter.AttentionAdapter;
+import com.leedane.cn.bean.AttentionBean;
+import com.leedane.cn.bean.HttpResponseAttentionBean;
+import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.leedaneAPP.R;
-import com.leedane.cn.service.SendMoodService;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
-import com.leedane.cn.util.MediaUtil;
-import com.leedane.cn.util.SerializableMap;
-import com.leedane.cn.util.SharedPreferenceUtil;
-import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONObject;
@@ -39,66 +30,31 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 评论列表的fragment类
- * Created by LeeDane on 2015/11/14.
+ * 关注列表的fragment类
+ * Created by LeeDane on 2016/4/6.
  */
-public class CommentOrTransmitFragment extends BaseFragment{
+public class AttentionFragment extends BaseFragment{
 
-    public static final String TAG = "CommentOrTransmitFragment";
-    private boolean isComment;
-    private boolean itemSingleClick; //控制每一项是否可以出发单击事件
+    public static final String TAG = "AttentionFragment";
     private Context mContext;
     private ListView mListView;
-    private CommentOrTransmitAdapter mAdapter;
-    private List<CommentOrTransmitBean> mCommentOrTransmitBeans = new ArrayList<>();
+    private AttentionAdapter mAdapter;
+    private List<AttentionBean> mAttentionBeans = new ArrayList<>();
 
     private SwipeRefreshLayout mSwipeLayout;
     private View mRootView;
-    private SerializableMap baseRequestParams = new SerializableMap();
+    private int toUserId;
 
     //是否是第一次加载
     private boolean isFirstLoading = true;
+
     private boolean isLoginUser;
 
-
-    public CommentOrTransmitFragment(){
+    public AttentionFragment(){
     }
-    /**
-     * 构建Frament对象(Item默认可以点击)
-     * @param index 当前frament是第几个
-     * @param context
-     * @param params
-     * @param isComment
-     */
-    /*public CommentOrTransmitFragment(int index, Context context, SerializableMap params, boolean isComment){
-        this.mContext = context;
-        this.baseRequestParams = params;
-        this.isComment = isComment;
-        this.itemSingleClick = true;
-    }*/
 
-    /**
-     * 构建Frament对象
-     * @param index 当前frament是第几个
-     * @param context
-     * @param params
-     * @param isComment
-     * @param itemSingleClick 每一项是否可以出发单击
-     */
-    /*public CommentOrTransmitFragment(int index, Context context, SerializableMap params, boolean isComment, boolean itemSingleClick){
-        this.mContext = context;
-        baseRequestParams = params;
-        this.isComment = isComment;
-        this.itemSingleClick = itemSingleClick;
-    }*/
-
-    /**
-     * 构建Frament对象
-     * @param bundle
-     * @return
-     */
-    public static final CommentOrTransmitFragment newInstance(Bundle bundle){
-        CommentOrTransmitFragment fragment = new CommentOrTransmitFragment();
+    public static final AttentionFragment newInstance(Bundle bundle){
+        AttentionFragment fragment = new AttentionFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -116,51 +72,50 @@ public class CommentOrTransmitFragment extends BaseFragment{
     public void taskFinished(TaskType type, Object result) {
         isLoading = false;
         if(result instanceof Error){
-            if((type == TaskType.LOAD_COMMENT || type == TaskType.LOAD_TRANSMIT) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
+            if((type == TaskType.LOAD_ATTENTION) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
                 mListViewFooter.setText(getResources().getString(R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
         try{
-            if(type == TaskType.LOAD_COMMENT || type == TaskType.LOAD_TRANSMIT){
+            if(type == TaskType.LOAD_ATTENTION){
                 if(mSwipeLayout !=null && mSwipeLayout.isRefreshing())
                     mSwipeLayout.setRefreshing(false);//下拉刷新组件停止刷新
                 if(isFirstLoading) {
                     isFirstLoading = false;
                 }
-                HttpResponseCommentOrTransmitBean httpResponseCommentOrTransmitBean = BeanConvertUtil.strConvertToCommentOrTransmitBeans(String.valueOf(result));
-                if(httpResponseCommentOrTransmitBean != null && httpResponseCommentOrTransmitBean.isSuccess()){
-                    List<CommentOrTransmitBean> commentOrTransmitBeans = httpResponseCommentOrTransmitBean.getMessage();
-                    if(commentOrTransmitBeans != null && commentOrTransmitBeans.size() > 0){
+                HttpResponseAttentionBean httpResponseAttentionBean = BeanConvertUtil.strConvertToAttentionBeans(String.valueOf(result));
+                if(httpResponseAttentionBean != null && httpResponseAttentionBean.isSuccess()){
+                    List<AttentionBean> attentionBeans = httpResponseAttentionBean.getMessage();
+                    if(attentionBeans != null && attentionBeans.size() > 0){
                         //临时list
-                        List<CommentOrTransmitBean> temList = new ArrayList<>();
+                        List<AttentionBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.removeAllViewsInLayout();
-                            mCommentOrTransmitBeans.clear();
+                            mAttentionBeans.clear();
                         }
                         //将新的数据和以前的数据进行叠加
                         if(mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            for(int i = commentOrTransmitBeans.size() -1; i>= 0 ; i--){
-                                temList.add(commentOrTransmitBeans.get(i));
+                            for(int i = attentionBeans.size() -1; i>= 0 ; i--){
+                                temList.add(attentionBeans.get(i));
                             }
-                            temList.addAll(mCommentOrTransmitBeans);
+                            temList.addAll(mAttentionBeans);
                         }else{
-                            temList.addAll(mCommentOrTransmitBeans);
-                            temList.addAll(commentOrTransmitBeans);
+                            temList.addAll(mAttentionBeans);
+                            temList.addAll(attentionBeans);
                         }
-                        //Log.i(TAG, "原来的大小：" + mCommentOrTransmitBeans.size());
+                        Log.i(TAG, "原来的大小：" + mAttentionBeans.size());
                         if(mAdapter == null) {
-                            mAdapter = new CommentOrTransmitAdapter(mContext, mCommentOrTransmitBeans);
+                            mAdapter = new AttentionAdapter(mContext, mAttentionBeans);
                             mListView.setAdapter(mAdapter);
                         }
                         mAdapter.refreshData(temList);
-                        //Log.i(TAG, "后来的大小：" + mCommentOrTransmitBeans.size());
+                        //Log.i(TAG, "后来的大小：" + mAttentionBeans.size());
+                        //ToastUtil.success(mContext, "成功加载" + attentionBeans.size() + "条数据,总数是：" + mAttentionBeans.size(), Toast.LENGTH_SHORT);
+                        int size = mAttentionBeans.size();
 
-                        //Toast.makeText(mContext, "成功加载"+ commentOrTransmitBeans.size() + "条数据,总数是："+mCommentOrTransmitBeans.size(), Toast.LENGTH_SHORT).show();
-                        int size = mCommentOrTransmitBeans.size();
-
-                        mFirstId = mCommentOrTransmitBeans.get(0).getId();
-                        mLastId = mCommentOrTransmitBeans.get(size - 1).getId();
+                        mFirstId = mAttentionBeans.get(0).getId();
+                        mLastId = mAttentionBeans.get(size - 1).getId();
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
@@ -170,8 +125,8 @@ public class CommentOrTransmitFragment extends BaseFragment{
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mCommentOrTransmitBeans.clear();
-                            mAdapter.refreshData(new ArrayList<CommentOrTransmitBean>());
+                            mAttentionBeans.clear();
+                            mAdapter.refreshData(new ArrayList<AttentionBean>());
                             //mListView.addHeaderView(viewHeader);
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
@@ -185,11 +140,8 @@ public class CommentOrTransmitFragment extends BaseFragment{
                 }else{
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            //mCommentOrTransmits = new ArrayList<>();
-                            //mListView.removeAllViewsInLayout();
-                            mCommentOrTransmitBeans.clear();
-                            mAdapter.refreshData(new ArrayList<CommentOrTransmitBean>());
-                            //mListView.addHeaderView(viewHeader);
+                            mAttentionBeans.clear();
+                            mAdapter.refreshData(new ArrayList<AttentionBean>());
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
@@ -200,11 +152,11 @@ public class CommentOrTransmitFragment extends BaseFragment{
                     }
                 }
                 return;
-            }else if(type == TaskType.DELETE_COMMENT || type == TaskType.DELETE_TRANSMIT){
+            }else if(type == TaskType.DELETE_ATTENTION){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-                    ToastUtil.success(mContext, "删除成功", Toast.LENGTH_SHORT);
+                    ToastUtil.success(mContext, "删除关注成功", Toast.LENGTH_SHORT);
                     sendFirstLoading();
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
@@ -226,18 +178,10 @@ public class CommentOrTransmitFragment extends BaseFragment{
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageSize", 10);
         params.put("method", mPreLoadMethod);
-        if(baseRequestParams != null)
-            params.putAll(baseRequestParams.getMap());
-        if(isComment) {
-            //第一次操作取消全部数据
-            taskCanceled(TaskType.LOAD_COMMENT);
-            CommentHandler.getCommentsRequest(this, params);
-        }else{
-            //第一次操作取消全部数据
-            taskCanceled(TaskType.LOAD_TRANSMIT);
-            TransmitHandler.getTransmitsRequest(this, params);
-        }
-
+        params.put("toUserId", toUserId);
+        //第一次操作取消全部数据
+        taskCanceled(TaskType.LOAD_ATTENTION);
+        AttentionHandler.getAttentionsRequest(this, params);
     }
     /**
      * 发送向上刷新的任务
@@ -257,18 +201,10 @@ public class CommentOrTransmitFragment extends BaseFragment{
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
-        if(baseRequestParams != null)
-            params.putAll(baseRequestParams.getMap());
-        if(isComment){
-            //向上刷新也先取消所有的加载操作
-            taskCanceled(TaskType.LOAD_COMMENT);
-            CommentHandler.getCommentsRequest(this, params);
-        }else{
-            //向上刷新也先取消所有的加载操作
-            taskCanceled(TaskType.LOAD_TRANSMIT);
-            TransmitHandler.getTransmitsRequest(this, params);
-        }
-
+        params.put("toUserId", toUserId);
+        //向上刷新也先取消所有的加载操作
+        taskCanceled(TaskType.LOAD_ATTENTION);
+        AttentionHandler.getAttentionsRequest(this, params);
     }
     /**
      * 发送向下刷新的任务
@@ -293,15 +229,9 @@ public class CommentOrTransmitFragment extends BaseFragment{
         params.put("pageSize", 5);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
-        if(baseRequestParams != null)
-            params.putAll(baseRequestParams.getMap());
-        if(isComment){
-            taskCanceled(TaskType.LOAD_COMMENT);
-            CommentHandler.getCommentsRequest(this, params);
-        }else{
-            taskCanceled(TaskType.LOAD_TRANSMIT);
-            TransmitHandler.getTransmitsRequest(this, params);
-        }
+        params.put("toUserId", toUserId);
+        taskCanceled(TaskType.LOAD_ATTENTION);
+        AttentionHandler.getAttentionsRequest(this, params);
     }
 
     /**
@@ -320,16 +250,10 @@ public class CommentOrTransmitFragment extends BaseFragment{
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
-            if(baseRequestParams != null)
-                params.putAll(baseRequestParams.getMap());
+            params.put("toUserId", toUserId);
             mListViewFooter.setText(getResources().getString(R.string.loading));
-            if(isComment){
-                taskCanceled(TaskType.LOAD_COMMENT);
-                CommentHandler.getCommentsRequest(this, params);
-            } else{
-                taskCanceled(TaskType.LOAD_TRANSMIT);
-                TransmitHandler.getTransmitsRequest(this, params);
-            }
+            taskCanceled(TaskType.LOAD_ATTENTION);
+            AttentionHandler.getAttentionsRequest(this, params);
         }
 
     }
@@ -338,9 +262,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
         if(bundle != null){
-            baseRequestParams = (SerializableMap) bundle.getSerializable("serializableMap");
-            this.isComment = bundle.getBoolean("isComment");
-            this.itemSingleClick = bundle.getBoolean("itemSingleClick");
+            this.toUserId = bundle.getInt("toUserId");
             this.isLoginUser = bundle.getBoolean("isLoginUser");
         }
         if(mContext == null)
@@ -352,10 +274,15 @@ public class CommentOrTransmitFragment extends BaseFragment{
             sendFirstLoading();
             //initFirstData();
             this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
-            mAdapter = new CommentOrTransmitAdapter( mContext, mCommentOrTransmitBeans);
+            mAdapter = new AttentionAdapter(mContext, mAttentionBeans);
             mListView.setOnScrollListener(new ListViewOnScrollListener());
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    CommonHandler.startDetailActivity(mContext, mAttentionBeans.get(position).getTableName(), mAttentionBeans.get(position).getTableId(), null);
+                }
+            });
 
-            //只有登录用户才给予删除的权限
             if(isLoginUser){
                 //长按执行删除的操作
                 mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -365,17 +292,12 @@ public class CommentOrTransmitFragment extends BaseFragment{
                         builder.setCancelable(true);
                         builder.setIcon(R.drawable.menu_feedback);
                         builder.setTitle("提示");
-                        builder.setMessage("删除该记录?");
+                        builder.setMessage("删除该关注记录?");
                         builder.setPositiveButton("删除",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        if(isComment){
-                                            CommentHandler.deleteComment(CommentOrTransmitFragment.this, mCommentOrTransmitBeans.get(position).getId(),  mCommentOrTransmitBeans.get(position).getCreateUserId());
-                                        } else{
-                                            TransmitHandler.deleteTransmit(CommentOrTransmitFragment.this, mCommentOrTransmitBeans.get(position).getId(),  mCommentOrTransmitBeans.get(position).getCreateUserId());
-                                        }
+                                        AttentionHandler.deleteAttention(AttentionFragment.this, mAttentionBeans.get(position).getId(), mAttentionBeans.get(position).getCreateUserId());
                                         showLoadingDialog("Delete", "try best to delete...");
-                                        //ToastUtil.success(mContext, "删除"+position);
                                     }
                                 });
                         builder.setNegativeButton("取消",
@@ -389,21 +311,11 @@ public class CommentOrTransmitFragment extends BaseFragment{
                     }
                 });
             }
-            if(itemSingleClick){
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //ToastUtil.success(mContext,"点击的位置是："+position+",内容："+mCommentOrTransmitBeans.get(position).getContent());
-                        CommonHandler.startDetailActivity(mContext,mCommentOrTransmitBeans.get(position).getTableName(), mCommentOrTransmitBeans.get(position).getTableId(), null);
-                    }
-                });
-            }
-
             //listview下方的显示
             viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
             mListView.addFooterView(viewFooter, null, false);
             mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-            mListViewFooter.setOnClickListener(CommentOrTransmitFragment.this);//添加点击事件
+            mListViewFooter.setOnClickListener(AttentionFragment.this);//添加点击事件
             mListViewFooter.setText(getResources().getString(R.string.loading));
 
             mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);

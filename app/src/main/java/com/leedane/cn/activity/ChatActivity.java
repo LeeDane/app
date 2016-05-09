@@ -11,11 +11,13 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
 import com.leedane.cn.adapter.ChatFragmentPagerAdapter;
-import com.leedane.cn.adapter.DetailFragmentPagerAdapter;
+import com.leedane.cn.bean.ChatBean;
 import com.leedane.cn.database.BaseSQLiteDatabase;
-import com.leedane.cn.frament.ChatHomeFragment;
+import com.leedane.cn.fragment.ChatHomeFragment;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ import java.util.List;
  * 聊天首页activity
  * Created by LeeDane on 2016/5/4.
  */
-public class ChatActivity extends BaseActivity {
+public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnItemClickListener{
     private static final String TAG = "ChatActivity";
     private BaseSQLiteDatabase sqLiteDatabase;
 
@@ -56,7 +58,9 @@ public class ChatActivity extends BaseActivity {
      */
     private void initData() {
         mFragments = new ArrayList<>();
-        mFragments.add(ChatHomeFragment.newInstance(new Bundle()));
+        ChatHomeFragment chatHomeFragment = ChatHomeFragment.newInstance(new Bundle());
+        chatHomeFragment.setOnItemClickListener(ChatActivity.this);
+        mFragments.add(chatHomeFragment);
         mFragments.add(null);
         mFragments.add(null);
     }
@@ -125,5 +129,11 @@ public class ChatActivity extends BaseActivity {
 
         switch (v.getId()){
         }
+    }
+
+    @Override
+    public void onItemClick(int position, ChatBean chatBean) {
+        ToastUtil.success(ChatActivity.this, chatBean.getAccount());
+        CommonHandler.startChatDetailActivity(ChatActivity.this, chatBean.getId(), chatBean.getAccount());
     }
 }

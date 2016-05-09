@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leedane.cn.bean.HttpResponseAttentionBean;
 import com.leedane.cn.bean.HttpResponseBlogBean;
+import com.leedane.cn.bean.HttpResponseChatDetailBean;
 import com.leedane.cn.bean.HttpResponseCircleOfFriendBean;
 import com.leedane.cn.bean.HttpResponseCollectionBean;
 import com.leedane.cn.bean.HttpResponseCommentOrTransmitBean;
@@ -113,6 +114,22 @@ public class BeanConvertUtil {
             return gson.fromJson(str, HttpResponseLoginHistoryBean.class);
         }catch (Exception e){
             Log.d(TAG, "响应HttpResponseLoginHistoryBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将字符串转化成List<ChatDetailBean>集合
+     * @param str
+     * @return
+     */
+    public static HttpResponseChatDetailBean strConvertToChatDetailBeans(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应HttpResponseChatDetailBean对象开始转换。。。");
+            return gson.fromJson(str, HttpResponseChatDetailBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应HttpResponseChatDetailBean对象转换失败");
         }
         return null;
     }

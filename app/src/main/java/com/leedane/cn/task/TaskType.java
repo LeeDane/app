@@ -38,6 +38,7 @@ public enum TaskType {
     ADD_ATTENTION, //添加关注
     ADD_COLLECTION, //添加收藏
     ADD_REPORT, //增加举报
+    ADD_CHAT, //发聊天信息
     LOAD_COMMENT, //加载评论列表
     LOAD_TRANSMIT, //加载转发列表
     LOAD_ZAN, //加载赞列表
@@ -48,6 +49,7 @@ public enum TaskType {
     LOAD_CIRCLEOFFRIEND, //加载朋友圈数据
     LOAD_SCORE, //加载积分历史列表
     LOAD_LOGIN_HISTORY, //加载登录历史列表
+    LOAD_CHAT, //加载聊天列表
     DO_LOGIN_PHONE, //手机登录
     DO_GET_LOGIN_CODE, //获取手机登录的验证码
     GET_APP_VERSION, //检查APP版本
@@ -64,5 +66,6 @@ public enum TaskType {
     DELETE_COLLECTION, //删除收藏记录
     DELETE_ZAN, //删除点赞记录
     DELETE_ATTENTION, //删除关注记录
+    DELETE_CHAT, //删除聊天列表
     UPDATE_HANDER, //更新用户头像
 }

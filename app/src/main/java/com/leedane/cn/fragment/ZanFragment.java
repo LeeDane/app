@@ -1,4 +1,4 @@
-package com.leedane.cn.frament;
+package com.leedane.cn.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,13 +13,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leedane.cn.adapter.CollectionAdapter;
-import com.leedane.cn.bean.CollectionBean;
-import com.leedane.cn.bean.HttpResponseCollectionBean;
-import com.leedane.cn.handler.CollectionHandler;
-import com.leedane.cn.handler.CommentHandler;
+import com.leedane.cn.adapter.ZanAdapter;
+import com.leedane.cn.bean.HttpResponseZanBean;
+import com.leedane.cn.bean.ZanBean;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.handler.TransmitHandler;
+import com.leedane.cn.handler.PraiseHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
@@ -32,32 +30,30 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 收藏列表的fragment类
- * Created by LeeDane on 2016/4/6.
+ * 点赞列表的fragment类
+ * Created by LeeDane on 2016/4/5.
  */
-public class CollectionFragment extends BaseFragment{
+public class ZanFragment extends BaseFragment{
 
-    public static final String TAG = "CollectionFragment";
+    public static final String TAG = "ZanFragment";
     private Context mContext;
     private ListView mListView;
-    private CollectionAdapter mAdapter;
-    private List<CollectionBean> mCollectionBeans = new ArrayList<>();
+    private ZanAdapter mAdapter;
+    private List<ZanBean> mZanBeans = new ArrayList<>();
 
     private SwipeRefreshLayout mSwipeLayout;
     private View mRootView;
-    //private HashMap<String, Object> baseRequestParams;
     private int toUserId;
 
     //是否是第一次加载
     private boolean isFirstLoading = true;
 
     private boolean isLoginUser;
-
-    public CollectionFragment() {
+    public ZanFragment(){
     }
 
-    public static final CollectionFragment newInstance(Bundle bundle){
-        CollectionFragment fragment = new CollectionFragment();
+    public static final ZanFragment newInstance(Bundle bundle){
+        ZanFragment fragment = new ZanFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -76,51 +72,50 @@ public class CollectionFragment extends BaseFragment{
     public void taskFinished(TaskType type, Object result) {
         isLoading = false;
         if(result instanceof Error){
-            if((type == TaskType.LOAD_COLLECTION) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
+            if((type == TaskType.LOAD_ZAN) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
                 mListViewFooter.setText(getResources().getString(R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
         try{
-            if(type == TaskType.LOAD_COLLECTION){
+            if(type == TaskType.LOAD_ZAN){
                 if(mSwipeLayout !=null && mSwipeLayout.isRefreshing())
                     mSwipeLayout.setRefreshing(false);//下拉刷新组件停止刷新
-
                 if(isFirstLoading) {
                     isFirstLoading = false;
                 }
-                HttpResponseCollectionBean httpResponseCollectionBean = BeanConvertUtil.strConvertToCollectionBeans(String.valueOf(result));
-                if(httpResponseCollectionBean != null && httpResponseCollectionBean.isSuccess()){
-                    List<CollectionBean> CollectionBeans = httpResponseCollectionBean.getMessage();
-                    if(CollectionBeans != null && CollectionBeans.size() > 0){
+                HttpResponseZanBean httpResponseZanBean = BeanConvertUtil.strConvertToZanBeans(String.valueOf(result));
+                if(httpResponseZanBean != null && httpResponseZanBean.isSuccess()){
+                    List<ZanBean> zanBeans = httpResponseZanBean.getMessage();
+                    if(zanBeans != null && zanBeans.size() > 0){
                         //临时list
-                        List<CollectionBean> temList = new ArrayList<>();
+                        List<ZanBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.removeAllViewsInLayout();
-                            mCollectionBeans.clear();
+                            mZanBeans.clear();
                         }
                         //将新的数据和以前的数据进行叠加
                         if(mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            for(int i = CollectionBeans.size() -1; i>= 0 ; i--){
-                                temList.add(CollectionBeans.get(i));
+                            for(int i = zanBeans.size() -1; i>= 0 ; i--){
+                                temList.add(zanBeans.get(i));
                             }
-                            temList.addAll(mCollectionBeans);
+                            temList.addAll(mZanBeans);
                         }else{
-                            temList.addAll(mCollectionBeans);
-                            temList.addAll(CollectionBeans);
+                            temList.addAll(mZanBeans);
+                            temList.addAll(zanBeans);
                         }
-                        Log.i(TAG, "原来的大小：" + mCollectionBeans.size());
+                        Log.i(TAG, "原来的大小：" + mZanBeans.size());
                         if(mAdapter == null) {
-                            mAdapter = new CollectionAdapter(mContext, mCollectionBeans);
+                            mAdapter = new ZanAdapter(mContext, mZanBeans);
                             mListView.setAdapter(mAdapter);
                         }
                         mAdapter.refreshData(temList);
-                        //Log.i(TAG, "后来的大小：" + mCollectionBeans.size());
-                        //ToastUtil.success(mContext, "成功加载" + CollectionBeans.size() + "条数据,总数是：" + mCollectionBeans.size(), Toast.LENGTH_SHORT);
-                        int size = mCollectionBeans.size();
+                        //Log.i(TAG, "后来的大小：" + mZanBeans.size());
+                        //ToastUtil.success(mContext, "成功加载" + zanBeans.size() + "条数据,总数是：" + mZanBeans.size(), Toast.LENGTH_SHORT);
+                        int size = mZanBeans.size();
 
-                        mFirstId = mCollectionBeans.get(0).getId();
-                        mLastId = mCollectionBeans.get(size - 1).getId();
+                        mFirstId = mZanBeans.get(0).getId();
+                        mLastId = mZanBeans.get(size - 1).getId();
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
@@ -130,8 +125,8 @@ public class CollectionFragment extends BaseFragment{
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mCollectionBeans.clear();
-                            mAdapter.refreshData(new ArrayList<CollectionBean>());
+                            mZanBeans.clear();
+                            mAdapter.refreshData(new ArrayList<ZanBean>());
                             //mListView.addHeaderView(viewHeader);
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
@@ -145,8 +140,8 @@ public class CollectionFragment extends BaseFragment{
                 }else{
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mCollectionBeans.clear();
-                            mAdapter.refreshData(new ArrayList<CollectionBean>());
+                            mZanBeans.clear();
+                            mAdapter.refreshData(new ArrayList<ZanBean>());
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
@@ -157,11 +152,11 @@ public class CollectionFragment extends BaseFragment{
                     }
                 }
                 return;
-            }else if(type == TaskType.DELETE_COLLECTION){
+            }else if(type == TaskType.DELETE_ZAN){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-                    ToastUtil.success(mContext, "删除收藏成功", Toast.LENGTH_SHORT);
+                    ToastUtil.success(mContext, "删除赞成功", Toast.LENGTH_SHORT);
                     sendFirstLoading();
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
@@ -185,8 +180,8 @@ public class CollectionFragment extends BaseFragment{
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
         //第一次操作取消全部数据
-        taskCanceled(TaskType.LOAD_COLLECTION);
-        CollectionHandler.getCollectionsRequest(this, params);
+        taskCanceled(TaskType.LOAD_ZAN);
+        PraiseHandler.getZansRequest(this, params);
     }
     /**
      * 发送向上刷新的任务
@@ -208,8 +203,8 @@ public class CollectionFragment extends BaseFragment{
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
         //向上刷新也先取消所有的加载操作
-        taskCanceled(TaskType.LOAD_COLLECTION);
-        CollectionHandler.getCollectionsRequest(this, params);
+        taskCanceled(TaskType.LOAD_ZAN);
+        PraiseHandler.getZansRequest(this, params);
     }
     /**
      * 发送向下刷新的任务
@@ -235,8 +230,8 @@ public class CollectionFragment extends BaseFragment{
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
-        taskCanceled(TaskType.LOAD_COLLECTION);
-        CollectionHandler.getCollectionsRequest(this, params);
+        taskCanceled(TaskType.LOAD_ZAN);
+        PraiseHandler.getZansRequest(this, params);
     }
 
     /**
@@ -257,8 +252,8 @@ public class CollectionFragment extends BaseFragment{
             params.put("method", mPreLoadMethod);
             params.put("toUserId", toUserId);
             mListViewFooter.setText(getResources().getString(R.string.loading));
-            taskCanceled(TaskType.LOAD_COLLECTION);
-            CollectionHandler.getCollectionsRequest(this, params);
+            taskCanceled(TaskType.LOAD_ZAN);
+            PraiseHandler.getZansRequest(this, params);
         }
 
     }
@@ -279,12 +274,12 @@ public class CollectionFragment extends BaseFragment{
             sendFirstLoading();
             //initFirstData();
             this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
-            mAdapter = new CollectionAdapter(mContext, mCollectionBeans);
+            mAdapter = new ZanAdapter( mContext, mZanBeans);
             mListView.setOnScrollListener(new ListViewOnScrollListener());
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    CommonHandler.startDetailActivity(mContext, mCollectionBeans.get(position).getTableName(), mCollectionBeans.get(position).getTableId(), null);
+                    CommonHandler.startDetailActivity(mContext, mZanBeans.get(position).getTableName(), mZanBeans.get(position).getTableId(), null);
                 }
             });
 
@@ -297,11 +292,11 @@ public class CollectionFragment extends BaseFragment{
                         builder.setCancelable(true);
                         builder.setIcon(R.drawable.menu_feedback);
                         builder.setTitle("提示");
-                        builder.setMessage("删除该收藏记录?");
+                        builder.setMessage("删除该点赞记录?");
                         builder.setPositiveButton("删除",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        CollectionHandler.deleteCollection(CollectionFragment.this, mCollectionBeans.get(position).getId(), mCollectionBeans.get(position).getCreateUserId());
+                                        PraiseHandler.deleteZan(ZanFragment.this, mZanBeans.get(position).getId(), mZanBeans.get(position).getCreateUserId());
                                         showLoadingDialog("Delete", "try best to delete...");
                                     }
                                 });
@@ -316,12 +311,11 @@ public class CollectionFragment extends BaseFragment{
                     }
                 });
             }
-
             //listview下方的显示
             viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
             mListView.addFooterView(viewFooter, null, false);
             mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-            mListViewFooter.setOnClickListener(CollectionFragment.this);//添加点击事件
+            mListViewFooter.setOnClickListener(ZanFragment.this);//添加点击事件
             mListViewFooter.setText(getResources().getString(R.string.loading));
 
             mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);

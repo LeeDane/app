@@ -1,4 +1,5 @@
 package com.leedane.cn.database;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.util.ConstantsUtil;
 
 import android.content.Context;
@@ -12,8 +13,26 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 
 	public static final String TABLE_FILE = "T_FILE";
 	public static final String TABLE_MOOD_DRAFT = "T_MOOD_DRAFT";
+	private int friendId;
+
+	/**
+	 * 普通表创建的构造方法
+	 * @param context
+	 * @param name  数据库名称
+	 */
 	public BaseSQLiteOpenHelper(Context context, String name) {
 		super(context, name, null, ConstantsUtil.DB_VERSION);
+	}
+
+	/**
+	 * 创建聊天详情表专用构造方法
+	 * @param context
+	 * @param name
+	 * @param friendId
+	 */
+	public BaseSQLiteOpenHelper(Context context, String name, int friendId) {
+		super(context, name, null, ConstantsUtil.DB_VERSION);
+		this.friendId = friendId;
 	}
 
 	/**
@@ -29,6 +48,8 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 		//database.execSQL(this.createTableOptions());
 		database.execSQL(this.createTableFile());
 		database.execSQL(this.createMoodDraft());
+		if(friendId > 0)
+			database.execSQL(this.createChatDetail(friendId));
 	}
 
 	/**
@@ -80,6 +101,25 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 				"create_time varchar(25)" + // 创建时间
 				");";
 		Log.i(TAG, "执行创建FilePath表的SQL语句");
+		return sql;
+	}
+
+	/**
+	 * 创建聊天详情表(每个好友一张表)
+	 * @return
+	 */
+	private String createChatDetail(int friendId) {
+		String tableName = "chat_detail_" + BaseApplication.getLoginUserId() + "_" +friendId;
+		String sql = "CREATE TABLE " + tableName + " ("
+				+ "ID integer primary key autoincrement, " + // id
+				"cid integer, " +  //聊天的ID
+				"content text, " + // 聊天内容
+				"to_user_id integer, " + // 接收聊天信息的用户ID
+				"accout varchar(20), " + // 接收聊天信息的用户名称
+				"create_user_id integer, " + // 创建人
+				"create_time varchar(25)" + // 创建时间
+				");";
+		Log.i(TAG, "执行创建"+tableName+"表的SQL语句");
 		return sql;
 	}
 }

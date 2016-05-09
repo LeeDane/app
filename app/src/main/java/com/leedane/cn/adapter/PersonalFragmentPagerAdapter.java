@@ -6,8 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
-import com.leedane.cn.frament.DetailArticleFragment;
-import com.leedane.cn.frament.PersonalFragment;
+import com.leedane.cn.fragment.PersonalFragment;
 
 import java.util.List;
 

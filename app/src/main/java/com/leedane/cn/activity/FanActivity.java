@@ -6,14 +6,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 
-import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.frament.FanFragment;
+import com.leedane.cn.fragment.FanFragment;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.ToastUtil;
-
-import java.util.HashMap;
 
 /**
  * 粉丝列表activity
@@ -33,28 +29,13 @@ public class FanActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //检查是否登录
-        checkedIsLogin();
+        checkedIsLogin("com.leedane.cn.activity.FanActivity");
         setContentView(R.layout.activity_fan);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.personal_fans);
         backLayoutVisible();
         initData();
         initView();
-    }
-
-    /**
-     * 检查是否登录
-     */
-    private void checkedIsLogin() {
-        //判断是否有缓存用户信息
-        if(BaseApplication.getLoginUserId() < 1){
-            Intent it = new Intent(FanActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.FanActivity");
-            startActivity(it);
-            FanActivity.this.finish();
-            return;
-        }
     }
 
     /**

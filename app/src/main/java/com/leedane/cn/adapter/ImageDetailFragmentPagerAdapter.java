@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
 import com.leedane.cn.bean.ImageDetailBean;
-import com.leedane.cn.frament.ImageDetailFragment;
+import com.leedane.cn.fragment.ImageDetailFragment;
 
 import java.util.List;
 

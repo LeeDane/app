@@ -1,54 +1,48 @@
-package com.leedane.cn.frament;
+package com.leedane.cn.fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.leedane.cn.adapter.ScoreAdapter;
-import com.leedane.cn.bean.HttpResponseScoreBean;
-import com.leedane.cn.bean.ScoreBean;
-import com.leedane.cn.handler.ScoreHandler;
-import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.adapter.LoginHistotyAdapter;
+import com.leedane.cn.bean.HttpResponseLoginHistoryBean;
+import com.leedane.cn.bean.LoginHistoryBean;
+import com.leedane.cn.handler.LoginHistoryHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.ToastUtil;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * 积分历史记录列表的fragment类
+ * 登录历史记录列表的fragment类
  * Created by LeeDane on 2016/5/5.
  */
-public class ScoreFragment extends BaseFragment{
+public class LoginHistoryFragment extends BaseFragment{
 
-    public static final String TAG = "ScoreFragment";
+    public static final String TAG = "LoginHistoryFragment";
     private Context mContext;
     private ListView mListView;
-    private ScoreAdapter mAdapter;
-    private List<ScoreBean> mScoreBeans = new ArrayList<>();
+    private LoginHistotyAdapter mAdapter;
+    private List<LoginHistoryBean> mLoginHistoryBeans = new ArrayList<>();
 
     private SwipeRefreshLayout mSwipeLayout;
     private View mRootView;
 
-    public ScoreFragment() {
+    public LoginHistoryFragment() {
     }
 
-    public static final ScoreFragment newInstance(Bundle bundle){
-        ScoreFragment fragment = new ScoreFragment();
+    public static final LoginHistoryFragment newInstance(Bundle bundle){
+        LoginHistoryFragment fragment = new LoginHistoryFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -67,48 +61,48 @@ public class ScoreFragment extends BaseFragment{
     public void taskFinished(TaskType type, Object result) {
         isLoading = false;
         if(result instanceof Error){
-            if((type == TaskType.LOAD_SCORE) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
+            if((type == TaskType.LOAD_LOGIN_HISTORY) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
                 mListViewFooter.setText(getResources().getString(R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
         try{
-            if(type == TaskType.LOAD_SCORE){
+            if(type == TaskType.LOAD_LOGIN_HISTORY){
                 if(mSwipeLayout !=null && mSwipeLayout.isRefreshing())
                     mSwipeLayout.setRefreshing(false);//下拉刷新组件停止刷新
 
-                HttpResponseScoreBean httpResponseScoreBean = BeanConvertUtil.strConvertToScoreBeans(String.valueOf(result));
-                if(httpResponseScoreBean != null && httpResponseScoreBean.isSuccess()){
-                    List<ScoreBean> scoreBeans = httpResponseScoreBean.getMessage();
-                    if(scoreBeans != null && scoreBeans.size() > 0){
+                HttpResponseLoginHistoryBean httpResponseLoginHistoryBean = BeanConvertUtil.strConvertToLoginHistoryBeans(String.valueOf(result));
+                if(httpResponseLoginHistoryBean != null && httpResponseLoginHistoryBean.isSuccess()){
+                    List<LoginHistoryBean> loginHistoryBeans = httpResponseLoginHistoryBean.getMessage();
+                    if(loginHistoryBeans != null && loginHistoryBeans.size() > 0){
                         //临时list
-                        List<ScoreBean> temList = new ArrayList<>();
+                        List<LoginHistoryBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.removeAllViewsInLayout();
-                            mScoreBeans.clear();
+                            mLoginHistoryBeans.clear();
                         }
                         //将新的数据和以前的数据进行叠加
                         if(mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            for(int i = scoreBeans.size() -1; i>= 0 ; i--){
-                                temList.add(scoreBeans.get(i));
+                            for(int i = loginHistoryBeans.size() -1; i>= 0 ; i--){
+                                temList.add(loginHistoryBeans.get(i));
                             }
-                            temList.addAll(mScoreBeans);
+                            temList.addAll(mLoginHistoryBeans);
                         }else{
-                            temList.addAll(mScoreBeans);
-                            temList.addAll(scoreBeans);
+                            temList.addAll(mLoginHistoryBeans);
+                            temList.addAll(loginHistoryBeans);
                         }
-                        Log.i(TAG, "原来的大小：" + mScoreBeans.size());
+                        Log.i(TAG, "原来的大小：" + mLoginHistoryBeans.size());
                         if(mAdapter == null) {
-                            mAdapter = new ScoreAdapter(mContext, mScoreBeans);
+                            mAdapter = new LoginHistotyAdapter(mContext, mLoginHistoryBeans);
                             mListView.setAdapter(mAdapter);
                         }
                         mAdapter.refreshData(temList);
                         //Log.i(TAG, "后来的大小：" + mCollectionBeans.size());
                         //ToastUtil.success(mContext, "成功加载" + CollectionBeans.size() + "条数据,总数是：" + mCollectionBeans.size(), Toast.LENGTH_SHORT);
-                        int size = mScoreBeans.size();
+                        int size = mLoginHistoryBeans.size();
 
-                        mFirstId = mScoreBeans.get(0).getId();
-                        mLastId = mScoreBeans.get(size - 1).getId();
+                        mFirstId = mLoginHistoryBeans.get(0).getId();
+                        mLastId = mLoginHistoryBeans.get(size - 1).getId();
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
@@ -118,8 +112,8 @@ public class ScoreFragment extends BaseFragment{
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mScoreBeans.clear();
-                            mAdapter.refreshData(new ArrayList<ScoreBean>());
+                            mLoginHistoryBeans.clear();
+                            mAdapter.refreshData(new ArrayList<LoginHistoryBean>());
                             //mListView.addHeaderView(viewHeader);
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
@@ -133,8 +127,8 @@ public class ScoreFragment extends BaseFragment{
                 }else{
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mScoreBeans.clear();
-                            mAdapter.refreshData(new ArrayList<ScoreBean>());
+                            mLoginHistoryBeans.clear();
+                            mAdapter.refreshData(new ArrayList<LoginHistoryBean>());
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
@@ -145,15 +139,6 @@ public class ScoreFragment extends BaseFragment{
                     }
                 }
                 return;
-            }else if(type == TaskType.DELETE_COLLECTION){
-                dismissLoadingDialog();
-                JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-                    ToastUtil.success(mContext, "删除收藏成功", Toast.LENGTH_SHORT);
-                    sendFirstLoading();
-                }else{
-                    ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
-                }
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -172,8 +157,8 @@ public class ScoreFragment extends BaseFragment{
         params.put("pageSize", 10);
         params.put("method", mPreLoadMethod);
         //第一次操作取消全部数据
-        taskCanceled(TaskType.LOAD_SCORE);
-        ScoreHandler.getScoresRequest(this, params);
+        taskCanceled(TaskType.LOAD_LOGIN_HISTORY);
+        LoginHistoryHandler.getLoginHistorysRequest(this, params);
     }
     /**
      * 发送向上刷新的任务
@@ -194,8 +179,8 @@ public class ScoreFragment extends BaseFragment{
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         //向上刷新也先取消所有的加载操作
-        taskCanceled(TaskType.LOAD_SCORE);
-        ScoreHandler.getScoresRequest(this, params);
+        taskCanceled(TaskType.LOAD_LOGIN_HISTORY);
+        LoginHistoryHandler.getLoginHistorysRequest(this, params);
     }
     /**
      * 发送向下刷新的任务
@@ -220,8 +205,8 @@ public class ScoreFragment extends BaseFragment{
         params.put("pageSize", 5);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
-        taskCanceled(TaskType.LOAD_SCORE);
-        ScoreHandler.getScoresRequest(this, params);
+        taskCanceled(TaskType.LOAD_LOGIN_HISTORY);
+        LoginHistoryHandler.getLoginHistorysRequest(this, params);
     }
 
     /**
@@ -241,8 +226,8 @@ public class ScoreFragment extends BaseFragment{
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
             mListViewFooter.setText(getResources().getString(R.string.loading));
-            taskCanceled(TaskType.LOAD_SCORE);
-            ScoreHandler.getScoresRequest(this, params);
+            taskCanceled(TaskType.LOAD_LOGIN_HISTORY);
+            LoginHistoryHandler.getLoginHistorysRequest(this, params);
         }
 
     }
@@ -254,13 +239,13 @@ public class ScoreFragment extends BaseFragment{
         sendFirstLoading();
         //initFirstData();
         this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
-        mAdapter = new ScoreAdapter(mContext, mScoreBeans);
+        mAdapter = new LoginHistotyAdapter(mContext, mLoginHistoryBeans);
         mListView.setOnScrollListener(new ListViewOnScrollListener());
         //listview下方的显示
         viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
         mListView.addFooterView(viewFooter, null, false);
         mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-        mListViewFooter.setOnClickListener(ScoreFragment.this);//添加点击事件
+        mListViewFooter.setOnClickListener(LoginHistoryFragment.this);//添加点击事件
         mListViewFooter.setText(getResources().getString(R.string.loading));
 
         mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);

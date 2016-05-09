@@ -1,36 +1,15 @@
 package com.leedane.cn.activity;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Matrix;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leedane.cn.adapter.DetailFragmentPagerAdapter;
-import com.leedane.cn.frament.DetailArticleFragment;
 import com.leedane.cn.leedaneAPP.R;
-import com.leedane.cn.util.ConstantsUtil;
-import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 /*import com.thefinestartist.finestwebview.FinestWebView;
 import com.thefinestartist.finestwebview.helpers.DipPixelHelper;*/
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 新的查看详情activity

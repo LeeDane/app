@@ -1,10 +1,9 @@
-package com.leedane.cn.frament;
+package com.leedane.cn.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +12,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leedane.cn.adapter.ZanAdapter;
-import com.leedane.cn.bean.HttpResponseZanBean;
-import com.leedane.cn.bean.ZanBean;
+import com.leedane.cn.adapter.CommentOrTransmitAdapter;
+import com.leedane.cn.bean.CommentOrTransmitBean;
+import com.leedane.cn.bean.HttpResponseCommentOrTransmitBean;
+import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.handler.PraiseHandler;
+import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.SerializableMap;
 import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONObject;
@@ -30,34 +31,69 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 点赞列表的fragment类
- * Created by LeeDane on 2016/4/5.
+ * 评论列表的fragment类
+ * Created by LeeDane on 2015/11/14.
  */
-public class ZanFragment extends BaseFragment{
+public class CommentOrTransmitFragment extends BaseFragment{
 
-    public static final String TAG = "ZanFragment";
+    public static final String TAG = "CommentOrTransmitFragment";
+    private boolean isComment;
+    private boolean itemSingleClick; //控制每一项是否可以出发单击事件
     private Context mContext;
     private ListView mListView;
-    private ZanAdapter mAdapter;
-    private List<ZanBean> mZanBeans = new ArrayList<>();
+    private CommentOrTransmitAdapter mAdapter;
+    private List<CommentOrTransmitBean> mCommentOrTransmitBeans = new ArrayList<>();
 
     private SwipeRefreshLayout mSwipeLayout;
     private View mRootView;
-    private int toUserId;
+    private SerializableMap baseRequestParams = new SerializableMap();
 
     //是否是第一次加载
     private boolean isFirstLoading = true;
-
     private boolean isLoginUser;
-    public ZanFragment(){
-    }
 
-    public static final ZanFragment newInstance(Bundle bundle){
-        ZanFragment fragment = new ZanFragment();
+
+    public CommentOrTransmitFragment(){
+    }
+    /**
+     * 构建Frament对象(Item默认可以点击)
+     * @param index 当前frament是第几个
+     * @param context
+     * @param params
+     * @param isComment
+     */
+    /*public CommentOrTransmitFragment(int index, Context context, SerializableMap params, boolean isComment){
+        this.mContext = context;
+        this.baseRequestParams = params;
+        this.isComment = isComment;
+        this.itemSingleClick = true;
+    }*/
+
+    /**
+     * 构建Frament对象
+     * @param index 当前frament是第几个
+     * @param context
+     * @param params
+     * @param isComment
+     * @param itemSingleClick 每一项是否可以出发单击
+     */
+    /*public CommentOrTransmitFragment(int index, Context context, SerializableMap params, boolean isComment, boolean itemSingleClick){
+        this.mContext = context;
+        baseRequestParams = params;
+        this.isComment = isComment;
+        this.itemSingleClick = itemSingleClick;
+    }*/
+
+    /**
+     * 构建Frament对象
+     * @param bundle
+     * @return
+     */
+    public static final CommentOrTransmitFragment newInstance(Bundle bundle){
+        CommentOrTransmitFragment fragment = new CommentOrTransmitFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,50 +108,51 @@ public class ZanFragment extends BaseFragment{
     public void taskFinished(TaskType type, Object result) {
         isLoading = false;
         if(result instanceof Error){
-            if((type == TaskType.LOAD_ZAN) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
+            if((type == TaskType.LOAD_COMMENT || type == TaskType.LOAD_TRANSMIT) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
                 mListViewFooter.setText(getResources().getString(R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
         try{
-            if(type == TaskType.LOAD_ZAN){
+            if(type == TaskType.LOAD_COMMENT || type == TaskType.LOAD_TRANSMIT){
                 if(mSwipeLayout !=null && mSwipeLayout.isRefreshing())
                     mSwipeLayout.setRefreshing(false);//下拉刷新组件停止刷新
                 if(isFirstLoading) {
                     isFirstLoading = false;
                 }
-                HttpResponseZanBean httpResponseZanBean = BeanConvertUtil.strConvertToZanBeans(String.valueOf(result));
-                if(httpResponseZanBean != null && httpResponseZanBean.isSuccess()){
-                    List<ZanBean> zanBeans = httpResponseZanBean.getMessage();
-                    if(zanBeans != null && zanBeans.size() > 0){
+                HttpResponseCommentOrTransmitBean httpResponseCommentOrTransmitBean = BeanConvertUtil.strConvertToCommentOrTransmitBeans(String.valueOf(result));
+                if(httpResponseCommentOrTransmitBean != null && httpResponseCommentOrTransmitBean.isSuccess()){
+                    List<CommentOrTransmitBean> commentOrTransmitBeans = httpResponseCommentOrTransmitBean.getMessage();
+                    if(commentOrTransmitBeans != null && commentOrTransmitBeans.size() > 0){
                         //临时list
-                        List<ZanBean> temList = new ArrayList<>();
+                        List<CommentOrTransmitBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.removeAllViewsInLayout();
-                            mZanBeans.clear();
+                            mCommentOrTransmitBeans.clear();
                         }
                         //将新的数据和以前的数据进行叠加
                         if(mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            for(int i = zanBeans.size() -1; i>= 0 ; i--){
-                                temList.add(zanBeans.get(i));
+                            for(int i = commentOrTransmitBeans.size() -1; i>= 0 ; i--){
+                                temList.add(commentOrTransmitBeans.get(i));
                             }
-                            temList.addAll(mZanBeans);
+                            temList.addAll(mCommentOrTransmitBeans);
                         }else{
-                            temList.addAll(mZanBeans);
-                            temList.addAll(zanBeans);
+                            temList.addAll(mCommentOrTransmitBeans);
+                            temList.addAll(commentOrTransmitBeans);
                         }
-                        Log.i(TAG, "原来的大小：" + mZanBeans.size());
+                        //Log.i(TAG, "原来的大小：" + mCommentOrTransmitBeans.size());
                         if(mAdapter == null) {
-                            mAdapter = new ZanAdapter(mContext, mZanBeans);
+                            mAdapter = new CommentOrTransmitAdapter(mContext, mCommentOrTransmitBeans);
                             mListView.setAdapter(mAdapter);
                         }
                         mAdapter.refreshData(temList);
-                        //Log.i(TAG, "后来的大小：" + mZanBeans.size());
-                        //ToastUtil.success(mContext, "成功加载" + zanBeans.size() + "条数据,总数是：" + mZanBeans.size(), Toast.LENGTH_SHORT);
-                        int size = mZanBeans.size();
+                        //Log.i(TAG, "后来的大小：" + mCommentOrTransmitBeans.size());
 
-                        mFirstId = mZanBeans.get(0).getId();
-                        mLastId = mZanBeans.get(size - 1).getId();
+                        //Toast.makeText(mContext, "成功加载"+ commentOrTransmitBeans.size() + "条数据,总数是："+mCommentOrTransmitBeans.size(), Toast.LENGTH_SHORT).show();
+                        int size = mCommentOrTransmitBeans.size();
+
+                        mFirstId = mCommentOrTransmitBeans.get(0).getId();
+                        mLastId = mCommentOrTransmitBeans.get(size - 1).getId();
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
@@ -125,8 +162,8 @@ public class ZanFragment extends BaseFragment{
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mZanBeans.clear();
-                            mAdapter.refreshData(new ArrayList<ZanBean>());
+                            mCommentOrTransmitBeans.clear();
+                            mAdapter.refreshData(new ArrayList<CommentOrTransmitBean>());
                             //mListView.addHeaderView(viewHeader);
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
@@ -140,8 +177,11 @@ public class ZanFragment extends BaseFragment{
                 }else{
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mZanBeans.clear();
-                            mAdapter.refreshData(new ArrayList<ZanBean>());
+                            //mCommentOrTransmits = new ArrayList<>();
+                            //mListView.removeAllViewsInLayout();
+                            mCommentOrTransmitBeans.clear();
+                            mAdapter.refreshData(new ArrayList<CommentOrTransmitBean>());
+                            //mListView.addHeaderView(viewHeader);
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
@@ -152,11 +192,11 @@ public class ZanFragment extends BaseFragment{
                     }
                 }
                 return;
-            }else if(type == TaskType.DELETE_ZAN){
+            }else if(type == TaskType.DELETE_COMMENT || type == TaskType.DELETE_TRANSMIT){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-                    ToastUtil.success(mContext, "删除赞成功", Toast.LENGTH_SHORT);
+                    ToastUtil.success(mContext, "删除成功", Toast.LENGTH_SHORT);
                     sendFirstLoading();
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
@@ -178,10 +218,18 @@ public class ZanFragment extends BaseFragment{
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageSize", 10);
         params.put("method", mPreLoadMethod);
-        params.put("toUserId", toUserId);
-        //第一次操作取消全部数据
-        taskCanceled(TaskType.LOAD_ZAN);
-        PraiseHandler.getZansRequest(this, params);
+        if(baseRequestParams != null)
+            params.putAll(baseRequestParams.getMap());
+        if(isComment) {
+            //第一次操作取消全部数据
+            taskCanceled(TaskType.LOAD_COMMENT);
+            CommentHandler.getCommentsRequest(this, params);
+        }else{
+            //第一次操作取消全部数据
+            taskCanceled(TaskType.LOAD_TRANSMIT);
+            TransmitHandler.getTransmitsRequest(this, params);
+        }
+
     }
     /**
      * 发送向上刷新的任务
@@ -201,10 +249,18 @@ public class ZanFragment extends BaseFragment{
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
-        params.put("toUserId", toUserId);
-        //向上刷新也先取消所有的加载操作
-        taskCanceled(TaskType.LOAD_ZAN);
-        PraiseHandler.getZansRequest(this, params);
+        if(baseRequestParams != null)
+            params.putAll(baseRequestParams.getMap());
+        if(isComment){
+            //向上刷新也先取消所有的加载操作
+            taskCanceled(TaskType.LOAD_COMMENT);
+            CommentHandler.getCommentsRequest(this, params);
+        }else{
+            //向上刷新也先取消所有的加载操作
+            taskCanceled(TaskType.LOAD_TRANSMIT);
+            TransmitHandler.getTransmitsRequest(this, params);
+        }
+
     }
     /**
      * 发送向下刷新的任务
@@ -229,9 +285,15 @@ public class ZanFragment extends BaseFragment{
         params.put("pageSize", 5);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
-        params.put("toUserId", toUserId);
-        taskCanceled(TaskType.LOAD_ZAN);
-        PraiseHandler.getZansRequest(this, params);
+        if(baseRequestParams != null)
+            params.putAll(baseRequestParams.getMap());
+        if(isComment){
+            taskCanceled(TaskType.LOAD_COMMENT);
+            CommentHandler.getCommentsRequest(this, params);
+        }else{
+            taskCanceled(TaskType.LOAD_TRANSMIT);
+            TransmitHandler.getTransmitsRequest(this, params);
+        }
     }
 
     /**
@@ -250,10 +312,16 @@ public class ZanFragment extends BaseFragment{
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
-            params.put("toUserId", toUserId);
+            if(baseRequestParams != null)
+                params.putAll(baseRequestParams.getMap());
             mListViewFooter.setText(getResources().getString(R.string.loading));
-            taskCanceled(TaskType.LOAD_ZAN);
-            PraiseHandler.getZansRequest(this, params);
+            if(isComment){
+                taskCanceled(TaskType.LOAD_COMMENT);
+                CommentHandler.getCommentsRequest(this, params);
+            } else{
+                taskCanceled(TaskType.LOAD_TRANSMIT);
+                TransmitHandler.getTransmitsRequest(this, params);
+            }
         }
 
     }
@@ -262,7 +330,9 @@ public class ZanFragment extends BaseFragment{
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
         if(bundle != null){
-            this.toUserId = bundle.getInt("toUserId");
+            baseRequestParams = (SerializableMap) bundle.getSerializable("serializableMap");
+            this.isComment = bundle.getBoolean("isComment");
+            this.itemSingleClick = bundle.getBoolean("itemSingleClick");
             this.isLoginUser = bundle.getBoolean("isLoginUser");
         }
         if(mContext == null)
@@ -274,15 +344,10 @@ public class ZanFragment extends BaseFragment{
             sendFirstLoading();
             //initFirstData();
             this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
-            mAdapter = new ZanAdapter( mContext, mZanBeans);
+            mAdapter = new CommentOrTransmitAdapter( mContext, mCommentOrTransmitBeans);
             mListView.setOnScrollListener(new ListViewOnScrollListener());
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    CommonHandler.startDetailActivity(mContext, mZanBeans.get(position).getTableName(), mZanBeans.get(position).getTableId(), null);
-                }
-            });
 
+            //只有登录用户才给予删除的权限
             if(isLoginUser){
                 //长按执行删除的操作
                 mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -292,12 +357,17 @@ public class ZanFragment extends BaseFragment{
                         builder.setCancelable(true);
                         builder.setIcon(R.drawable.menu_feedback);
                         builder.setTitle("提示");
-                        builder.setMessage("删除该点赞记录?");
+                        builder.setMessage("删除该记录?");
                         builder.setPositiveButton("删除",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        PraiseHandler.deleteZan(ZanFragment.this, mZanBeans.get(position).getId(), mZanBeans.get(position).getCreateUserId());
+                                        if(isComment){
+                                            CommentHandler.deleteComment(CommentOrTransmitFragment.this, mCommentOrTransmitBeans.get(position).getId(),  mCommentOrTransmitBeans.get(position).getCreateUserId());
+                                        } else{
+                                            TransmitHandler.deleteTransmit(CommentOrTransmitFragment.this, mCommentOrTransmitBeans.get(position).getId(),  mCommentOrTransmitBeans.get(position).getCreateUserId());
+                                        }
                                         showLoadingDialog("Delete", "try best to delete...");
+                                        //ToastUtil.success(mContext, "删除"+position);
                                     }
                                 });
                         builder.setNegativeButton("取消",
@@ -311,11 +381,21 @@ public class ZanFragment extends BaseFragment{
                     }
                 });
             }
+            if(itemSingleClick){
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        //ToastUtil.success(mContext,"点击的位置是："+position+",内容："+mCommentOrTransmitBeans.get(position).getContent());
+                        CommonHandler.startDetailActivity(mContext,mCommentOrTransmitBeans.get(position).getTableName(), mCommentOrTransmitBeans.get(position).getTableId(), null);
+                    }
+                });
+            }
+
             //listview下方的显示
             viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
             mListView.addFooterView(viewFooter, null, false);
             mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-            mListViewFooter.setOnClickListener(ZanFragment.this);//添加点击事件
+            mListViewFooter.setOnClickListener(CommentOrTransmitFragment.this);//添加点击事件
             mListViewFooter.setText(getResources().getString(R.string.loading));
 
             mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);

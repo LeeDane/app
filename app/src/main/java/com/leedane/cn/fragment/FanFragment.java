@@ -1,7 +1,6 @@
-package com.leedane.cn.frament;
+package com.leedane.cn.fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -13,51 +12,50 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leedane.cn.adapter.AttentionAdapter;
-import com.leedane.cn.bean.AttentionBean;
-import com.leedane.cn.bean.HttpResponseAttentionBean;
-import com.leedane.cn.handler.AttentionHandler;
-import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.adapter.FanAdapter;
+import com.leedane.cn.bean.FanBean;
+import com.leedane.cn.bean.HttpResponseFanBean;
+import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.ToastUtil;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * 关注列表的fragment类
- * Created by LeeDane on 2016/4/6.
+ * 粉丝列表的fragment类
+ * Created by LeeDane on 2016/4/13.
  */
-public class AttentionFragment extends BaseFragment{
+public class FanFragment extends BaseFragment{
 
-    public static final String TAG = "AttentionFragment";
+    public static final String TAG = "FanFragment";
+    private boolean itemSingleClick; //控制每一项是否可以出发单击事件
     private Context mContext;
     private ListView mListView;
-    private AttentionAdapter mAdapter;
-    private List<AttentionBean> mAttentionBeans = new ArrayList<>();
+    private FanAdapter mAdapter;
+    private List<FanBean> mFanBeans = new ArrayList<>();
 
     private SwipeRefreshLayout mSwipeLayout;
     private View mRootView;
-    private int toUserId;
 
     //是否是第一次加载
     private boolean isFirstLoading = true;
-
+    private int fanOrAttention;
     private boolean isLoginUser;
+    private int toUserId;
 
-    public AttentionFragment(){
+    public FanFragment(){
     }
 
-    public static final AttentionFragment newInstance(Bundle bundle){
-        AttentionFragment fragment = new AttentionFragment();
+    public static final FanFragment newInstance(Bundle bundle){
+        FanFragment fragment = new FanFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,50 +70,45 @@ public class AttentionFragment extends BaseFragment{
     public void taskFinished(TaskType type, Object result) {
         isLoading = false;
         if(result instanceof Error){
-            if((type == TaskType.LOAD_ATTENTION) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
+            if(type == TaskType.LOAD_MY_FAN && !mPreLoadMethod.equalsIgnoreCase("uploading")){
                 mListViewFooter.setText(getResources().getString(R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
         try{
-            if(type == TaskType.LOAD_ATTENTION){
-                if(mSwipeLayout !=null && mSwipeLayout.isRefreshing())
-                    mSwipeLayout.setRefreshing(false);//下拉刷新组件停止刷新
-                if(isFirstLoading) {
-                    isFirstLoading = false;
-                }
-                HttpResponseAttentionBean httpResponseAttentionBean = BeanConvertUtil.strConvertToAttentionBeans(String.valueOf(result));
-                if(httpResponseAttentionBean != null && httpResponseAttentionBean.isSuccess()){
-                    List<AttentionBean> attentionBeans = httpResponseAttentionBean.getMessage();
-                    if(attentionBeans != null && attentionBeans.size() > 0){
+            if(type == TaskType.LOAD_MY_FAN || type == TaskType.LOAD_MY_ATTENTION){
+                mSwipeLayout.setRefreshing(false);
+                HttpResponseFanBean responseFanBean = BeanConvertUtil.strConvertToFanBeans(String.valueOf(result));
+                if(responseFanBean != null && responseFanBean.isSuccess()){
+                    List<FanBean> fanBeans =  responseFanBean.getMessage();
+                    if(fanBeans != null && fanBeans.size() > 0){
                         //临时list
-                        List<AttentionBean> temList = new ArrayList<>();
+                        List<FanBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.removeAllViewsInLayout();
-                            mAttentionBeans.clear();
+                            mFanBeans.clear();
                         }
                         //将新的数据和以前的数据进行叠加
                         if(mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            for(int i = attentionBeans.size() -1; i>= 0 ; i--){
-                                temList.add(attentionBeans.get(i));
+                            for(int i = fanBeans.size() -1; i>= 0 ; i--){
+                                temList.add(fanBeans.get(i));
                             }
-                            temList.addAll(mAttentionBeans);
+                            temList.addAll(mFanBeans);
                         }else{
-                            temList.addAll(mAttentionBeans);
-                            temList.addAll(attentionBeans);
+                            temList.addAll(mFanBeans);
+                            temList.addAll(fanBeans);
                         }
-                        Log.i(TAG, "原来的大小：" + mAttentionBeans.size());
+                        Log.i(TAG, "原来的大小：" + mFanBeans.size());
                         if(mAdapter == null) {
-                            mAdapter = new AttentionAdapter(mContext, mAttentionBeans);
+                            mAdapter = new FanAdapter(mContext, mFanBeans);
                             mListView.setAdapter(mAdapter);
                         }
                         mAdapter.refreshData(temList);
-                        //Log.i(TAG, "后来的大小：" + mAttentionBeans.size());
-                        //ToastUtil.success(mContext, "成功加载" + attentionBeans.size() + "条数据,总数是：" + mAttentionBeans.size(), Toast.LENGTH_SHORT);
-                        int size = mAttentionBeans.size();
 
-                        mFirstId = mAttentionBeans.get(0).getId();
-                        mLastId = mAttentionBeans.get(size - 1).getId();
+                        int size = mFanBeans.size();
+
+                        mFirstId = mFanBeans.get(0).getId();
+                        mLastId = mFanBeans.get(size - 1).getId();
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
@@ -125,42 +118,31 @@ public class AttentionFragment extends BaseFragment{
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mAttentionBeans.clear();
-                            mAdapter.refreshData(new ArrayList<AttentionBean>());
-                            //mListView.addHeaderView(viewHeader);
+                            mFanBeans.clear();
+                            mAdapter.refreshData(new ArrayList<FanBean>());
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                             mListView.removeFooterView(viewFooter);
                             mListView.addFooterView(viewFooter, null, false);
                             mListViewFooter.setText(getResources().getString(R.string.no_load_more));
                         }else {
-                            ToastUtil.success(mContext, getResources().getString(R.string.no_load_more));
+                            ToastUtil.success(mContext, getResources().getString(R.string.no_load_more), Toast.LENGTH_LONG);
                         }
                     }
                 }else{
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mAttentionBeans.clear();
-                            mAdapter.refreshData(new ArrayList<AttentionBean>());
+                            mFanBeans.clear();
+                            mAdapter.refreshData(new ArrayList<FanBean>());
                         }
                         mListView.removeFooterView(viewFooter);
-                        mListView.addFooterView(viewFooter, null, false);
+                        mListView.addFooterView(viewFooter, null ,false);
                         mListViewFooter.setText(getResources().getString(R.string.load_more_error));
                         mListViewFooter.setOnClickListener(this);
-                    }else{
-                        ToastUtil.failure(mContext);
                     }
                 }
-                return;
-            }else if(type == TaskType.DELETE_ATTENTION){
-                dismissLoadingDialog();
-                JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-                    ToastUtil.success(mContext, "删除关注成功", Toast.LENGTH_SHORT);
-                    sendFirstLoading();
-                }else{
-                    ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
-                }
+            }else{
+                ToastUtil.failure(mContext, "数据加载失败", Toast.LENGTH_SHORT);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -169,9 +151,7 @@ public class AttentionFragment extends BaseFragment{
     /**
      * 发送第一次刷新的任务
      */
-    @Override
     protected void sendFirstLoading(){
-
         mPreLoadMethod = "firstloading";
         mFirstId = 0;
         mLastId = 0;
@@ -179,14 +159,26 @@ public class AttentionFragment extends BaseFragment{
         params.put("pageSize", 10);
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
-        //第一次操作取消全部数据
-        taskCanceled(TaskType.LOAD_ATTENTION);
-        AttentionHandler.getAttentionsRequest(this, params);
+        taskCanceled(TaskType.LOAD_MY_ATTENTION);
+        taskCanceled(TaskType.LOAD_MY_FAN);
+        if(fanOrAttention == 0) {
+            if(isLoginUser){
+                FanHandler.getMyFansRequest(FanFragment.this, params);
+            }else{
+                FanHandler.getToFansRequest(FanFragment.this, params);
+            }
+        }else {
+            if(isLoginUser){
+                FanHandler.getMyAttentionsRequest(FanFragment.this, params);
+            }else{
+                FanHandler.getToAttentionsRequest(FanFragment.this, params);
+            }
+        }
     }
+
     /**
      * 发送向上刷新的任务
      */
-    @Override
     protected void sendUpLoading(){
         //没有fistID时当作第一次请求加载
         if(mFirstId == 0){
@@ -202,14 +194,26 @@ public class AttentionFragment extends BaseFragment{
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
-        //向上刷新也先取消所有的加载操作
-        taskCanceled(TaskType.LOAD_ATTENTION);
-        AttentionHandler.getAttentionsRequest(this, params);
+        //获取当前是评论还是转发
+        taskCanceled(TaskType.LOAD_MY_ATTENTION);
+        taskCanceled(TaskType.LOAD_MY_FAN);
+        if(fanOrAttention == 0) {
+            if(isLoginUser){
+                FanHandler.getMyFansRequest(FanFragment.this, params);
+            }else{
+                FanHandler.getToFansRequest(FanFragment.this, params);
+            }
+        }else {
+            if(isLoginUser){
+                FanHandler.getMyAttentionsRequest(FanFragment.this, params);
+            }else{
+                FanHandler.getToAttentionsRequest(FanFragment.this, params);
+            }
+        }
     }
     /**
      * 发送向下刷新的任务
      */
-    @Override
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
         if(getResources().getString(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
@@ -230,92 +234,96 @@ public class AttentionFragment extends BaseFragment{
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
-        taskCanceled(TaskType.LOAD_ATTENTION);
-        AttentionHandler.getAttentionsRequest(this, params);
+        taskCanceled(TaskType.LOAD_MY_ATTENTION);
+        taskCanceled(TaskType.LOAD_MY_FAN);
+        if(fanOrAttention == 0) {
+            if(isLoginUser){
+                FanHandler.getMyFansRequest(FanFragment.this, params);
+            }else{
+                FanHandler.getToFansRequest(FanFragment.this, params);
+            }
+        }else {
+            if(isLoginUser){
+                FanHandler.getMyAttentionsRequest(FanFragment.this, params);
+            }else{
+                FanHandler.getToAttentionsRequest(FanFragment.this, params);
+            }
+        }
     }
 
     /**
      * 加载失败后点击加载更多
      * @param view
      */
-    @Override
-    protected void sendLoadAgain(View view){
+    public void sendLoadAgain(View view){
         //只有在加载失败或者点击加载更多的情况下点击才有效
         if(getResources().getString(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
                 || getResources().getString(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
-
+            ToastUtil.success(mContext, "请求重新加载", Toast.LENGTH_SHORT);
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10: 5);
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10 : 5);
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
             params.put("toUserId", toUserId);
             mListViewFooter.setText(getResources().getString(R.string.loading));
-            taskCanceled(TaskType.LOAD_ATTENTION);
-            AttentionHandler.getAttentionsRequest(this, params);
+            taskCanceled(TaskType.LOAD_MY_ATTENTION);
+            taskCanceled(TaskType.LOAD_MY_FAN);
+            if(fanOrAttention == 0) {
+                if(isLoginUser){
+                    FanHandler.getMyFansRequest(FanFragment.this, params);
+                }else{
+                    FanHandler.getToFansRequest(FanFragment.this, params);
+                }
+            }else {
+                if(isLoginUser){
+                    FanHandler.getMyAttentionsRequest(FanFragment.this, params);
+                }else{
+                    FanHandler.getToAttentionsRequest(FanFragment.this, params);
+                }
+            }
+
         }
 
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         Bundle bundle = getArguments();
         if(bundle != null){
             this.toUserId = bundle.getInt("toUserId");
+            this.itemSingleClick = true;
+            this.fanOrAttention = bundle.getInt("fanOrAttention");
             this.isLoginUser = bundle.getBoolean("isLoginUser");
         }
         if(mContext == null)
             mContext = getActivity();
 
         if(isFirstLoading){
+            sendFirstLoading();
             //ToastUtil.success(mContext, "评论");
             //isFirstLoading = false;
-            sendFirstLoading();
             //initFirstData();
             this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
-            mAdapter = new AttentionAdapter(mContext, mAttentionBeans);
+            mAdapter = new FanAdapter( getContext(), mFanBeans);
             mListView.setOnScrollListener(new ListViewOnScrollListener());
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    CommonHandler.startDetailActivity(mContext, mAttentionBeans.get(position).getTableName(), mAttentionBeans.get(position).getTableId(), null);
-                }
-            });
-
-            if(isLoginUser){
-                //长按执行删除的操作
-                mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            if(itemSingleClick){
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
-                        builder.setCancelable(true);
-                        builder.setIcon(R.drawable.menu_feedback);
-                        builder.setTitle("提示");
-                        builder.setMessage("删除该关注记录?");
-                        builder.setPositiveButton("删除",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        AttentionHandler.deleteAttention(AttentionFragment.this, mAttentionBeans.get(position).getId(), mAttentionBeans.get(position).getCreateUserId());
-                                        showLoadingDialog("Delete", "try best to delete...");
-                                    }
-                                });
-                        builder.setNegativeButton("取消",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                                    }
-                                });
-                        builder.show();
-                        return true;
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        ToastUtil.success(getContext(), "点击的位置是：" + position + ",内容：" + mFanBeans.get(position).getAccount());
+                        //CommonHandler.startDetailActivity(mContext,mFanBeans.get(position).getTableName(), mFanBeans.get(position).getTableId(), null);
                     }
                 });
             }
+
             //listview下方的显示
-            viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
+            viewFooter = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer_item, null);
             mListView.addFooterView(viewFooter, null, false);
             mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-            mListViewFooter.setOnClickListener(AttentionFragment.this);//添加点击事件
+            mListViewFooter.setOnClickListener(FanFragment.this);//添加点击事件
             mListViewFooter.setText(getResources().getString(R.string.loading));
 
             mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);

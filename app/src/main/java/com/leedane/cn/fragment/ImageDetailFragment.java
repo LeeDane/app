@@ -1,4 +1,4 @@
-package com.leedane.cn.frament;
+package com.leedane.cn.fragment;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,8 +17,6 @@ import com.leedane.cn.task.NetworkImageLoader;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.volley.ImageCacheManager;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;

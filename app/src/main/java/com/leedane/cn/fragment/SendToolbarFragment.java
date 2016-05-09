@@ -1,4 +1,4 @@
-package com.leedane.cn.frament;
+package com.leedane.cn.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.bean.CommentOrTransmitBean;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.TransmitHandler;
@@ -38,7 +37,6 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
         , TaskListener {
     public static final String TAG = "SendToolbarFragment";
     private Context mContext;
-    private MoodDetailActivity activity;
     private EditText mContentText;
     private ImageView mContentSend;
     private LinearLayout mSendBarRootView;
@@ -98,18 +96,9 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
         if(mContext == null)
             mContext = getActivity();
 
-        if(mContext == null)
-            mContext = getActivity();
-        if(activity == null)
-            activity = (MoodDetailActivity)getActivity();
-
         mKeyboardHelper = new SoftKeyboardStateHelper(getActivity().getWindow()
                 .getDecorView());
         mKeyboardHelper.addSoftKeyboardStateListener(this);
-
-       /* Message message = new Message();
-        message.obj = this;
-        handler.sendMessageDelayed(message, 55);*/
         this.mSendBarRootView = (LinearLayout)mRootView.findViewById(R.id.send_bar_root);
         this.mContentText = (EditText) mRootView.findViewById(R.id.mood_detail_comment_or_transmit_text);
         this.mContentSend = (ImageView)mRootView.findViewById(R.id.mood_detail_comment_or_transmit_send);
