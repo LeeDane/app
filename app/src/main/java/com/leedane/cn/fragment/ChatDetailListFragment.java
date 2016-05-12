@@ -20,10 +20,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leedane.cn.adapter.ChatDetailAdapter;
 import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.bean.ChatBean;
 import com.leedane.cn.bean.ChatDetailBean;
 import com.leedane.cn.bean.HttpResponseChatDetailBean;
 import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.bean.MyFriendsBean;
+import com.leedane.cn.database.BaseSQLiteDatabase;
+import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.handler.ChatDetailHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
@@ -41,6 +44,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 聊天详情列表的Fragment
@@ -81,6 +85,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
      */
     private List<ChatDetailBean> mChatDetailBeans = new ArrayList<>();
     private ChatDetailAdapter mAdapter;
+    private ChatDataBase dataBase;
 
     private int toUserId;
 
@@ -99,6 +104,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
      * @param chatDetailBean
      */
     public void afterSuccessSendMessage(ChatDetailBean chatDetailBean) {
+        dataBase.insert(chatDetailBean);
         List<ChatDetailBean> tempList = new ArrayList<>();
         tempList.addAll(mChatDetailBeans);
         tempList.add(chatDetailBean);
@@ -109,9 +115,10 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if(mRootView == null)
+        if(mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_chat_detail_list, container,
                     false);
+        }
         setHasOptionsMenu(true);
         return mRootView;
     }
@@ -126,6 +133,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         if(mContext == null)
             mContext = getActivity();
 
+        dataBase = new ChatDataBase(mContext);
         initUserPicBitMap();
         initView();
         loadLocalData();
@@ -145,7 +153,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
             HttpResponseMyFriendsBean mModel = gson.fromJson(friends, HttpResponseMyFriendsBean.class);
             if(mModel != null && mModel.getMessage().size() > 0){
                 for(MyFriendsBean friendsBean: mModel.getMessage()){
-                    if(friendsBean.getId() == toUserId){
+                    if(friendsBean.getId() == toUserId && StringUtil.isNotNull(friendsBean.getUserPicPath())){
                         toUserPicBitMap = ImageCacheManager.loadImage(friendsBean.getUserPicPath(), 30, 30);
                         break;
                     }
@@ -228,6 +236,23 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
                         }else{
                             mListViewHeader.setText(getStringResource(R.string.load_finish));
                         }
+
+                        /**
+                         * 将数据保存到本地数据库
+                         */
+                        String tableName = "chat_detail_" + BaseApplication.getLoginUserId() +"_"+toUserId;
+                        Map<String, Object> params;
+                        for(ChatDetailBean chatDetailBean: chatDetailBeans){
+                           /* params = new HashMap<>();
+                            params.put("cid", chatDetailBean.getId());
+                            params.put("content", chatDetailBean.getContent());
+                            params.put("to_user_id", chatDetailBean.getToUserId());
+                            params.put("create_user_id", chatDetailBean.getCreateUserId());
+                            params.put("create_time", chatDetailBean.getCreateTime());
+                            params.put("_type", chatDetailBean.getType());*/
+                            dataBase.insert(chatDetailBean);
+                        }
+
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
@@ -382,7 +407,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
 
     @Override
     public void onDestroy() {
-        if(userPicBitMap != null && !userPicBitMap.isRecycled()){
+        /*if(userPicBitMap != null && !userPicBitMap.isRecycled()){
             userPicBitMap.recycle();
             System.gc();
             userPicBitMap = null;
@@ -392,7 +417,8 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
             toUserPicBitMap.recycle();
             System.gc();
             toUserPicBitMap = null;
-        }
+        }*/
+        dataBase.destroy();
         taskCanceled(TaskType.LOAD_CHAT);
         super.onDestroy();
     }

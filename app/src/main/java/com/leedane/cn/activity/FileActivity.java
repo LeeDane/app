@@ -108,8 +108,8 @@ public class FileActivity extends BaseActivity {
         params.put("id", random.nextInt(10000));
         params.put("filename", "1_82378545124366_20160119184016_myJava.pdf");
         params.put("create_time", DateUtil.DateToString(new Date()));
-        params.put("create_user_id", 1);
-        sqLiteDatabase.insert("t_file", params);
+        params.put("create_user_id", BaseApplication.getLoginUserId());
+        sqLiteDatabase.insert(BaseSQLiteOpenHelper.TABLE_FILE, params);
         Cursor cursor = sqLiteDatabase.rowQuery("select * from "+ BaseSQLiteOpenHelper.TABLE_FILE+" where create_user_id =? order by id desc", new String[]{String.valueOf(BaseApplication.getLoginUserId())});
         if(cursor != null){
             String fileName,createTime;

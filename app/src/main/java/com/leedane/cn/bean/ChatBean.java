@@ -30,10 +30,31 @@ public class ChatBean extends IdBean {
 	private String createTime;
 
 	/**
+	 * 是否读取(0：未读，1：已读)
+	 */
+	private int read;
+	/**
 	 * 未读取数量
 	 */
 	@SerializedName("no_read_number")
 	private int noReadNumber;
+
+	/**
+	 * 创建人ID
+	 */
+	@SerializedName("create_user_id")
+	private int createUserId;
+
+	/**
+	 * 接收人的ID
+	 */
+	@SerializedName("to_user_id")
+	private int toUserId;
+
+	/**
+	 * 信息的类型
+	 */
+	private int type;
 
 	public String getContent() {
 		return content;
@@ -73,5 +94,37 @@ public class ChatBean extends IdBean {
 
 	public void setNoReadNumber(int noReadNumber) {
 		this.noReadNumber = noReadNumber;
+	}
+
+	public int getCreateUserId() {
+		return createUserId;
+	}
+
+	public void setCreateUserId(int createUserId) {
+		this.createUserId = createUserId;
+	}
+
+	public int getToUserId() {
+		return toUserId;
+	}
+
+	public void setToUserId(int toUserId) {
+		this.toUserId = toUserId;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public int getRead() {
+		return read;
+	}
+
+	public void setRead(int read) {
+		this.read = read;
 	}
 }

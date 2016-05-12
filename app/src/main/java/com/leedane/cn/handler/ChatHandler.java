@@ -30,9 +30,11 @@ public class ChatHandler {
         chatBeans.add(chatBean);
 
         ChatBean chatBean1 = new ChatBean();
-        chatBean1.setAccount("andy");
-        chatBean1.setContent("我是andy");
-        chatBean1.setId(5);
+        chatBean1.setAccount("测试号");
+        chatBean1.setContent("我是测试号");
+        chatBean1.setId(2);
+        chatBean1.setCreateUserId(1);
+        chatBean1.setToUserId(2);
         chatBean1.setCreateTime(DateUtil.DateToString(new Date()));
         chatBeans.add(chatBean1);
         return chatBeans;

@@ -7,7 +7,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.leedane.cn.bean.ChatDetailBean;
+import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.fragment.ChatDetailListFragment;
 import com.leedane.cn.fragment.SendChatToolbarFragment;
 import com.leedane.cn.fragment.SendToolbarFragment;
@@ -119,13 +122,19 @@ public class ChatDetailActivity extends BaseActivity implements ChatDetailListFr
         public void onReceive(Context context, Intent intent) {
             if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
                 String messge = intent.getStringExtra(KEY_MESSAGE);
-                String extras = intent.getStringExtra(KEY_EXTRAS);
+                Gson gson = new GsonBuilder().create();
+                ChatDetailBean chatDetailBean = gson.fromJson(messge, ChatDetailBean.class);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                //找到ChatDetailListFragment
+                ChatDetailListFragment chatDetailListFragment = (ChatDetailListFragment) fragmentManager.findFragmentById(R.id.chat_detail_container);
+                chatDetailListFragment.afterSuccessSendMessage(chatDetailBean);
+               /* String extras = intent.getStringExtra(KEY_EXTRAS);
                 StringBuilder showMsg = new StringBuilder();
                 showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
                 if (StringUtil.isNotNull(extras)) {
                     showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
                 }
-                setCostomMsg(showMsg.toString());
+                setCostomMsg(showMsg.toString());*/
             }
         }
     }

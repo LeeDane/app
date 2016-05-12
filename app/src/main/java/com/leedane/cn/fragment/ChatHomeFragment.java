@@ -1,6 +1,7 @@
 package com.leedane.cn.fragment;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,12 +11,24 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.leedane.cn.adapter.ChatAdapter;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatBean;
+import com.leedane.cn.bean.ChatDetailBean;
+import com.leedane.cn.bean.HttpResponseMyFriendsBean;
+import com.leedane.cn.bean.MyFriendsBean;
+import com.leedane.cn.database.BaseSQLiteDatabase;
+import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.handler.ChatHandler;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.SharedPreferenceUtil;
+import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +60,7 @@ public class ChatHomeFragment extends Fragment implements TaskListener
     private SwipeRefreshLayout mSwipeLayout;
     private Context mContext;
 
+    private ChatDataBase database;
     /**
      * List存放页面上的评论对象列表
      */
@@ -66,9 +80,12 @@ public class ChatHomeFragment extends Fragment implements TaskListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if(mRootView == null)
+        if(mRootView == null){
+
             mRootView = inflater.inflate(R.layout.fragment_chat_home, container,
                     false);
+        }
+
         setHasOptionsMenu(true);
         return mRootView;
     }
@@ -82,6 +99,8 @@ public class ChatHomeFragment extends Fragment implements TaskListener
         }
         if(mContext == null)
             mContext = getActivity();
+
+        database = new ChatDataBase(mContext);
         initData();
         initView();
     }
@@ -91,8 +110,26 @@ public class ChatHomeFragment extends Fragment implements TaskListener
      */
     private void initData(){
 
-       mChatBeans = ChatHandler.getLocalChatBeans(mContext);
+        String tempData = SharedPreferenceUtil.getFriends(mContext.getApplicationContext());
+        if(StringUtil.isNull(tempData)){
+            ToastUtil.success(mContext, "您还没有好友");
+            //后台去获取用户的好友信息
+            CommonHandler.startUserFreidnsService(mContext.getApplicationContext(), false);
+            return;
+        }
+        try {
+            Gson gson = new GsonBuilder().create();
+            HttpResponseMyFriendsBean model = gson.fromJson(tempData, HttpResponseMyFriendsBean.class);
+            if(model != null && model.getMessage() != null){
+                mChatBeans.addAll(database.queryChatHome(mContext, model.getMessage()));
+            }
+             mChatBeans.addAll(ChatHandler.getLocalChatBeans(mContext));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+
 
     private void initView(){
 
@@ -128,6 +165,7 @@ public class ChatHomeFragment extends Fragment implements TaskListener
 
     @Override
     public void onDestroy() {
+        database.destroy();
         super.onDestroy();
     }
 

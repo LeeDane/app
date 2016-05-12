@@ -53,19 +53,6 @@ public class BaseSQLiteDatabase {
 	}
 
 	/**
-	 * 创建聊天详情表的专用构造器
-	 * @param context
-	 * @param openType
-	 * @param friendId 好友ID
-	 */
-	public BaseSQLiteDatabase(Context context, int openType, int friendId) {
-		this.context = context;
-		this.helper = new BaseSQLiteOpenHelper(context, ConstantsUtil.DB_NAME, friendId);
-		this.openType = openType;
-		this.friendId = friendId;
-	}
-
-	/**
 	 * 打开数据库，就是为Database db赋值
 	 * @return
 	 * @throws SQLException
@@ -105,7 +92,7 @@ public class BaseSQLiteDatabase {
 					db.beginTransaction();  //开始事务
 					Long v = db.insert(tableName, null, values); //执行插入操作
 					db.setTransactionSuccessful();//设置是为了将事务标记为成功，当结束事务时就会提交事务，不设将直接回滚
-					Log.i(TAG, "tableName insert return value = " + v);
+					Log.i(TAG, tableName +" insert return value = " + v);
 					this.isSuccess = true;
 					this.message = "保存成功";//设置保存成功
 				}else{

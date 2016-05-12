@@ -25,31 +25,15 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * 创建聊天详情表专用构造方法
-	 * @param context
-	 * @param name
-	 * @param friendId
-	 */
-	public BaseSQLiteOpenHelper(Context context, String name, int friendId) {
-		super(context, name, null, ConstantsUtil.DB_VERSION);
-		this.friendId = friendId;
-	}
-
-	/**
 	 * 当数据库不存在或者第一次执行的时候才调用 (non-Javadoc)
 	 *
 	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		//database.execSQL(this.createTableUSER_ALL());
-		//database.execSQL(this.createTableMONEY_IN());
-		//database.execSQL(this.createTableMONEY_IN_TYPE());
-		//database.execSQL(this.createTableOptions());
 		database.execSQL(this.createTableFile());
 		database.execSQL(this.createMoodDraft());
-		if(friendId > 0)
-			database.execSQL(this.createChatDetail(friendId));
+		database.execSQL(ChatDataBase.CREATE_CHAT_TABLE);
 	}
 
 	/**
@@ -70,6 +54,8 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 		 *
 		 * this.onCreate(db); //执行创建操作!
 		 */
+		//db.execSQL("DROP TABLE IF EXISTS " + TABLE_FILE);
+
 	}
 
 	/**
@@ -84,7 +70,7 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 				"create_user_id int, " + // 创建人
 				"create_time varchar(25)" + // 创建时间
 				");";
-		Log.i(TAG, "执行创建MoodDraft表的SQL语句");
+		Log.i(TAG, "执行创建TableFile表的SQL语句");
 		return sql;
 	}
 
@@ -100,26 +86,7 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 				"create_user_id varchar(25), " + // 创建人
 				"create_time varchar(25)" + // 创建时间
 				");";
-		Log.i(TAG, "执行创建FilePath表的SQL语句");
-		return sql;
-	}
-
-	/**
-	 * 创建聊天详情表(每个好友一张表)
-	 * @return
-	 */
-	private String createChatDetail(int friendId) {
-		String tableName = "chat_detail_" + BaseApplication.getLoginUserId() + "_" +friendId;
-		String sql = "CREATE TABLE " + tableName + " ("
-				+ "ID integer primary key autoincrement, " + // id
-				"cid integer, " +  //聊天的ID
-				"content text, " + // 聊天内容
-				"to_user_id integer, " + // 接收聊天信息的用户ID
-				"accout varchar(20), " + // 接收聊天信息的用户名称
-				"create_user_id integer, " + // 创建人
-				"create_time varchar(25)" + // 创建时间
-				");";
-		Log.i(TAG, "执行创建"+tableName+"表的SQL语句");
+		Log.i(TAG, "执行创建MoodDraft表的SQL语句");
 		return sql;
 	}
 }

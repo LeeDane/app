@@ -6,9 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.activity.MainActivity;
 import com.leedane.cn.activity.NotificationActivity;
+import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.bean.ChatDetailBean;
+import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -107,13 +112,15 @@ public class JPushReceiver extends BroadcastReceiver {
 	
 	//send msg to MainActivity
 	private void processCustomMessage(Context context, Bundle bundle) {
-		ToastUtil.success(context, "极光推送这块代码被注释掉");
+		//ToastUtil.success(context, "极光推送这块代码被注释掉");
 		String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
 		String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-		if(StringUtil.isNotNull(extras)){
+		if(StringUtil.isNotNull(extras)){//自定义消息
+
 			try{
 				JSONObject jsonObject = new JSONObject(extras);
-				if (ChatDetailActivity.isForeground && ChatDetailActivity.toUserId == jsonObject.getInt("toUserId")) {
+
+				if (ChatDetailActivity.isForeground && ChatDetailActivity.toUserId == jsonObject.getInt("fromUserId")) {
 					Intent msgIntent = new Intent(ChatDetailActivity.MESSAGE_RECEIVED_ACTION);
 					msgIntent.putExtra(ChatDetailActivity.KEY_MESSAGE, message);
 					if (StringUtil.isNotNull(extras)) {
@@ -129,6 +136,10 @@ public class JPushReceiver extends BroadcastReceiver {
 					}
 					context.sendBroadcast(msgIntent);
 				}else{
+					ChatDataBase dataBase = new ChatDataBase(BaseApplication.newInstance());
+					Gson gson = new GsonBuilder().create();
+					ChatDetailBean chatDetailBean = gson.fromJson(message, ChatDetailBean.class);
+					dataBase.insert(chatDetailBean);
 					new NotificationUtil(1, context).sendActionNotification("聊天信息提示", message, "测试", 16, 0);
 				}
 			}catch (JSONException e){

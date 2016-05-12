@@ -47,6 +47,11 @@ public class ChatDetailBean extends IdBean {
 	@SerializedName("is_read")
 	private boolean read;
 
+	/**
+	 * 这个是特殊编码，记录的是和登录用户聊天的人的ID
+	 */
+	private int code;
+
 	public int getCreateUserId() {
 		return createUserId;
 	}
@@ -109,5 +114,13 @@ public class ChatDetailBean extends IdBean {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public int getCode() {
+		return code;
+	}
+
+	public void setCode(int code) {
+		this.code = code;
 	}
 }

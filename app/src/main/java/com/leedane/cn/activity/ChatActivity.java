@@ -11,8 +11,10 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
 import com.leedane.cn.adapter.ChatFragmentPagerAdapter;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatBean;
 import com.leedane.cn.database.BaseSQLiteDatabase;
+import com.leedane.cn.fragment.ChatContactFragment;
 import com.leedane.cn.fragment.ChatHomeFragment;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
@@ -60,8 +62,11 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
         mFragments = new ArrayList<>();
         ChatHomeFragment chatHomeFragment = ChatHomeFragment.newInstance(new Bundle());
         chatHomeFragment.setOnItemClickListener(ChatActivity.this);
+
+        ChatContactFragment contactFragment = ChatContactFragment.newInstance(new Bundle());
+
         mFragments.add(chatHomeFragment);
-        mFragments.add(null);
+        mFragments.add(contactFragment);
         mFragments.add(null);
     }
     /**
@@ -134,6 +139,12 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
     @Override
     public void onItemClick(int position, ChatBean chatBean) {
         ToastUtil.success(ChatActivity.this, chatBean.getAccount());
-        CommonHandler.startChatDetailActivity(ChatActivity.this, chatBean.getId(), chatBean.getAccount());
+        int toUserId  = 0;
+        if(chatBean.getCreateUserId() == BaseApplication.getLoginUserId()){
+            toUserId = chatBean.getToUserId();
+        }else{
+            toUserId = chatBean.getCreateUserId();
+        }
+        CommonHandler.startChatDetailActivity(ChatActivity.this, toUserId, chatBean.getAccount());
     }
 }
