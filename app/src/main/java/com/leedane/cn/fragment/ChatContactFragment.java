@@ -107,7 +107,7 @@ public class ChatContactFragment extends Fragment implements View.OnClickListene
         mUserDialog = (TextView) mRootView.findViewById(R.id.myfriends_dialog);
         mRecyclerView = (ChatContactTouchableRecyclerView) mRootView.findViewById(R.id.myfriends_member);
         mSideBar.setTextView(mUserDialog);
-        mAdapter.setOnRecyclerViewListener(ChatContactFragment.this);
+
         getNetData();
     }
 
@@ -161,6 +161,7 @@ public class ChatContactFragment extends Fragment implements View.OnClickListene
             final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(mAdapter);
             mRecyclerView.addItemDecoration(headersDecor);
             mRecyclerView.addItemDecoration(new DividerDecoration(mContext));
+            mAdapter.setOnRecyclerViewListener(ChatContactFragment.this);
             //   setTouchHelper();
             mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
