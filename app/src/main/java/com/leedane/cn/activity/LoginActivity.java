@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.service.LoadUserFriendService;
@@ -240,6 +241,9 @@ public class LoginActivity extends Activity implements TaskListener {
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferenceUtil.clearUserInfo(LoginActivity.this);
                         SharedPreferenceUtil.clearFriends(LoginActivity.this);
+                        ChatDataBase dataBase = new ChatDataBase(LoginActivity.this);
+                        dataBase.deleteAll();
+                        dataBase.destroy();
                     }
 
                 })

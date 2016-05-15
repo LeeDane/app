@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import com.leedane.cn.activity.MoodActivity;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.database.BaseSQLiteDatabase;
@@ -335,10 +336,10 @@ public class SendMoodService extends Service implements TaskListener {
             params.put("create_user_id", String.valueOf(BaseApplication.getLoginUserId()));
             sqLiteDatabase.insert(BaseSQLiteOpenHelper.TABLE_MOOD_DRAFT, params);
             //SharedPreferenceUtil.saveMoodDraft(getApplicationContext(), content, uris);
-            new NotificationUtil(1, SendMoodService.this).sendActionNotification("心情发表失败", "失败步骤:"+steps+"，心情已经保存为草稿", "测试", 1, 0);
+            new NotificationUtil(1, SendMoodService.this).sendActionNotification("心情发表失败", "失败步骤:"+steps+"，心情已经保存为草稿", "测试", 1, 0, MoodActivity.class);
         }catch (Exception e){
             e.printStackTrace();
-            new NotificationUtil(1, SendMoodService.this).sendActionNotification("心情发表失败", "失败步骤:"+steps, "测试", 1, 0);
+            new NotificationUtil(1, SendMoodService.this).sendActionNotification("心情发表失败", "失败步骤:"+steps, "测试", 1, 0, MoodActivity.class);
         }
     }
 

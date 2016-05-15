@@ -104,6 +104,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
      * @param chatDetailBean
      */
     public void afterSuccessSendMessage(ChatDetailBean chatDetailBean) {
+        chatDetailBean.setRead(true);
         dataBase.insert(chatDetailBean);
         List<ChatDetailBean> tempList = new ArrayList<>();
         tempList.addAll(mChatDetailBeans);
@@ -233,9 +234,8 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.setSelection(mChatDetailBeans.size() -1);
-                        }else{
-                            mListViewHeader.setText(getStringResource(R.string.load_finish));
                         }
+                        mListViewHeader.setText(getStringResource(R.string.load_finish));
 
                         /**
                          * 将数据保存到本地数据库
@@ -250,6 +250,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
                             params.put("create_user_id", chatDetailBean.getCreateUserId());
                             params.put("create_time", chatDetailBean.getCreateTime());
                             params.put("_type", chatDetailBean.getType());*/
+                            chatDetailBean.setRead(true);
                             dataBase.insert(chatDetailBean);
                         }
 

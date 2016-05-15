@@ -8,12 +8,14 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.leedane.cn.activity.ChatActivity;
 import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.activity.MainActivity;
 import com.leedane.cn.activity.NotificationActivity;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatDetailBean;
 import com.leedane.cn.database.ChatDataBase;
+import com.leedane.cn.handler.FriendHandler;
 import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -139,8 +141,14 @@ public class JPushReceiver extends BroadcastReceiver {
 					ChatDataBase dataBase = new ChatDataBase(BaseApplication.newInstance());
 					Gson gson = new GsonBuilder().create();
 					ChatDetailBean chatDetailBean = gson.fromJson(message, ChatDetailBean.class);
-					dataBase.insert(chatDetailBean);
-					new NotificationUtil(1, context).sendActionNotification("聊天信息提示", message, "测试", 16, 0);
+					if(chatDetailBean != null){
+						//判断是否是已经存在数据库
+						if(dataBase.insert(chatDetailBean)){
+							String friendAccount = FriendHandler.getFriendAccout(chatDetailBean.getCreateUserId());
+							if(StringUtil.isNotNull(friendAccount))
+								new NotificationUtil(1, context).sendActionNotification("与"+friendAccount +"聊天", friendAccount +":" +chatDetailBean.getContent(), "测试", 16, 0, ChatActivity.class);
+						}
+					}
 				}
 			}catch (JSONException e){
 				e.printStackTrace();

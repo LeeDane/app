@@ -1,5 +1,7 @@
 package com.leedane.cn.activity;
 
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,12 +9,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.leedane.cn.adapter.ChatFragmentPagerAdapter;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatBean;
+import com.leedane.cn.customview.RightBorderTextView;
 import com.leedane.cn.database.BaseSQLiteDatabase;
 import com.leedane.cn.fragment.ChatContactFragment;
 import com.leedane.cn.fragment.ChatHomeFragment;
@@ -32,11 +38,17 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
     private static final String TAG = "ChatActivity";
     private BaseSQLiteDatabase sqLiteDatabase;
 
+    private ImageView mImageViewLine;
     private ViewPager mViewPager;
     private List<Fragment> mFragments;
 
     //线的宽度
     private int mLineWidth;
+
+    private int tabWidth;
+
+
+    private LinearLayout mChatBottom;
 
     //偏移量
     private int mOffset;
@@ -73,24 +85,23 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
      * 初始化控件
      */
     private void initView() {
+        mChatBottom = (LinearLayout)findViewById(R.id.chat_bottom);
+        mImageViewLine = (ImageView)findViewById(R.id.line_imageview);
+        //初始化线图像
+        initImageView();
         mViewPager = (ViewPager)findViewById(R.id.chat_viewpager);
         mViewPager.setAdapter(new ChatFragmentPagerAdapter(getSupportFragmentManager(), mFragments));
         mViewPager.setCurrentItem(0);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            int one = mOffset * 2 + mLineWidth;// 页卡1 -> 页卡2 偏移量
+            float positionOffsetOld;
             @Override
             public void onPageSelected(int position) {
-                if (position == 0) {
-
-                } else if (position == 1) {
-
-                } else {
-
-                }
-                Animation animation = new TranslateAnimation(one * current_index, one * position, 0, 0);
-                animation.setFillAfter(true);
-                animation.setDuration(300);
                 current_index = position;
+
+                //更新Tab文字的颜色
+                upDateTabTextColor();
+
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 List<Fragment> list = fragmentManager.getFragments();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -100,20 +111,22 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.i(TAG, "onPageScrolled-->position: " + position + ", positionOffset:" + positionOffset + ", positionOffsetPixels:" + positionOffsetPixels);
+                if (positionOffset == 0.00 || positionOffset == 1.00 || positionOffset == 2.00) {
+                    return;
+                }
+                Animation animation = new TranslateAnimation((position + positionOffsetOld) * tabWidth, (position + positionOffset) * tabWidth, 0, 0);
+                animation.setFillAfter(true);
+                animation.setDuration(20);
+                mImageViewLine.startAnimation(animation);
+                positionOffsetOld = positionOffset;
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
                 Log.i(TAG, "onPageScrollStateChanged:" + state);
-				/*if(state == 0){
-					current_index = getSupportFragmentManager().getFragments().get
-				}*/
             }
         });
         current_index  = 0;
-        //ChatHomeFragment chatHomeFragment = ChatHomeFragment.newInstance(null);
-        //getSupportFragmentManager().beginTransaction().replace(R.id.chat_container, chatHomeFragment).commit();
     }
 
     @Override
@@ -131,9 +144,75 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
     @Override
     public void onClick(View v) {
         super.onClick(v);
+    }
 
-        switch (v.getId()){
+    /**
+     * 聊天tab的点击
+     * @param view
+     */
+    public void tabChatClick(View view){
+        current_index = 0;
+        mViewPager.setCurrentItem(current_index);
+        upDateTabTextColor();
+    }
+
+    /**
+     * 通讯录tab的点击
+     * @param view
+     */
+    public void tabContactClick(View view){
+        current_index = 1;
+        mViewPager.setCurrentItem(current_index);
+        upDateTabTextColor();
+    }
+
+    /**
+     * 操作tab的点击
+     * @param view
+     */
+    public void tabOperateClick(View view){
+        current_index = 2;
+        mViewPager.setCurrentItem(current_index);
+        upDateTabTextColor();
+    }
+
+    /**
+     * 更新Tab文字的颜色
+     */
+    private void upDateTabTextColor(){
+        RightBorderTextView textView;
+        for (int i = 0; i < 3; i++) {
+            if (i == current_index) {
+                textView = (RightBorderTextView) mChatBottom.getChildAt(current_index);
+                textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+            } else {
+                textView = (RightBorderTextView) mChatBottom.getChildAt(i);
+                textView.setTextColor(getResources().getColor(R.color.gray));
+            }
         }
+    }
+
+    /**
+     * 初始化创建线的图像
+     */
+    private void initImageView() {
+        //获得当前设备的屏幕宽度
+        int screenWidth = BaseApplication.newInstance().getScreenWidthAndHeight()[0];
+
+        //设置线性的图像的宽度为1/3的屏幕宽度
+        ViewGroup.LayoutParams params = mImageViewLine.getLayoutParams();
+        int w = (int)screenWidth/3;
+        Log.i(TAG, "screenWidth:"+w);
+        tabWidth = w;
+        params.width = w;
+        //获取图片宽度
+        mLineWidth = BitmapFactory.decodeResource(getResources(), R.drawable.line).getWidth();
+        Log.i(TAG, "mLineWidth:"+w);
+        Matrix matrix = new Matrix();
+        mOffset = (int) ((screenWidth/(float)3 - mLineWidth)/2);
+        matrix.postTranslate(mOffset, 0);
+        //设置初始位置
+        mImageViewLine.setImageMatrix(matrix);
     }
 
     @Override

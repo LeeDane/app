@@ -123,7 +123,7 @@ public class ChatHomeFragment extends Fragment implements TaskListener
             if(model != null && model.getMessage() != null){
                 mChatBeans.addAll(database.queryChatHome(mContext, model.getMessage()));
             }
-             mChatBeans.addAll(ChatHandler.getLocalChatBeans(mContext));
+             //mChatBeans.addAll(ChatHandler.getLocalChatBeans(mContext));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.bean.CommentOrTransmitBean;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.TransmitHandler;
@@ -225,7 +226,7 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
                     new NotificationUtil(1, mContext).sendTipNotification("信息提示", "您的评论发表成功", "测试", 1, 0);
                     mContentText.setText("");
                 } else {
-                    new NotificationUtil(1, mContext).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0);
+                    new NotificationUtil(1, mContext).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0, MoodDetailActivity.class);
                 }
             }
         }catch (JSONException e){

@@ -50,15 +50,15 @@ public class ChatDataBase {
     }
 
     /**
-     * 增
-     *
+     * 新增
      * @param data
+     * @return true表示成功插入，false表示不成功插入
      */
-    public void insert(ChatDetailBean data) {
+    public boolean insert(ChatDetailBean data) {
 
         if(isExists(data.getId())){
             Log.i(TAG, "数据已经存在:"+data.getId());
-            return;
+            return false;
         }
 
         Log.i(TAG, "数据还没有存在:"+data.getId());
@@ -78,13 +78,14 @@ public class ChatDataBase {
                 data.getId() + "", data.getContent() + "", data.getType() +"",
                 data.getToUserId() +"", data.getCreateUserId() +"", data.getCreateTime(), code +"" });
         sqlite.close();
+        return true;
     }
 
     private boolean isExists(int cid){
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
         ArrayList<ChatDetailBean> data = new ArrayList<ChatDetailBean>();
         Cursor cursor = sqlite.rawQuery("select cid from "
-                + CHAT_TABLE_NAME + " where cid = ?", new String[]{cid +""});
+                + CHAT_TABLE_NAME + " where cid = ?", new String[]{cid + ""});
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             ChatDetailBean person = new ChatDetailBean();
             person.setId(cursor.getInt(0));
@@ -99,14 +100,23 @@ public class ChatDataBase {
     }
 
     /**
-     * 删
-     *
+     * 删掉指定一条记录
      * @param id
      */
     public void delete(int id) {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("delete from " + CHAT_TABLE_NAME + " where cid=?");
         sqlite.execSQL(sql, new Integer[] { id });
+        sqlite.close();
+    }
+
+    /**
+     * 删掉全部记录
+     */
+    public void deleteAll() {
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        String sql = ("delete from " + CHAT_TABLE_NAME );
+        sqlite.execSQL(sql);
         sqlite.close();
     }
 
@@ -175,19 +185,12 @@ public class ChatDataBase {
                     "from " + CHAT_TABLE_NAME + " o  " +
                     "where not EXISTS(" +
                     "select 0 from " + CHAT_TABLE_NAME + " o1  where o1.code = o.code and o1.cid > o.cid" +
-                    ")";
+                    ") order by create_time desc";
             SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
 
             Cursor cursor = sqlite.rawQuery(sql, null);
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 ChatBean chatBean = new ChatBean();
-               /* person.setId(cursor.getInt(0));
-                person.setContent(cursor.getString(1));
-                person.setType(cursor.getInt(2));
-                person.setToUserId(cursor.getInt(3));
-                person.setCreateUserId(cursor.getInt(4));
-                person.setCreateTime(cursor.getString(5));
-                person.setCode(cursor.getInt(6));*/
                 chatBean.setAccount(getAccountByFriend(myFriendsBeans, cursor.getInt(6)));
                 chatBean.setCreateTime(cursor.getString(5));
                 chatBean.setContent(cursor.getString(1));
