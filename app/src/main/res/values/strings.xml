@@ -37,6 +37,7 @@
     <string name="unlike">不喜欢</string>
     <string name="score">积分</string>
     <string name="comlpete">完成</string>
+    <string name="oparate">操作</string>
 
     <!-- 异常相关 -->
     <string name="crash_file_path">"/crash"</string>

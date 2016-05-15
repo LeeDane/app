@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.leedane.cn.activity.ImageDetailActivity;
+import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.adapter.CommentOrTransmitAdapter;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.CommentOrTransmitBean;
@@ -467,7 +468,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                     }, 1000);
 
                 } else {
-                    new NotificationUtil(1, mContext).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0);
+                    new NotificationUtil(1, mContext).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0, MoodDetailActivity.class);
                 }
             } else if (type == TaskType.ADD_ZAN) {
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));

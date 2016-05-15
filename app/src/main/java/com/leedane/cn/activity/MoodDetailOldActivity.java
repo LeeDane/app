@@ -460,7 +460,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
                     }, 1000);
 
                 } else {
-                    new NotificationUtil(1, MoodDetailOldActivity.this).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0);
+                    new NotificationUtil(1, MoodDetailOldActivity.this).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0, MoodDetailOldActivity.class);
                 }
             } else if (type == TaskType.ADD_ZAN) {
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));

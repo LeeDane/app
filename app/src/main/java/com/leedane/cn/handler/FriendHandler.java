@@ -1,11 +1,18 @@
 package com.leedane.cn.handler;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.bean.HttpResponseMyFriendsBean;
+import com.leedane.cn.bean.MyFriendsBean;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.SharedPreferenceUtil;
+import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.volley.ImageCacheManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +23,26 @@ import java.util.Map;
  */
 public class FriendHandler {
 
+    /**
+     * 根据好友ID获取好友名称
+     * @param friendId
+     * @return
+     */
+    public static String getFriendAccout(int friendId){
+        String friends = SharedPreferenceUtil.getFriends(BaseApplication.newInstance().getApplicationContext().getApplicationContext());
+        if(StringUtil.isNotNull(friends)){
+            Gson gson = new GsonBuilder().create();
+            HttpResponseMyFriendsBean mModel = gson.fromJson(friends, HttpResponseMyFriendsBean.class);
+            if(mModel != null && mModel.getMessage().size() > 0){
+                for(MyFriendsBean friendsBean: mModel.getMessage()){
+                    if(friendsBean.getId() == friendId){
+                        return friendsBean.getAccount();
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * 获取已经跟我成为好友关系的分页列表

@@ -516,7 +516,7 @@ public class MoodActivity extends BaseActivity {
                     new NotificationUtil(1, MoodActivity.this).sendTipNotification("信息提示", "您的发表的心情发送成功", "测试", 1, 0);
                     finish();//关闭当前activity
                 }else{
-                    new NotificationUtil(1, MoodActivity.this).sendActionNotification("信息提示", "您的发表的心情发送失败，点击重试", "测试", 1, 0);
+                    new NotificationUtil(1, MoodActivity.this).sendActionNotification("信息提示", "您的发表的心情发送失败，点击重试", "测试", 1, 0, MoodActivity.class);
                 }
             }else if(type == TaskType.ADD_COMMENT){
 
@@ -526,7 +526,7 @@ public class MoodActivity extends BaseActivity {
                     setResult(PersonalActivity.MOOD_COMMENT_REQUEST_CODE, intent);
                     finish();//关闭当前activity
                 }else{
-                    new NotificationUtil(1, MoodActivity.this).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0);
+                    new NotificationUtil(1, MoodActivity.this).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0, MoodActivity.class);
                 }
             }else if(type == TaskType.ADD_TRANSMIT){
 
@@ -534,7 +534,7 @@ public class MoodActivity extends BaseActivity {
                 new NotificationUtil(1, MoodActivity.this).sendTipNotification("信息提示", "转发成功", "测试", 1, 0);
                 finish();//关闭当前activity
             }else{
-                new NotificationUtil(1, MoodActivity.this).sendActionNotification("信息提示", "转发失败，点击重试", "测试", 1, 0);
+                new NotificationUtil(1, MoodActivity.this).sendActionNotification("信息提示", "转发失败，点击重试", "测试", 1, 0, MoodActivity.class);
             }
             }
         }catch (Exception e){
