@@ -13,13 +13,19 @@ public class TimeLineBean implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	@SerializedName("table_id")
 	private int tableId;
+
+	@SerializedName("table_name")
 	private String tableName;
+
+	@SerializedName("create_time")
 	private String createTime; //避免转化json过程中的出现问题，用字符串yyyy-MM-dd HH:mm:ss字符串
 	private String source;
 	private String content;
 	private String froms;
+	@SerializedName("create_user_id")
 	private int createUserId;
 	private String account;
 	@SerializedName("user_pic_path")

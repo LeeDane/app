@@ -1,6 +1,7 @@
 package com.leedane.cn.application;
 
 import android.app.Application;
+import android.app.Service;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -8,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.os.Vibrator;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,10 +18,12 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.baidu.mapapi.SDKInitializer;
 import com.leedane.cn.handler.CrashUncaughtExceptionHandler;
 
 
 import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.service.LocationService;
 import com.leedane.cn.task.Task;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
@@ -47,6 +51,8 @@ public class BaseApplication extends Application {
     private static Bitmap getDefaultImage;
     private static Bitmap getErrorImage;
     private static  boolean isLogin;
+    public LocationService locationService;
+    public Vibrator mVibrator;
     @Override
     public void onCreate() {
         long start = System.currentTimeMillis();
@@ -68,6 +74,12 @@ public class BaseApplication extends Application {
         //JPushInterface.setDebugMode(true);
         //JPushInterface.init(this);
 
+        /***
+         * 初始化定位sdk，建议在Application中创建
+         */
+        locationService = new LocationService(getApplicationContext());
+        mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
+        SDKInitializer.initialize(getApplicationContext());
         queue = Volley.newRequestQueue(getApplicationContext());//使用全局上下文
         Log.i(TAG, "创建上下文信息完成，耗时：" + (end - start));
     }

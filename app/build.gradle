@@ -17,6 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
@@ -51,4 +56,6 @@ dependencies {
     compile files('libs/zxing.jar')
     compile files('libs/togglebuttonlib.jar')
     compile files('libs/jpush-android-2.1.3.jar')
+    compile files('libs/locSDK_6.23.jar')
+    compile files('libs/baidumapapi_v3_5_0.jar')
 }

@@ -69,7 +69,6 @@
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -235,6 +234,13 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity
+            android:name="com.leedane.cn.activity.TestActivity"
+            android:label="@string/chat_detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <!--  Jpush  -->
         <!-- Required SDK核心功能-->
         <activity
@@ -334,6 +340,14 @@
                 <action android:name="com.leedane.cn.broadcast.UserInfoDataReceiver"/>
             </intent-filter>
         </receiver>
+
+        <!--  百度地图 -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="VxBxLWIGa2zK6O3LNA4E3FfNDcuf17bE" />
+        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
+        </service>
+
 
         <activity
             android:name="com.leedane.cn.activity.MipcaActivityCapture"
