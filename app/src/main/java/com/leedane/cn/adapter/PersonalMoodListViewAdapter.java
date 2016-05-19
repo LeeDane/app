@@ -86,13 +86,10 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_personal_mood_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmAccount((TextView) view.findViewById(R.id.personal_mood_account));
             viewHolder.setmContent((AutoLinkTextView) view.findViewById(R.id.personal_mood_content));
             viewHolder.setmFroms((TextView) view.findViewById(R.id.personal_mood_froms));
             viewHolder.setmTime((TextView) view.findViewById(R.id.personal_mood_time));
             viewHolder.setmMore((ImageView) view.findViewById(R.id.personal_mood_more));
-            viewHolder.setmUserImg((CircularImageView) view.findViewById(R.id.personal_mood_user_pic));
-            viewHolder.setmUserInfo((LinearLayout)view.findViewById(R.id.personal_mood_user));
 
             viewHolder.setmImgMain((ImageView) view.findViewById(R.id.personal_mood_img_main));
             viewHolder.setmTransmit((RightBorderTextView) view.findViewById(R.id.personal_mood_operate_transmit));
@@ -105,13 +102,6 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
 
         final MoodBean moodBean = mData.get(position);
         viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getmAccount().setText(moodBean.getAccount());
-        viewHolder.getmUserInfo().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CommonHandler.startPersonalActivity(mContext, moodBean.getCreateUserId());
-            }
-        });
 
         String content = moodBean.getContent();
         //SpannableString mSpanContent = new SpannableString(content);
@@ -166,40 +156,6 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         });
 
         String userPicPath = moodBean.getUserPicPath();
-
-        //七牛云存储处理
-        if(StringUtil.isQiniuUrl(userPicPath)){
-
-            Log.i(TAG, "volley的get请求获取图片,url:" + userPicPath);
-            ImageCacheManager.loadImage(userPicPath, viewHolder.getmUserImg(), BaseApplication.getDefaultImage() , BaseApplication.getErrorImage());
-        }else{
-            //post请求本系统获取base64图像字符串
-            Log.i(TAG, "post请求本系统获取base64图像字符串,url:"+userPicPath);
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("uid", moodBean.getCreateUserId());
-                jsonObject.put("size", "30x30");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            String httpUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER) + "leedane/user_getHeadBase64StrById.action";
-            JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.POST,
-                    httpUrl,  //请求的地址
-                    jsonObject,  //请求的参数
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject jsonObject) {
-                            Toast.makeText(mContext, "数据：" + jsonObject.toString(), Toast.LENGTH_LONG).show();
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-
-                }
-            });
-
-            BaseApplication.getVollyQueue().add(objectRequest);
-        }
 
         //异步根据用户的id去获取图片对象
         // viewHolder.getmUserImg().setImageBitmap(ImageUtil.getInstance().getBitmapByBase64(moodBean.getCreateUserId()));
@@ -270,8 +226,6 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
 
     private class ViewHolder{
         private TextView mFroms;
-        private CircularImageView mUserImg;
-        private TextView mAccount;
         private TextView mTime;
         private ImageView mMore;
         private AutoLinkTextView mContent;
@@ -279,7 +233,6 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         private TextView mPraiseList;
         private RightBorderTextView mComment;
         private RightBorderTextView mTransmit;
-        private LinearLayout mUserInfo;
         //private RightBorderTextView mPraise;
 
         public ImageView getmMore() {
@@ -288,14 +241,6 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
 
         public void setmMore(ImageView mMore) {
             this.mMore = mMore;
-        }
-
-        public TextView getmAccount() {
-            return mAccount;
-        }
-
-        public void setmAccount(TextView mAccount) {
-            this.mAccount = mAccount;
         }
 
         public RightBorderTextView getmComment() {
@@ -354,28 +299,12 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             this.mTransmit = mTransmit;
         }
 
-        public CircularImageView getmUserImg() {
-            return mUserImg;
-        }
-
-        public void setmUserImg(CircularImageView mUserImg) {
-            this.mUserImg = mUserImg;
-        }
-
         public TextView getmPraiseList() {
             return mPraiseList;
         }
 
         public void setmPraiseList(TextView mPraiseList) {
             this.mPraiseList = mPraiseList;
-        }
-
-        public LinearLayout getmUserInfo() {
-            return mUserInfo;
-        }
-
-        public void setmUserInfo(LinearLayout mUserInfo) {
-            this.mUserInfo = mUserInfo;
         }
     }
 }

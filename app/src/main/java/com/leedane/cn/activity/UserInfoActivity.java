@@ -236,7 +236,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
             contentString =  CommonHandler.encodeQrCodeStr(contentString);
             ToastUtil.failure(UserInfoActivity.this, "二维码创建成功，长按保存到本地", Toast.LENGTH_SHORT);
             try {
-                qrCodeBitmap = EncodingHandler.createQRCode(contentString, 350);
+                qrCodeBitmap = EncodingHandler.createQRCode(contentString, 720);
                 imageView.setImageBitmap(qrCodeBitmap);
             } catch (WriterException e) {
                 e.printStackTrace();

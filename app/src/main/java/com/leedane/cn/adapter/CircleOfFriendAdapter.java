@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.AttentionBean;
 import com.leedane.cn.bean.TimeLineBean;
 import com.leedane.cn.customview.CircularImageView;
@@ -28,10 +29,14 @@ import java.util.List;
 public class CircleOfFriendAdapter extends BaseAdapter{
     private Context mContext;
     private List<TimeLineBean> mTimeLineBeans;
+    private int loginUserId;
+    private String loginUserPicPath;
 
     public CircleOfFriendAdapter(Context context, List<TimeLineBean> timeLineBeans) {
         this.mContext = context;
         this.mTimeLineBeans = timeLineBeans;
+        loginUserId = BaseApplication.getLoginUserId();
+        loginUserPicPath = BaseApplication.getLoginUserPicPath();
     }
 
     @Override
@@ -77,8 +82,14 @@ public class CircleOfFriendAdapter extends BaseAdapter{
                     CommonHandler.startPersonalActivity(mContext, timeLineBean.getCreateUserId());
             }
         });
-        if(timeLineBean.getUserPicPath() != null)
-            ImageCacheManager.loadImage(timeLineBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);
+
+        if(timeLineBean.getCreateUserId() == loginUserId){
+            if(StringUtil.isNotNull(loginUserPicPath))
+                ImageCacheManager.loadImage(loginUserPicPath, viewHolder.getmUserPic(), 30, 30);
+        }else{
+            if(timeLineBean.getUserPicPath() != null)
+                ImageCacheManager.loadImage(timeLineBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);
+        }
 
         if(StringUtil.isNotNull(timeLineBean.getSource())){
             viewHolder.getmSource().setText(timeLineBean.getSource());
