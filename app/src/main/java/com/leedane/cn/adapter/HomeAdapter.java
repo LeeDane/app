@@ -20,12 +20,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.leedane.cn.activity.ImageDetailActivity;
 import com.leedane.cn.activity.PersonalActivity;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.BlogBean;
+import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.NetworkImageLoader;
 import com.leedane.cn.task.TaskLoader;
@@ -83,10 +88,10 @@ public class HomeAdapter extends BaseAdapter{
         this.mList.addAll(blogs);
         this.notifyDataSetChanged();
     }
-    MyHolder myHolder;
-    BlogBean blogBean;
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        MyHolder myHolder;
 
         if(convertView == null){
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_home_listview, null);
@@ -101,9 +106,8 @@ public class HomeAdapter extends BaseAdapter{
         }else{
             myHolder = (MyHolder)convertView.getTag();
         }
-        blogBean = mList.get(position);
+        final BlogBean blogBean = mList.get(position);
         Log.i(TAG, "执行了getView()方法");
-
         String title = blogBean.getTitle();
        //mSpanTitle = new SpannableString(title);
 
@@ -141,35 +145,23 @@ public class HomeAdapter extends BaseAdapter{
         myHolder.getHome_item_img().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*String ss = imgUrl.substring(imgUrl.length()-15, imgUrl.length());
-                Toast.makeText(mContext, "图像:"+ss, Toast.LENGTH_SHORT).show();*/
-                Intent it_image = new Intent();
-                it_image.setClass(mContext, ImageDetailActivity.class);
+                String picPath = blogBean.getImgUrl();
+                if(StringUtil.isNotNull(picPath)){
+                    List<ImageDetailBean> list = new ArrayList<ImageDetailBean>();
 
-                //it_image.putExtra("imageUrl", imgUrl);
-                //虚拟数据
-                StringBuffer buffer = new StringBuffer();
-                buffer.append("leedane_0c73a3ed-31fe-4608-b18b-98cb2e6f70bd_2015-11-12_17-49-53-28_80x80.png");
-                buffer.append(";");
-                buffer.append("leedane_4ab4c55d-ef1c-4665-9252-d0d6eb399bc1_2015-11-12_17-49-55-298_80x80.png");
-                buffer.append(";");
-                buffer.append("leedane_6d36c7d4-824c-4314-8fc4-2bc20ad1f33b_2015-11-12_17-49-54-995_30x30.png");
-                buffer.append(";");
-                buffer.append("leedane_6f23bdb2-c48b-4311-9f79-83c7be863215_2015-11-12_17-49-52-991_60x60.png");
-                buffer.append(";");
-                buffer.append("leedane_11fe7bda-37b2-43c5-bcc2-c07d16930a55_2015-11-12_17-49-55-396_120x120.png");
-                buffer.append(";");
-                buffer.append("leedane_62bbf5af-9a14-429e-80f5-94fa32100afa_2015-11-12_17-49-55-351_100x100.png");
-                buffer.append(";");
-                buffer.append("leedane_74b17796-30ad-44bf-b79b-e7e3472298b9_2015-11-12_17-36-43-284_120x120.png");
-                buffer.append(";");
-                buffer.append("leedane_90cff8dd-42b3-4eea-8f03-0063106515ec_2015-11-12_17-36-43-260_100x100.png");
-                buffer.append(";");
-                buffer.append("leedane_615a96d1-9f53-42e7-8d89-8d08b0aa7746_2015-11-12_17-49-53-100_100x100.png");
-                it_image.putExtra("imageUrls", buffer.toString());
-                it_image.putExtra("current", 3);
+                    ImageDetailBean imageDetailBean = new ImageDetailBean();
+                    imageDetailBean.setPath(picPath);
+                    list.add(imageDetailBean);
 
-                mContext.startActivity(it_image);
+                    Intent itImageDetail = new Intent();
+                    itImageDetail.setClass(mContext, ImageDetailActivity.class);
+                    Type type = new TypeToken<ArrayList<ImageDetailBean>>() {
+                    }.getType();
+                    String json = new Gson().toJson(list, type);
+                    itImageDetail.putExtra("ImageDetailBeans", json);
+                    itImageDetail.putExtra("current", 0);
+                    mContext.startActivity(itImageDetail);
+                }
             }
         });
 
