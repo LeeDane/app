@@ -71,8 +71,8 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
     private boolean isLoading; //标记当前是否在加载数据
     private int mFirstId;  //页面上第一条数据的ID
     private int mLastId; //页面上第一条数据的ID
-    private Bitmap userPicBitMap;
-    private Bitmap toUserPicBitMap;
+    private String userPicPath;
+    private String toUserPicPath;
 
    // private SwipeRefreshLayout mSwipeLayout;
     private View viewHeader;
@@ -135,27 +135,24 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
             mContext = getActivity();
 
         dataBase = new ChatDataBase(mContext);
-        initUserPicBitMap();
+        initUserPicPath();
         initView();
         loadLocalData();
     }
 
     /**
-     * 初始化用户头像的bitmap
+     * 初始化用户头像的路径
      */
-    private void initUserPicBitMap() {
-        String path = BaseApplication.getLoginUserPicPath();
-        if(StringUtil.isNotNull(path)){
-            userPicBitMap = ImageCacheManager.loadImage(path, 30, 30);
-        }
+    private void initUserPicPath() {
+        userPicPath = BaseApplication.getLoginUserPicPath();
         String friends = SharedPreferenceUtil.getFriends(mContext.getApplicationContext());
         if(StringUtil.isNotNull(friends)){
             Gson gson = new GsonBuilder().create();
             HttpResponseMyFriendsBean mModel = gson.fromJson(friends, HttpResponseMyFriendsBean.class);
             if(mModel != null && mModel.getMessage().size() > 0){
                 for(MyFriendsBean friendsBean: mModel.getMessage()){
-                    if(friendsBean.getId() == toUserId && StringUtil.isNotNull(friendsBean.getUserPicPath())){
-                        toUserPicBitMap = ImageCacheManager.loadImage(friendsBean.getUserPicPath(), 30, 30);
+                    if(friendsBean.getId() == toUserId){
+                        toUserPicPath = friendsBean.getUserPicPath();
                         break;
                     }
                 }
@@ -174,7 +171,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
     private void initView(){
 
         mListView = (ListView)mRootView.findViewById(R.id.chat_detail_listview);
-        mAdapter = new ChatDetailAdapter(mContext, mChatDetailBeans, userPicBitMap, toUserPicBitMap);
+        mAdapter = new ChatDetailAdapter(mContext, mChatDetailBeans, userPicPath, toUserPicPath);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -222,7 +219,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
                         }
                         Log.i(TAG, "原来的大小：" + mChatDetailBeans.size());
                         if(mAdapter == null) {
-                            mAdapter = new ChatDetailAdapter(mContext, mChatDetailBeans, userPicBitMap, toUserPicBitMap);
+                            mAdapter = new ChatDetailAdapter(mContext, mChatDetailBeans, userPicPath, toUserPicPath);
                             mListView.setAdapter(mAdapter);
                         }
                         mAdapter.refreshData(temList);

@@ -28,14 +28,14 @@ import java.util.List;
 public class ChatDetailAdapter extends BaseAdapter{
     private Context mContext;
     private List<ChatDetailBean> mChatDetailBeans;
-    private Bitmap userPicBitMap;
-    private Bitmap toUserPicBitMap;
+    private String userPicPath;
+    private String toUserPicPath;
 
-    public ChatDetailAdapter(Context context, List<ChatDetailBean> chatDetailBeans, Bitmap userPicBitMap, Bitmap toUserPicBitMap) {
+    public ChatDetailAdapter(Context context, List<ChatDetailBean> chatDetailBeans, String userPicPath, String toUserPicPath) {
         this.mContext = context;
         this.mChatDetailBeans = chatDetailBeans;
-        this.userPicBitMap = userPicBitMap;
-        this.toUserPicBitMap = toUserPicBitMap;
+        this.userPicPath = userPicPath;
+        this.toUserPicPath = toUserPicPath;
     }
 
     @Override
@@ -86,9 +86,8 @@ public class ChatDetailAdapter extends BaseAdapter{
                     CommonHandler.startPersonalActivity(mContext, chatDetailBean.getCreateUserId());
                 }
             });
-            if(toUserPicBitMap != null)
-                viewHolder.getmUserPicPath().setImageBitmap(toUserPicBitMap);
-                //ImageCacheManager.loadImage(chatDetailBean.getUserPicPath(), viewHolder.getmUserPicPath(), 30, 30);
+            if(StringUtil.isNotNull(toUserPicPath))
+                ImageCacheManager.loadImage(toUserPicPath, viewHolder.getmUserPicPath(), 30, 30);
 
         }else{//自己使用right
             if(view == null) {
@@ -117,9 +116,9 @@ public class ChatDetailAdapter extends BaseAdapter{
                     CommonHandler.startPersonalActivity(mContext, chatDetailBean.getCreateUserId());
                 }
             });
-            if(userPicBitMap != null)
-                viewHolder.getmUserPicPath().setImageBitmap(userPicBitMap);
-                //ImageCacheManager.loadImage(BaseApplication.getLoginUserPicPath(), viewHolder.getmUserPicPath(), 30, 30);
+            if(toUserPicPath != null)
+                //viewHolder.getmUserPicPath().setImageBitmap(userPicBitMap);
+                ImageCacheManager.loadImage(toUserPicPath, viewHolder.getmUserPicPath(), 30, 30);
         }
         return view;
     }
