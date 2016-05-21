@@ -3,11 +3,18 @@ package com.leedane.cn.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.leedane.cn.activity.ImageDetailActivity;
 import com.leedane.cn.activity.MoodDetailActivity;
+import com.leedane.cn.activity.ZanUserActivity;
 import com.leedane.cn.adapter.CommentOrTransmitAdapter;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.CommentOrTransmitBean;
@@ -32,11 +40,16 @@ import com.leedane.cn.bean.HttpResponseCommentOrTransmitBean;
 import com.leedane.cn.bean.HttpResponseMoodImagesBean;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.bean.MoodImagesBean;
+import com.leedane.cn.customview.CircularImageView;
+import com.leedane.cn.customview.UserNameClickableSpan;
+import com.leedane.cn.customview.ZanUserNumberClickableSpan;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.PraiseHandler;
 import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.listener.OnUserNameClickListener;
+import com.leedane.cn.listener.OnZanUserNumberClickListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
@@ -44,6 +57,7 @@ import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
 import org.json.JSONException;
@@ -53,6 +67,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 心情详情的Fragment
@@ -101,10 +118,11 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     private JSONObject detail = new JSONObject();
     private HttpResponseMoodImagesBean mMoodImagesBean;
     private LinearLayout mDetailInfoShowLinearLayout;
+    private CircularImageView mIVUserPic;
     private TextView mTVUser;
     private TextView mTVTime;
     private TextView mTVContent;
-    private LinearLayout mLLPraiseList;
+    private TextView mPraiseUser;
     private TextView mTVComment;
     private TextView mTVTransmit;
     private TextView mTVError;
@@ -122,7 +140,6 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     private CommentOrTransmitAdapter mCommentOrTransmitAdapter;
     private ImageView mCommentLine;
     private ImageView mTransmitLine;
-
     public MoodDetailFragment(){
 
     }
@@ -197,9 +214,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         TaskLoader.getInstance().startTaskForResult(TaskType.DETAIL_MOOD, this, requestBean);
         sendFirstLoading();
     }
-
     private void initView(){
-
         mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.mood_detail_swipe_listview);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -212,14 +227,17 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(mCommentOrTransmits.size() > 0 )
-                    onItemClickListener.onItemClick(position, mCommentOrTransmits.get(position -1 ), commentOrTransmit);
+                if (mCommentOrTransmits.size() > 0)
+                    onItemClickListener.onItemClick(position, mCommentOrTransmits.get(position - 1), commentOrTransmit);
             }
         });
+
+
 
         viewHeader = LayoutInflater.from(mContext).inflate(R.layout.mood_detail_header, null);
         mDetailInfoShowLinearLayout = (LinearLayout)viewHeader.findViewById(R.id.mood_detail_info_show);
         mTVUser = (TextView)viewHeader.findViewById(R.id.mood_detail_user);
+        mIVUserPic = (CircularImageView)viewHeader.findViewById(R.id.mood_detail_user_pic);
         mTVTime = (TextView)viewHeader.findViewById(R.id.mood_detail_time);
         mTVContent = (TextView)viewHeader.findViewById(R.id.mood_detail_content);
         mTVComment = (TextView)viewHeader.findViewById(R.id.mood_detail_comment_show);
@@ -231,7 +249,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         mLLTransmit.setOnClickListener(this);
 
         mIVImg = (ImageView)viewHeader.findViewById(R.id.mood_detail_img);
-        mLLPraiseList = (LinearLayout)viewHeader.findViewById(R.id.mood_detail_praise_list);
+        mPraiseUser = (TextView)viewHeader.findViewById(R.id.mood_detail_praise);
         mTVPraise = (TextView)viewHeader.findViewById(R.id.mood_detail_praise_show);
         mTVPraise.setOnClickListener(this);
         mCommentLine = (ImageView)viewHeader.findViewById(R.id.mood_detail_comment_show_line);
@@ -246,12 +264,14 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         mListViewFooter.setOnClickListener(this);//添加点击事件
     }
 
-
     /**
      * 初始化参数
      */
     private void init() {
         try{
+            //mIVUserPic
+            if(detail.has("user_pic_path") && StringUtil.isNotNull(detail.getString("user_pic_path")))
+                ImageCacheManager.loadImage(detail.getString("user_pic_path"), mIVUserPic);
             mTVUser.setText(detail.getString("account"));
             mTVTime.setText(detail.getString("create_time"));
             mTVContent.setText(detail.getString("content"));
@@ -266,6 +286,10 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     }
 
     /**
+     * 存放的是点赞的用户对象，key为用户名称，value为用户的ID
+     */
+    private Map<String, Integer> zanUserMap = new HashMap<>();
+    /**
      * 展示赞的用户列表
      * @throws JSONException
      */
@@ -275,44 +299,93 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             praiseList = detail.getString("zan_users");
 
         if(StringUtil.isNotNull(praiseList) && detail.getInt("zan_number") > 0){
-            mLLPraiseList.setVisibility(View.VISIBLE);
-            mLLPraiseList.removeAllViewsInLayout();
+            mPraiseUser.setVisibility(View.VISIBLE);
+
             String[] users = praiseList.split(";");
-            TextView textView;
-            StringBuffer showPraiseHtml;
-            int i = 0;
+            String[] u;
+            StringBuffer showPraise = new StringBuffer();
             for(String user: users){
                 if(StringUtil.isNotNull(user)){
-                    textView = new TextView(mContext);
-                    showPraiseHtml = new StringBuffer();
-                    showPraiseHtml.append("<html><body>");
 
-                    final String[] u = user.split(",");
-                    showPraiseHtml.append("<font color=\"#8181F7\">");
-                    showPraiseHtml.append(u[1]);
-                    showPraiseHtml.append("</font>");
-                    if(i != users.length-1)
-                        showPraiseHtml.append("、");
-                    showPraiseHtml.append("</body></html>");
-                    textView.setText(Html.fromHtml(showPraiseHtml.toString()));
-                    textView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            CommonHandler.startPersonalActivity(mContext, Integer.parseInt(u[0]));
-                        }
-                    });
-                    mLLPraiseList.addView(textView);
+                    u = user.split(",");
+                    showPraise.append(u[1]);
+                    showPraise.append("、");
+                    zanUserMap.put(u[1], StringUtil.stringToInt(u[0]));
                 }
-                i++;
             }
-            TextView endTextView = new TextView(mContext);
-            //showPraiseHtml.append("<font color=\"#00bbaa\">颜色2</font></body></html>");
-            endTextView.setText(Html.fromHtml("等" + detail.getInt("zan_number") + "位用户觉得很赞"));
-            mLLPraiseList.addView(endTextView);
+            String show = showPraise.toString();
+            show = show.substring(0, show.length()-1) + "等"+detail.getInt("zan_number")+"位用户觉得很赞";
+            mPraiseUser.setText(show);
 
+            Pattern numberPattern = Pattern.compile("等\\d+位");
+            SpannableString ss = new SpannableString(show);
+            setZanUserNumberClickable(mPraiseUser, ss, numberPattern, new ZanUserNumberClickableSpan(detail.getInt("zan_number"), "t_mood", mid, new OnZanUserNumberClickListener() {
+                @Override
+                public void clickTextView(int number, String tableName, int tableId) {
+                    Intent intent = new Intent(mContext, ZanUserActivity.class);
+                    intent.putExtra("table_id", tableId);
+                    intent.putExtra("table_name", tableName);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void setStyle(TextPaint ds) {
+                    ds.setColor(mContext.getResources().getColor(R.color.blueAccountLink));
+                    ds.setUnderlineText(false);
+                }
+            }));
+
+
+            String userSource = showPraise.toString().substring(0, showPraise.toString().length() -1);
+            String[] arr = userSource.split("、");
+            int start = 0;
+            int end = 0;
+            int toUserId = 0;
+            for(int i = 0; i < arr.length; i++){
+                if(i > 0 ){
+                    start = end + 1;
+                }else{
+                    start = end;
+                }
+                end = start + arr[i].length();
+                toUserId = StringUtil.changeObjectToInt(zanUserMap.get(arr[i]));
+                setUserNameClickable(mPraiseUser, ss, start, end, new UserNameClickableSpan(toUserId, arr[i], new OnUserNameClickListener() {
+                    @Override
+                    public void clickTextView(int toUserId, String username) {
+                        CommonHandler.startPersonalActivity(mContext,toUserId);
+                    }
+
+                    @Override
+                    public void setStyle(TextPaint ds) {
+                        ds.setColor(mContext.getResources().getColor(R.color.blueAccountLink));
+                        ds.setUnderlineText(false);
+                    }
+                }));
+            }
         }else{
-            mLLPraiseList.setVisibility(View.GONE);
+            mPraiseUser.setVisibility(View.GONE);
         }
+    }
+
+    private void setZanUserNumberClickable(TextView textView, SpannableString ss, Pattern pattern, ClickableSpan cs){
+        Matcher matcher = pattern.matcher(ss.toString());
+        while (matcher.find()){
+            String key = matcher.group();
+            if(StringUtil.isNotNull(key) && key.startsWith("等")){
+                int start = ss.toString().indexOf(key) +1; //把等去掉，不高亮显示
+                int end = start + (key.length() -1);
+                setClickTextView(textView, ss, start, end, cs);
+            }
+        }
+    }
+    private void setUserNameClickable(TextView textView, SpannableString ss, int start, int end,ClickableSpan cs){
+        setClickTextView(textView, ss, start, end, cs);
+    }
+
+    private void setClickTextView(TextView textView, SpannableString ss, int start, int end, ClickableSpan cs) {
+        ss.setSpan(cs, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(ss);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
@@ -329,7 +402,6 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             if(type == TaskType.DETAIL_MOOD){
                 JSONObject resultObject = new JSONObject(String.valueOf(result));
                 if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
-                    //Toast.makeText(MoodDetailActivity.this, "成功" +resultObject, Toast.LENGTH_SHORT).show();
                     detail = resultObject.getJSONArray("message").getJSONObject(0);
                     mDetailInfoShowLinearLayout.setVisibility(View.VISIBLE);
                     init();
@@ -773,4 +845,8 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         }
         sendUpLoading();
     }
+
+
+
+
 }

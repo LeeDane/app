@@ -246,4 +246,7 @@
     <string name="chat_detail_layout_left">layout_left</string>
     <string name="chat_detail_layout_right">layout_right</string>
 
+    <!--  赞用户列表  -->
+    <string name="zan_user">点赞用户</string>
+
 </resources>

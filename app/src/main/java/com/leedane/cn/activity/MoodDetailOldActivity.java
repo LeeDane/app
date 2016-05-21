@@ -100,7 +100,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
     private TextView mTVUser;
     private TextView mTVTime;
     private TextView mTVContent;
-    private LinearLayout mLLPraiseList;
+    private TextView mPraiseZanUser;
     private TextView mTVComment;
     private TextView mTVTransmit;
     private TextView mTVError;
@@ -214,7 +214,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
         mLLTransmit.setOnClickListener(this);
 
         mIVImg = (ImageView)viewHeader.findViewById(R.id.mood_detail_img);
-        mLLPraiseList = (LinearLayout)viewHeader.findViewById(R.id.mood_detail_praise_list);
+        mPraiseZanUser = (TextView)viewHeader.findViewById(R.id.mood_detail_praise);
         mTVPraise = (TextView)viewHeader.findViewById(R.id.mood_detail_praise_show);
         mTVPraise.setOnClickListener(this);
         mCommentLine = (ImageView)viewHeader.findViewById(R.id.mood_detail_comment_show_line);
@@ -260,8 +260,8 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
             praiseList = detail.getString("zan_users");
 
         if(StringUtil.isNotNull(praiseList) && detail.getInt("zan_number") > 0){
-            mLLPraiseList.setVisibility(View.VISIBLE);
-            mLLPraiseList.removeAllViewsInLayout();
+            mPraiseZanUser.setVisibility(View.VISIBLE);
+           // mPraiseZanUser.removeAllViewsInLayout();
             String[] users = praiseList.split(";");
             TextView textView;
             StringBuffer showPraiseHtml;
@@ -286,17 +286,17 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
                             CommonHandler.startPersonalActivity(MoodDetailOldActivity.this, Integer.parseInt(u[0]));
                         }
                     });
-                    mLLPraiseList.addView(textView);
+                   // mPraiseZanUser.addView(textView);
                 }
                 i++;
             }
             TextView endTextView = new TextView(MoodDetailOldActivity.this);
             //showPraiseHtml.append("<font color=\"#00bbaa\">颜色2</font></body></html>");
             endTextView.setText(Html.fromHtml("等" + detail.getInt("zan_number") + "位用户觉得很赞"));
-            mLLPraiseList.addView(endTextView);
+            //mPraiseZanUser.addView(endTextView);
 
         }else{
-            mLLPraiseList.setVisibility(View.GONE);
+            mPraiseZanUser.setVisibility(View.GONE);
         }
     }
 

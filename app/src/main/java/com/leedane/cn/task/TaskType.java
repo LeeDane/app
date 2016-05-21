@@ -42,6 +42,7 @@ public enum TaskType {
     LOAD_COMMENT, //加载评论列表
     LOAD_TRANSMIT, //加载转发列表
     LOAD_ZAN, //加载赞列表
+    LOAD_ZAN_USER, //加载点赞用户列表
     LOAD_ATTENTION, //加载关注列表
     LOAD_MY_FAN, //加载我的粉丝列表
     LOAD_MY_ATTENTION, //加载我关注的用户列表

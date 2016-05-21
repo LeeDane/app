@@ -241,6 +241,13 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity
+            android:name="com.leedane.cn.activity.ZanUserActivity"
+            android:label="@string/zan_user"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <!--  Jpush  -->
         <!-- Required SDK核心功能-->
         <activity

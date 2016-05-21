@@ -13,7 +13,7 @@ import com.leedane.cn.util.ToastUtil;
 
 /**
  * 粉丝列表activity
- * Created by LeeDane on 2016/4/13O.
+ * Created by LeeDane on 2016/4/3O.
  */
 public class FanActivity extends BaseActivity{
 

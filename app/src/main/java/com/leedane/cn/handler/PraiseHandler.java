@@ -48,6 +48,20 @@ public class PraiseHandler {
     }
 
     /**
+     * 获取全部点赞用户的请求
+     * @param listener
+     * @param params
+     */
+    public static void getZanUsersRequest(TaskListener listener, Map<String, Object> params){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("leedane/zan_getAllZanUser.action");
+        TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_ZAN_USER, listener, requestBean);
+    }
+
+    /**
      * 删除收藏
      * @param listener
      * @param zanId

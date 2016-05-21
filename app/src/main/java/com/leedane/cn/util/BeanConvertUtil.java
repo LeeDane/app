@@ -21,6 +21,7 @@ import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.bean.HttpResponseNotificationBean;
 import com.leedane.cn.bean.HttpResponseScoreBean;
 import com.leedane.cn.bean.HttpResponseZanBean;
+import com.leedane.cn.bean.HttpResponseZanUserBean;
 
 /**
  * Bean转化工具类
@@ -146,6 +147,22 @@ public class BeanConvertUtil {
             return gson.fromJson(str, HttpResponseZanBean.class);
         }catch (Exception e){
             Log.d(TAG, "响应HttpResponseZanBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将字符串转化成List<ZanUserBean>集合
+     * @param str
+     * @return
+     */
+    public static HttpResponseZanUserBean strConvertToZanUserBeans(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应HttpResponseZanUserBean对象开始转换。。。");
+            return gson.fromJson(str, HttpResponseZanUserBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应HttpResponseZanUserBean对象转换失败");
         }
         return null;
     }
