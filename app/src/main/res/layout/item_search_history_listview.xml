@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:padding="@dimen/default_padding">
+    <TextView
+        android:id="@+id/search_history_type"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:text="@string/no_text"/>
+    <TextView
+        android:id="@+id/search_history_key"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:singleLine="true"
+        android:focusableInTouchMode="true"
+        android:ellipsize="marquee"
+        android:scrollHorizontally="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:text="@string/no_text"/>
+    <TextView
+        android:id="@+id/search_history_time"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:text="@string/no_text"/>
+</LinearLayout>

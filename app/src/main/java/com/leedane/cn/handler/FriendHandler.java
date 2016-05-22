@@ -24,6 +24,38 @@ import java.util.Map;
 public class FriendHandler {
 
     /**
+     * 添加好友
+     * @param listener
+     * @param toUserId
+     */
+    public static void addFriend(TaskListener listener, int toUserId){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        Map<String, Object> params = new HashMap<>();
+        params.put("to_user_id", toUserId);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/friend_add.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.ADD_FRIEND, listener, requestBean);
+    }
+
+    /**
+     * 解除与某用户的好友关系
+     * @param listener
+     * @param toUserId
+     */
+    public static void cancelFriend(TaskListener listener, int toUserId){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        Map<String, Object> params = new HashMap<>();
+        params.put("to_user_id", String.valueOf(toUserId));
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/friend_delete.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.CANCEL_FRIEND, listener, requestBean);
+    }
+
+    /**
      * 根据好友ID获取好友名称
      * @param friendId
      * @return

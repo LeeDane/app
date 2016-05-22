@@ -52,6 +52,7 @@ public class FindActivity extends BaseActivity implements FindAdapter.OnRecycler
         findBeans.add(new MenuBean(R.drawable.menu_circle_of_friends, getStringResource(R.string.circle_of_friend)));
         findBeans.add(new MenuBean(R.drawable.no_user_pic, getStringResource(R.string.chat)));
         findBeans.add(new MenuBean(R.drawable.menu_friends, getStringResource(R.string.my_friends)));
+        findBeans.add(new MenuBean(R.drawable.head, getStringResource(R.string.search)));
         findBeans.add(new MenuBean(R.drawable.qr_code, getStringResource(R.string.sao_yi_sao)));
         findBeans.add(new MenuBean(R.drawable.no_user, getStringResource(R.string.yao_yi_yao)));
         findBeans.add(new MenuBean(R.drawable.menu_address_list, getStringResource(R.string.address_list)));
@@ -72,6 +73,10 @@ public class FindActivity extends BaseActivity implements FindAdapter.OnRecycler
             Intent intent = new Intent();
             intent.setClass(FindActivity.this, MipcaActivityCapture.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }else if(title.equalsIgnoreCase(getStringResource(R.string.search))) {//搜索
+            Intent intent = new Intent();
+            intent.setClass(FindActivity.this, SearchActivity.class);
             startActivity(intent);
         }else if(title.equalsIgnoreCase(getStringResource(R.string.my_friends))){//我的朋友
             Intent intent = new Intent();

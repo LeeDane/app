@@ -51,6 +51,9 @@ public enum TaskType {
     LOAD_SCORE, //加载积分历史列表
     LOAD_LOGIN_HISTORY, //加载登录历史列表
     LOAD_CHAT, //加载聊天列表
+    LOAD_SEARCH_USER, //加载搜索用户列表
+    LOAD_SEARCH_BLOG, //加载搜索博客列表
+    LOAD_SEARCH_MOOD, //加载搜索心情列表
     DO_LOGIN_PHONE, //手机登录
     DO_GET_LOGIN_CODE, //获取手机登录的验证码
     GET_APP_VERSION, //检查APP版本
@@ -62,6 +65,7 @@ public enum TaskType {
     LOAD_USER_FRIENS, //加载用户的好友列表
     LOAD_HEAD_PATH, //加载用户新头像
     CANCEL_FAN, //不再成为TA的粉丝
+    CANCEL_FRIEND, //解除好友关系
     DELETE_COMMENT, //删除评论
     DELETE_TRANSMIT, //删除转发
     DELETE_COLLECTION, //删除收藏记录

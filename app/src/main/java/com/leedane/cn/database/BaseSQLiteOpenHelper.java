@@ -1,11 +1,11 @@
 package com.leedane.cn.database;
-import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.util.ConstantsUtil;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.leedane.cn.util.ConstantsUtil;
 
 public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 
@@ -34,6 +34,7 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 		database.execSQL(this.createTableFile());
 		database.execSQL(this.createMoodDraft());
 		database.execSQL(ChatDataBase.CREATE_CHAT_TABLE);
+		database.execSQL(SearchHistoryDataBase.CREATE_SEARCH_TABLE);
 	}
 
 	/**

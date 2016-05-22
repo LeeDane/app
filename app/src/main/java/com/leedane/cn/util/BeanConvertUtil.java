@@ -22,6 +22,9 @@ import com.leedane.cn.bean.HttpResponseNotificationBean;
 import com.leedane.cn.bean.HttpResponseScoreBean;
 import com.leedane.cn.bean.HttpResponseZanBean;
 import com.leedane.cn.bean.HttpResponseZanUserBean;
+import com.leedane.cn.bean.search.HttpResponseSearchBlogBean;
+import com.leedane.cn.bean.search.HttpResponseSearchMoodBean;
+import com.leedane.cn.bean.search.HttpResponseSearchUserBean;
 
 /**
  * Bean转化工具类
@@ -323,6 +326,54 @@ public class BeanConvertUtil {
             return gson.fromJson(str, HttpResponseMyFriendsBean.class);
         }catch (Exception e){
             Log.d(TAG, "响应HttpResponseMyFriendsBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将响应请求的字符串转化成HttpResponseSearchUserBean对象
+     * @param str
+     * @return
+     */
+    public static HttpResponseSearchUserBean strConvertToSearchUserBeans(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应HttpResponseSearchUserBean对象开始转换。。。");
+            return gson.fromJson(str, HttpResponseSearchUserBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应HttpResponseSearchUserBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将响应请求的字符串转化成HttpResponseSearchBlogBean对象
+     * @param str
+     * @return
+     */
+    public static HttpResponseSearchBlogBean strConvertToSearchBlogBeans(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应HttpResponseSearchBlogBean对象开始转换。。。");
+            return gson.fromJson(str, HttpResponseSearchBlogBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应HttpResponseSearchBlogBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将响应请求的字符串转化成HttpResponseSearchMoodBean对象
+     * @param str
+     * @return
+     */
+    public static HttpResponseSearchMoodBean strConvertToSearchMoodBeans(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应HttpResponseSearchMoodBean对象开始转换。。。");
+            return gson.fromJson(str, HttpResponseSearchMoodBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应HttpResponseSearchMoodBean对象转换失败");
         }
         return null;
     }

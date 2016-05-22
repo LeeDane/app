@@ -242,6 +242,13 @@
         </activity>
 
         <activity
+            android:name="com.leedane.cn.activity.SearchActivity"
+            android:label="@string/search"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
             android:name="com.leedane.cn.activity.ZanUserActivity"
             android:label="@string/zan_user"
             android:screenOrientation="portrait"

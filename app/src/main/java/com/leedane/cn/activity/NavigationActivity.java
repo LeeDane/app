@@ -69,7 +69,8 @@ public class NavigationActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()){
             case R.id.action_bar_search:
-                Toast.makeText(this, "search", Toast.LENGTH_SHORT).show();
+                Intent it_search = new Intent(NavigationActivity.this, SearchActivity.class);
+                startActivity(it_search);
                 return true;
             case R.id.action_bar_login:  //登录
                 Intent it = new Intent();
@@ -86,7 +87,7 @@ public class NavigationActivity extends AppCompatActivity
                 createLeaveAlertDialog();
                 return true;
             case android.R.id.home:
-                Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
+                ToastUtil.success(this, "home", Toast.LENGTH_SHORT);
                 finish();
                 return true;
             case R.id.action_bar_version:

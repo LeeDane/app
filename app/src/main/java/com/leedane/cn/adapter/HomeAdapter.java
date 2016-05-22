@@ -186,7 +186,7 @@ public class HomeAdapter extends BaseAdapter{
             myHolder.getHome_item_time().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 
-        myHolder.getHome_item_digest().setText(blogBean.getDigest());
+        myHolder.getHome_item_digest().setText(StringUtil.changeNotNull(blogBean.getDigest()) +"...");
         return convertView;
     }
 
