@@ -116,9 +116,9 @@ public class ChatDetailAdapter extends BaseAdapter{
                     CommonHandler.startPersonalActivity(mContext, chatDetailBean.getCreateUserId());
                 }
             });
-            if(toUserPicPath != null)
+            if(userPicPath != null)
                 //viewHolder.getmUserPicPath().setImageBitmap(userPicBitMap);
-                ImageCacheManager.loadImage(toUserPicPath, viewHolder.getmUserPicPath(), 30, 30);
+                ImageCacheManager.loadImage(userPicPath, viewHolder.getmUserPicPath(), 30, 30);
         }
         return view;
     }
