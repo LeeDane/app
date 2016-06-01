@@ -26,27 +26,19 @@ public class FriendActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //检查是否登录
-        checkedIsLogin();
+        if(!checkedIsLogin()){
+            Intent it = new Intent(FriendActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.FriendActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+        }
         setContentView(R.layout.activity_fan);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.my_friends);
         backLayoutVisible();
         initView();
-    }
-
-    /**
-     * 检查是否登录
-     */
-    private void checkedIsLogin() {
-        //判断是否有缓存用户信息
-        if(BaseApplication.getLoginUserId() < 1){
-            Intent it = new Intent(FriendActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.FriendActivity");
-            startActivity(it);
-            FriendActivity.this.finish();
-            return;
-        }
     }
 
     public void initView(){

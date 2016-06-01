@@ -25,27 +25,19 @@ public class NotificationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //检查是否登录
-        checkedIsLogin();
+        if(!checkedIsLogin()){
+            Intent it = new Intent(NotificationActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.NotificationActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+        }
         setContentView(R.layout.activity_fan);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.message);
         backLayoutVisible();
         initView();
-    }
-
-    /**
-     * 检查是否登录
-     */
-    private void checkedIsLogin() {
-        //判断是否有缓存用户信息
-        if(BaseApplication.getLoginUserId() < 1){
-            Intent it = new Intent(NotificationActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.NotificationActivity");
-            startActivity(it);
-            NotificationActivity.this.finish();
-            return;
-        }
     }
 
     public void initView(){

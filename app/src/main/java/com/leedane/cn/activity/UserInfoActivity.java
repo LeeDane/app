@@ -1,20 +1,14 @@
 package com.leedane.cn.activity;
 
 import android.app.Dialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -23,22 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.WriterException;
-import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.adapter.UserInfoMenuAdapter;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.MenuBean;
 import com.leedane.cn.broadcast.UserInfoDataReceiver;
 import com.leedane.cn.customview.CircularImageView;
-import com.leedane.cn.handler.AttentionHandler;
-import com.leedane.cn.handler.CollectionHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.EncodingHandler;
-import com.leedane.cn.handler.MoodHandler;
-import com.leedane.cn.handler.PraiseHandler;
-import com.leedane.cn.handler.UserHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.service.LoadUserInfoDataService;
-import com.leedane.cn.util.Base64Util;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
@@ -50,7 +37,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -71,12 +57,6 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
      */
     private ImageView mRightImg;
 
-    private JSONObject mUserInfo;
-
-    private int mLoginAccountId;
-
-    private String mLoginAccountName;
-
     private Dialog mQrCodeDialog;
 
     //是否已经登录
@@ -89,9 +69,18 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_info);
         //检查是否登录
-        checkedIsLogin();
+        if(!checkedIsLogin()){
+            Intent it = new Intent(UserInfoActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.UserInfoActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+            return;
+        }
+
+        setContentView(R.layout.activity_user_info);
         getUserInfoData();
         initView();
     }
@@ -120,30 +109,6 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         it_service.setAction("com.leedane.cn.LoadUserInfoDataService");
         it_service.putExtra("toUserId", BaseApplication.getLoginUserId());
         getApplicationContext().startService(it_service);
-    }
-
-    /**
-     * 检查是否登录
-     */
-    private void checkedIsLogin() {
-        mUserInfo = BaseApplication.getLoginUserInfo();
-        //判断是否有缓存用户信息
-        if(mUserInfo == null || !mUserInfo.has("account") ){
-            ToastUtil.failure(UserInfoActivity.this, "未登录");
-            Intent it = new Intent(UserInfoActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.UserInfoActivity");
-            startActivity(it);
-            finish();
-            return;
-        }
-        isLogin = true;
-        try {
-            mLoginAccountName = mUserInfo.getString("account");
-            mLoginAccountId = mUserInfo.getInt("id");
-        }catch (Exception e){
-            Log.i(TAG, "获取缓存的用户名称为空");
-        }
     }
 
     /**
@@ -177,6 +142,14 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
             ToastUtil.failure(UserInfoActivity.this, "用户还没有上传头像");
         }
 
+        //修改用户头像
+        mUserPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonHandler.startUpdateHeaderActivity(UserInfoActivity.this);
+            }
+        });
+
         mListView = (ListView)findViewById(R.id.user_info_listview);
         List<MenuBean> menuBeans = new ArrayList<>();
         menuBeans.add(new MenuBean(R.drawable.menu_base_info, getStringResource(R.string.personal_info)));
@@ -193,6 +166,8 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
                     CommonHandler.startPersonalActivity(UserInfoActivity.this, BaseApplication.getLoginUserId());
                 }else if(title.equalsIgnoreCase(getStringResource(R.string.nav_message))){
                     CommonHandler.startMyMessageActivity(UserInfoActivity.this);
+                }else if(title.equalsIgnoreCase(getStringResource(R.string.personal_info))){
+                    CommonHandler.startUserBaseActivity(UserInfoActivity.this, BaseApplication.getLoginUserId());
                 }else{
                     ToastUtil.success(UserInfoActivity.this, ((TextView)view.findViewById(R.id.recyclerview_title)).getText().toString());
                 }
@@ -225,7 +200,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         ImageView imageView = new ImageView(UserInfoActivity.this);
         String contentString = null;
         try{
-            String str = "{'account':'"+mUserInfo.getString("account")+"','id':"+mUserInfo.getInt("id")+"}";
+            String str = "{'account':'"+BaseApplication.getLoginUserName()+"','id':"+BaseApplication.getLoginUserId()+"}";
             contentString = new JSONObject(str).toString();
         }catch (JSONException e){
             e.printStackTrace();
@@ -246,7 +221,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                String fPath = getQrCodeDir() + File.separator + mLoginAccountName +".jpg";
+                String fPath = getQrCodeDir() + File.separator + BaseApplication.getLoginUserName() +".jpg";
                 File f = new File(fPath);
                 if(f.exists()){
                     ToastUtil.failure(UserInfoActivity.this, "二维码图片保存成功，路径是："+fPath);

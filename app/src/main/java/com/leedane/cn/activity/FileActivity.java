@@ -57,11 +57,17 @@ public class FileActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //检查是否登录
+        if(!checkedIsLogin()){
+            Intent it = new Intent(FileActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.FileActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+        }
         setContentView(R.layout.activity_file);
         currentIntent = getIntent();
-        //检查是否登录
-        checkedIsLogin("com.leedane.cn.activity.FileActivity");
-
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.nav_file);
         backLayoutVisible();

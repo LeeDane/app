@@ -28,7 +28,6 @@ public class FindActivity extends BaseActivity implements FindAdapter.OnRecycler
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
-
         initView();
     }
 
@@ -50,9 +49,9 @@ public class FindActivity extends BaseActivity implements FindAdapter.OnRecycler
         mRecyclerView.setLayoutManager(layoutManager);
 
         findBeans.add(new MenuBean(R.drawable.menu_circle_of_friends, getStringResource(R.string.circle_of_friend)));
-        findBeans.add(new MenuBean(R.drawable.no_user_pic, getStringResource(R.string.chat)));
+        findBeans.add(new MenuBean(R.drawable.menu_chat, getStringResource(R.string.chat)));
         findBeans.add(new MenuBean(R.drawable.menu_friends, getStringResource(R.string.my_friends)));
-        findBeans.add(new MenuBean(R.drawable.head, getStringResource(R.string.search)));
+        findBeans.add(new MenuBean(R.drawable.menu_search, getStringResource(R.string.search)));
         findBeans.add(new MenuBean(R.drawable.qr_code, getStringResource(R.string.sao_yi_sao)));
         findBeans.add(new MenuBean(R.drawable.no_user, getStringResource(R.string.yao_yi_yao)));
         findBeans.add(new MenuBean(R.drawable.menu_address_list, getStringResource(R.string.address_list)));

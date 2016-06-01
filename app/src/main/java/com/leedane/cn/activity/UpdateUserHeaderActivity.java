@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,9 +25,11 @@ import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.FileUtil;
+import com.leedane.cn.util.MD5Util;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
+import com.leedane.cn.volley.ImageCacheManager;
 
 import org.json.JSONObject;
 
@@ -56,11 +59,20 @@ public class UpdateUserHeaderActivity extends BaseActivity {
     private boolean isCancel = false;
     private int itemIndex = 0;
     private int mLoginUserId;
+    private String fileName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //检查是否登录
-        checkedIsLogin();
+        if (!checkedIsLogin()) {
+            Intent it = new Intent(UpdateUserHeaderActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.UpdateUserHeaderActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+            return;
+        }
         mLoginUserId = BaseApplication.getLoginUserId();
 
         setContentView(R.layout.activity_update_header);
@@ -73,21 +85,6 @@ public class UpdateUserHeaderActivity extends BaseActivity {
     }
 
     /**
-     * 检查是否登录
-     */
-    private void checkedIsLogin() {
-        //判断是否有缓存用户信息
-        if(BaseApplication.getLoginUserId() < 1){
-            Intent it = new Intent(UpdateUserHeaderActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.UpdateUserHeaderActivity");
-            startActivity(it);
-            finish();
-            return;
-        }
-    }
-
-    /**
      * 初始化视图控件
      */
     private void initView() {
@@ -96,6 +93,15 @@ public class UpdateUserHeaderActivity extends BaseActivity {
         confirmUploadHeader = (TextView)findViewById(R.id.confirm_upload_header);
         selectGallery.setOnClickListener(this);
         confirmUploadHeader.setOnClickListener(this);
+        if(StringUtil.isNotNull(BaseApplication.getLoginUserPicPath())){
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    ImageCacheManager.loadImage(BaseApplication.getLoginUserPicPath(), showImage, 300, 300);
+                }
+            }, 500);
+        }
     }
 
     @Override
@@ -111,7 +117,6 @@ public class UpdateUserHeaderActivity extends BaseActivity {
                 startActivityForResult(intent, MoodActivity.GET_SYSTEM_IMAGE_CODE);
                 break;
             case R.id.confirm_upload_header: //上传头像
-                showLoadingDialog("Upload", "is updating header...");
                 upload();
                 break;
         }
@@ -133,7 +138,9 @@ public class UpdateUserHeaderActivity extends BaseActivity {
             ToastUtil.failure(getApplicationContext(), "文件不存在:" + imagePath, Toast.LENGTH_LONG);
             return;
         }
-        String tempFilePath = getTempDir(getApplicationContext()) + File.separator+ file.getName();
+
+        fileName = file.getName();
+        String tempFilePath = getTempDir(getApplicationContext()) + File.separator+ fileName;
         Toast.makeText(getApplicationContext(), "临时文件路径：" +tempFilePath, Toast.LENGTH_LONG).show();
         file = new File(tempFilePath);
         if (file.exists()) {
@@ -158,6 +165,7 @@ public class UpdateUserHeaderActivity extends BaseActivity {
             BitmapUtil.recycled(bitmap);
         }
         mItems.add(FileUtil.buildUploadItem(getApplicationContext(), tempFilePath, new Date(), 0, String.valueOf(mLoginUserId), ConstantsUtil.UPLOAD_UPDATE_HEADER_TABLE_NAME, 60000, 60000));
+        showLoadingDialog("Upload", "is updating header...");
         uploadOneFile();
     }
 
@@ -286,6 +294,14 @@ public class UpdateUserHeaderActivity extends BaseActivity {
                         SharedPreferenceUtil.saveUserInfo(getApplicationContext(), json.toString());
                     }
                     ToastUtil.failure(UpdateUserHeaderActivity.this, "更新头像完成", Toast.LENGTH_SHORT);
+                    if(StringUtil.isNotNull(fileName)){
+                        //删除临时文件
+                        String tempFilePath = getTempDir(getApplicationContext()) + File.separator+ fileName;
+                        File f = new File(tempFilePath);
+                        if(f.exists()){
+                            f.delete();
+                        }
+                    }
                 }else{
                     ToastUtil.failure(UpdateUserHeaderActivity.this, "删除断点文件过程中", Toast.LENGTH_SHORT);
                 }

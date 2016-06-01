@@ -118,7 +118,15 @@ public class MoodActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //检查是否登录
+        if(!checkedIsLogin()){
+            Intent it = new Intent(MoodActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.MoodActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+        }
         it_mood = getIntent();
         mOperateType = it_mood.getIntExtra("operateType", 0);
         if(mOperateType == EnumUtil.MoodOperateType.转发.value || mOperateType == EnumUtil.MoodOperateType.评论.value){

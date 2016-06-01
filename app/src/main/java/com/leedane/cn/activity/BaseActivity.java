@@ -41,19 +41,13 @@ public class BaseActivity extends FragmentActivity implements TaskListener, View
 
     /**
      * 检查是否登录
-     * @param classFullName 当前activity全路径
      */
-    protected void checkedIsLogin(String classFullName) {
+    protected boolean checkedIsLogin() {
         //判断是否有缓存用户信息
         if(BaseApplication.getLoginUserId() < 1){
-            Intent it = new Intent(BaseActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", classFullName);
-            it.setData(getIntent().getData());
-            startActivity(it);
-            finish();
-            return;
+            return false;
         }
+        return true;
     }
     /**
      * 弹出加载ProgressDiaLog
@@ -138,7 +132,7 @@ public class BaseActivity extends FragmentActivity implements TaskListener, View
     }
 
     public void onGoBack(View v){
-        Toast.makeText(BaseActivity.this, "点击返回", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(BaseActivity.this, "点击返回", Toast.LENGTH_SHORT).show();
         BaseActivity.this.finish();
     }
 

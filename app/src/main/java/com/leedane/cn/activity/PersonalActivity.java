@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ import com.leedane.cn.fragment.PersonalFragment;
 import com.leedane.cn.fragment.PersonalMoodFragment;
 import com.leedane.cn.fragment.ScoreFragment;
 import com.leedane.cn.fragment.ZanFragment;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.handler.SignInHandler;
 import com.leedane.cn.leedaneAPP.R;
@@ -133,10 +135,21 @@ public class PersonalActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //检查是否登录
+        if(!checkedIsLogin()){
+            Intent it = new Intent(PersonalActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.PersonalActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_personal);
         currentIntent = getIntent();
-        //检查是否登录
-        checkedIsLogin();
+        //初始化数据
+        initData();
 
         //显示标题栏的发送心情的图片按钮
         mRightImg = (ImageView)findViewById(R.id.view_right_img);
@@ -230,6 +243,16 @@ public class PersonalActivity extends BaseActivity {
         mScrollview = (HorizontalScrollView)findViewById(R.id.personal_scrollview);
         mRadioGroup = (RadioGroup) findViewById(R.id.personal_tabs);
         mPersonalPic = (CircularImageView)findViewById(R.id.personal_pic);
+
+        if(mIsLoginUser){
+            mPersonalPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommonHandler.startUpdateHeaderActivity(PersonalActivity.this);
+                }
+            });
+        }
+
         mPersonalInfo = (TextView)findViewById(R.id.personal_info);
         mPersonalFans = (TextView)findViewById(R.id.personal_fans);
         mPersonalSignIn = (TextView)findViewById(R.id.personal_sign_in);
@@ -414,23 +437,10 @@ public class PersonalActivity extends BaseActivity {
     /**
      * 检查是否登录
      */
-    private void checkedIsLogin() {
+    private void initData() {
         mUserInfo = SharedPreferenceUtil.getUserInfo(getApplicationContext());
-        //判断是否有缓存用户信息
-        if(mUserInfo == null || !mUserInfo.has("account") ){
-            Intent it = new Intent(PersonalActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.PersonalActivity");
-            it.setData(currentIntent.getData());
-            startActivity(it);
-            PersonalActivity.this.finish();
-            return;
-        }
-
         try {
-            //mLoginAccountName = mUserInfo.getString("account");
             mLoginAccountId = mUserInfo.getInt("id");
-            //ToastUtil.success(getBaseContext(), "mLoginAccountId" +mLoginAccountId);
         }catch (Exception e){
             Log.i(TAG, "获取缓存的用户名称为空");
         }
@@ -631,6 +641,12 @@ public class PersonalActivity extends BaseActivity {
                     ((TextView)view.findViewById(R.id.base_user_info_qq)).setText(StringUtil.changeNotNull(mUserInfo.getString("qq")));
                 if(mUserInfo.has("personal_introduction"))
                     ((TextView)view.findViewById(R.id.base_user_info_personal_introduction)).setText(StringUtil.changeNotNull(mUserInfo.getString("personal_introduction")));
+
+                if(mUserInfo.has("last_request_time") && !mIsLoginUser){
+                    ((LinearLayout)view.findViewById(R.id.base_user_info_personal_last_request)).setVisibility(View.VISIBLE);
+                    ((TextView)view.findViewById(R.id.base_user_info_personal_last_request_time)).setText(StringUtil.changeNotNull(mUserInfo.getString("last_request_time")));
+                }
+
 
             }catch (JSONException e){
                 e.printStackTrace();

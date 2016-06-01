@@ -91,8 +91,16 @@ public class UploadFileActivity extends BaseActivity {
 
         currentIntent = getIntent();
         //检查是否登录
-        checkedIsLogin();
-
+        if(!checkedIsLogin()){
+            Intent it = new Intent(UploadFileActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.UploadFileActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+            return;
+        }
+        initData();
         setContentView(R.layout.activity_upload_file);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.system_upload);
@@ -107,20 +115,10 @@ public class UploadFileActivity extends BaseActivity {
     }
 
     /**
-     * 检查是否登录
+     * 初始化数据
      */
-    private void checkedIsLogin() {
+    private void initData() {
         mUserInfo = SharedPreferenceUtil.getUserInfo(getApplicationContext());
-        //判断是否有缓存用户信息
-        if(mUserInfo == null || !mUserInfo.has("account") || !mUserInfo.has("id") ){
-            Intent it = new Intent(UploadFileActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.PersonalActivity");
-            it.setData(currentIntent.getData());
-            startActivity(it);
-            UploadFileActivity.this.finish();
-            return;
-        }
 
         try {
             mLoginAccountId = mUserInfo.getInt("id");

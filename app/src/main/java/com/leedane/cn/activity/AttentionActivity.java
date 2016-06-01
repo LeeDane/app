@@ -55,10 +55,17 @@ public class AttentionActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //检查是否登录
+        if(!checkedIsLogin()){
+            Intent it = new Intent(AttentionActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.AttentionActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+        }
         setContentView(R.layout.activity_attention);
         currentIntent = getIntent();
-        //检查是否登录
-        checkedIsLogin();
 
         //显示标题栏的发送心情的图片按钮
         mBtnRefresh = (Button)findViewById(R.id.view_right_button);
@@ -96,19 +103,8 @@ public class AttentionActivity extends BaseActivity {
     /**
      * 检查是否登录
      */
-    private void checkedIsLogin() {
+    private void initData() {
         mUserInfo = SharedPreferenceUtil.getUserInfo(getApplicationContext());
-        //判断是否有缓存用户信息
-        if(mUserInfo == null || !mUserInfo.has("account") ){
-            Intent it = new Intent(AttentionActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.AttentionActivity");
-            it.setData(currentIntent.getData());
-            startActivity(it);
-            AttentionActivity.this.finish();
-            return;
-        }
-
         try {
             mLoginAccountId = mUserInfo.getInt("id");
         }catch (Exception e){

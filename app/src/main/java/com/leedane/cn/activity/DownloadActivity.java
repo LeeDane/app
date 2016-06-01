@@ -1,5 +1,6 @@
 package com.leedane.cn.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -35,6 +36,15 @@ public class DownloadActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //检查是否登录
+        if(!checkedIsLogin()){
+            Intent it = new Intent(DownloadActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.DownloadActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+        }
         setContentView(R.layout.activity_download);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.system_download);
