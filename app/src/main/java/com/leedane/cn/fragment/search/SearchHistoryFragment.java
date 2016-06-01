@@ -98,9 +98,9 @@ public class SearchHistoryFragment extends Fragment implements View.OnClickListe
                 builder.setPositiveButton("清除",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                showLoadingDialog("Clear", "try best to clear all...");
+                                showLoadingDialog("Clear", "try best to clear...");
                                 SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(mContext);
-                                searchHistoryDataBase.deleteAll();
+                                searchHistoryDataBase.delete(mSearchHistoryBeans.get(position).getId());
                                 searchHistoryDataBase.destroy();
                                 mSearchHistoryBeans.remove(position);
                                 List<SearchHistoryBean> temp = new ArrayList<SearchHistoryBean>();

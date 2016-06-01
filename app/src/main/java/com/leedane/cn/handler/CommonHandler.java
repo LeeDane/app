@@ -4,16 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.leedane.cn.activity.AtFriendActivity;
 import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.activity.DetailActivity;
+import com.leedane.cn.activity.ImageDetailActivity;
 import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.activity.NotificationActivity;
 import com.leedane.cn.activity.PersonalActivity;
 import com.leedane.cn.activity.UpdateUserHeaderActivity;
+import com.leedane.cn.activity.UserBaseActivity;
 import com.leedane.cn.activity.UserInfoActivity;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.service.LoadUserFriendService;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
@@ -23,6 +28,9 @@ import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,6 +53,36 @@ public class CommonHandler {
     }
 
     /**
+     * 触发图片列表详情的activity
+     * @param context
+     * @param list
+     */
+    public static void startImageDetailActivity(Context context, List<ImageDetailBean> list){
+        Intent it_detail = new Intent(context, ImageDetailActivity.class);
+        Type type = new TypeToken<ArrayList<ImageDetailBean>>(){}.getType();
+        String json = new Gson().toJson(list,type);
+        it_detail.putExtra("ImageDetailBeans", json);
+        context.startActivity(it_detail);
+    }
+
+    /**
+     * 触发图片列表详情的activity
+     * @param context
+     * @param imgs
+     */
+    public static void startImageDetailActivity(Context context, String imgs){
+        List<ImageDetailBean> list = new ArrayList<>();
+        String[] showImages = imgs.split(",");
+        ImageDetailBean imageDetailBean;
+        for(String img: showImages){
+            imageDetailBean = new ImageDetailBean();
+            imageDetailBean.setPath(img);
+            list.add(imageDetailBean);
+        }
+        startImageDetailActivity(context, list);
+    }
+
+    /**
      * 触发个人中心的activity
      * @param context
      * @param toUserId
@@ -55,6 +93,16 @@ public class CommonHandler {
         context.startActivity(it);
     }
 
+    /**
+     * 触发基本信息activity
+     * @param context
+     * @param toUserId
+     */
+    public static void startUserBaseActivity(Context context, int toUserId){
+        Intent it = new Intent(context, UserBaseActivity.class);
+        it.putExtra("userId", toUserId);
+        context.startActivity(it);
+    }
     /**
      * 触发我的消息activity
      * @param context

@@ -50,7 +50,9 @@ public class ScoreAdapter extends BaseAdapter{
             view = LayoutInflater.from(mContext).inflate(R.layout.item_score_listview, null);
             viewHolder = new ViewHolder();
             viewHolder.setmTime((TextView) view.findViewById(R.id.score_time));
-            viewHolder.setmDesc((TextView) view.findViewById(R.id.score_desc));
+            TextView tvDesc = (TextView) view.findViewById(R.id.score_desc);
+            tvDesc.setSelected(true);
+            viewHolder.setmDesc(tvDesc);
             viewHolder.setmNumber((TextView) view.findViewById(R.id.score_number));
             viewHolder.setmTotalNumber((TextView)view.findViewById(R.id.score_total_number));
             viewHolder.setmStatus((TextView)view.findViewById(R.id.score_status));

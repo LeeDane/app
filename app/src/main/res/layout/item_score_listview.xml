@@ -8,45 +8,43 @@
     <TextView
         android:id="@+id/score_desc"
         android:layout_width="0dp"
-        android:layout_weight="4"
+        android:layout_weight="1"
         android:textSize="10sp"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:focusableInTouchMode="true"
+        android:ellipsize="marquee"
+        android:scrollHorizontally="true"
+        android:marqueeRepeatLimit="marquee_forever"
         android:text="@string/no_text"/>
     <TextView
         android:id="@+id/score_number"
-        android:layout_width="0dp"
-        android:layout_weight="2"
+        android:layout_width="70dp"
         android:textSize="10sp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/no_text"/>
     <TextView
         android:id="@+id/score_total_number"
-        android:layout_width="0dp"
-        android:layout_weight="2"
+        android:layout_width="80dp"
         android:textSize="10sp"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:text="@string/no_text"/>
 
     <TextView
         android:id="@+id/score_status"
-        android:layout_width="0dp"
-        android:layout_weight="2"
+        android:layout_width="50dp"
         android:textSize="10sp"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:text="@string/no_text"/>
 
     <TextView
         android:id="@+id/score_time"
-        android:layout_width="0dp"
-        android:layout_weight="2"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:textSize="10sp"
         android:background="#FFFAFA"
         android:singleLine="true"
         android:ellipsize="end"
-        android:gravity="center"
         android:text="@string/no_text"/>
 </LinearLayout>

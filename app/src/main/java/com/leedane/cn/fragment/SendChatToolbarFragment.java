@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatDetailBean;
 import com.leedane.cn.handler.ChatDetailHandler;
 import com.leedane.cn.helper.SoftKeyboardStateHelper;
@@ -174,8 +176,15 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
                                 .enableComplexMapKeySerialization()
                                 .create();
                         ChatDetailBean detailBean = gson.fromJson(jsonObject.getString("message"), ChatDetailBean.class);
+
+                        //隐藏输入法
+                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(mContentText.getWindowToken(), 0);
+
                         //注册发表评论或者转发后的监听
                         onSendChatListener.afterSuccessSendChat(detailBean);
+
+
                     }catch (Exception e){
                         ToastUtil.failure(mContext, "发送不成功，原始是服务器返回的不是json对象");
                         e.printStackTrace();

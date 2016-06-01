@@ -51,8 +51,15 @@ public class CircleOfFriendActivity  extends BaseActivity implements SwipeRefres
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        checkedIsLogin();
+        //检查是否登录
+        if(!checkedIsLogin()){
+            Intent it = new Intent(CircleOfFriendActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.CircleOfFriendActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+        }
         setContentView(R.layout.fragment_listview);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.circle_of_friend);
@@ -84,20 +91,6 @@ public class CircleOfFriendActivity  extends BaseActivity implements SwipeRefres
         sendFirstLoading();
     }
 
-    /**
-     * 检查是否登录
-     */
-    private void checkedIsLogin() {
-        //判断是否有缓存用户信息
-        if(BaseApplication.getLoginUserId() < 1){
-            Intent it = new Intent(CircleOfFriendActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.CircleOfFriendActivity");
-            startActivity(it);
-            finish();
-            return;
-        }
-    }
     @Override
     public void taskFinished(TaskType type, Object result) {
         isLoading = false;
@@ -141,9 +134,10 @@ public class CircleOfFriendActivity  extends BaseActivity implements SwipeRefres
                         }
                         mAdapter.refreshData(temList);
                         int size = mTimeLineBeans.size();
-
-                        mFirstId = 0;
-                        mLastId = size;
+                        if(size > 0){
+                            mFirstId = mTimeLineBeans.get(0).getTableId();
+                            mLastId = mTimeLineBeans.get(size - 1).getTableId();
+                        }
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){

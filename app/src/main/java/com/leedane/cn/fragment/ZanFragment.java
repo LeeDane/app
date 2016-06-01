@@ -73,7 +73,7 @@ public class ZanFragment extends BaseFragment{
         isLoading = false;
         if(result instanceof Error){
             if((type == TaskType.LOAD_ZAN) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getResources().getString(R.string.no_load_more));
+                mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
@@ -121,7 +121,7 @@ public class ZanFragment extends BaseFragment{
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.setSelection(0);
                         }
-                        mListViewFooter.setText(getResources().getString(R.string.load_finish));
+                        mListViewFooter.setText(getStringResource(mContext, R.string.load_finish));
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
@@ -132,9 +132,9 @@ public class ZanFragment extends BaseFragment{
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                             mListView.removeFooterView(viewFooter);
                             mListView.addFooterView(viewFooter, null, false);
-                            mListViewFooter.setText(getResources().getString(R.string.no_load_more));
+                            mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
                         }else {
-                            ToastUtil.success(mContext, getResources().getString(R.string.no_load_more));
+                            ToastUtil.success(mContext, getStringResource(mContext, R.string.no_load_more));
                         }
                     }
                 }else{
@@ -145,7 +145,7 @@ public class ZanFragment extends BaseFragment{
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
-                        mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                        mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
                         mListViewFooter.setOnClickListener(this);
                     }else{
                         ToastUtil.failure(mContext);
@@ -212,7 +212,7 @@ public class ZanFragment extends BaseFragment{
     @Override
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getResources().getString(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
             return;
         }
         //没有lastID时当作第一次请求加载
@@ -221,7 +221,7 @@ public class ZanFragment extends BaseFragment{
             return;
         }
 
-        mListViewFooter.setText(getResources().getString(R.string.loading));
+        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
@@ -241,8 +241,8 @@ public class ZanFragment extends BaseFragment{
     @Override
     protected void sendLoadAgain(View view){
         //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getResources().getString(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
-                || getResources().getString(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
+        if(getStringResource(mContext, R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
+                || getStringResource(mContext, R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
 
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
@@ -251,7 +251,7 @@ public class ZanFragment extends BaseFragment{
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
             params.put("toUserId", toUserId);
-            mListViewFooter.setText(getResources().getString(R.string.loading));
+            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
             taskCanceled(TaskType.LOAD_ZAN);
             PraiseHandler.getZansRequest(this, params);
         }
@@ -316,7 +316,7 @@ public class ZanFragment extends BaseFragment{
             mListView.addFooterView(viewFooter, null, false);
             mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
             mListViewFooter.setOnClickListener(ZanFragment.this);//添加点击事件
-            mListViewFooter.setText(getResources().getString(R.string.loading));
+            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
 
             mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
             mSwipeLayout.setOnRefreshListener(this);
@@ -332,5 +332,11 @@ public class ZanFragment extends BaseFragment{
     @Override
     public void onClick(View v) {
         super.onClick(v);
+
+        switch (v.getId()){
+            case R.id.listview_footer_reLoad:
+                sendLoadAgain(v);
+                break;
+        }
     }
 }

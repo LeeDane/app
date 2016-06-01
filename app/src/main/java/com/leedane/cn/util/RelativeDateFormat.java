@@ -47,7 +47,14 @@ public class RelativeDateFormat {
         }
         if (delta < 24L * ONE_HOUR) {
             long hours = toHours(delta);
-            return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
+            //return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
+
+            //特殊处理12个小时前显示小时和分钟(如2016-06-01 10:10:10，显示10:10)
+            if(hours < 13){
+                return DateUtil.DateToString(date, "HH:mm");
+            }else{
+                return hours + ONE_HOUR_AGO;
+            }
         }
         if (delta < 48L * ONE_HOUR) {
             return "昨天";

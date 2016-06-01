@@ -123,5 +123,26 @@
             android:layout_height="match_parent"
             android:layout_weight="2"/>
     </LinearLayout>
-
+    <LinearLayout
+        android:id="@+id/base_user_info_personal_last_request"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:gravity="center">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:text="@string/info_personal_request_time"/>
+        <TextView
+            android:id="@+id/base_user_info_personal_last_request_time"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:layout_weight="2"/>
+    </LinearLayout>
 </LinearLayout>

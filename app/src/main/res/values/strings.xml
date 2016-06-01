@@ -137,6 +137,7 @@
     <string name="info_qq">QQ号码：</string>
     <string name="info_sex">性别：</string>
     <string name="info_personal_introduction">个人介绍：</string>
+    <string name="info_personal_request_time">最近操作：</string>
 
     <!-- 下载相关 -->
     <string name="system_download">文件下载</string>
@@ -203,6 +204,9 @@
 
     <!--  用户中心  -->
     <string name="user_info">用户中心</string>
+
+    <!--  用户基本信息  -->
+    <string name="user_base">基本信息</string>
 
     <!-- zxing  -->
     <string name="my_qr_code">我的二维码</string>

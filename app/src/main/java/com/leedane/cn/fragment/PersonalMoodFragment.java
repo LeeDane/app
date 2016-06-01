@@ -111,7 +111,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         isLoading = false;
         if(result instanceof Error){
             if(type == TaskType.PERSONAL_LOADMOODS && !mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getResourceString(R.string.no_load_more));
+                mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
@@ -174,9 +174,9 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                             mListView.removeFooterView(viewFooter);
                             mListView.addFooterView(viewFooter, null, false);
-                            mListViewFooter.setText(getResourceString(R.string.no_load_more));
+                            mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
                         }else {
-                            ToastUtil.success(mContext, getResourceString(R.string.no_load_more));
+                            ToastUtil.success(mContext, getStringResource(mContext, R.string.no_load_more));
                         }
                     }
                 }else{
@@ -190,7 +190,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
-                        mListViewFooter.setText(getResourceString(R.string.load_more_error));
+                        mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
                         mListViewFooter.setOnClickListener(this);
                     }else{
                         ToastUtil.failure(mContext);
@@ -283,8 +283,8 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
             mListView.addFooterView(viewFooter, null, false);
             mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
             mListViewFooter.setOnClickListener(PersonalMoodFragment.this);//添加点击事件
-            mListViewFooter.setText(getResourceString(R.string.loading));
-            //mListViewFooter.setText(getResourceString(R.string.loading));
+            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+            //mListViewFooter.setText(getStringResource(mContext, R.string.loading));
             //mListViewFooter.setVisibility(View.GONE);
             mSwipeLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.id_swipe_listview);
             mSwipeLayout.setOnRefreshListener(this);
@@ -331,20 +331,20 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         List<String> menus = new ArrayList<>();
 
-        menus.add(getResourceString(R.string.personal_look));
-        menus.add(getResourceString(R.string.personal_praise));
-        menus.add(getResourceString(R.string.copyText));
+        menus.add(getStringResource(mContext, R.string.personal_look));
+        menus.add(getStringResource(mContext, R.string.personal_praise));
+        menus.add(getStringResource(mContext, R.string.copyText));
         if(hasImg){
-            menus.add(getResourceString(R.string.copyLink));
+            menus.add(getStringResource(mContext, R.string.copyLink));
         }
         //登录的用户：查看，点赞，复制文字，复制图像链接，删除，
         if(mPreUid == createUserId){
-            menus.add(getResourceString(R.string.delete));
+            menus.add(getStringResource(mContext, R.string.delete));
             //非登录用户：查看, 点赞，复制文字，复制图像链接，屏蔽，举报
         }else{
-            menus.add(getResourceString(R.string.personal_attention));
-            menus.add(getResourceString(R.string.personal_collection));
-            menus.add(getResourceString(R.string.personal_report));
+            menus.add(getStringResource(mContext, R.string.personal_attention));
+            menus.add(getStringResource(mContext, R.string.personal_collection));
+            menus.add(getStringResource(mContext, R.string.personal_report));
         }
 
         SimpleListAdapter adapter = new SimpleListAdapter(getActivity().getApplicationContext(), menus);
@@ -354,7 +354,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                TextView textView = (TextView)view.findViewById(R.id.simple_listview_item);
                 //查看
-                if(textView.getText().toString().equalsIgnoreCase(getResourceString(R.string.personal_look))){
+                if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_look))){
                     /*Intent it_detail = new Intent();
                     it_detail.setClass(mContext, MoodDetailActivity.class);
                     it_detail.putExtra("mid", mMoodBeans.get(clickListItemPosition).getId());
@@ -365,14 +365,14 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                     CommonHandler.startDetailActivity(mContext, "t_mood", mMoodBeans.get(clickListItemPosition).getId(), params);
                     dismissMoodListItemMenuDialog();
                     //点赞
-                }else if(textView.getText().toString().equalsIgnoreCase(getResourceString(R.string.personal_praise))){
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_praise))){
                     HashMap<String, Object> params = new HashMap<String, Object>();
                     params.put("table_name", "t_mood");
                     params.put("table_id", mMoodBeans.get(clickListItemPosition).getId());
                     params.put("content", "赞了这条心情");
                     PraiseHandler.sendZan(PersonalMoodFragment.this, params);
                     //复制文本
-                }else if(textView.getText().toString().equalsIgnoreCase(getResourceString(R.string.copyText))){
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.copyText))){
                     try {
                         ClipboardManager clipboardManager = (ClipboardManager)mContext.getSystemService(getContext().CLIPBOARD_SERVICE);
                         clipboardManager.setPrimaryClip(ClipData.newPlainText(null, mMoodBeans.get(clickListItemPosition).getContent()));
@@ -382,7 +382,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                     }
                     dismissMoodListItemMenuDialog();
                     //复制图片链接
-                }else if(textView.getText().toString().equalsIgnoreCase(getResourceString(R.string.copyLink))){
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.copyLink))){
                     try {
                         ClipboardManager clipboardManager = (ClipboardManager)mContext.getSystemService(getContext().CLIPBOARD_SERVICE);
                         clipboardManager.setPrimaryClip(ClipData.newPlainText(null, mMoodBeans.get(clickListItemPosition).getImgs()));
@@ -392,16 +392,16 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                     }
                     dismissMoodListItemMenuDialog();
                     //删除
-                }else if(textView.getText().toString().equalsIgnoreCase(getResourceString(R.string.delete))){
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.delete))){
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("mid", mMoodBeans.get(clickListItemPosition).getId());
                     MoodHandler.delete(PersonalMoodFragment.this, params);
                     showLoadingDialog("Delete", "is deleting......", true);
                     //举报
-                }else if(textView.getText().toString().equalsIgnoreCase(getResourceString(R.string.personal_report))){
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_report))){
 
                     //关注
-                }else if(textView.getText().toString().equalsIgnoreCase(getResourceString(R.string.personal_attention))){//关注
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_attention))){//关注
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("table_name", "t_mood");
                     params.put("table_id", mMoodBeans.get(clickListItemPosition).getId());
@@ -409,7 +409,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                     showLoadingDialog("Attention", "add attentioning......", true);
 
                     //收藏
-                }else if(textView.getText().toString().equalsIgnoreCase(getResourceString(R.string.personal_collection))){//收藏
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_collection))){//收藏
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("table_name", "t_mood");
                     params.put("table_id", mMoodBeans.get(clickListItemPosition).getId());
@@ -507,7 +507,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
     @Override
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getResourceString(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())) {
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())) {
             return;
         }
         //没有lastID时当作第一次请求加载
@@ -517,7 +517,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         }
         //刷新之前先把以前的任务取消
         taskCanceled(TaskType.PERSONAL_LOADMOODS);
-        mListViewFooter.setText(getResourceString(R.string.loading));
+        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
@@ -530,27 +530,14 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
     }
 
     /**
-     * 获取系统字符串资源
-     * @param id
-     * @return
-     */
-    private String getResourceString(int id){
-        Context context = getActivity();
-        if(context == null){
-            context = BaseApplication.newInstance();
-        }
-        return context.getResources().getString(id);
-    }
-
-    /**
      * 加载失败后点击加载更多
      * @param view
      */
     @Override
     protected void sendLoadAgain(View view){
         //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getResourceString(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
-                || getResourceString(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
+        if(getStringResource(mContext, R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
+                || getStringResource(mContext, R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
             taskCanceled(TaskType.PERSONAL_LOADMOODS);
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
@@ -559,7 +546,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
-            mListViewFooter.setText(getResourceString(R.string.loading));
+            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
             MoodHandler.sendMood(this, params);
         }
 

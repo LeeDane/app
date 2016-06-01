@@ -1,6 +1,7 @@
 package com.leedane.cn.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -84,6 +85,20 @@ public abstract class BaseFragment extends Fragment implements TaskListener, Vie
     }
 
     /**
+     * 获取字符串资源
+     * @param mContext
+     * @param resourseId
+     * @return
+     */
+    public String getStringResource(Context mContext, int resourseId){
+        if(mContext == null){
+            return BaseApplication.newInstance().getResources().getString(resourseId);
+        }else{
+            return mContext.getResources().getString(resourseId);
+        }
+    }
+
+    /**
      * 发送第一次刷新的任务
      */
     protected abstract void sendFirstLoading();
@@ -131,6 +146,21 @@ public abstract class BaseFragment extends Fragment implements TaskListener, Vie
                 }
             }
         }
+
+        /**
+         * 获取字符串资源
+         * @param context
+         * @param resourseId
+         * @return
+         */
+        public String getStringResource1(Context context, int resourseId){
+            if(context == null){
+                return BaseApplication.newInstance().getResources().getString(resourseId);
+            }else{
+                return context.getResources().getString(resourseId);
+            }
+        }
+
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         }

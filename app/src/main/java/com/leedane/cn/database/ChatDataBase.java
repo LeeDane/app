@@ -40,7 +40,7 @@ public class ChatDataBase {
             "to_user_id integer, " + // 接收聊天信息的用户ID
             //"accout varchar(20), " + // 接收聊天信息的用户名称
             "create_user_id integer, " + // 创建人
-            "read integer, " + // 是否读取
+            "read integer, " + // 是否读取, 0：表示未读， 1表示已经读取
             "code integer, " + // 与当前用户聊天的人的ID
             "create_time varchar(25)" + // 创建时间
 
@@ -71,12 +71,16 @@ public class ChatDataBase {
         }
         String sql = "insert into " + CHAT_TABLE_NAME;
 
-        sql += "(cid, content, _type, to_user_id, create_user_id, create_time, code) values(?, ?, ?, ?, ?, ?, ?)";
+        sql += "(cid, content, _type, to_user_id, create_user_id, create_time, code, read) values(?, ?, ?, ?, ?, ?, ?, ?)";
 
+        int read = 0;
+        if(data.isRead()){
+            read = 1;
+        }
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         sqlite.execSQL(sql, new String[] {
                 data.getId() + "", data.getContent() + "", data.getType() +"",
-                data.getToUserId() +"", data.getCreateUserId() +"", data.getCreateTime(), code +"" });
+                data.getToUserId() +"", data.getCreateUserId() +"", data.getCreateTime(), code +"", read +"" });
         sqlite.close();
         return true;
     }
@@ -126,13 +130,17 @@ public class ChatDataBase {
      * @param data
      */
     public void update(ChatDetailBean data) {
+        int read = 0;
+        if(data.isRead()){
+            read = 1;
+        }
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        String sql = ("update " + CHAT_TABLE_NAME + " set cid=?, content=?, _type=?, to_user_id=?, create_user_id=?, create_time=?, code=? where cid=?");
+        String sql = ("update " + CHAT_TABLE_NAME + " set cid=?, content=?, _type=?, to_user_id=?, create_user_id=?, create_time=?, code=?, read=? where cid=?");
         sqlite.execSQL(sql,
                 new String[] { data.getId() +"", data.getContent() + "",
                         data.getType() +"", data.getToUserId() +"",
                         data.getCreateUserId() +"", data.getCreateTime(),
-                        data.getId() + "" });
+                        read +"", data.getId() + "" });
         sqlite.close();
     }
 
@@ -150,18 +158,23 @@ public class ChatDataBase {
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
         ArrayList<ChatDetailBean> data = null;
         data = new ArrayList<ChatDetailBean>();
-        Cursor cursor = sqlite.rawQuery("select cid, content, _type, to_user_id, create_user_id, create_time, code  from "
+        Cursor cursor = sqlite.rawQuery("select cid, content, _type, to_user_id, create_user_id, create_time, code, read  from "
                 + CHAT_TABLE_NAME + where, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            ChatDetailBean person = new ChatDetailBean();
-            person.setId(cursor.getInt(0));
-            person.setContent(cursor.getString(1));
-            person.setType(cursor.getInt(2));
-            person.setToUserId(cursor.getInt(3));
-            person.setCreateUserId(cursor.getInt(4));
-            person.setCreateTime(cursor.getString(5));
-            person.setCode(cursor.getInt(6));
-            data.add(person);
+            ChatDetailBean chatDetailBean = new ChatDetailBean();
+            chatDetailBean.setId(cursor.getInt(0));
+            chatDetailBean.setContent(cursor.getString(1));
+            chatDetailBean.setType(cursor.getInt(2));
+            chatDetailBean.setToUserId(cursor.getInt(3));
+            chatDetailBean.setCreateUserId(cursor.getInt(4));
+            chatDetailBean.setCreateTime(cursor.getString(5));
+            chatDetailBean.setCode(cursor.getInt(6));
+            chatDetailBean.setRead(false);
+            int read = cursor.getInt(7);
+            if(read == 1){
+                chatDetailBean.setRead(true);
+            }
+            data.add(chatDetailBean);
         }
         if (!cursor.isClosed()) {
             cursor.close();

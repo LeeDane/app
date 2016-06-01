@@ -76,7 +76,15 @@ public class ZanUserActivity extends BaseActivity implements SwipeRefreshLayout.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //检查是否登录
-        checkedIsLogin("com.leedane.cn.activity.ZanUserActivity");
+        if(!checkedIsLogin()){
+            Intent it = new Intent(ZanUserActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.ZanUserActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_zan_user);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.zan_user);

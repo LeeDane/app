@@ -47,10 +47,9 @@ public class SearchHistoryDataBase {
             delete(data.getId());
         }else{
             //判断内容是否存在
-            SearchHistoryBean historyBean1 = isExists(data);
-            if(historyBean1 != null){
-                Log.i(TAG, "内容相同:"+historyBean1.getId());
-                delete(historyBean1.getId());//删掉旧的内容的数据
+            if(isExists(data) != null){
+                Log.i(TAG, "内容相同:key:"+data.getSearchKey() +",type:"+data.getSearchType());
+                delete(data.getSearchType(), data.getSearchKey());//删掉旧的内容的数据
             }
         }
 
@@ -65,8 +64,7 @@ public class SearchHistoryDataBase {
     private SearchHistoryBean isExists(SearchHistoryBean searchHistoryBean){
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
         ArrayList<SearchHistoryBean> data = new ArrayList<SearchHistoryBean>();
-        Cursor cursor = sqlite.rawQuery("select id from "
-                + SEARCH_TABLE_NAME + " where search_type = ? and search_key=? ", new String[]{searchHistoryBean.getSearchType(), searchHistoryBean.getSearchKey()});
+        Cursor cursor = sqlite.rawQuery("select id from " + SEARCH_TABLE_NAME + " where search_type = ? and search_key=? ", new String[]{searchHistoryBean.getSearchType(), searchHistoryBean.getSearchKey()});
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             SearchHistoryBean historyBean = new SearchHistoryBean();
             searchHistoryBean.setId(cursor.getInt(0));
@@ -88,6 +86,18 @@ public class SearchHistoryDataBase {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("delete from " + SEARCH_TABLE_NAME + " where id=?");
         sqlite.execSQL(sql, new Integer[]{id});
+        sqlite.close();
+    }
+
+    /**
+     * 删掉指定一条记录
+     * @param type
+     * @param key
+     */
+    public void delete(String type, String key) {
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        String sql = ("delete from " + SEARCH_TABLE_NAME + " where search_type=? and search_key=? ");
+        sqlite.execSQL(sql, new String[]{type, key});
         sqlite.close();
     }
 

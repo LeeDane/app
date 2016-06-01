@@ -25,7 +25,6 @@
                 android:id="@+id/mood_detail_user"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/no_text"
                 android:gravity="center"
                 android:textSize="18dp"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -36,8 +35,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:textSize="12dp"
-                android:gravity="center"
-                android:text="@string/no_text"/>
+                android:gravity="center"/>
         </LinearLayout>
         <TextView
             android:id="@+id/mood_detail_content"
@@ -48,20 +46,17 @@
             android:autoLink="all"
             android:textSize="16sp"
             android:padding="5dp"
-            android:background="#FFFAFA"
-            android:text="@string/no_text"/>
+            android:background="#FFFAFA"/>
         <ImageView
             android:id="@+id/mood_detail_img"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:visibility="gone"
-            android:src="@drawable/head"/>
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/mood_detail_praise"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="@string/action_settings">
+            android:visibility="gone">
         </TextView>
      </LinearLayout>
 
@@ -71,8 +66,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:visibility="gone"
-        android:textColor="@color/gray"
-        android:text="@string/no_text"/>
+        android:textColor="@color/gray"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -49,7 +50,6 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
     private int itemClickPosition;
     private int commentOrTransmit = 0;
     private CommentOrTransmitBean commentOrTransmitBean;
-    private MoodDetailFragment.OnItemClickListener onItemClickListener;
 
     public SendToolbarFragment(){
     }
@@ -64,6 +64,14 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
 
     public void setOnAddCommentOrTransmitListener(OnAddCommentOrTransmitListener onAddCommentOrTransmitListener) {
         this.onAddCommentOrTransmitListener = onAddCommentOrTransmitListener;
+    }
+
+    /**
+     * 操作类型改变的时候触发的
+     * @param commentOrTransmit
+     */
+    public void changeOperateType(int commentOrTransmit) {
+        this.commentOrTransmit = commentOrTransmit;
     }
 
     /**
@@ -189,9 +197,8 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
         mSendBarRootView.setLayoutParams(layoutParams);
     }
 
-    public void onItemClick(int position, CommentOrTransmitBean commentOrTransmitBean, int commentOrTransmit) {
+    public void onItemClick(int position, CommentOrTransmitBean commentOrTransmitBean) {
         this.itemClickPosition = position;
-        this.commentOrTransmit = commentOrTransmit;
         this.commentOrTransmitBean = commentOrTransmitBean;
         mContentText.setHint(" @" + commentOrTransmitBean.getAccount());
     }
@@ -220,6 +227,9 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
 
+                    //隐藏输入法
+                    InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mContentText.getWindowToken(), 0);
                     //注册发表评论或者转发后的监听
                     onAddCommentOrTransmitListener.afterSuccessAddCommentOrTransmit(commentOrTransmit);
 

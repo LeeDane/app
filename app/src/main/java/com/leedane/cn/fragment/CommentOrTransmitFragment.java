@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.adapter.CommentOrTransmitAdapter;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.CommentOrTransmitBean;
 import com.leedane.cn.bean.HttpResponseCommentOrTransmitBean;
 import com.leedane.cn.handler.CommentHandler;
@@ -109,7 +110,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
         isLoading = false;
         if(result instanceof Error){
             if((type == TaskType.LOAD_COMMENT || type == TaskType.LOAD_TRANSMIT) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getResources().getString(R.string.no_load_more));
+                mListViewFooter.setText(getStringResource(mContext, (R.string.no_load_more)));
             }
         }
         super.taskFinished(type, result);
@@ -158,7 +159,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.setSelection(0);
                         }
-                        mListViewFooter.setText(getResources().getString(R.string.load_finish));
+                        mListViewFooter.setText(getStringResource(mContext, R.string.load_finish));
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
@@ -169,9 +170,9 @@ public class CommentOrTransmitFragment extends BaseFragment{
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                             mListView.removeFooterView(viewFooter);
                             mListView.addFooterView(viewFooter, null, false);
-                            mListViewFooter.setText(getResources().getString(R.string.no_load_more));
+                            mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
                         }else {
-                            ToastUtil.success(mContext, getResources().getString(R.string.no_load_more));
+                            ToastUtil.success(mContext, getStringResource(mContext, R.string.no_load_more));
                         }
                     }
                 }else{
@@ -185,7 +186,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
-                        mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                        mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
                         mListViewFooter.setOnClickListener(this);
                     }else{
                         ToastUtil.failure(mContext);
@@ -206,6 +207,9 @@ public class CommentOrTransmitFragment extends BaseFragment{
             e.printStackTrace();
         }
     }
+
+
+
     /**
      * 发送第一次刷新的任务
      */
@@ -268,7 +272,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
     @Override
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getResources().getString(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
             return;
         }
         //没有lastID时当作第一次请求加载
@@ -277,7 +281,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
             return;
         }
 
-        mListViewFooter.setText(getResources().getString(R.string.loading));
+        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
@@ -303,8 +307,8 @@ public class CommentOrTransmitFragment extends BaseFragment{
     @Override
     protected void sendLoadAgain(View view){
         //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getResources().getString(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
-                || getResources().getString(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
+        if(getStringResource(mContext, R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
+                || getStringResource(mContext, R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
 
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
@@ -314,7 +318,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
             params.put("method", mPreLoadMethod);
             if(baseRequestParams != null)
                 params.putAll(baseRequestParams.getMap());
-            mListViewFooter.setText(getResources().getString(R.string.loading));
+            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
             if(isComment){
                 taskCanceled(TaskType.LOAD_COMMENT);
                 CommentHandler.getCommentsRequest(this, params);
@@ -396,7 +400,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
             mListView.addFooterView(viewFooter, null, false);
             mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
             mListViewFooter.setOnClickListener(CommentOrTransmitFragment.this);//添加点击事件
-            mListViewFooter.setText(getResources().getString(R.string.loading));
+            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
 
             mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
             mSwipeLayout.setOnRefreshListener(this);
@@ -412,5 +416,11 @@ public class CommentOrTransmitFragment extends BaseFragment{
     @Override
     public void onClick(View v) {
         super.onClick(v);
+
+        switch (v.getId()){
+            case R.id.listview_footer_reLoad:
+                sendLoadAgain(v);
+                break;
+        }
     }
 }

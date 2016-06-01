@@ -2,17 +2,12 @@ package com.leedane.cn.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
@@ -27,11 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.leedane.cn.activity.ImageDetailActivity;
 import com.leedane.cn.activity.MoodDetailActivity;
-import com.leedane.cn.activity.ZanUserActivity;
 import com.leedane.cn.adapter.CommentOrTransmitAdapter;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.CommentOrTransmitBean;
@@ -41,15 +32,12 @@ import com.leedane.cn.bean.HttpResponseMoodImagesBean;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.bean.MoodImagesBean;
 import com.leedane.cn.customview.CircularImageView;
-import com.leedane.cn.customview.UserNameClickableSpan;
-import com.leedane.cn.customview.ZanUserNumberClickableSpan;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.PraiseHandler;
 import com.leedane.cn.handler.TransmitHandler;
+import com.leedane.cn.helper.PraiseUserHelper;
 import com.leedane.cn.leedaneAPP.R;
-import com.leedane.cn.listener.OnUserNameClickListener;
-import com.leedane.cn.listener.OnZanUserNumberClickListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
@@ -63,7 +51,6 @@ import com.leedane.cn.volley.ImageCacheManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +74,24 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
+
+
+    private OnOperateTypeChangeListener onOperateTypeChangeListener;
+
+    public void setOnOperateTypeChangeListener(OnOperateTypeChangeListener onOperateTypeChangeListener) {
+        this.onOperateTypeChangeListener = onOperateTypeChangeListener;
+    }
+
+    /**
+     * 评论或者转发状态改变的事件的监听
+     */
+    public interface OnOperateTypeChangeListener{
+        /**
+         * 成功发表评论或者转发后的监听
+         */
+        void change(int commentOrTransmit);
+    }
+
 
     public static final String TAG = "MoodDetailFragment";
 
@@ -227,8 +232,10 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mCommentOrTransmits.size() > 0)
-                    onItemClickListener.onItemClick(position, mCommentOrTransmits.get(position - 1), commentOrTransmit);
+                if (mCommentOrTransmits.size() > 0){
+                    ToastUtil.success(mContext, "type:"+getOperateType());
+                    onItemClickListener.onItemClick(position, mCommentOrTransmits.get(position - 1), getOperateType());
+                }
             }
         });
 
@@ -260,10 +267,13 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
         mListView.addFooterView(viewFooter, null, false);
         mListViewFooter = (TextView)viewFooter.findViewById(R.id.listview_footer_reLoad);
-        mListViewFooter.setText(getResources().getString(R.string.loading));
+        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
         mListViewFooter.setOnClickListener(this);//添加点击事件
     }
 
+    private int getOperateType(){
+        return commentOrTransmit;
+    }
     /**
      * 初始化参数
      */
@@ -275,7 +285,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             mTVUser.setText(detail.getString("account"));
             mTVTime.setText(detail.getString("create_time"));
             mTVContent.setText(detail.getString("content"));
-            mTVPraise.setText(getResources().getString(R.string.personal_praise) +"("+ detail.getInt("zan_number")+")");
+            mTVPraise.setText(getStringResource(mContext, R.string.personal_praise) +"("+ detail.getInt("zan_number")+")");
             mTVComment.setText("评论("+detail.getInt("comment_number")+")");
             mTVTransmit.setText("转发("+detail.getInt("transmit_number")+")");
 
@@ -298,7 +308,10 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         if(detail.has("zan_users"))
             praiseList = detail.getString("zan_users");
 
-        if(StringUtil.isNotNull(praiseList) && detail.getInt("zan_number") > 0){
+        PraiseUserHelper helper = new PraiseUserHelper("t_mood", mid);
+        helper.setLikeUsers(mContext, mPraiseUser, praiseList, detail.getInt("zan_number"));
+
+        /*if(StringUtil.isNotNull(praiseList) && detail.getInt("zan_number") > 0){
             mPraiseUser.setVisibility(View.VISIBLE);
 
             String[] users = praiseList.split(";");
@@ -314,10 +327,10 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                 }
             }
             String show = showPraise.toString();
-            show = show.substring(0, show.length()-1) + "等"+detail.getInt("zan_number")+"位用户觉得很赞";
+            show = show.substring(0, show.length()-1) + "等"+detail.getInt("zan_number")+"人觉得很赞";
             mPraiseUser.setText(show);
 
-            Pattern numberPattern = Pattern.compile("等\\d+位");
+            Pattern numberPattern = Pattern.compile("等\\d+人");
             SpannableString ss = new SpannableString(show);
             setZanUserNumberClickable(mPraiseUser, ss, numberPattern, new ZanUserNumberClickableSpan(detail.getInt("zan_number"), "t_mood", mid, new OnZanUserNumberClickListener() {
                 @Override
@@ -364,7 +377,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             }
         }else{
             mPraiseUser.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     private void setZanUserNumberClickable(TextView textView, SpannableString ss, Pattern pattern, ClickableSpan cs){
@@ -393,7 +406,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         isLoading = false;
         if(result instanceof Error){
             if((type == TaskType.LOAD_COMMENT || type == TaskType.LOAD_TRANSMIT) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getResources().getString(R.string.no_load_more));
+                mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
@@ -488,8 +501,8 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.setSelection(0);
                         }
-                        mListViewFooter.setText(getResources().getString(R.string.load_finish));
-                    }else{
+                        mListViewFooter.setText(getStringResource(mContext, R.string.load_finish));
+                    } else {
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mCommentOrTransmits.clear();
@@ -498,9 +511,9 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                             mListView.removeFooterView(viewFooter);
                             mListView.addFooterView(viewFooter, null, false);
-                            mListViewFooter.setText(getResources().getString(R.string.no_load_more));
+                            mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
                         }else {
-                            Toast.makeText(mContext, getResources().getString(R.string.no_load_more), Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, getStringResource(mContext, R.string.no_load_more), Toast.LENGTH_LONG).show();
                         }
                     }
                 }else{
@@ -511,7 +524,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null ,false);
-                        mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                        mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
                         mListViewFooter.setOnClickListener(this);
                     }
                 }
@@ -548,7 +561,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                     Toast.makeText(mContext, "点赞成功", Toast.LENGTH_SHORT).show();
                     int zanNumber = detail.getInt("zan_number");
                     detail.put("zan_number", (zanNumber + 1));
-                    mTVPraise.setText(getResources().getString(R.string.personal_praise) + "(" + detail.getInt("zan_number") + ")");
+                    mTVPraise.setText(getStringResource(mContext, R.string.personal_praise) + "(" + detail.getInt("zan_number") + ")");
 
                     //拼接赞用户列表数据
                     String oldZanUsers = "";
@@ -670,7 +683,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
      */
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getResources().getString(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())) {
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())) {
             return;
         }
         //没有lastID时当作第一次请求加载
@@ -679,7 +692,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             return;
         }
 
-        mListViewFooter.setText(getResources().getString(R.string.loading));
+        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
@@ -718,8 +731,8 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
      */
     public void sendLoadAgain(View view){
         //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getResources().getString(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
-                || getResources().getString(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
+        if(getStringResource(mContext, R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
+                || getStringResource(mContext, R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
             Toast.makeText(mContext, "请求重新加载", Toast.LENGTH_SHORT).show();
             taskCanceled(TaskType.LOAD_COMMENT);
             taskCanceled(TaskType.LOAD_TRANSMIT);
@@ -732,7 +745,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
             params.put("showUserInfo", true);
-            mListViewFooter.setText(getResources().getString(R.string.loading));
+            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
             if(commentOrTransmit == 0){
                 CommentHandler.getCommentsRequest(MoodDetailFragment.this, params);
             }else{
@@ -747,7 +760,6 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         HashMap<String, Object> params = new HashMap<>();
         switch (v.getId()){
             case R.id.mood_detail_img:
-                Intent it_detail = new Intent(mContext, ImageDetailActivity.class);
                 List<ImageDetailBean> list = new ArrayList<ImageDetailBean>();
                 ImageDetailBean imageDetailBean;
                 for(MoodImagesBean bean: mMoodImagesBean.getMessage()){
@@ -763,22 +775,19 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                         continue;
                     }
                 }
-
-                Type type = new TypeToken<ArrayList<ImageDetailBean>>(){}.getType();
-                String json = new Gson().toJson(list,type);
-                it_detail.putExtra("ImageDetailBeans", json);
-                //it_detail.putExtra("imageUrls", imageUrls);
-                startActivity(it_detail);
+                CommonHandler.startImageDetailActivity(mContext, list);
                 break;
             case R.id.mood_detail_comment:
                 //Toast.makeText(MoodDetailActivity.this, "评论", Toast.LENGTH_SHORT).show();
                 commentOrTransmit = 0;
                 onItemClickListener.clearPosition();
+                onOperateTypeChangeListener.change(commentOrTransmit);
                 sendFirstLoading();
                 break;
             case R.id.mood_detail_transmit:
                 commentOrTransmit = 1;
                 onItemClickListener.clearPosition();
+                onOperateTypeChangeListener.change(commentOrTransmit);
                 sendFirstLoading();
                 break;
             case R.id.mood_detail_praise_show:
