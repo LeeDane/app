@@ -234,19 +234,8 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
                         }
                         mListViewHeader.setText(getStringResource(R.string.load_finish));
 
-                        /**
-                         * 将数据保存到本地数据库
-                         */
-                        String tableName = "chat_detail_" + BaseApplication.getLoginUserId() +"_"+toUserId;
-                        Map<String, Object> params;
+                        //将记录保存在本地数据库
                         for(ChatDetailBean chatDetailBean: chatDetailBeans){
-                           /* params = new HashMap<>();
-                            params.put("cid", chatDetailBean.getId());
-                            params.put("content", chatDetailBean.getContent());
-                            params.put("to_user_id", chatDetailBean.getToUserId());
-                            params.put("create_user_id", chatDetailBean.getCreateUserId());
-                            params.put("create_time", chatDetailBean.getCreateTime());
-                            params.put("_type", chatDetailBean.getType());*/
                             chatDetailBean.setRead(true);
                             dataBase.insert(chatDetailBean);
                         }
@@ -260,8 +249,8 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
                         if(mPreLoadMethod.equalsIgnoreCase("uploading")){
                             mListView.removeHeaderView(viewHeader);
                             mListView.addHeaderView(viewHeader, null, false);
-                            mListViewHeader.setText(getStringResource(R.string.no_load_more));
                         }
+                        mListViewHeader.setText(getStringResource(R.string.no_load_more));
                     }
                 }else{
                     if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
@@ -427,6 +416,9 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
      * @return
      */
     public String getStringResource(int resourceId){
+        if(mContext == null){
+            return BaseApplication.newInstance().getResources().getString(resourceId);
+        }
         return mContext.getResources().getString(resourceId);
     }
 

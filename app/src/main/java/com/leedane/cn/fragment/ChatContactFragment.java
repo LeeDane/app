@@ -201,11 +201,7 @@ public class ChatContactFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.view_right_button: //完成
 
-                break;
-        }
     }
 
     @Override

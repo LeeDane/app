@@ -1,10 +1,10 @@
 package com.leedane.cn.fragment;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +14,9 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leedane.cn.adapter.ChatAdapter;
-import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatBean;
-import com.leedane.cn.bean.ChatDetailBean;
 import com.leedane.cn.bean.HttpResponseMyFriendsBean;
-import com.leedane.cn.bean.MyFriendsBean;
-import com.leedane.cn.database.BaseSQLiteDatabase;
 import com.leedane.cn.database.ChatDataBase;
-import com.leedane.cn.handler.ChatHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
@@ -85,7 +80,7 @@ public class ChatHomeFragment extends Fragment implements TaskListener
             mRootView = inflater.inflate(R.layout.fragment_chat_home, container,
                     false);
         }
-
+        Log.i(TAG, "onCreateView() ........................");
         setHasOptionsMenu(true);
         return mRootView;
     }
@@ -101,8 +96,15 @@ public class ChatHomeFragment extends Fragment implements TaskListener
             mContext = getActivity();
 
         database = new ChatDataBase(mContext);
-        initData();
+
         initView();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initData();
+        Log.i(TAG, "onstart() ........................");
     }
 
     /**
@@ -120,9 +122,13 @@ public class ChatHomeFragment extends Fragment implements TaskListener
         try {
             Gson gson = new GsonBuilder().create();
             HttpResponseMyFriendsBean model = gson.fromJson(tempData, HttpResponseMyFriendsBean.class);
+            mChatBeans.clear();
             if(model != null && model.getMessage() != null){
                 mChatBeans.addAll(database.queryChatHome(mContext, model.getMessage()));
             }
+            List<ChatBean> tempChatBeans = new ArrayList<>();
+            tempChatBeans.addAll(mChatBeans);
+            mAdapter.refreshData(tempChatBeans);
              //mChatBeans.addAll(ChatHandler.getLocalChatBeans(mContext));
         } catch (Exception e) {
             e.printStackTrace();

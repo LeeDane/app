@@ -40,7 +40,15 @@ public class ChatDetailActivity extends BaseActivity implements ChatDetailListFr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkedIsLogin("com.leedane.cn.activity.ChatDetailActivity");
+        //检查是否登录
+        if(!checkedIsLogin()){
+            Intent it = new Intent(ChatDetailActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.ChatDetailActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+        }
         setContentView(R.layout.activity_chat_detail);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         Intent it = getIntent();
