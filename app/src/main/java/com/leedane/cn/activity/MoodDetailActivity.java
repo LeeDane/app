@@ -33,7 +33,7 @@ import java.io.File;
  * Created by LeeDane on 2016/3/1.
  */
 public class MoodDetailActivity extends BaseActivity implements MoodDetailFragment.OnItemClickListener
-        , SendToolbarFragment.OnAddCommentOrTransmitListener{
+        , SendToolbarFragment.OnAddCommentOrTransmitListener, MoodDetailFragment.OnOperateTypeChangeListener{
 
     public static final String TAG = "MoodDetailActivity";
 
@@ -46,7 +46,15 @@ public class MoodDetailActivity extends BaseActivity implements MoodDetailFragme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkedIsLogin();
+        //检查是否登录
+        if(!checkedIsLogin()){
+            Intent it = new Intent(MoodDetailActivity.this, LoginActivity.class);
+            //设置跳转的activity
+            it.putExtra("returnClass", "com.leedane.cn.activity.MoodDetailActivity");
+            it.setData(getIntent().getData());
+            startActivity(it);
+            finish();
+        }
         setContentView(R.layout.activity_mood_detail);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.mood_detail);
@@ -67,6 +75,7 @@ public class MoodDetailActivity extends BaseActivity implements MoodDetailFragme
         bundle.putBoolean("hasImg", hasImg);
         MoodDetailFragment moodDetailFragment = MoodDetailFragment.newInstance(bundle);
         moodDetailFragment.setOnItemClickListener(this);
+        moodDetailFragment.setOnOperateTypeChangeListener(this);
         SendToolbarFragment sendToolbarFragment = SendToolbarFragment.newInstance(bundle);
         sendToolbarFragment.setOnAddCommentOrTransmitListener(this);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, moodDetailFragment).commit();
@@ -78,22 +87,6 @@ public class MoodDetailActivity extends BaseActivity implements MoodDetailFragme
         mRightImg.setVisibility(View.VISIBLE);
         mRightImg.setImageResource(R.drawable.qr_code);
         mRightImg.setOnClickListener(this);
-    }
-
-
-    /**
-     * 检查是否登录
-     */
-    private void checkedIsLogin() {
-        //判断是否有缓存用户信息
-        if (BaseApplication.getLoginUserId() < 1) {
-            Intent it = new Intent(MoodDetailActivity.this, LoginActivity.class);
-            //设置跳转的activity
-            it.putExtra("returnClass", "com.leedane.cn.activity.MoodDetailActivity");
-            startActivity(it);
-            finish();
-            return;
-        }
     }
 
     @Override
@@ -215,7 +208,7 @@ public class MoodDetailActivity extends BaseActivity implements MoodDetailFragme
         FragmentManager fragmentManager = getSupportFragmentManager();
         //找到SendToolBarFragment
         SendToolbarFragment sendToolbarFragment = (SendToolbarFragment) fragmentManager.findFragmentById(R.id.emoji_keyboard);
-        sendToolbarFragment.onItemClick(position, commentOrTransmitBean, commentOrTransmit);
+        sendToolbarFragment.onItemClick(position, commentOrTransmitBean);
     }
 
     @Override
@@ -232,5 +225,13 @@ public class MoodDetailActivity extends BaseActivity implements MoodDetailFragme
         //找到MoodDetailFragment
         MoodDetailFragment moodDetailFragment = (MoodDetailFragment) fragmentManager.findFragmentById(R.id.container);
         moodDetailFragment.afterSuccessAddCommentOrTransmit(commentOrTransmit);
+    }
+
+    @Override
+    public void change(int commentOrTransmit) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        //找到SendToolBarFragment
+        SendToolbarFragment sendToolbarFragment = (SendToolbarFragment) fragmentManager.findFragmentById(R.id.emoji_keyboard);
+        sendToolbarFragment.changeOperateType(commentOrTransmit);
     }
 }

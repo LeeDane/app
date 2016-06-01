@@ -2,43 +2,40 @@ package com.leedane.cn.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.Html;
-import android.util.Log;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.leedane.cn.activity.MoodActivity;
 import com.leedane.cn.activity.PersonalActivity;
-import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.MoodBean;
+import com.leedane.cn.bean.ZanUserBean;
 import com.leedane.cn.customview.AutoLinkTextView;
-import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.customview.RightBorderTextView;
 import com.leedane.cn.fragment.PersonalMoodFragment;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.helper.PraiseUserHelper;
 import com.leedane.cn.leedaneAPP.R;
-import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.RelativeDateFormat;
-import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,6 +92,43 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             viewHolder.setmTransmit((RightBorderTextView) view.findViewById(R.id.personal_mood_operate_transmit));
             viewHolder.setmComment((RightBorderTextView) view.findViewById(R.id.personal_mood_operate_comment));
             //viewHolder.setmPraise((RightBorderTextView)view.findViewById(R.id.personal_mood_operate_praise));
+            /*MulitLinkTextView tv = (MulitLinkTextView)view.findViewById(R.id.personal_mood_praise_list);
+            tv.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    boolean ret = false;
+                    CharSequence text = ((TextView) v).getText();
+                    Spannable stext = Spannable.Factory.getInstance().newSpannable(text);
+                    TextView widget = (TextView) v;
+                    int action = event.getAction();
+
+                    if (action == MotionEvent.ACTION_UP ||
+                            action == MotionEvent.ACTION_DOWN) {
+                        int x = (int) event.getX();
+                        int y = (int) event.getY();
+
+                        x -= widget.getTotalPaddingLeft();
+                        y -= widget.getTotalPaddingTop();
+
+                        x += widget.getScrollX();
+                        y += widget.getScrollY();
+
+                        Layout layout = widget.getLayout();
+                        int line = layout.getLineForVertical(y);
+                        int off = layout.getOffsetForHorizontal(line, x);
+
+                        ClickableSpan[] link = stext.getSpans(off, off, ClickableSpan.class);
+
+                        if (link.length != 0) {
+                            if (action == MotionEvent.ACTION_UP) {
+                                link[0].onClick(widget);
+                            }
+                            ret = true;
+                        }
+                    }
+                    return ret;
+                }
+            });*/
             viewHolder.setmPraiseList((TextView)view.findViewById(R.id.personal_mood_praise_list));
 
             view.setTag(viewHolder);
@@ -121,32 +155,14 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         }
 
         String praiseList = moodBean.getPraiseUserList();
-        if(StringUtil.isNotNull(praiseList) && moodBean.getZanNumber() > 0){
-            viewHolder.getmPraiseList().setVisibility(View.VISIBLE);
-            String[] users = praiseList.split(";");
-            String[] u;
-            StringBuffer showPraise = new StringBuffer();
-            StringBuffer showPraiseHtml = new StringBuffer();
-            showPraiseHtml.append("<html><body>");
-            for(String user: users){
-                if(StringUtil.isNotNull(user)){
-                    u = user.split(",");
-                    showPraise.append("<font color=\"#8181F7\">");
-                    showPraise.append(u[1]);
-                    showPraise.append("</font>");
-                    showPraise.append("、");
-                }
-            }
-            String show = showPraise.toString();
-            show = show.substring(0, show.length()-1);
-            showPraiseHtml.append(show);
-            //showPraiseHtml.append("<font color=\"#00bbaa\">颜色2</font></body></html>");
-            viewHolder.getmPraiseList().setVisibility(View.VISIBLE);
-            viewHolder.getmPraiseList().setText(Html.fromHtml(showPraiseHtml.toString() + "等" + moodBean.getZanNumber() + "位用户觉得很赞"));
 
-        }else{
-            viewHolder.getmPraiseList().setVisibility(View.GONE);
+        try{
+            PraiseUserHelper helper = new PraiseUserHelper("t_mood", moodBean.getId());
+            helper.setLikeUsers(mContext, viewHolder.getmPraiseList(), praiseList, moodBean.getZanNumber());
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         final int index = position;
         viewHolder.getmMore().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,11 +171,6 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             }
         });
 
-        String userPicPath = moodBean.getUserPicPath();
-
-        //异步根据用户的id去获取图片对象
-        // viewHolder.getmUserImg().setImageBitmap(ImageUtil.getInstance().getBitmapByBase64(moodBean.getCreateUserId()));
-
         //异步去获取该心情的图像路径列表
         if(!StringUtil.isNull(moodBean.getImgs())){
             viewHolder.getmImgMain().setVisibility(View.VISIBLE);
@@ -167,15 +178,21 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             String[] showImages = imgs.split(",");
             for(String img: showImages){
                 //拿到图像的路径后再去回去base64位的图像字符串填充到相应的ImageView
-                ImageCacheManager.loadImage(img, viewHolder.getmImgMain(), 30 , 30);
+                ImageCacheManager.loadImage(img, viewHolder.getmImgMain(), 100 , 50);
             }
+
+            viewHolder.getmImgMain().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommonHandler.startImageDetailActivity(mContext, moodBean.getImgs());
+                }
+            });
         }else{
             viewHolder.getmImgMain().setVisibility(View.GONE);
         }
 
         viewHolder.getmTransmit().setText(mContext.getResources().getString(R.string.personal_transmit) + "(" +String.valueOf(moodBean.getTransmitNumber()) + ")");
         viewHolder.getmComment().setText(mContext.getResources().getString(R.string.personal_comment) + "(" + String.valueOf(moodBean.getCommentNumber()) + ")");
-        //viewHolder.getmPraise().setText(mContext.getResources().getString(R.string.personal_praise) + "(" + String.valueOf(moodBean.getZanNumber()) + ")");
         viewHolder.getmTransmit().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -307,4 +324,6 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             this.mPraiseList = mPraiseList;
         }
     }
+
+
 }
