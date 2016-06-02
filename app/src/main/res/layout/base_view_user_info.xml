@@ -35,9 +35,9 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="16sp"
-            android:text="@string/info_age"/>
+            android:text="@string/info_birth_day"/>
         <TextView
-            android:id="@+id/base_user_info_age"
+            android:id="@+id/base_user_info_birthday"
             android:layout_width="0dp"
             android:gravity="center"
             android:layout_height="match_parent"

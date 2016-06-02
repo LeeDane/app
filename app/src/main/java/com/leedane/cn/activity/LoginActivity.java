@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.database.ChatDataBase;
+import com.leedane.cn.database.SearchHistoryDataBase;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.service.LoadUserFriendService;
@@ -109,11 +110,11 @@ public class LoginActivity extends Activity implements TaskListener {
         final String password = ((EditText)findViewById(R.id.editview_password)).getText().toString();
 
         if(username == null || username.length() == 0 || username.replaceAll(" ", "").length() == 0){
-            Toast.makeText(LoginActivity.this, getResources().getString(R.string.username_null), Toast.LENGTH_SHORT).show();
+            ToastUtil.failure(LoginActivity.this, getResources().getString(R.string.username_null), Toast.LENGTH_SHORT);
             return;
         }
         if(password == null || password.length() == 0 || password.replaceAll(" ", "").length() == 0){
-            Toast.makeText(LoginActivity.this, getResources().getString(R.string.password_null), Toast.LENGTH_SHORT).show();
+            ToastUtil.failure(LoginActivity.this, getResources().getString(R.string.password_null), Toast.LENGTH_SHORT);
             return;
         }
 
@@ -145,7 +146,7 @@ public class LoginActivity extends Activity implements TaskListener {
     public void taskFinished(TaskType type, Object result) {
         dismissLoadingDialog();
         if(result instanceof Error){
-            Toast.makeText(LoginActivity.this, ((Error) result).getMessage(), Toast.LENGTH_SHORT).show();
+            ToastUtil.failure(LoginActivity.this, ((Error) result).getMessage(), Toast.LENGTH_SHORT);
             return;
         }
 
@@ -154,7 +155,7 @@ public class LoginActivity extends Activity implements TaskListener {
             if(TaskType.LOGIN_DO == type && resultObject != null){
                 if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
                     SharedPreferenceUtil.saveUserInfo(getApplicationContext(), resultObject.getString("userinfo"));
-                    Toast.makeText(LoginActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    ToastUtil.success(LoginActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT);
                     CommonHandler.startUserFreidnsService(getApplicationContext(), true);
                     //把信息返回到上一个activity
                     if(StringUtil.isNull(mReturnClass)){
@@ -174,20 +175,20 @@ public class LoginActivity extends Activity implements TaskListener {
                     }
 
                 }else{
-                    Toast.makeText(LoginActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    ToastUtil.failure(LoginActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT);
                 }
                 return;
             }else if(TaskType.DO_GET_LOGIN_CODE == type && resultObject != null){//获取手机验证码完成
                 if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
-                    Toast.makeText(LoginActivity.this, "验证码发送成功，1小时内有效", Toast.LENGTH_SHORT).show();
+                    ToastUtil.success(LoginActivity.this, "验证码发送成功，1小时内有效", Toast.LENGTH_SHORT);
                     loginPhoneSendMessage.setEnabled(false);
                 }else{
-                    Toast.makeText(LoginActivity.this, "验证码发送失败", Toast.LENGTH_SHORT).show();
+                    ToastUtil.failure(LoginActivity.this, "验证码发送失败", Toast.LENGTH_SHORT);
                 }
             }else if(type ==TaskType.DO_LOGIN_PHONE){
                 if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
                     SharedPreferenceUtil.saveUserInfo(getApplicationContext(), resultObject.getString("userinfo"));
-                    Toast.makeText(LoginActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    ToastUtil.success(LoginActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT);
                     CommonHandler.startUserFreidnsService(getApplicationContext(), true);
                     //把信息返回到上一个activity
                     if(StringUtil.isNull(mReturnClass)){
@@ -210,7 +211,7 @@ public class LoginActivity extends Activity implements TaskListener {
                 }
             }
         } catch (Exception e) {
-            Toast.makeText(LoginActivity.this, getResources().getString(R.string.login_error), Toast.LENGTH_SHORT).show();
+            ToastUtil.failure(LoginActivity.this, getResources().getString(R.string.login_error), Toast.LENGTH_SHORT);
             e.printStackTrace();
         }
     }
@@ -244,6 +245,10 @@ public class LoginActivity extends Activity implements TaskListener {
                         ChatDataBase dataBase = new ChatDataBase(LoginActivity.this);
                         dataBase.deleteAll();
                         dataBase.destroy();
+
+                        SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(LoginActivity.this);
+                        searchHistoryDataBase.deleteAll();
+                        searchHistoryDataBase.destroy();
                     }
 
                 })
@@ -316,7 +321,7 @@ public class LoginActivity extends Activity implements TaskListener {
     public void onLoginPhoneClick(View view){
         String phoneNumber = loginPhoneNumber.getText().toString();
         if(StringUtil.isNull(phoneNumber) || phoneNumber.length() != 11){
-            Toast.makeText(LoginActivity.this, "请输入正确的11位手机号码", Toast.LENGTH_LONG).show();
+            ToastUtil.failure(LoginActivity.this, "请输入正确的11位手机号码");
             loginPhoneNumber.setFocusable(true);
             return;
         }
@@ -324,7 +329,7 @@ public class LoginActivity extends Activity implements TaskListener {
         String validationCode = loginPhoneCode.getText().toString();
 
         if(StringUtil.isNull(validationCode) || validationCode.length() != 6){
-            Toast.makeText(LoginActivity.this, "请输入正确的6位验证码", Toast.LENGTH_LONG).show();
+            ToastUtil.failure(LoginActivity.this, "请输入正确的6位验证码");
             loginPhoneCode.setFocusable(true);
             return;
         }
@@ -347,7 +352,7 @@ public class LoginActivity extends Activity implements TaskListener {
     public void getValidationCodeClick(View view){
         String phoneNumber = loginPhoneNumber.getText().toString();
         if(StringUtil.isNull(phoneNumber) || phoneNumber.length() != 11){
-            Toast.makeText(LoginActivity.this, "请输入正确的11位手机号码", Toast.LENGTH_LONG).show();
+            ToastUtil.failure(LoginActivity.this, "请输入正确的11位手机号码");
             loginPhoneNumber.setFocusable(true);
             return;
         }

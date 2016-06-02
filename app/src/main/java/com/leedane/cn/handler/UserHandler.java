@@ -43,4 +43,18 @@ public class UserHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_HEAD_PATH, listener, requestBean);
     }
+
+    /**
+     * 更新用户的基本信息
+     * @param listener
+     * @param params
+     */
+    public static void updateUserBase(TaskListener listener, Map<String, Object> params){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/user_updateUserBase.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_USER_BASE, listener, requestBean);
+    }
 }

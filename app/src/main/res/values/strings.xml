@@ -38,6 +38,7 @@
     <string name="score">积分</string>
     <string name="comlpete">完成</string>
     <string name="oparate">操作</string>
+    <string name="edit">编辑</string>
     <string name="clear_history">清除全部搜索历史</string>
 
     <!-- 异常相关 -->
@@ -78,6 +79,7 @@
     <string name="nav_gallery">我的图库</string>
     <string name="nav_attention">我的关注</string>
     <string name="nav_message">我的消息</string>
+    <string name="nav_setting">我的设置</string>
     <string name="nav_file">我的文件</string>
     <string name="nav_personnal_centre">个人中心</string>
     <string name="nav_system">系统</string>
@@ -132,6 +134,7 @@
 
     <!-- 基本信息 -->
     <string name="info_age">年龄：</string>
+    <string name="info_birth_day">出生日期：</string>
     <string name="info_email">邮箱：</string>
     <string name="info_mobile_phone">手机号码：</string>
     <string name="info_qq">QQ号码：</string>

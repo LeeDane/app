@@ -271,7 +271,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
             mContext = getActivity();
 
         if(isFirstLoading){
-            ToastUtil.success(getContext(), "第一次加载");
+            //ToastUtil.success(getContext(), "第一次加载");
             sendFirstLoading();
             //initFirstData();
             mListView = (ListView)mRootView.findViewById(R.id.personal_fragment_listview);

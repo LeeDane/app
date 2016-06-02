@@ -73,4 +73,5 @@ public enum TaskType {
     DELETE_ATTENTION, //删除关注记录
     DELETE_CHAT, //删除聊天列表
     UPDATE_HANDER, //更新用户头像
+    UPDATE_USER_BASE, //更新用户的基本信息
 }

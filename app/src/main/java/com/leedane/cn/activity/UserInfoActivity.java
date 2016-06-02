@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -58,12 +59,10 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
     private ImageView mRightImg;
 
     private Dialog mQrCodeDialog;
-
-    //是否已经登录
-    private boolean isLogin;
-
     private ListView mListView;
     private UserInfoMenuAdapter mAdapter;
+
+    private View mHeader;
 
     private UserInfoDataReceiver userInfoDataReceive = new UserInfoDataReceiver();
     @Override
@@ -129,11 +128,41 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         setTitleViewText(R.string.user_info);
         backLayoutVisible();
 
-        mUserPic = (CircularImageView)findViewById(R.id.user_info_pic);
-        mScore = (TextView)findViewById(R.id.user_info_score);
-        mComment = (TextView)findViewById(R.id.user_info_comment);
-        mTransmit = (TextView)findViewById(R.id.user_info_transmit);
-        mFan = (TextView)findViewById(R.id.user_info_fans);
+        mListView = (ListView)findViewById(R.id.user_info_listview);
+        List<MenuBean> menuBeans = new ArrayList<>();
+        menuBeans.add(new MenuBean(R.drawable.menu_base_info, getStringResource(R.string.personal_info)));
+        menuBeans.add(new MenuBean(R.drawable.menu_personal_center, getStringResource(R.string.personal_title)));
+        menuBeans.add(new MenuBean(R.drawable.menu_message, getStringResource(R.string.nav_message)));
+        menuBeans.add(new MenuBean(R.drawable.menu_feedback, getStringResource(R.string.feedback)));
+        menuBeans.add(new MenuBean(R.drawable.menu_setting, getStringResource(R.string.nav_setting)));
+
+        mAdapter = new UserInfoMenuAdapter(UserInfoActivity.this, menuBeans);
+        mListView.setAdapter(mAdapter);
+        mHeader = LayoutInflater.from(UserInfoActivity.this).inflate(R.layout.user_info_header, null);
+        mUserPic = (CircularImageView)mHeader.findViewById(R.id.user_info_pic);
+        mScore = (TextView)mHeader.findViewById(R.id.user_info_score);
+        mComment = (TextView)mHeader.findViewById(R.id.user_info_comment);
+        mTransmit = (TextView)mHeader.findViewById(R.id.user_info_transmit);
+        mFan = (TextView)mHeader.findViewById(R.id.user_info_fans);
+        mListView.addHeaderView(mHeader, null ,false);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String title = ((TextView)view.findViewById(R.id.recyclerview_title)).getText().toString();
+                if(title.equalsIgnoreCase(getStringResource(R.string.personal_title))){
+                    CommonHandler.startPersonalActivity(UserInfoActivity.this, BaseApplication.getLoginUserId());
+                }else if(title.equalsIgnoreCase(getStringResource(R.string.nav_message))){
+                    CommonHandler.startMyMessageActivity(UserInfoActivity.this);
+                }else if(title.equalsIgnoreCase(getStringResource(R.string.personal_info))){
+                    CommonHandler.startUserBaseActivity(UserInfoActivity.this, BaseApplication.getLoginUserId());
+                }else if(title.equalsIgnoreCase(getStringResource(R.string.nav_setting))){
+                    CommonHandler.startMySettingActivity(UserInfoActivity.this);
+                }else{
+                    ToastUtil.success(UserInfoActivity.this, ((TextView)view.findViewById(R.id.recyclerview_title)).getText().toString());
+                }
+            }
+        });
 
         String userPicPath = BaseApplication.getLoginUserPicPath();
         if(StringUtil.isNotNull(userPicPath)){
@@ -149,30 +178,6 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
                 CommonHandler.startUpdateHeaderActivity(UserInfoActivity.this);
             }
         });
-
-        mListView = (ListView)findViewById(R.id.user_info_listview);
-        List<MenuBean> menuBeans = new ArrayList<>();
-        menuBeans.add(new MenuBean(R.drawable.menu_base_info, getStringResource(R.string.personal_info)));
-        menuBeans.add(new MenuBean(R.drawable.menu_personal_center, getStringResource(R.string.personal_title)));
-        menuBeans.add(new MenuBean(R.drawable.menu_message, getStringResource(R.string.nav_message)));
-        menuBeans.add(new MenuBean(R.drawable.menu_feedback, getStringResource(R.string.feedback)));
-        mAdapter = new UserInfoMenuAdapter(UserInfoActivity.this, menuBeans);
-        mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String title = ((TextView)view.findViewById(R.id.recyclerview_title)).getText().toString();
-                if(title.equalsIgnoreCase(getStringResource(R.string.personal_title))){
-                    CommonHandler.startPersonalActivity(UserInfoActivity.this, BaseApplication.getLoginUserId());
-                }else if(title.equalsIgnoreCase(getStringResource(R.string.nav_message))){
-                    CommonHandler.startMyMessageActivity(UserInfoActivity.this);
-                }else if(title.equalsIgnoreCase(getStringResource(R.string.personal_info))){
-                    CommonHandler.startUserBaseActivity(UserInfoActivity.this, BaseApplication.getLoginUserId());
-                }else{
-                    ToastUtil.success(UserInfoActivity.this, ((TextView)view.findViewById(R.id.recyclerview_title)).getText().toString());
-                }
-            }
-        });
     }
 
     @Override
@@ -180,11 +185,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         super.onClick(v);
         switch (v.getId()){
             case R.id.view_right_img: //点生成二维码
-                if(isLogin){
-                    showQrCodeDialog();
-                }else{
-                    ToastUtil.failure(UserInfoActivity.this, getStringResource(R.string.please_login));
-                }
+                showQrCodeDialog();
                 break;
         }
     }

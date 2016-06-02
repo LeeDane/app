@@ -159,6 +159,26 @@ public class DateUtil {
 			c.add(Calendar.DATE, amount);
 		return c.getTime();
 	}
+
+	/**
+	 * 从出生日期获得年龄
+	 * @param birthDay
+	 * @return
+	 */
+	public static int getAge(Date birthDay){
+		if(birthDay != null){
+			Calendar c = Calendar.getInstance();
+			c.setTime(birthDay);
+			int birthYear = c.get(Calendar.YEAR);
+
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(new Date());
+			int thisYear = c.get(Calendar.YEAR);
+			return thisYear - birthYear > 0 ? thisYear - birthYear : 0;
+		}
+
+		return 0;
+	}
 	
 
 	/**

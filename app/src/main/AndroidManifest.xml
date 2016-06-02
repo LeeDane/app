@@ -168,6 +168,13 @@
         </activity>
 
         <activity
+            android:name="com.leedane.cn.activity.MySettingActivity"
+            android:label="@string/nav_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
+        <activity
             android:name="com.leedane.cn.activity.CircleOfFriendActivity"
             android:label="@string/circle_of_friend"
             android:screenOrientation="portrait"

@@ -11,6 +11,7 @@ import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.activity.DetailActivity;
 import com.leedane.cn.activity.ImageDetailActivity;
 import com.leedane.cn.activity.MoodDetailActivity;
+import com.leedane.cn.activity.MySettingActivity;
 import com.leedane.cn.activity.NotificationActivity;
 import com.leedane.cn.activity.PersonalActivity;
 import com.leedane.cn.activity.UpdateUserHeaderActivity;
@@ -109,6 +110,15 @@ public class CommonHandler {
      */
     public static void startMyMessageActivity(Context context){
         Intent it = new Intent(context, NotificationActivity.class);
+        context.startActivity(it);
+    }
+
+    /**
+     * 触发我的设置activity
+     * @param context
+     */
+    public static void startMySettingActivity(Context context){
+        Intent it = new Intent(context, MySettingActivity.class);
         context.startActivity(it);
     }
 

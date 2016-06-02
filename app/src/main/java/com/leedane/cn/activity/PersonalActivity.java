@@ -38,6 +38,7 @@ import com.leedane.cn.handler.SignInHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.SerializableMap;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
@@ -601,7 +602,10 @@ public class PersonalActivity extends BaseActivity {
                 break;
             case R.id.personal_info:
                 Log.i(TAG, "点击查看基本信息");
-                showPopUserInfoDialog();
+                if(mIsLoginUser)
+                    CommonHandler.startUserBaseActivity(PersonalActivity.this, BaseApplication.getLoginUserId());
+                else
+                    showPopUserInfoDialog();
                 break;
             case R.id.personal_fans:
                 Intent it_fan = new Intent(PersonalActivity.this, FanActivity.class);
@@ -631,8 +635,18 @@ public class PersonalActivity extends BaseActivity {
             try{
                 if(mUserInfo.has("sex"))
                     ((TextView)view.findViewById(R.id.base_user_info_sex)).setText(StringUtil.changeNotNull(mUserInfo.getString("sex")));
-                if(mUserInfo.has("age"))
-                    ((TextView)view.findViewById(R.id.base_user_info_age)).setText(StringUtil.changeNotNull(mUserInfo.getString("age")));
+                if(mUserInfo.has("birth_day")){
+                    int age = 0;
+                    try{
+                        String birthDay = StringUtil.changeNotNull(mUserInfo.getString("birth_day"));
+                        if(StringUtil.isNotNull(birthDay)){
+                            age = DateUtil.getAge(DateUtil.stringToDate(birthDay));
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    ((TextView)view.findViewById(R.id.base_user_info_birthday)).setText(String.valueOf(age));
+                }
                 if(mUserInfo.has("email"))
                     ((TextView)view.findViewById(R.id.base_user_info_email)).setText(StringUtil.changeNotNull(mUserInfo.getString("email")));
                 if(mUserInfo.has("mobile_phone"))
@@ -641,13 +655,10 @@ public class PersonalActivity extends BaseActivity {
                     ((TextView)view.findViewById(R.id.base_user_info_qq)).setText(StringUtil.changeNotNull(mUserInfo.getString("qq")));
                 if(mUserInfo.has("personal_introduction"))
                     ((TextView)view.findViewById(R.id.base_user_info_personal_introduction)).setText(StringUtil.changeNotNull(mUserInfo.getString("personal_introduction")));
-
-                if(mUserInfo.has("last_request_time") && !mIsLoginUser){
+                if(mUserInfo.has("last_request_time")){
                     ((LinearLayout)view.findViewById(R.id.base_user_info_personal_last_request)).setVisibility(View.VISIBLE);
                     ((TextView)view.findViewById(R.id.base_user_info_personal_last_request_time)).setText(StringUtil.changeNotNull(mUserInfo.getString("last_request_time")));
                 }
-
-
             }catch (JSONException e){
                 e.printStackTrace();
             }

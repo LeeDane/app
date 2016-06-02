@@ -100,6 +100,8 @@ public class ChatHomeFragment extends Fragment implements TaskListener
         initView();
     }
 
+
+    //初次启动或者被销毁、取代之后重新打开都会调用这个方法
     @Override
     public void onStart() {
         super.onStart();
