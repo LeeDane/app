@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.leedane.cn.adapter.PersonalMoodListViewAdapter;
 import com.leedane.cn.adapter.SimpleListAdapter;
-import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpResponseMoodBean;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.database.MoodDataBase;

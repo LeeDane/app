@@ -13,7 +13,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.telephony.TelephonyManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,12 +40,12 @@ import com.leedane.cn.bean.GalleryBean;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.bean.HttpResponseGalleryBean;
 import com.leedane.cn.bean.ImageDetailBean;
+import com.leedane.cn.database.GalleryDataBase;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
-import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
@@ -67,6 +66,8 @@ import java.util.List;
 public class GalleryScrollView extends ScrollView implements View.OnTouchListener, TaskListener{
 
     public static final String TAG = "GalleryScrollView";
+
+    private GalleryDataBase galleryDataBase;
 
     /**
      * 每一列的宽度
@@ -296,8 +297,20 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
             secondColumn = (LinearLayout)findViewById(R.id.second_column);
             thirdColumn = (LinearLayout)findViewById(R.id.third_column);
             columnWidth = firstColumn.getWidth();
-            loadMoreImage("firstLoading", null);
-            loadOne = true;
+            //加载本地数据库的数据
+            galleryDataBase = new GalleryDataBase(getContext());
+            mBeans = galleryDataBase.queryGalleryLimit50(BaseApplication.getLoginUserId());
+            if(mBeans.size() > 0){
+                first_id = mBeans.get(0).getId();
+                last_id = mBeans.get(mBeans.size() - 1).getId();
+                mPreMethod = "lowloading";
+                for(GalleryBean galleryBean: mBeans)
+                    showImageView(galleryBean);
+                checkVisibility();
+            }else{
+                loadMoreImage("firstLoading", null);
+                loadOne = true;
+            }
         }
     }
 
@@ -350,6 +363,9 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
             firstColumn.removeAllViews();
             secondColumn.removeAllViews();
             thirdColumn.removeAllViews();
+
+            //第一次加载清空所有的数据
+            galleryDataBase.deleteAll();
         }
         isLoading = true;
         /*this.galleryActivity = galleryActivity;*/
@@ -432,6 +448,10 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
+                            }
+
+                            for(GalleryBean gb: mBeans){
+                                galleryDataBase.insert(gb);
                             }
                             checkVisibility();
                         }
@@ -968,5 +988,13 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
         public void setHeight(int height) {
             this.height = height;
         }
+    }
+
+    /**
+     * 销毁数据库资源
+     */
+    public void destroy() {
+        if(galleryDataBase != null)
+            galleryDataBase.destroy();
     }
 }

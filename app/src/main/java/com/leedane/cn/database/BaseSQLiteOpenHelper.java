@@ -35,6 +35,7 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 		database.execSQL(SearchHistoryDataBase.CREATE_SEARCH_TABLE);
 		database.execSQL(BlogDataBase.CREATE_BLOG_TABLE);
 		database.execSQL(MoodDataBase.CREATE_MOOD_TABLE);
+		database.execSQL(GalleryDataBase.CREATE_GALLERY_TABLE);
 	}
 
 	/**

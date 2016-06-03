@@ -202,4 +202,10 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
         //showLoadingDialog("Gallery", "please wait, loading...");
         scrollView.loadMoreImage("firstloading", this);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        scrollView.destroy();
+    }
 }
