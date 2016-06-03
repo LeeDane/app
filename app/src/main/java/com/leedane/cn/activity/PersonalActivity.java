@@ -152,6 +152,12 @@ public class PersonalActivity extends BaseActivity {
         //初始化数据
         initData();
 
+        setImmerseLayout(findViewById(R.id.baeselayout_navbar));
+        //显示整个顶部的导航栏
+        backLayoutVisible();
+        //以用户名称作为个人中心的标题
+        setTitleViewText(getStringResource(R.string.personal_title));
+
         //显示标题栏的发送心情的图片按钮
         mRightImg = (ImageView)findViewById(R.id.view_right_img);
         mRightImg.setVisibility(View.VISIBLE);
@@ -243,6 +249,7 @@ public class PersonalActivity extends BaseActivity {
         mViewPager = (ViewPager) findViewById(R.id.personal_viewpager);
         mScrollview = (HorizontalScrollView)findViewById(R.id.personal_scrollview);
         mRadioGroup = (RadioGroup) findViewById(R.id.personal_tabs);
+        mRadioGroup.setVisibility(View.VISIBLE);
         mPersonalPic = (CircularImageView)findViewById(R.id.personal_pic);
 
         if(mIsLoginUser){
@@ -267,7 +274,7 @@ public class PersonalActivity extends BaseActivity {
         }else{
             mPersonalPic.setVisibility(View.GONE);
         }
-        setImmerseLayout(findViewById(R.id.baeselayout_navbar));
+
 
         //以用户名称作为个人中心的标题
         if(StringUtil.isNull(mUserInfo.getString("account"))){
@@ -318,8 +325,7 @@ public class PersonalActivity extends BaseActivity {
             FanHandler.isFan(PersonalActivity.this, mUserId);
         }
 
-        //显示整个顶部的导航栏
-        backLayoutVisible();
+
         String tabText;
         for(int i = 0; i < mRadioGroup.getChildCount(); i++){
             tabText = ((RightBorderTextView)mRadioGroup.getChildAt(i)).getText().toString();

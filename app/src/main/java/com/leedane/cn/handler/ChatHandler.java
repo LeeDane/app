@@ -3,10 +3,14 @@ package com.leedane.cn.handler;
 import android.content.Context;
 
 import com.leedane.cn.bean.ChatBean;
+import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.database.ChatDataBase;
+import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -14,6 +18,23 @@ import java.util.List;
  * Created by LeeDane on 2016/5/4.
  */
 public class ChatHandler {
+
+    /**
+     * 删除评论
+     * @param context
+     * @param userId
+     */
+    public static boolean deleteLocalChat(Context context, int userId){
+        try{
+            ChatDataBase chatDataBase = new ChatDataBase(context);
+            chatDataBase.deleteByUser(userId);
+            chatDataBase.destroy();
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     /**
      * 加载本地的聊天实体

@@ -1,6 +1,8 @@
 package com.leedane.cn.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,13 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leedane.cn.adapter.ChatAdapter;
+import com.leedane.cn.adapter.SimpleListAdapter;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatBean;
 import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.database.ChatDataBase;
+import com.leedane.cn.handler.ChatHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
@@ -36,6 +42,18 @@ public class ChatHomeFragment extends Fragment implements TaskListener
         , View.OnClickListener, View.OnLongClickListener
         ,SwipeRefreshLayout.OnRefreshListener{
 
+    /**
+     * 聊天数据改变的监听器
+     */
+    public interface OnChatDataChangeListener{
+        void change();
+    }
+
+    private OnChatDataChangeListener onChatDataChangeListener;
+
+    public void setOnChatDataChangeListener(OnChatDataChangeListener onChatDataChangeListener) {
+        this.onChatDataChangeListener = onChatDataChangeListener;
+    }
 
 
     public interface OnItemClickListener{
@@ -169,8 +187,90 @@ public class ChatHomeFragment extends Fragment implements TaskListener
                     onItemClickListener.onItemClick(position, mChatBeans.get(position));
             }
         });
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showMenuDialog(position);
+                return true;
+            }
+        });
     }
 
+    private Dialog mDialog;
+
+    /**
+     * 显示弹出自定义菜单view
+     * @param index
+     */
+    public void showMenuDialog(final int index){
+        //判断是否已经存在菜单，存在则把以前的记录取消
+        dismissMenuDialog();
+
+        mDialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.mood_list_menu, null);
+
+        ListView listView = (ListView)view.findViewById(R.id.mood_list_menu_listview);
+        listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        List<String> menus = new ArrayList<>();
+
+        menus.add(getStringResource(R.string.delete));
+        menus.add(getStringResource(R.string.add_top));
+        menus.add(getStringResource(R.string.nav_personnal_centre));
+        SimpleListAdapter adapter = new SimpleListAdapter(getActivity().getApplicationContext(), menus);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView textView = (TextView)view.findViewById(R.id.simple_listview_item);
+                //删除
+                if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.delete))){
+                    if(ChatHandler.deleteLocalChat(mContext, mChatBeans.get(index).getToUserId())){
+                        ToastUtil.success(mContext, "本地聊天记录删除成功");
+                        mChatBeans.remove(index);
+                        mAdapter.notifyDataSetChanged();
+                    }else{
+                        ToastUtil.success(mContext, "本地聊天记录删除失败");
+                    }
+                    //个人中心
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.nav_personnal_centre))){
+                    CommonHandler.startPersonalActivity(mContext,  mChatBeans.get(index).getToUserId());
+                }
+            }
+        });
+        mDialog.setTitle("操作");
+        mDialog.setCancelable(true);
+        mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dismissMenuDialog();
+            }
+        });
+        //ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(800,(menus.size() +1) * 90 +20);
+        mDialog.setContentView(view);
+        mDialog.show();
+    }
+
+    /**
+     * 获取字符串资源
+     * @param resourseId
+     * @return
+     */
+    public String getStringResource(int resourseId){
+        if(mContext == null){
+            return BaseApplication.newInstance().getResources().getString(resourseId);
+        }else{
+            return mContext.getResources().getString(resourseId);
+        }
+    }
+
+
+    /**
+     * 隐藏弹出自定义view
+     */
+    public void dismissMenuDialog(){
+        if(mDialog != null && mDialog.isShowing())
+            mDialog.dismiss();
+    }
     @Override
     public void taskFinished(TaskType type, Object result) {
     }

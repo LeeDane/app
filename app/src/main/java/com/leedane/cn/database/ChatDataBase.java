@@ -115,6 +115,17 @@ public class ChatDataBase {
     }
 
     /**
+     * 删掉指定一条记录
+     * @param userId
+     */
+    public void deleteByUser(int userId) {
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        String sql = ("delete from " + CHAT_TABLE_NAME + " where create_user_id=?");
+        sqlite.execSQL(sql, new Integer[] { userId });
+        sqlite.close();
+    }
+
+    /**
      * 删掉全部记录
      */
     public void deleteAll() {

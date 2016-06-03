@@ -30,7 +30,7 @@ public class ImageCacheUtil implements ImageLoader.ImageCache {
     private static DiskLruCache mDiskLruCache;
 
     //定义磁盘的缓存大小
-    private static final int DISK_MAX_SIZE = 20 * 1024 * 1024;
+    private static final int DISK_MAX_SIZE = 80 * 1024 * 1024;
 
     public ImageCacheUtil(){
         //获取应用可占内存的1/4作为缓存

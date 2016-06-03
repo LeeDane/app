@@ -9,23 +9,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="@drawable/personal_bg">
+        android:layout_height="105dp"
+        android:background="@drawable/personal_bg"
+        android:orientation="vertical">
         <com.leedane.cn.customview.CircularImageView
             android:id="@+id/personal_pic"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_centerInParent="true"
-            android:src="@drawable/error_cat"
+            android:layout_marginTop="12dp"
+            android:layout_gravity="center"
+            android:src="@drawable/no_pic"
             app:border_width="2dp"
             />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="35dp"
             android:layout_below="@id/personal_pic"
             android:orientation="horizontal">
             <TextView
@@ -72,7 +73,7 @@
                 android:gravity="center"
                 android:text="@string/personal_fans"/>
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
     <HorizontalScrollView
         android:id="@+id/personal_scrollview"
         android:layout_width="match_parent"
@@ -82,6 +83,7 @@
             android:id="@+id/personal_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="horizontal">
             <com.leedane.cn.customview.RightBorderTextView
                 android:id="@+id/personal_mood"
