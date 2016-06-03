@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.database.ChatDataBase;
+import com.leedane.cn.database.MoodDataBase;
 import com.leedane.cn.database.SearchHistoryDataBase;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
@@ -245,6 +246,10 @@ public class LoginActivity extends Activity implements TaskListener {
                         ChatDataBase dataBase = new ChatDataBase(LoginActivity.this);
                         dataBase.deleteAll();
                         dataBase.destroy();
+
+                        MoodDataBase moodDataBase = new MoodDataBase(LoginActivity.this);
+                        moodDataBase.deleteAll();
+                        moodDataBase.destroy();
 
                         SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(LoginActivity.this);
                         searchHistoryDataBase.deleteAll();

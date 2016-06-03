@@ -54,10 +54,10 @@ public class ChatAdapter extends BaseAdapter{
         this.mList.addAll(chatBeans);
         this.notifyDataSetChanged();
     }
-    MyHolder myHolder;
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        MyHolder myHolder;
         if(convertView == null){
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_chat_listview, null);
             myHolder = new MyHolder();
@@ -82,6 +82,8 @@ public class ChatAdapter extends BaseAdapter{
         String userPicPath = chatBean.getUserPicPath();
         if(StringUtil.isNotNull(userPicPath)){
             ImageCacheManager.loadImage(userPicPath, myHolder.getmUserPicPath());
+        }else{
+            myHolder.getmUserPicPath().setImageResource(R.drawable.no_pic);
         }
         myHolder.getmAccount().setText(chatBean.getAccount());
         myHolder.getmContent().setText(chatBean.getContent());

@@ -71,6 +71,8 @@ public class ZanAdapter extends BaseAdapter{
         if(StringUtil.isNotNull(zanBean.getSource())){
             viewHolder.getmSource().setText(zanBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.getmSource().setVisibility(View.GONE);
         }
         return view;
     }

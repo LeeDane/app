@@ -41,7 +41,6 @@ public class PersonalListViewAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View view, ViewGroup group) {
-
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_personal_listview, null);

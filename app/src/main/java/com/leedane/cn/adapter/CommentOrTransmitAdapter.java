@@ -80,6 +80,8 @@ public class CommentOrTransmitAdapter extends BaseAdapter{
         if(StringUtil.isNotNull(commentOrTransmitBean.getSource())){
             viewHolder.getmSource().setText(commentOrTransmitBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.getmSource().setVisibility(View.GONE);
         }
 
         if(showUserInfo){
@@ -93,6 +95,8 @@ public class CommentOrTransmitAdapter extends BaseAdapter{
             viewHolder.getmUserName().setText(commentOrTransmitBean.getAccount());
             if(commentOrTransmitBean.getUserPicPath() != null)
                 ImageCacheManager.loadImage(commentOrTransmitBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);
+            else
+                viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
         }
         return view;
     }

@@ -60,10 +60,10 @@ public class FileAdapter extends BaseAdapter{
         this.mList.addAll(fileBeans);
         this.notifyDataSetChanged();
     }
-    MyHolder myHolder;
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        MyHolder myHolder;
         if(convertView == null){
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_file_listview, null);
             myHolder = new MyHolder();

@@ -10,10 +10,8 @@ import com.leedane.cn.util.ConstantsUtil;
 public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 
 	public static  final String TAG = "BaseSQLiteOpenHelper";
-
 	public static final String TABLE_FILE = "T_FILE";
 	public static final String TABLE_MOOD_DRAFT = "T_MOOD_DRAFT";
-	private int friendId;
 
 	/**
 	 * 普通表创建的构造方法
@@ -35,6 +33,8 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 		database.execSQL(this.createMoodDraft());
 		database.execSQL(ChatDataBase.CREATE_CHAT_TABLE);
 		database.execSQL(SearchHistoryDataBase.CREATE_SEARCH_TABLE);
+		database.execSQL(BlogDataBase.CREATE_BLOG_TABLE);
+		database.execSQL(MoodDataBase.CREATE_MOOD_TABLE);
 	}
 
 	/**

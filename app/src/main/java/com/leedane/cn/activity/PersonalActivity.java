@@ -635,7 +635,7 @@ public class PersonalActivity extends BaseActivity {
             try{
                 if(mUserInfo.has("sex"))
                     ((TextView)view.findViewById(R.id.base_user_info_sex)).setText(StringUtil.changeNotNull(mUserInfo.getString("sex")));
-                if(mUserInfo.has("birth_day")){
+                if(mUserInfo.has("birth_day")){/*
                     int age = 0;
                     try{
                         String birthDay = StringUtil.changeNotNull(mUserInfo.getString("birth_day"));
@@ -644,8 +644,8 @@ public class PersonalActivity extends BaseActivity {
                         }
                     }catch (Exception e){
                         e.printStackTrace();
-                    }
-                    ((TextView)view.findViewById(R.id.base_user_info_birthday)).setText(String.valueOf(age));
+                    }*/
+                    ((TextView)view.findViewById(R.id.base_user_info_birthday)).setText(StringUtil.changeNotNull(mUserInfo.getString("birth_day")));
                 }
                 if(mUserInfo.has("email"))
                     ((TextView)view.findViewById(R.id.base_user_info_email)).setText(StringUtil.changeNotNull(mUserInfo.getString("email")));

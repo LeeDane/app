@@ -86,14 +86,22 @@ public class CircleOfFriendAdapter extends BaseAdapter{
         if(timeLineBean.getCreateUserId() == loginUserId){
             if(StringUtil.isNotNull(loginUserPicPath))
                 ImageCacheManager.loadImage(loginUserPicPath, viewHolder.getmUserPic(), 30, 30);
+            else{
+                viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
+            }
         }else{
             if(timeLineBean.getUserPicPath() != null)
                 ImageCacheManager.loadImage(timeLineBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);
+            else{
+                viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
+            }
         }
 
         if(StringUtil.isNotNull(timeLineBean.getSource())){
             viewHolder.getmSource().setText(timeLineBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.getmSource().setVisibility(View.GONE);
         }
 
         viewHolder.getmContent().setText(timeLineBean.getContent());

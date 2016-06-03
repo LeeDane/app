@@ -86,7 +86,10 @@ public class FanAdapter extends BaseAdapter implements TaskListener{
                     CommonHandler.startPersonalActivity(mContext, fanBean.getToUserId());
                 }
             });
+        }else{
+            viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
         }
+
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(fanBean.getCreateTime())));
         if(userId == fanBean.getToUserId()){
             viewHolder.getmFanShow().setVisibility(View.GONE);

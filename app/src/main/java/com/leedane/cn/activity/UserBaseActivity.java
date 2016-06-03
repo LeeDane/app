@@ -2,6 +2,7 @@ package com.leedane.cn.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -109,9 +110,6 @@ public class UserBaseActivity extends BaseActivity{
         mSchool = (Spinner)findViewById(R.id.user_base_school);
         mIntroduction = (EditText)findViewById(R.id.user_base_introduction);
 
-        initData();
-        disabledAllView();
-
         ArrayAdapter<String> arraySexAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, sexs);
         mSex.setAdapter(arraySexAdapter);
         mSex.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -139,6 +137,9 @@ public class UserBaseActivity extends BaseActivity{
                 school = schools[0];
             }
         });
+
+        initData();
+        disabledAllView();
     }
 
     /**
@@ -150,6 +151,7 @@ public class UserBaseActivity extends BaseActivity{
             if(userInfo.has("account") && StringUtil.isNotNull(userInfo.getString("account")))
                 mAccount.setText(userInfo.getString("account"));
             if(userInfo.has("sex") && StringUtil.isNotNull(userInfo.getString("sex")))
+                //这个应该放在setAdapter()方法之后执行才有效
                 mSex.setSelection(getArrayPosition(sexs, userInfo.getString("sex")), true);
             if(userInfo.has("mobile_phone") && StringUtil.isNotNull(userInfo.getString("mobile_phone")))
                 mPhone.setText(userInfo.getString("mobile_phone"));
@@ -158,16 +160,7 @@ public class UserBaseActivity extends BaseActivity{
             if(userInfo.has("email") && StringUtil.isNotNull(userInfo.getString("email")))
                 mEmail.setText(userInfo.getString("email"));
             if(userInfo.has("birth_day") && StringUtil.isNotNull(userInfo.getString("birth_day"))){
-                int age = 0;
-                try{
-                    String birthDay = StringUtil.changeNotNull(userInfo.getString("birth_day"));
-                    if(StringUtil.isNotNull(birthDay)){
-                        age = DateUtil.getAge(DateUtil.stringToDate(birthDay));
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                mBirthDay.setText(userInfo.getString("email"));
+                mBirthDay.setText(userInfo.getString("birth_day"));
             }
             if(userInfo.has("education_background") && StringUtil.isNotNull(userInfo.getString("education_background")))
                 mSchool.setSelection(getArrayPosition(schools, userInfo.getString("education_background")), true);
@@ -207,9 +200,9 @@ public class UserBaseActivity extends BaseActivity{
                 if(mRight.getText().toString().equalsIgnoreCase(getStringResource(R.string.edit))){//进入编辑状态
                     mRight.setText(getStringResource(R.string.comlpete));
                     enabledAllView();
-                    ToastUtil.success(UserBaseActivity.this, "完成");
+                    //ToastUtil.success(UserBaseActivity.this, getStringResource(R.string.comlpete));
                 }else{//提交编辑
-                    ToastUtil.success(UserBaseActivity.this, "编辑");
+                    //ToastUtil.success(UserBaseActivity.this, getStringResource(R.string.edit));
                     Map<String, Object> params = new HashMap<>();
                     params.put("sex", sex);
                     params.put("mobile_phone", mPhone.getText().toString());
@@ -241,8 +234,11 @@ public class UserBaseActivity extends BaseActivity{
     private void disabledAllView(){
         mSex.setEnabled(false);
         mPhone.setEnabled(false);
+        mPhone.setBackground(null);
         mQq.setEnabled(false);
+        mQq.setBackground(null);
         mEmail.setEnabled(false);
+        mEmail.setBackground(null);
         mSelectBirthDay.setEnabled(false);
         mSchool.setEnabled(false);
         mIntroduction.setEnabled(false);
@@ -254,8 +250,11 @@ public class UserBaseActivity extends BaseActivity{
     private void enabledAllView(){
         mSex.setEnabled(true);
         mPhone.setEnabled(true);
+        mPhone.setBackgroundResource(R.drawable.bg_user_base_edittext);
         mQq.setEnabled(true);
+        mQq.setBackgroundResource(R.drawable.bg_user_base_edittext);
         mEmail.setEnabled(true);
+        mEmail.setBackgroundResource(R.drawable.bg_user_base_edittext);
         mSelectBirthDay.setEnabled(true);
         mSchool.setEnabled(true);
         mIntroduction.setEnabled(true);
@@ -271,7 +270,7 @@ public class UserBaseActivity extends BaseActivity{
                 if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
                     //获取新的基本信息
                     SharedPreferenceUtil.saveUserInfo(getApplicationContext(), resultObject.getString("userinfo"));
-                    ToastUtil.success(UserBaseActivity.this, "基本信息修改成功");
+                    ToastUtil.success(UserBaseActivity.this, getStringResource(R.string.user_base_update_success));
                     mRight.setText(getStringResource(R.string.edit));//将文字设置成编辑状态
                     disabledAllView();//将所有视图设置为不可编辑状态
                 }else{
@@ -280,7 +279,7 @@ public class UserBaseActivity extends BaseActivity{
                 return;
             }
         } catch (Exception e) {
-            ToastUtil.failure(UserBaseActivity.this, getResources().getString(R.string.login_error));
+            ToastUtil.failure(UserBaseActivity.this, getStringResource(R.string.user_base_update_error));
             e.printStackTrace();
         }
     }

@@ -60,8 +60,6 @@ public class ChatDataBase {
             Log.i(TAG, "数据已经存在:"+data.getId());
             return false;
         }
-
-        Log.i(TAG, "数据还没有存在:"+data.getId());
         int code = 0;
         //自己
         if(data.getCreateUserId() == BaseApplication.getLoginUserId()){
@@ -82,6 +80,8 @@ public class ChatDataBase {
                 data.getId() + "", data.getContent() + "", data.getType() +"",
                 data.getToUserId() +"", data.getCreateUserId() +"", data.getCreateTime(), code +"", read +"" });
         sqlite.close();
+
+        Log.i(TAG, "数据插入成功:" + data.getId());
         return true;
     }
 

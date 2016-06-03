@@ -109,6 +109,18 @@ public class ChatHomeFragment extends Fragment implements TaskListener
         Log.i(TAG, "onstart() ........................");
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause() ........................");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i(TAG, "onDestroyView() ........................");
+    }
+
     /**
      * 获取初始化数据
      */
@@ -124,7 +136,7 @@ public class ChatHomeFragment extends Fragment implements TaskListener
         try {
             Gson gson = new GsonBuilder().create();
             HttpResponseMyFriendsBean model = gson.fromJson(tempData, HttpResponseMyFriendsBean.class);
-            mChatBeans.clear();
+            mChatBeans = new ArrayList<>();
             if(model != null && model.getMessage() != null){
                 mChatBeans.addAll(database.queryChatHome(mContext, model.getMessage()));
             }

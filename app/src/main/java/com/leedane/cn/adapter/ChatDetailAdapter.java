@@ -88,7 +88,9 @@ public class ChatDetailAdapter extends BaseAdapter{
             });
             if(StringUtil.isNotNull(toUserPicPath))
                 ImageCacheManager.loadImage(toUserPicPath, viewHolder.getmUserPicPath(), 30, 30);
-
+            else{
+                viewHolder.getmUserPicPath().setImageResource(R.drawable.no_pic);
+            }
         }else{//自己使用right
             if(view == null) {
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail_listview_right, null);
@@ -119,6 +121,9 @@ public class ChatDetailAdapter extends BaseAdapter{
             if(userPicPath != null)
                 //viewHolder.getmUserPicPath().setImageBitmap(userPicBitMap);
                 ImageCacheManager.loadImage(userPicPath, viewHolder.getmUserPicPath(), 30, 30);
+            else{
+                viewHolder.getmUserPicPath().setImageResource(R.drawable.no_pic);
+            }
         }
         return view;
     }

@@ -40,6 +40,6 @@
         android:maxHeight="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:src="@drawable/head"/>
+        android:src="@drawable/no_pic"/>
 
 </LinearLayout>

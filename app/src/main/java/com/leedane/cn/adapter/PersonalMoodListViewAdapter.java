@@ -77,9 +77,10 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         this.mData.addAll(moods);
         this.notifyDataSetChanged();
     }
-    ViewHolder viewHolder = null;
+
     @Override
     public View getView(int position, View view, ViewGroup group) {
+        ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_personal_mood_listview, null);
             viewHolder = new ViewHolder();

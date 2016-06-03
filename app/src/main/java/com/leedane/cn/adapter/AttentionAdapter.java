@@ -67,6 +67,8 @@ public class AttentionAdapter extends BaseAdapter{
         if(StringUtil.isNotNull(attentionBean.getSource())){
             viewHolder.getmSource().setText(attentionBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.getmSource().setVisibility(View.GONE);
         }
         return view;
     }

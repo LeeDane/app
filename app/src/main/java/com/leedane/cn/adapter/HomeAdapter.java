@@ -40,6 +40,7 @@ import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
 /**
@@ -92,7 +93,6 @@ public class HomeAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         MyHolder myHolder;
-
         if(convertView == null){
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_home_listview, null);
             myHolder = new MyHolder();
@@ -133,7 +133,7 @@ public class HomeAdapter extends BaseAdapter{
                 public void imageLoaded(Bitmap imageBitmap, String imageTag) {
                     ImageView imageView = (ImageView) mListView.findViewWithTag(imageTag);
                     if (imageBitmap == null && imageView != null) {
-                        imageView.setImageResource(R.drawable.error_cat);
+                        imageView.setImageResource(R.drawable.no_pic);
                         return;
                     }
                     if (imageView != null) {
@@ -161,6 +161,8 @@ public class HomeAdapter extends BaseAdapter{
                     itImageDetail.putExtra("ImageDetailBeans", json);
                     itImageDetail.putExtra("current", 0);
                     mContext.startActivity(itImageDetail);
+                }else{
+                    ToastUtil.success(mContext, "暂无图片");
                 }
             }
         });

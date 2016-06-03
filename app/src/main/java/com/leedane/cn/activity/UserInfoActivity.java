@@ -53,11 +53,6 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
     private TextView mFan;
     private TextView mTransmit;
 
-    /**
-     * 发送心情的imageview
-     */
-    private ImageView mRightImg;
-
     private Dialog mQrCodeDialog;
     private ListView mListView;
     private UserInfoMenuAdapter mAdapter;
@@ -117,12 +112,6 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
 
         JSONObject jsonObject = SharedPreferenceUtil.getUserInfoData(getApplicationContext());
         updateUserInfoData(jsonObject);
-        //mUserInfoListView = (ListView)findViewById(R.id.user_info_listview);
-        //显示标题栏的发送心情的图片按钮
-        mRightImg = (ImageView)findViewById(R.id.view_right_img);
-        mRightImg.setVisibility(View.VISIBLE);
-        mRightImg.setImageResource(R.drawable.qr_code);
-        mRightImg.setOnClickListener(this);
 
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.user_info);
@@ -132,6 +121,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         List<MenuBean> menuBeans = new ArrayList<>();
         menuBeans.add(new MenuBean(R.drawable.menu_base_info, getStringResource(R.string.personal_info)));
         menuBeans.add(new MenuBean(R.drawable.menu_personal_center, getStringResource(R.string.personal_title)));
+        menuBeans.add(new MenuBean(R.drawable.qr_code, getStringResource(R.string.qr_code_idcard)));
         menuBeans.add(new MenuBean(R.drawable.menu_message, getStringResource(R.string.nav_message)));
         menuBeans.add(new MenuBean(R.drawable.menu_feedback, getStringResource(R.string.feedback)));
         menuBeans.add(new MenuBean(R.drawable.menu_setting, getStringResource(R.string.nav_setting)));
@@ -158,6 +148,8 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
                     CommonHandler.startUserBaseActivity(UserInfoActivity.this, BaseApplication.getLoginUserId());
                 }else if(title.equalsIgnoreCase(getStringResource(R.string.nav_setting))){
                     CommonHandler.startMySettingActivity(UserInfoActivity.this);
+                }else if(title.equalsIgnoreCase(getStringResource(R.string.qr_code_idcard))){ //二维码名片
+                    showQrCodeDialog();//展示二维码名片
                 }else{
                     ToastUtil.success(UserInfoActivity.this, ((TextView)view.findViewById(R.id.recyclerview_title)).getText().toString());
                 }
@@ -183,11 +175,6 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
-            case R.id.view_right_img: //点生成二维码
-                showQrCodeDialog();
-                break;
-        }
     }
 
     private Bitmap qrCodeBitmap;

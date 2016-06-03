@@ -71,6 +71,10 @@ public class ZanUserAdapter extends BaseAdapter{
 
         if(StringUtil.isNotNull(zanUserBean.getUserPicPath()))
             ImageCacheManager.loadImage(zanUserBean.getUserPicPath(), viewHolder.getmUserPic(), 40, 40);
+        else{
+            viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
+        }
+
         viewHolder.getmUserPic().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

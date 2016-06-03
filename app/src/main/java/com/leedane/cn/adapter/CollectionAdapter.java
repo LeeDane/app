@@ -67,6 +67,8 @@ public class CollectionAdapter extends BaseAdapter{
         if(StringUtil.isNotNull(collectionBean.getSource())){
             viewHolder.getmSource().setText(collectionBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.getmSource().setVisibility(View.GONE);
         }
         return view;
     }

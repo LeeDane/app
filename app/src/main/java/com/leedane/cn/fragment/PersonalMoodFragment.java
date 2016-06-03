@@ -21,6 +21,7 @@ import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpResponseMoodBean;
 import com.leedane.cn.bean.MoodBean;
+import com.leedane.cn.database.MoodDataBase;
 import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.CollectionHandler;
 import com.leedane.cn.handler.CommonHandler;
@@ -47,6 +48,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
 
     public static final String TAG = "PersonalMoodFragment";
 
+    private MoodDataBase moodDataBase;
     private Context mContext;
     private ListView mListView;
     //private TextView mTextViewLoading;
@@ -54,9 +56,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
 
     private View mRootView;
     private Dialog mDialog;
-    private int mIndex;
     private int mPreUid; //当前个人中心用户ID，不一定是系统登录用户ID
-    private boolean mIsLoginUser; //当前个人中心用户是否是登录用户
     private int clickListItemPosition;//点击ListView的位置
 
     private List<MoodBean> mMoodBeans = new ArrayList<>();
@@ -64,26 +64,9 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
 
     //是否是第一次加载
     private boolean isFirstLoading = true;
-
-
-
     public PersonalMoodFragment(){
 
     }
-
-    /**
-     *
-     * @param index 当前fragment是第几个
-     * @param context
-     */
-    /*public PersonalMoodFragment(int index, Context context, int preUid, boolean isLoginUser){
-        this.mContext = context;
-        this.mIndex = index;
-        this.mPreUid = preUid;
-        this.mIsLoginUser = isLoginUser;
-        mAdapter = new PersonalMoodListViewAdapter(getActivity(), mContext, mMoodBeans, this);
-    }*/
-
     /**
      * 构建Fragment对象
      * @param bundle
@@ -160,16 +143,16 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.setSelection(0);
                         }
-                        //mListView.removeFooterView(viewFooter);
-                        //setListViewHeightBasedOnChildren(mListView);
+
+                        //把获取到的数据全部加载到心情数据库中
+                        for(MoodBean mb: mMoodBeans){
+                            moodDataBase.insert(mb);
+                        }
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            //mCommentOrTransmits = new ArrayList<>();
-                            //mListView.removeAllViewsInLayout();
                             mMoodBeans.clear();
                             mAdapter.refreshData(new ArrayList<MoodBean>());
-                            //mListView.addHeaderView(viewHeader);
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                             mListView.removeFooterView(viewFooter);
@@ -182,11 +165,8 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                 }else{
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            //mCommentOrTransmits = new ArrayList<>();
-                            //mListView.removeAllViewsInLayout();
                             mMoodBeans.clear();
                             mAdapter.refreshData(new ArrayList<MoodBean>());
-                            //mListView.addHeaderView(viewHeader);
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
@@ -196,19 +176,6 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                         ToastUtil.failure(mContext);
                     }
                 }
-                /*if(httpResponseMoodBean != null){
-                    tempDatas.addAll(httpResponseMoodBean.getMessage());
-                    if(mAdapter == null){
-                        Log.i(TAG, "mAdapter为空");
-                        mAdapter = new PersonalMoodListViewAdapter(getActivity(), mContext, mMoodBeans, this);
-                        mListView.setAdapter(mAdapter);
-                    }
-                    mAdapter.refreshData(tempDatas);
-                    Log.i(TAG, "获取心情总数：" + tempDatas.size());
-                    mListView.setVisibility(View.VISIBLE);
-                    mTextViewLoading.setVisibility(View.GONE);
-                    return;
-                }*/
                 return;
             }else  if(type == TaskType.ADD_ZAN) {
                 dismissMoodListItemMenuDialog();
@@ -246,6 +213,9 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                     for(int i = 0;i < mMoodBeans.size(); i++){
                         if(clickListItemPosition != i)
                             tempList.add(mMoodBeans.get(i));
+                        else
+                            //把本地的心情数据也删除掉
+                            moodDataBase.delete(mMoodBeans.get(clickListItemPosition).getCreateUserId(), mMoodBeans.get(clickListItemPosition).getId());
                     }
                     //mMoodBeans.remove(clickListItemPosition);
                     mAdapter.refreshData(tempList);
@@ -265,14 +235,21 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         Bundle bundle = getArguments();
         if(bundle != null){
             this.mPreUid = bundle.getInt("toUserId");
-            this.mIsLoginUser = bundle.getBoolean("isLoginUser");
         }
         if(mContext == null)
             mContext = getActivity();
 
         if(isFirstLoading){
             //ToastUtil.success(getContext(), "第一次加载");
-            sendFirstLoading();
+            //加载本地数据库的数据
+            moodDataBase = new MoodDataBase(mContext);
+            mMoodBeans = moodDataBase.queryMoodLimit50(mPreUid);
+            if(mMoodBeans.size() > 0){
+                mFirstId = mMoodBeans.get(0).getId();
+                mLastId = mMoodBeans.get(mMoodBeans.size() - 1).getId();
+            }else{
+                sendFirstLoading();
+            }
             //initFirstData();
             mListView = (ListView)mRootView.findViewById(R.id.personal_fragment_listview);
             mAdapter = new PersonalMoodListViewAdapter(mContext, mMoodBeans, this);
@@ -284,8 +261,6 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
             mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
             mListViewFooter.setOnClickListener(PersonalMoodFragment.this);//添加点击事件
             mListViewFooter.setText(getStringResource(mContext, R.string.loading));
-            //mListViewFooter.setText(getStringResource(mContext, R.string.loading));
-            //mListViewFooter.setVisibility(View.GONE);
             mSwipeLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.id_swipe_listview);
             mSwipeLayout.setOnRefreshListener(this);
             mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
@@ -303,12 +278,6 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Toast.makeText(mContext, "点击啦", Toast.LENGTH_SHORT).show();
-        /*Intent it_detail = new Intent();
-        it_detail.setClass(mContext, MoodDetailActivity.class);
-        it_detail.putExtra("tableId", mMoodBeans.get(position).getId());
-        it_detail.putExtra("hasImg", !StringUtil.isNull(mMoodBeans.get(position).getImgs()));
-        startActivity(it_detail);*/
         HashMap<String, Object> params = new HashMap<>();
         params.put("hasImg", !StringUtil.isNull(mMoodBeans.get(position).getImgs()));
         CommonHandler.startDetailActivity(mContext, "t_mood", mMoodBeans.get(position).getId(), params);
@@ -355,11 +324,6 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                TextView textView = (TextView)view.findViewById(R.id.simple_listview_item);
                 //查看
                 if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_look))){
-                    /*Intent it_detail = new Intent();
-                    it_detail.setClass(mContext, MoodDetailActivity.class);
-                    it_detail.putExtra("mid", mMoodBeans.get(clickListItemPosition).getId());
-                    it_detail.putExtra("hasImg", !StringUtil.isNull(mMoodBeans.get(clickListItemPosition).getImgs()));
-                    startActivity(it_detail);*/
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("hasImg", !StringUtil.isNull(mMoodBeans.get(clickListItemPosition).getImgs()));
                     CommonHandler.startDetailActivity(mContext, "t_mood", mMoodBeans.get(clickListItemPosition).getId(), params);
@@ -416,21 +380,6 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                     CollectionHandler.sendCollection(PersonalMoodFragment.this, params);
                     showLoadingDialog("Collection", "add collectioning......", true);
                 }
-                /*Toast.makeText(mContext, index+ "文本："+textView.getText(), Toast.LENGTH_SHORT).show();
-                switch (position){
-                    case 0:
-                        Toast.makeText(mContext, index+ "收藏："+mMoodBeans.get(index).getContent(), Toast.LENGTH_SHORT).show();
-                        break;
-                    case 1:
-                        Toast.makeText(mContext, index+ "解除好友："+mMoodBeans.get(index).getContent(), Toast.LENGTH_SHORT).show();
-                        break;
-                    case 2:
-                        Toast.makeText(mContext, index+ "屏蔽："+mMoodBeans.get(index).getContent(), Toast.LENGTH_SHORT).show();
-                        break;
-                    case 3:
-                        Toast.makeText(mContext, index+ "举报："+mMoodBeans.get(index).getContent(), Toast.LENGTH_SHORT).show();
-                        break;
-                }*/
             }
         });
         mDialog.setTitle("操作");
@@ -555,6 +504,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
     @Override
     public void onDestroy() {
         super.onDestroy();
+        moodDataBase.destroy();
     }
 
     @Override

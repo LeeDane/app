@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.leedane.cn.adapter.CommonString;
 import com.leedane.cn.adapter.ContactAdapter;
 import com.leedane.cn.adapter.expandRecyclerviewadapter.StickyRecyclerHeadersDecoration;
 import com.leedane.cn.application.BaseApplication;

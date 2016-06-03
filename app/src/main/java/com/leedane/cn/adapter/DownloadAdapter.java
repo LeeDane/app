@@ -57,11 +57,11 @@ public class DownloadAdapter extends BaseAdapter{
         this.mList.addAll(downloadItems);
         this.notifyDataSetChanged();
     }
-    MyHolder myHolder;
+
     private int downloadCount = 0;
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        MyHolder myHolder;
         if(convertView == null){
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_download_listview, null);
             myHolder = new MyHolder();

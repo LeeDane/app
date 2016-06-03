@@ -79,6 +79,7 @@
     <string name="nav_gallery">我的图库</string>
     <string name="nav_attention">我的关注</string>
     <string name="nav_message">我的消息</string>
+    <string name="qr_code_idcard">二维码名片</string>
     <string name="nav_setting">我的设置</string>
     <string name="nav_file">我的文件</string>
     <string name="nav_personnal_centre">个人中心</string>
@@ -210,9 +211,11 @@
 
     <!--  用户基本信息  -->
     <string name="user_base">基本信息</string>
+    <string name="user_base_update_success">基本信息修改成功</string>
+    <string name="user_base_update_error">基本信息修改失败</string>
 
     <!-- zxing  -->
-    <string name="my_qr_code">我的二维码</string>
+    <string name="my_qr_code">我的二维码名片</string>
     <string name="menu_settings">Settings</string>
     <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
     <string name="mipca_user_info_personal">查看个人中心</string>

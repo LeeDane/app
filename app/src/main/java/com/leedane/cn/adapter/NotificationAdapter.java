@@ -82,12 +82,16 @@ public class NotificationAdapter extends BaseAdapter{
                     CommonHandler.startPersonalActivity(mContext, notificationBean.getToUserId());
                 }
             });
+        }else{
+            viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
         }
         viewHolder.getmContent().setText(StringUtil.changeNotNull(notificationBean.getContent()));
         String source = notificationBean.getSource();
         if(StringUtil.isNotNull(source)){
             viewHolder.getmSource().setVisibility(View.VISIBLE);
             viewHolder.getmSource().setText(source);
+        }else{
+            viewHolder.getmSource().setVisibility(View.GONE);
         }
 
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(notificationBean.getCreateTime())));

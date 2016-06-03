@@ -430,7 +430,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         //只有在加载失败或者点击加载更多的情况下点击才有效
         if(getStringResource(R.string.load_more_error).equalsIgnoreCase(mListViewHeader.getText().toString())
                 || getStringResource(R.string.load_more).equalsIgnoreCase(mListViewHeader.getText().toString())){
-            Toast.makeText(mContext, "请求重新加载", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "请求重新加载", Toast.LENGTH_SHORT).show();
             taskCanceled(TaskType.LOAD_CHAT);
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();

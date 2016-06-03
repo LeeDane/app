@@ -2,7 +2,6 @@ package com.leedane.cn.activity;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,7 +33,7 @@ import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.BlogBean;
 import com.leedane.cn.bean.HttpResponseBlogBean;
 import com.leedane.cn.customview.CircularImageView;
-import com.leedane.cn.handler.AppVersionHandler;
+import com.leedane.cn.database.BlogDataBase;
 import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.BlogHandler;
 import com.leedane.cn.handler.CollectionHandler;
@@ -59,7 +58,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import cn.jpush.android.api.BasicPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -67,6 +65,8 @@ public class MainActivity extends NavigationActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
 
     public static final String TAG = "MainActivity";
+
+    private BlogDataBase blogDataBase; //数据库
 
     //跳转到登录页面的请求码
     public static final int LOGIN_REQUEST_CODE = 100;
@@ -210,17 +210,10 @@ public class MainActivity extends NavigationActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-                /*mBlogs.clear();
-                mFirstId = 0;
-                mLastId = 0;
-                sendFirstLoading();*/
                 //启动用户中心
                 CommonHandler.startUserInfoActivity(MainActivity.this);
             }
         });
-        //registerForContextMenu(fab);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -249,6 +242,16 @@ public class MainActivity extends NavigationActivity
         mListViewFooter.setOnClickListener(this);//添加点击事件
         mListViewFooter.setText(getStringResource(R.string.loading));
 
+
+        //加载本地数据库的数据
+        blogDataBase = new BlogDataBase(MainActivity.this);
+        mBlogs = blogDataBase.queryBlogLimit50();
+        if(mBlogs.size() > 0){
+            mFirstId = mBlogs.get(0).getId();
+            mLastId = mBlogs.get(mBlogs.size() - 1).getId();
+        }else{
+            sendFirstLoading();
+        }
         mAdapter = new HomeAdapter(mBlogs, MainActivity.this, mlistViewBlogs);
         mlistViewBlogs.setAdapter(mAdapter);
         mlistViewBlogs.setOnScrollListener(new ListViewOnScrollListener());
@@ -284,7 +287,7 @@ public class MainActivity extends NavigationActivity
 
         //检查是否加载远程服务器上的数据
         if(checkedIsLoadServerBlog()){
-            sendFirstLoading();
+
         }
     }
 
@@ -402,6 +405,9 @@ public class MainActivity extends NavigationActivity
                                 for(BlogBean blogBean: mBlogs){
                                     temList.add(blogBean);
                                 }
+                                //把本地的博客数据也删除掉
+                                blogDataBase.delete(temList.get(mClickPosition).getId());
+
                                 temList.remove(mClickPosition);
                                 mAdapter.refreshData(temList);
                                 Log.i(TAG, "删除后文章的数量：" + mBlogs.size());
@@ -469,6 +475,9 @@ public class MainActivity extends NavigationActivity
             if(result instanceof HttpResponseBlogBean){
                 HttpResponseBlogBean httpResponseBlogBean = (HttpResponseBlogBean)result;
                 if(httpResponseBlogBean != null && httpResponseBlogBean.isSuccess()){
+                    //清空本地的博客数据
+                    //blogDataBase.deleteAll();
+
                     List<BlogBean> blogBeans = httpResponseBlogBean.getMessage();
                     if(blogBeans != null && blogBeans.size() > 0){
                         //临时list
@@ -505,6 +514,11 @@ public class MainActivity extends NavigationActivity
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             //mlistViewBlogs.smoothScrollToPosition(0);
                             //mlistViewBlogs.setSelection(0);
+                        }
+
+                        //把获取到的数据全部加载到博客数据库中
+                        for(BlogBean bb: mBlogs){
+                            blogDataBase.insert(bb);
                         }
 
                     }else{
@@ -867,5 +881,11 @@ public class MainActivity extends NavigationActivity
         if(mProgressDialog != null && mProgressDialog.isShowing()){
             mProgressDialog.dismiss();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        blogDataBase.destroy();
     }
 }
