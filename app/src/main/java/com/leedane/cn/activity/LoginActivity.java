@@ -247,9 +247,9 @@ public class LoginActivity extends Activity implements TaskListener {
                         dataBase.deleteAll();
                         dataBase.destroy();
 
-                        MoodDataBase moodDataBase = new MoodDataBase(LoginActivity.this);
+                       /* MoodDataBase moodDataBase = new MoodDataBase(LoginActivity.this);
                         moodDataBase.deleteAll();
-                        moodDataBase.destroy();
+                        moodDataBase.destroy();*/
 
                         SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(LoginActivity.this);
                         searchHistoryDataBase.deleteAll();

@@ -245,7 +245,7 @@ public class MainActivity extends NavigationActivity
 
         //加载本地数据库的数据
         blogDataBase = new BlogDataBase(MainActivity.this);
-        mBlogs = blogDataBase.queryBlogLimit50();
+        mBlogs = blogDataBase.queryBlogLimit25();
         if(mBlogs.size() > 0){
             mFirstId = mBlogs.get(0).getId();
             mLastId = mBlogs.get(mBlogs.size() - 1).getId();

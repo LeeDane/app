@@ -55,8 +55,8 @@ public class BlogDataBase {
 
         //获得总数
         int total = getTotal();
-        if(total >= 50){
-            Log.i(TAG, "数据超过50条");
+        if(total >= 25){
+            Log.i(TAG, "数据超过25条");
             deleteMinId();
         }
         String sql = "insert into " + BLOG_TABLE_NAME;
@@ -224,11 +224,11 @@ public class BlogDataBase {
     }
 
     /**
-     * 首页加载50条数据
+     * 首页加载25条数据
      * @return
      */
-    public List<BlogBean> queryBlogLimit50() {
-        return query(" where bid > 0 order by create_time desc limit 0,50 ");
+    public List<BlogBean> queryBlogLimit25() {
+        return query(" where bid > 0 order by create_time desc limit 0,25 ");
     }
 
     /**

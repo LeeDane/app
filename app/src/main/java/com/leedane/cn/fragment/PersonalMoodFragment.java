@@ -130,6 +130,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                             mAdapter = new PersonalMoodListViewAdapter(mContext, mMoodBeans, this);
                             mListView.setAdapter(mAdapter);
                         }
+
                         mAdapter.refreshData(temList);
                         //Log.i(TAG, "后来的大小：" + mMoodBeans.size());
 
@@ -144,8 +145,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                             mListView.setSelection(0);
                         }
 
-                        //把获取到的数据全部加载到心情数据库中
-                        for(MoodBean mb: mMoodBeans){
+                        for(MoodBean mb: moodBeans){
                             moodDataBase.insert(mb);
                         }
                     }else{
@@ -243,7 +243,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
             //ToastUtil.success(getContext(), "第一次加载");
             //加载本地数据库的数据
             moodDataBase = new MoodDataBase(mContext);
-            mMoodBeans = moodDataBase.queryMoodLimit50(mPreUid);
+            mMoodBeans = moodDataBase.queryMoodLimit25(mPreUid);
             if(mMoodBeans.size() > 0){
                 mFirstId = mMoodBeans.get(0).getId();
                 mLastId = mMoodBeans.get(mMoodBeans.size() - 1).getId();

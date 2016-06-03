@@ -54,8 +54,8 @@ public class MoodDataBase {
 
         //获得总数
         int total = getTotal(data.getCreateUserId());
-        if(total >= 50){
-            Log.i(TAG, "数据超过50条");
+        if(total >= 25){
+            Log.i(TAG, "数据超过25条");
             deleteMinId(data.getCreateUserId());
         }
         String sql = "insert into " + MOOD_TABLE_NAME;
@@ -209,11 +209,11 @@ public class MoodDataBase {
     }
 
     /**
-     * 首页加载50条数据
+     * 首页加载25条数据
      * @return
      */
-    public List<MoodBean> queryMoodLimit50(int userId) {
-        return query(" where mid > 0 and create_user_id="+userId+" order by create_time desc limit 0,50 ");
+    public List<MoodBean> queryMoodLimit25(int userId) {
+        return query(" where mid > 0 and create_user_id="+userId+" order by create_time desc limit 0,25 ");
     }
 
     /**
