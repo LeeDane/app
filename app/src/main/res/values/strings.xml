@@ -266,4 +266,15 @@
     <string name="search_user_footer">最多显示最匹配的25个用户结果</string>
     <string name="search_mood_footer">最多显示最匹配的25个心情结果</string>
     <string name="search_blog_footer">最多显示最匹配的25个博客结果</string>
+
+    <!--  修改密码  -->
+    <string name="update_login_password">修改登录密码</string>
+    <string name="update_login_error">更新密码失败,请稍后重试</string>
+    <string name="update_user_tip">成功设置密码后将退出当前登录，输入新的密码才能重新进入系统！注意：新密码不能跟原来的密码一样，为了您的账户安全,密码最好是字母+数字的复杂组合，长度不能低于8位数。</string>
+    <string name="update_user_old_psw">原密码：</string>
+    <string name="update_user_hint_old_psw">请输入您原来的登录密码</string>
+    <string name="update_user_new_psw">新密码：</string>
+    <string name="update_user_hint_new_psw">请输入长度不能低于8位的新密码</string>
+    <string name="update_user_confirm_psw">确认密码：</string>
+    <string name="update_user_hint_confirm_psw">请再次输入新密码</string>
 </resources>

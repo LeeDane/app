@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -122,6 +121,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         menuBeans.add(new MenuBean(R.drawable.menu_base_info, getStringResource(R.string.personal_info)));
         menuBeans.add(new MenuBean(R.drawable.menu_personal_center, getStringResource(R.string.personal_title)));
         menuBeans.add(new MenuBean(R.drawable.qr_code, getStringResource(R.string.qr_code_idcard)));
+        menuBeans.add(new MenuBean(R.drawable.menu_security, getStringResource(R.string.update_login_password)));
         menuBeans.add(new MenuBean(R.drawable.menu_message, getStringResource(R.string.nav_message)));
         menuBeans.add(new MenuBean(R.drawable.menu_feedback, getStringResource(R.string.feedback)));
         menuBeans.add(new MenuBean(R.drawable.menu_setting, getStringResource(R.string.nav_setting)));
@@ -150,6 +150,9 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
                     CommonHandler.startMySettingActivity(UserInfoActivity.this);
                 }else if(title.equalsIgnoreCase(getStringResource(R.string.qr_code_idcard))){ //二维码名片
                     showQrCodeDialog();//展示二维码名片
+                }else if(title.equalsIgnoreCase(getStringResource(R.string.update_login_password))){//修改登录密码
+                    Intent it = new Intent(UserInfoActivity.this, UpdateLoginPswActivity.class);
+                    startActivityForResult(it, UpdateLoginPswActivity.UPDATE_LOGIN_PASSWORD_CODE);
                 }else{
                     ToastUtil.success(UserInfoActivity.this, ((TextView)view.findViewById(R.id.recyclerview_title)).getText().toString());
                 }
@@ -160,7 +163,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         if(StringUtil.isNotNull(userPicPath)){
             ImageCacheManager.loadImage(userPicPath, mUserPic);
         }else{
-            ToastUtil.failure(UserInfoActivity.this, "用户还没有上传头像");
+            ToastUtil.failure(UserInfoActivity.this, "您还没有上传头像");
         }
 
         //修改用户头像
@@ -349,5 +352,25 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         it.putExtra("toUserId", BaseApplication.getLoginUserId());
         it.putExtra("isLoginUser", true);
         startActivity(it);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case UpdateLoginPswActivity.UPDATE_LOGIN_PASSWORD_CODE:
+                if(data != null && data.getBooleanExtra("success", false)){//密码更新成功，跳转到登录页面
+                    Intent it = new Intent(UserInfoActivity.this, LoginActivity.class);
+                    //设置跳转的activity
+                    it.putExtra("returnClass", "com.leedane.cn.activity.UserInfoActivity");
+                    it.setData(getIntent().getData());
+                    it.putExtra("forceClear", true);
+                    startActivity(it);
+                    finish();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

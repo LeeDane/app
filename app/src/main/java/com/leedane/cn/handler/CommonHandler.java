@@ -6,7 +6,6 @@ import android.net.Uri;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.leedane.cn.activity.AtFriendActivity;
 import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.activity.DetailActivity;
 import com.leedane.cn.activity.ImageDetailActivity;
@@ -18,14 +17,9 @@ import com.leedane.cn.activity.UpdateUserHeaderActivity;
 import com.leedane.cn.activity.UserBaseActivity;
 import com.leedane.cn.activity.UserInfoActivity;
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.service.LoadUserFriendService;
-import com.leedane.cn.task.TaskListener;
-import com.leedane.cn.task.TaskLoader;
-import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.Base64Util;
-import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 

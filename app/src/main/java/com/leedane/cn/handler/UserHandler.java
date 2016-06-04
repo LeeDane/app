@@ -6,6 +6,7 @@ import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.MD5Util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,5 +57,23 @@ public class UserHandler {
         requestBean.setServerMethod("leedane/user_updateUserBase.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_USER_BASE, listener, requestBean);
+    }
+
+    /**
+     * 更新登录密码
+     * @param listener
+     * @param password
+     * @param newPassword
+     */
+    public static void updateLoginPsw(TaskListener listener, String password, String newPassword){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        Map<String, Object> params = new HashMap<>();
+        params.put("password", MD5Util.compute(password));
+        params.put("new_password", MD5Util.compute(newPassword));
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/user_updatePassword.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_LOGIN_PSW, listener, requestBean);
     }
 }

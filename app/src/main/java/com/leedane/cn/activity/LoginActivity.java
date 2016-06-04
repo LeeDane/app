@@ -57,8 +57,6 @@ import java.util.Map;
 public class LoginActivity extends Activity implements TaskListener {
     AutoCompleteTextView mTextEditUsername;
     public static final String TAG = "LoginActivity";
-
-    private JSONObject mUserInfo;
     /**
      * 登录成功后返回的activity
      */
@@ -228,10 +226,14 @@ public class LoginActivity extends Activity implements TaskListener {
      * 检查是否登录
      */
     private void checkedIsLogin() {
-        mUserInfo = SharedPreferenceUtil.getUserInfo(getApplicationContext());
         //判断是否有缓存用户信息
-        if(mUserInfo != null && mUserInfo.has("account") ){
-            showAlertDialog();
+        if(BaseApplication.getLoginUserId() > 0){
+
+            //判断是否有强制清理缓存的数据
+            if(getIntent().getBooleanExtra("forceClear", false)){
+                clearCache();
+            }else
+                showAlertDialog();
         }
     }
 
@@ -242,23 +244,7 @@ public class LoginActivity extends Activity implements TaskListener {
                 .setPositiveButton("退出登录", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferenceUtil.clearUserInfo(LoginActivity.this);
-                        SharedPreferenceUtil.clearFriends(LoginActivity.this);
-                        ChatDataBase dataBase = new ChatDataBase(LoginActivity.this);
-                        dataBase.deleteAll();
-                        dataBase.destroy();
-
-                       /* MoodDataBase moodDataBase = new MoodDataBase(LoginActivity.this);
-                        moodDataBase.deleteAll();
-                        moodDataBase.destroy();*/
-
-                        /*GalleryDataBase galleryDataBase = new GalleryDataBase((LoginActivity.this));
-                        galleryDataBase.deleteAll();
-                        galleryDataBase.destroy();*/
-
-                        SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(LoginActivity.this);
-                        searchHistoryDataBase.deleteAll();
-                        searchHistoryDataBase.destroy();
+                        clearCache();
                     }
 
                 })
@@ -268,6 +254,26 @@ public class LoginActivity extends Activity implements TaskListener {
                     }
                 }).create(); // 创建对话框
         alertDialog.show(); // 显示对话框
+    }
+
+    private void clearCache(){
+        SharedPreferenceUtil.clearUserInfo(LoginActivity.this);
+        SharedPreferenceUtil.clearFriends(LoginActivity.this);
+        ChatDataBase dataBase = new ChatDataBase(LoginActivity.this);
+        dataBase.deleteAll();
+        dataBase.destroy();
+
+                       /* MoodDataBase moodDataBase = new MoodDataBase(LoginActivity.this);
+                        moodDataBase.deleteAll();
+                        moodDataBase.destroy();*/
+
+                        /*GalleryDataBase galleryDataBase = new GalleryDataBase((LoginActivity.this));
+                        galleryDataBase.deleteAll();
+                        galleryDataBase.destroy();*/
+
+        SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(LoginActivity.this);
+        searchHistoryDataBase.deleteAll();
+        searchHistoryDataBase.destroy();
     }
 
     /**

@@ -74,4 +74,5 @@ public enum TaskType {
     DELETE_CHAT, //删除聊天列表
     UPDATE_HANDER, //更新用户头像
     UPDATE_USER_BASE, //更新用户的基本信息
+    UPDATE_LOGIN_PSW, //更新登录密码
 }
