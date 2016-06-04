@@ -56,7 +56,13 @@ public class MoodDataBase {
         int total = getTotal(data.getCreateUserId());
         if(total >= 25){
             Log.i(TAG, "数据超过25条");
-            deleteMinId(data.getCreateUserId());
+            int minId = getMinId(data.getCreateUserId());
+            if(data.getId() < minId){  //数据更旧，直接过滤掉
+                return false;
+            }else{
+                //数据是新的，直接删除旧的数据
+                delete(data.getCreateUserId(), minId);
+            }
         }
         String sql = "insert into " + MOOD_TABLE_NAME;
         sql += "(mid,content,froms,has_img,imgs,zan_number,comment_number,transmit_number,zan_users,create_user_id,account,user_pic_path,create_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -118,11 +124,18 @@ public class MoodDataBase {
      * 删掉最旧的一条记录
      * @param userId
      */
-    public void deleteMinId(int userId) {
-        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        String sql = ("delete from " + MOOD_TABLE_NAME + " where mid=(select min(mid) from "+MOOD_TABLE_NAME+" where create_user_id=?)");
-        sqlite.execSQL(sql, new Integer[]{userId});
+    public int getMinId(int userId) {
+        SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
+        Cursor cursor = sqlite.rawQuery("select min(mid) from " +MOOD_TABLE_NAME +" where create_user_id=?" , new String[]{String.valueOf(userId)});
+        int mid = 0;
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            mid = cursor.getInt(0);
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
         sqlite.close();
+        return mid;
     }
 
     /**

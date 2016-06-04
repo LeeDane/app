@@ -57,12 +57,16 @@ public class BlogDataBase {
         int total = getTotal();
         if(total >= 25){
             Log.i(TAG, "数据超过25条");
-            deleteMinId();
+            int minId = getMinId();
+            if(data.getId() < minId){  //数据更旧，直接过滤掉
+                return false;
+            }else{
+                //数据是新的，直接删除旧的数据
+                delete(minId);
+            }
         }
         String sql = "insert into " + BLOG_TABLE_NAME;
-
         sql += "(bid,title,content,digest,tag,froms,has_img,img_url,origin_link,source,is_read,create_user_id,account,create_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
         int read = 0;
         if(data.isRead()){
             read = 1;
@@ -123,13 +127,20 @@ public class BlogDataBase {
     }
 
     /**
-     * 删掉最旧的一条记录
+     * 获取最旧的一条记录Id
      */
-    public void deleteMinId() {
-        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        String sql = ("delete from " + BLOG_TABLE_NAME + " where bid=(select min(bid) from "+BLOG_TABLE_NAME+")");
-        sqlite.execSQL(sql, null);
+    public int getMinId() {
+        SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
+        Cursor cursor = sqlite.rawQuery("select min(bid) from " +BLOG_TABLE_NAME, null);
+        int bid = 0;
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            bid = cursor.getInt(0);
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
         sqlite.close();
+        return bid;
     }
 
     /**

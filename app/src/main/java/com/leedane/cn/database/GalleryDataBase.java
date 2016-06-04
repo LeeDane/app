@@ -52,7 +52,13 @@ public class GalleryDataBase {
         int total = getTotal(data.getUserId());
         if(total >= 50){
             Log.i(TAG, "数据超过50条");
-            deleteMinId(data.getUserId());
+            int minId = getMinId(data.getUserId());
+            if(data.getId() < minId){  //数据更旧，直接过滤掉
+                return false;
+            }else{
+                //数据是新的，直接删除旧的数据
+                delete(data.getUserId(), minId);
+            }
         }
         String sql = "insert into " + GALLERY_TABLE_NAME;
         sql += "(gid,path,gallery_desc,width,height,length,create_user_id,account,create_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -63,6 +69,7 @@ public class GalleryDataBase {
         sqlite.close();
         Log.i(TAG, "数据插入成功:" + data.getId());
         return true;
+
     }
 
     /**
@@ -106,14 +113,21 @@ public class GalleryDataBase {
     }
 
     /**
-     * 删掉最旧的一条记录
+     * 获取最旧的一条记录ID
      * @param userId
      */
-    public void deleteMinId(int userId) {
-        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        String sql = ("delete from " + GALLERY_TABLE_NAME + " where gid=(select min(gid) from "+GALLERY_TABLE_NAME+" where create_user_id=?)");
-        sqlite.execSQL(sql, new Integer[]{userId});
+    public int getMinId(int userId) {
+        SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
+        Cursor cursor = sqlite.rawQuery("select min(gid) from " +GALLERY_TABLE_NAME +" where create_user_id=?" , new String[]{String.valueOf(userId)});
+        int mid = 0;
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            mid = cursor.getInt(0);
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
         sqlite.close();
+        return mid;
     }
 
     /**
@@ -177,6 +191,7 @@ public class GalleryDataBase {
             galleryBean.setUserId(cursor.getInt(6));
             galleryBean.setAccount(cursor.getString(7));
             galleryBean.setCreateTime(cursor.getString(8));
+            Log.i(TAG, "图库的ID是："+galleryBean.getId());
             datas.add(galleryBean);
         }
         if (!cursor.isClosed()) {

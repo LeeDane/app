@@ -64,8 +64,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_user_base_edittext"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:inputType="phone"
-                android:hint="11位的手机号码"/>
+                android:inputType="phone"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,8 +84,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_user_base_edittext"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:inputType="number"
-                android:hint="腾讯QQ号码"/>
+                android:inputType="number"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,8 +104,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_user_base_edittext"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:inputType="textEmailAddress"
-                android:hint="电子邮箱地址"/>
+                android:inputType="textEmailAddress"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -126,8 +123,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:gravity="center_vertical"
-                    android:enabled="false"
-                    android:hint="格式如:1970-01-01"/>
+                    android:enabled="false"/>
                 <Button
                     android:id="@+id/user_base_select_birthday"
                     android:layout_width="100dp"
