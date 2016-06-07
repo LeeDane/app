@@ -26,6 +26,7 @@ import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.service.LocationService;
 import com.leedane.cn.task.Task;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.util.http.HttpConnectionUtil;
@@ -81,6 +82,8 @@ public class BaseApplication extends Application {
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
         SDKInitializer.initialize(getApplicationContext());
         queue = Volley.newRequestQueue(getApplicationContext());//使用全局上下文
+
+        MySettingConfigUtil.getInstance();
         Log.i(TAG, "创建上下文信息完成，耗时：" + (end - start));
     }
 

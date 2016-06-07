@@ -193,7 +193,7 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
                     ToastUtil.success(mContext, "聊天信息发送成功");
                     mContentText.setText("");
                 } else {
-                    ToastUtil.failure(mContext, "聊天信息发送失败");
+                    ToastUtil.failure(mContext, "信息发送失败"+(jsonObject.has("message")? ":"+jsonObject.getString("message"):""));
                 }
             }
         }catch (JSONException e){

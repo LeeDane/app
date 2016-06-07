@@ -1,312 +1,474 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/empty_cart_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fff" >
-    <!--   用来垂直滚动视图，用于设置项较多的情形。如果设置项不多，例如上面的qq，那么就不需要了。 -->
-    <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fadingEdge="none" >
-
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingBottom="60dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp" >
-
-        <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:orientation="vertical" >
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TableLayout
-                android:id="@+id/MorePageTableLayout_Favorite"
-                android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textSize="16dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_setting_base_setting" />
+        <!-- 基本设置表格布局 -->
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip" >
+            <!-- 表格布局：第一行 -->
+            <TableRow
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:shrinkColumns="0"
-                android:stretchColumns="0" >
-
-                <TableRow
-                    android:id="@+id/more_page_row0"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:background="@drawable/round_full"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp" >
-
+                android:background="@drawable/shape_top_corner_no_bottom_line"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dip" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:drawableLeft="@drawable/menu_address_list"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:includeFontPadding="false"
-                        android:paddingLeft="17dp"
-                        android:text="我的设置"
-                        android:textColor="#ff333333"
-                        android:textSize="16.0sp" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/no_user" />
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_load_image" />
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOn="开"
+                        android:textOff="关"
+                        android:checked="true"
+                        android:id="@+id/my_setting_load_image"
+                        android:layout_marginRight="10dp"
+                        android:layout_column="4" />
+                </LinearLayout>
             </TableRow>
-        </TableLayout>
-    </LinearLayout>
+           <!-- 表格布局：第二行 -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_no_corner_without_bottom"
+                android:padding="10dip" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_no_notification" />
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:textOn="开"
+                        android:textOff="关"
+                        android:id="@+id/my_setting_no_notification"
+                        android:layout_marginRight="10dp"
+                        android:layout_column="4" />
+                </LinearLayout>
+            </TableRow>
+            <!-- 表格布局：第二行 -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_no_corner_without_bottom"
+                android:padding="10dip" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="32dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_first_load" />
+                    <TextView
+                        android:id="@+id/my_setting_first_load"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/my_setting_first_load_default"/>
+                </LinearLayout>
+            </TableRow>
+            <!-- 表格布局：第二行 -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_no_corner_without_bottom"
+                android:padding="10dip" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_other_load" />
+                    <TextView
+                        android:id="@+id/my_setting_other_load"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/my_setting_first_other_default"/>
+                </LinearLayout>
+            </TableRow>
+            <!-- 表格布局：第三行 -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_bottom_corner_no_top_line"
+                android:padding="10dip" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_double_click_out" />
+                    <Switch
+                        android:id="@+id/my_setting_double_click_out"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOn="开"
+                        android:textOff="关"
+                        android:layout_marginRight="10dp"
+                        android:layout_column="4" />
+                </LinearLayout>
+            </TableRow>
+       </TableLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="4dp"
-        android:text="我的设置"
-        android:textColor="#ff888888"
-        android:textSize="16.0sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
 
-        <TableLayout
-            android:id="@+id/MorePageTableLayout_Follow"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="1dp"
-            android:shrinkColumns="0"
-            android:stretchColumns="0" >
-
+            android:layout_marginLeft="20dp"
+            android:textSize="16dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_setting_cache" />
+        <!-- 缓存表格布局 -->
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip" >
+            <!-- 表格布局：第一行 -->
             <TableRow
-                android:id="@+id/more_page_row1"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/round_top"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp" >
-
-                <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_top_corner_no_bottom_line"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dip" >
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableLeft="@drawable/menu_base_info"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:includeFontPadding="false"
-                    android:paddingLeft="17dp"
-                    android:text="账号管理"
-                    android:textColor="#ff333333"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/no_user" />
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_cache_blog" />
+                    <Switch
+                        android:id="@+id/my_setting_cache_blog"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOn="开"
+                        android:textOff="关"
+                        android:checked="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_column="4" />
+                </LinearLayout>
             </TableRow>
-
+            <!-- 缓存表格布局：第二行 -->
             <TableRow
-                android:id="@+id/more_page_row2"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/round_center"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp" >
-
-                <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_no_corner_without_bottom"
+                android:padding="10dip" >
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableLeft="@drawable/menu_message"
-                    android:drawablePadding="10dp"
+                    android:layout_height="32dp"
                     android:gravity="center_vertical"
-                    android:includeFontPadding="false"
-                    android:paddingLeft="17dp"
-                    android:text="个人爱好"
-                    android:textColor="#ff333333"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/no_user" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/my_setting_cache_clear_blog"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_cache_clear_blog" />
+                    <TextView
+                        android:id="@+id/my_setting_cache_clear_blog_show"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"/>
+                </LinearLayout>
             </TableRow>
-
+            <!-- 缓存表格布局：第二行 -->
             <TableRow
-                android:id="@+id/more_page_row3"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/round_bottom"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp" >
-
-                <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_no_corner_without_bottom"
+                android:padding="10dip" >
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableLeft="@drawable/menu_friends"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:includeFontPadding="false"
-                    android:paddingLeft="17dp"
-                    android:text="浏览记录"
-                    android:textColor="#ff333333"
-                    android:textSize="16.0sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/no_user" />
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_cache_gallery" />
+                    <Switch
+                        android:id="@+id/my_setting_cache_gallery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOn="开"
+                        android:textOff="关"
+                        android:checked="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_column="4" />
+                </LinearLayout>
+            </TableRow>
+            <!-- 缓存表格布局：第二行 -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_no_corner_without_bottom"
+                android:padding="10dip" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/my_setting_cache_clear_gallery"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_cache_clear_gallery" />
+                    <TextView
+                        android:id="@+id/my_setting_cache_clear_gallery_show"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"/>
+                </LinearLayout>
+            </TableRow>
+            <!-- 缓存表格布局：第二行 -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_no_corner_without_bottom"
+                android:padding="10dip" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_cache_mood" />
+                    <Switch
+                        android:id="@+id/my_setting_cache_mood"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOn="开"
+                        android:textOff="关"
+                        android:checked="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_column="4" />
+                </LinearLayout>
+            </TableRow>
+            <!-- 表格布局：第三行 -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_bottom_corner_no_top_line"
+                android:padding="10dip" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/my_setting_cache_clear_mood"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_cache_clear_mood" />
+                    <TextView
+                        android:id="@+id/my_setting_cache_clear_mood_show"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"/>
+                </LinearLayout>
             </TableRow>
         </TableLayout>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="4dp"
-        android:text="客户端"
-        android:textColor="#ff888888"
-        android:textSize="16.0sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TableLayout
-            android:id="@+id/MorePageTableLayout_Client"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="1dp"
-            android:shrinkColumns="0"
-            android:stretchColumns="0" >
-
+            android:layout_marginLeft="20dp"
+            android:textSize="16dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/my_setting_chat" />
+        <!-- 聊天表格布局 -->
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip" >
+            <!-- 表格布局：第一行 -->
             <TableRow
-                android:id="@+id/more_page_row4"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/round_top"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp" >
-
-                <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_top_corner_no_bottom_line"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dip" >
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableLeft="@drawable/menu_chat"
-                    android:drawablePadding="10dp"
+                    android:layout_height="32dp"
                     android:gravity="center_vertical"
-                    android:includeFontPadding="false"
-                    android:paddingLeft="17dp"
-                    android:text="设置"
-                    android:textColor="#ff333333"
-                    android:textSize="16.0sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/no_user" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_chat_text_size" />
+                    <TextView
+                        android:id="@+id/my_setting_chat_text_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/my_setting_chat_text_size_default"/>
+                </LinearLayout>
             </TableRow>
-
+            <!-- 缓存表格布局：第二行 -->
             <TableRow
-                android:id="@+id/more_page_row5"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/round_center"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp" >
-
-                <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_no_corner_without_bottom"
+                android:padding="10dip" >
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableLeft="@drawable/menu_feedback"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:includeFontPadding="false"
-                    android:paddingLeft="27dp"
-                    android:text="意见反馈"
-                    android:textColor="#ff333333"
-                    android:textSize="16.0sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/no_user" />
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/my_setting_chat_bg"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_chat_bg" />
+                </LinearLayout>
             </TableRow>
-
+            <!-- 缓存表格布局：第二行 -->
             <TableRow
-                android:id="@+id/more_page_row6"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/round_center"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp" >
-
-                <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_no_corner_without_bottom"
+                android:padding="10dip" >
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableLeft="@drawable/menu_circle_of_friends"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:includeFontPadding="false"
-                    android:paddingLeft="17dp"
-                    android:text="检测更新"
-                    android:textColor="#ff333333"
-                    android:textSize="16.0sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/no_user" />
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_chat_delete" />
+                    <Spinner
+                        android:id="@+id/my_setting_chat_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp" />
+                </LinearLayout>
             </TableRow>
-
+            <!-- 表格布局：第三行 -->
             <TableRow
-                android:id="@+id/more_page_row7"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/round_bottom"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp" >
-
-                <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_bottom_corner_no_top_line"
+                android:padding="10dip" >
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:drawableLeft="@drawable/menu_search"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:includeFontPadding="false"
-                    android:paddingLeft="17dp"
-                    android:text="关于"
-                    android:textColor="#ff333333"
-                    android:textSize="16.0sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/no_user" />
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dip"
+                        android:text="@string/my_setting_chat_send_enter" />
+                    <Switch
+                        android:id="@+id/my_setting_chat_send_enter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOn="开"
+                        android:textOff="关"
+                        android:layout_marginRight="10dp"
+                        android:layout_column="4" />
+                </LinearLayout>
             </TableRow>
+
+
         </TableLayout>
+        <Button
+           android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Button" />
     </LinearLayout>
-</LinearLayout>
-    </ScrollView>
-
-    </RelativeLayout>
+</ScrollView>

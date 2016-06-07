@@ -532,7 +532,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-                    new NotificationUtil(1, mContext).sendTipNotification("信息提示", "您的评论发表成功", "测试", 1, 0);
+                    new NotificationUtil(1, mContext).sendTipNotification("信息提示", "您的"+(type == TaskType.ADD_COMMENT? "评论": "转发")+"发表成功", "测试", 1, 0);
                     if(type == TaskType.ADD_COMMENT){
                         int commentNumber = detail.getInt("comment_number");
                         detail.put("comment_number", (commentNumber+1));
@@ -553,7 +553,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                     }, 1000);
 
                 } else {
-                    new NotificationUtil(1, mContext).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0, MoodDetailActivity.class);
+                    new NotificationUtil(1, mContext).sendActionNotification("信息提示", (type == TaskType.ADD_COMMENT? "评论": "转发") + "发表失败"+(jsonObject.has("message")? ":" +jsonObject.getString("message"): ""), "测试", 1, 0, MoodDetailActivity.class);
                 }
             } else if (type == TaskType.ADD_ZAN) {
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));

@@ -277,4 +277,27 @@
     <string name="update_user_hint_new_psw">请输入长度不能低于8位的新密码</string>
     <string name="update_user_confirm_psw">确认密码：</string>
     <string name="update_user_hint_confirm_psw">请再次输入新密码</string>
+
+    <!--  我的设置  -->
+    <string name="my_setting_base_setting">基本设置</string>
+    <string name="my_setting_load_image">加载图片</string>
+    <string name="my_setting_first_load">首次请求加载</string>
+    <string name="my_setting_other_load">其他次请求加载</string>
+    <string name="my_setting_first_load_default">10条</string>
+    <string name="my_setting_first_other_default">5条</string>
+    <string name="my_setting_no_notification">勿扰模式</string>
+    <string name="my_setting_double_click_out">双击退出</string>
+    <string name="my_setting_cache">缓存数据</string>
+    <string name="my_setting_cache_blog">缓存博客数据</string>
+    <string name="my_setting_cache_gallery">缓存图库数据</string>
+    <string name="my_setting_cache_mood">缓存心情数据</string>
+    <string name="my_setting_cache_clear_blog">清理缓存博客数据</string>
+    <string name="my_setting_cache_clear_gallery">清理缓存图库数据</string>
+    <string name="my_setting_cache_clear_mood">清理缓存心情数据</string>
+    <string name="my_setting_chat">聊天</string>
+    <string name="my_setting_chat_text_size">字体大小</string>
+    <string name="my_setting_chat_text_size_default">16</string>
+    <string name="my_setting_chat_bg">背景图片</string>
+    <string name="my_setting_chat_delete">信息删除</string>
+    <string name="my_setting_chat_send_enter">回车键发送消息</string>
 </resources>

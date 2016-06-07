@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.leedane.cn.bean.BlogBean;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class BlogDataBase {
      * 获得总记录数
      * @return
      */
-    private int getTotal(){
+    public int getTotal(){
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
         Cursor cursor = sqlite.rawQuery("select count(bid) from " +BLOG_TABLE_NAME , null);
         int total = 0;
@@ -251,9 +252,11 @@ public class BlogDataBase {
             SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
             // 删除全部
             sqlite.execSQL("delete from " + BLOG_TABLE_NAME);
-            // 重新添加
-            for (BlogBean data : datas) {
-                insert(data);
+            if(MySettingConfigUtil.getCacheBlog()) {
+                // 重新添加
+                for (BlogBean data : datas) {
+                    insert(data);
+                }
             }
             sqlite.close();
         }
@@ -268,7 +271,9 @@ public class BlogDataBase {
         if (datas != null && !datas.isEmpty()) {
             update(data);
         } else {
-            insert(data);
+            if(MySettingConfigUtil.getCacheBlog()) {
+                insert(data);
+            }
         }
     }
     public void destroy() {

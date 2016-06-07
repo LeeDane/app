@@ -9,6 +9,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.StringUtil;
 
 /**
@@ -74,7 +75,7 @@ public class ImageCacheManager {
      * @param view
      */
     public static void loadImage(String url, ImageView view){
-        if(StringUtil.isNull(url)){
+        if(StringUtil.isNull(url) || !MySettingConfigUtil.getLoadImage()){
             return;
         }
         mImageLoader.get(url, ImageCacheManager.getImageListener(view, BaseApplication.getDefaultImage(), BaseApplication.getErrorImage()));
@@ -88,7 +89,7 @@ public class ImageCacheManager {
      * @param errorImage
      */
     public static void loadImage(String url, ImageView view, Bitmap defaultImage, Bitmap errorImage){
-        if(StringUtil.isNull(url)){
+        if(StringUtil.isNull(url) || !MySettingConfigUtil.getLoadImage()){
             return;
         }
         mImageLoader.get(url, ImageCacheManager.getImageListener(view, defaultImage, errorImage));
@@ -104,7 +105,7 @@ public class ImageCacheManager {
      * @param maxHeight
      */
     public static void loadImage(String url, ImageView view, Bitmap defaultImage, Bitmap errorImage, int maxWidth, int maxHeight ) {
-        if(StringUtil.isNull(url)){
+        if(StringUtil.isNull(url) || !MySettingConfigUtil.getLoadImage()){
             return;
         }
         mImageLoader.get(url, ImageCacheManager.getImageListener(view, defaultImage, errorImage), maxWidth, maxHeight);
@@ -118,7 +119,7 @@ public class ImageCacheManager {
      * @return
      */
     public static void loadImage(String url, SubsamplingScaleImageView view, int maxWidth, int maxHeight){
-        if(StringUtil.isNull(url)){
+        if(StringUtil.isNull(url) || !MySettingConfigUtil.getLoadImage()){
             return;
         }
         mImageLoader.get(url, ImageCacheManager.getSubsamplingScaleImageListener(view, BaseApplication.getDefaultImage(), BaseApplication.getErrorImage()), maxWidth, maxHeight).getBitmap();
@@ -132,7 +133,7 @@ public class ImageCacheManager {
      * @return
      */
     public static void loadImage(String url, ImageView view, int maxWidth, int maxHeight){
-        if(StringUtil.isNull(url)){
+        if(StringUtil.isNull(url) || !MySettingConfigUtil.getLoadImage()){
             return;
         }
         mImageLoader.get(url, ImageCacheManager.getImageListener(view, BaseApplication.getDefaultImage(), BaseApplication.getErrorImage()), maxWidth, maxHeight).getBitmap();
@@ -146,7 +147,7 @@ public class ImageCacheManager {
      * @return
      */
     public static Bitmap loadImage(String url, int maxWidth, int maxHeight){
-        if(StringUtil.isNull(url)){
+        if(StringUtil.isNull(url) || !MySettingConfigUtil.getLoadImage()){
             return null;
         }
         return mImageLoader.get(url, ImageCacheManager.getImageListener(null, BaseApplication.getDefaultImage(), BaseApplication.getErrorImage()), maxWidth, maxHeight).getBitmap();

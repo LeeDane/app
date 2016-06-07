@@ -31,6 +31,7 @@ import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.database.GalleryDataBase;
 import com.leedane.cn.database.MoodDataBase;
+import com.leedane.cn.database.MySettingDataBase;
 import com.leedane.cn.database.SearchHistoryDataBase;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
@@ -274,6 +275,10 @@ public class LoginActivity extends Activity implements TaskListener {
         SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(LoginActivity.this);
         searchHistoryDataBase.deleteAll();
         searchHistoryDataBase.destroy();
+
+        MySettingDataBase mySettingDataBase = new MySettingDataBase(LoginActivity.this);
+        mySettingDataBase.deleteAll();
+        mySettingDataBase.destroy();
     }
 
     /**

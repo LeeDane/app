@@ -46,6 +46,7 @@ import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
@@ -449,9 +450,10 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                                     e.printStackTrace();
                                 }
                             }
-
-                            for(GalleryBean gb: mBeans){
-                                galleryDataBase.insert(gb);
+                            if(MySettingConfigUtil.getCacheGallery()){
+                                for(GalleryBean gb: mBeans){
+                                    galleryDataBase.insert(gb);
+                                }
                             }
                             checkVisibility();
                         }

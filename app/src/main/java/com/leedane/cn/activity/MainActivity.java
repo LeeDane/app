@@ -44,6 +44,7 @@ import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ImageUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -422,7 +423,7 @@ public class MainActivity extends NavigationActivity
                             if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
                                 ToastUtil.success(MainActivity.this, "评论成功");
                             }else{
-                                ToastUtil.failure(MainActivity.this, jsonObject);
+                                ToastUtil.failure(MainActivity.this, "评论发表失败"+(jsonObject.has("message")? ":" +jsonObject.getString("message"):""));
                             }
                         }
                         //转发
@@ -432,7 +433,7 @@ public class MainActivity extends NavigationActivity
                             if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
                                 ToastUtil.success(MainActivity.this, "转发成功");
                             }else{
-                                ToastUtil.failure(MainActivity.this, jsonObject);
+                                ToastUtil.failure(MainActivity.this, "转发失败"+(jsonObject.has("message")? ":"+jsonObject.getString("message"):""));
                             }
                         }
 
@@ -515,10 +516,11 @@ public class MainActivity extends NavigationActivity
                             //mlistViewBlogs.smoothScrollToPosition(0);
                             //mlistViewBlogs.setSelection(0);
                         }
-
-                        //把获取到的数据全部加载到博客数据库中
-                        for(BlogBean bb: mBlogs){
-                            blogDataBase.insert(bb);
+                        if(MySettingConfigUtil.getCacheBlog()) {
+                            //把获取到的数据全部加载到博客数据库中
+                            for (BlogBean bb : mBlogs) {
+                                blogDataBase.insert(bb);
+                            }
                         }
 
                     }else{

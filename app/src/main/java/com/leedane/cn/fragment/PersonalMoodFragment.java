@@ -29,6 +29,7 @@ import com.leedane.cn.handler.PraiseHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -143,9 +144,10 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.setSelection(0);
                         }
-
-                        for(MoodBean mb: moodBeans){
-                            moodDataBase.insert(mb);
+                        if(MySettingConfigUtil.getCacheMood()){
+                            for(MoodBean mb: moodBeans){
+                                moodDataBase.insert(mb);
+                            }
                         }
                     }else{
 

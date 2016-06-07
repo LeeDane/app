@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.leedane.cn.bean.GalleryBean;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,24 @@ public class GalleryDataBase {
     private int getTotal(int userId){
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
         Cursor cursor = sqlite.rawQuery("select count(gid) from " +GALLERY_TABLE_NAME +" where create_user_id=?" , new String[]{String.valueOf(userId)});
+        int total = 0;
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            total = cursor.getInt(0);
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        sqlite.close();
+        return total;
+    }
+
+    /**
+     * 获得总记录数
+     * @return
+     */
+    public int getTotal(){
+        SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
+        Cursor cursor = sqlite.rawQuery("select count(gid) from " +GALLERY_TABLE_NAME , null);
         int total = 0;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             total = cursor.getInt(0);
@@ -219,9 +238,11 @@ public class GalleryDataBase {
             SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
             // 删除全部
             sqlite.execSQL("delete from " + GALLERY_TABLE_NAME);
-            // 重新添加
-            for (GalleryBean data : datas) {
-                insert(data);
+            if (MySettingConfigUtil.getCacheGallery()){
+                // 重新添加
+                for (GalleryBean data : datas) {
+                    insert(data);
+                }
             }
             sqlite.close();
         }
@@ -236,7 +257,9 @@ public class GalleryDataBase {
         if (datas != null && !datas.isEmpty()) {
             update(data);
         } else {
-            insert(data);
+            if (MySettingConfigUtil.getCacheGallery()) {
+                insert(data);
+            }
         }
     }
     public void destroy() {
