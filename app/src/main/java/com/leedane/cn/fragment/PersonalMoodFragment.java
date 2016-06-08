@@ -149,6 +149,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                                 moodDataBase.insert(mb);
                             }
                         }
+                        mListViewFooter.setText(getStringResource(mContext, R.string.load_finish));
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){

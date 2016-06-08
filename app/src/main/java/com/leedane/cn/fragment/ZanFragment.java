@@ -21,6 +21,7 @@ import com.leedane.cn.handler.PraiseHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONObject;
@@ -176,7 +177,7 @@ public class ZanFragment extends BaseFragment{
         mFirstId = 0;
         mLastId = 0;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", 10);
+        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
         //第一次操作取消全部数据
@@ -197,7 +198,7 @@ public class ZanFragment extends BaseFragment{
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", 5);
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
@@ -226,7 +227,7 @@ public class ZanFragment extends BaseFragment{
         isLoading = true;
 
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", 5);
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
@@ -246,7 +247,7 @@ public class ZanFragment extends BaseFragment{
 
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10: 5);
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad() : MySettingConfigUtil.getOtherLoad());
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);

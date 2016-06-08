@@ -20,6 +20,7 @@ import com.leedane.cn.handler.NotificationHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -158,7 +159,7 @@ public class NotificationFragment extends BaseFragment{
         mFirstId = 0;
         mLastId = 0;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", 10);
+        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
         params.put("method", mPreLoadMethod);
         params.put("type", mType);
         taskCanceled(TaskType.LOAD_NOTIFICATION);
@@ -178,7 +179,7 @@ public class NotificationFragment extends BaseFragment{
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", 5);
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
@@ -205,7 +206,7 @@ public class NotificationFragment extends BaseFragment{
         mPreLoadMethod = "lowloading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", 5);
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("type", mType);
@@ -224,7 +225,7 @@ public class NotificationFragment extends BaseFragment{
             ToastUtil.success(mContext, "请求重新加载", Toast.LENGTH_SHORT);
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10 : 5);
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad() : MySettingConfigUtil.getOtherLoad());
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);

@@ -612,7 +612,7 @@ public class MainActivity extends NavigationActivity
         mLastId = 0;
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", "10");
+        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
         params.put("method", mPreLoadMethod);
         BlogHandler.getBlogsRequest(this, params);
     }
@@ -631,7 +631,7 @@ public class MainActivity extends NavigationActivity
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", "5");
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("first_id", mFirstId);
         params.put("method",mPreLoadMethod );
         BlogHandler.getBlogsRequest(this, params);
@@ -655,7 +655,7 @@ public class MainActivity extends NavigationActivity
         isLoading = true;
 
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", "5");
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         BlogHandler.getBlogsRequest(this, params);
@@ -702,7 +702,7 @@ public class MainActivity extends NavigationActivity
             taskCanceled(TaskType.HOME_LOADBLOGS);
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10: 5);
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);

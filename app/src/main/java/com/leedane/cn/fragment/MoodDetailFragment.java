@@ -42,6 +42,7 @@ import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
@@ -623,7 +624,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         HashMap<String, Object> params = new HashMap<>();
         params.put("table_name", "t_mood");
         params.put("table_id", mid);
-        params.put("pageSize", 10);
+        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
         params.put("method", mPreLoadMethod);
         params.put("showUserInfo", true);
         //params.putAll(BaseApplication.newInstance().getBaseRequestParams());
@@ -666,7 +667,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         HashMap<String, Object> params = new HashMap<>();
         params.put("table_name", "t_mood");
         params.put("table_id", mid);
-        params.put("pageSize", 5);
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
@@ -699,7 +700,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("table_name", "t_mood");
         params.put("table_id", mid);
-        params.put("pageSize", 5);
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("showUserInfo", true);
@@ -740,7 +741,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             HashMap<String, Object> params = new HashMap<String, Object>();
             params.put("table_name", "t_mood");
             params.put("table_id", mid);
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10: 5);
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);

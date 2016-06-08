@@ -37,7 +37,7 @@ public class MySettingDataBase {
      */
     public static List<MySettingBean> initMySetting(){
         List<MySettingBean> mySettingBeans = new ArrayList<>();
-        MySettingBean mySettingBean1 = new MySettingBean(1, "load_image", "1");
+        MySettingBean mySettingBean1 = new MySettingBean(1, "load_image", "0");
         MySettingBean mySettingBean2 = new MySettingBean(2, "no_notification", "0");
         MySettingBean mySettingBean3 = new MySettingBean(3, "first_load", "10");
         MySettingBean mySettingBean4 = new MySettingBean(4, "other_load", "5");

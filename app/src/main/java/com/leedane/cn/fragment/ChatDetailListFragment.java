@@ -33,6 +33,7 @@ import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.BitmapUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -346,7 +347,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         mFirstId = 0;
         mLastId = 0;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", 10);
+        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
         taskCanceled(TaskType.LOAD_CHAT);
@@ -373,7 +374,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", 5);
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
@@ -434,7 +435,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
             taskCanceled(TaskType.LOAD_CHAT);
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10 : 5);
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad() : MySettingConfigUtil.getOtherLoad());
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
