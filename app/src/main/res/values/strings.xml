@@ -41,6 +41,7 @@
     <string name="edit">编辑</string>
     <string name="clear_history">清除全部搜索历史</string>
     <string name="add_top">置顶</string>
+    <string name="fanyi">翻译</string>
 
     <!-- 异常相关 -->
     <string name="crash_file_path">"/crash"</string>
@@ -290,9 +291,11 @@
     <string name="my_setting_cache">缓存数据</string>
     <string name="my_setting_cache_blog">缓存博客数据</string>
     <string name="my_setting_cache_gallery">缓存图库数据</string>
+    <string name="my_setting_cache_file">缓存文件数据</string>
     <string name="my_setting_cache_mood">缓存心情数据</string>
     <string name="my_setting_cache_clear_blog">清理缓存博客数据</string>
     <string name="my_setting_cache_clear_gallery">清理缓存图库数据</string>
+    <string name="my_setting_cache_clear_file">清理缓存文件数据</string>
     <string name="my_setting_cache_clear_mood">清理缓存心情数据</string>
     <string name="my_setting_chat">聊天</string>
     <string name="my_setting_chat_text_size">字体大小</string>

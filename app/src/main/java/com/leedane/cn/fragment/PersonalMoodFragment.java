@@ -225,10 +225,50 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
                 }
                 dismissLoadingDialog();
+            }else  if(type == TaskType.FANYI) { //翻译
+                dismissMoodListItemMenuDialog();
+                JSONObject jsonObject = new JSONObject(String.valueOf(result));
+                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
+                    showFanyiDialog(jsonObject.getString("message"));
+                }else{
+                    ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
+                }
+                dismissLoadingDialog();
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 展示翻译结果的信息
+     * @param message
+     */
+    private void showFanyiDialog(final String message) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
+        builder.setCancelable(true);
+        builder.setIcon(R.drawable.menu_feedback);
+        builder.setTitle("翻译结果");
+        builder.setMessage(message);
+        builder.setPositiveButton("复制",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        try {
+                            ClipboardManager clipboardManager = (ClipboardManager)mContext.getSystemService(getContext().CLIPBOARD_SERVICE);
+                            clipboardManager.setPrimaryClip(ClipData.newPlainText(null, message));
+                            ToastUtil.success(getContext(), "复制成功", Toast.LENGTH_SHORT);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        builder.setNegativeButton("关闭",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                    }
+                });
+        builder.show();
     }
 
     @Override
@@ -304,6 +344,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
 
         menus.add(getStringResource(mContext, R.string.personal_look));
         menus.add(getStringResource(mContext, R.string.personal_praise));
+        menus.add(getStringResource(mContext, R.string.fanyi));
         menus.add(getStringResource(mContext, R.string.copyText));
         if(hasImg){
             menus.add(getStringResource(mContext, R.string.copyLink));
@@ -381,6 +422,11 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                     params.put("table_id", mMoodBeans.get(clickListItemPosition).getId());
                     CollectionHandler.sendCollection(PersonalMoodFragment.this, params);
                     showLoadingDialog("Collection", "add collectioning......", true);
+
+                    //翻译
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.fanyi))){
+                    CommonHandler.getFanYiRequest(PersonalMoodFragment.this, mMoodBeans.get(clickListItemPosition).getContent());
+                    showLoadingDialog("Fanyi", "try best to fanyi......", true);
                 }
             }
         });
@@ -426,7 +472,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         //HttpRequestBean requestBean = new HttpRequestBean();
         HashMap<String, Object> params = new HashMap<>();
         params.put("toUserId", mPreUid);
-        params.put("pageSize", 10);
+        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
         params.put("method", mPreLoadMethod);
         MoodHandler.sendMood(this, params);
     }
@@ -445,7 +491,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", 5);
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("toUserId", mPreUid);
@@ -473,7 +519,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         isLoading = true;
 
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", 5);
+        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("toUserId", mPreUid);
@@ -493,7 +539,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
             params.put("toUserId", mPreUid);
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? 10: 5);
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);

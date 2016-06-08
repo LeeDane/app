@@ -48,6 +48,7 @@ public class MySettingDataBase {
         MySettingBean mySettingBean9 = new MySettingBean(9, "chat_delete", "只删除本地记录");
         MySettingBean mySettingBean10 = new MySettingBean(10, "chat_send_enter", "0");
         MySettingBean mySettingBean11 = new MySettingBean(11, "cache_gallery", "1");
+        MySettingBean mySettingBean12 = new MySettingBean(12, "cache_file", "1");
 
         mySettingBeans.add(mySettingBean1);
         mySettingBeans.add(mySettingBean2);
@@ -60,6 +61,7 @@ public class MySettingDataBase {
         mySettingBeans.add(mySettingBean9);
         mySettingBeans.add(mySettingBean10);
         mySettingBeans.add(mySettingBean11);
+        mySettingBeans.add(mySettingBean12);
         MySettingDataBase mySettingDataBase = new MySettingDataBase(BaseApplication.newInstance());
         for(MySettingBean mySettingBean: mySettingBeans){
             mySettingDataBase.insert(mySettingBean);

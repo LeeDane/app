@@ -37,6 +37,7 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 		database.execSQL(MoodDataBase.CREATE_MOOD_TABLE);
 		database.execSQL(GalleryDataBase.CREATE_GALLERY_TABLE);
 		database.execSQL(MySettingDataBase.CREATE_MY_SETTING_TABLE);
+		database.execSQL(FileDataBase.CREATE_FILE_TABLE);
 
 		//插入初始化设置的SQL
 		//MySettingDataBase.initMySetting();

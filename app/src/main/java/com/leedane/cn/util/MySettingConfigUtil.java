@@ -29,6 +29,7 @@ public class MySettingConfigUtil {
     private static int chat_delete = 0; //0只删除本地，1：删除本地和数据库
     private static boolean chat_send_enter = true;
     private static boolean cache_gallery = true;
+    private static boolean cache_file = true;
 
     public static synchronized MySettingConfigUtil getInstance() {
         if (instance == null) {
@@ -91,6 +92,11 @@ public class MySettingConfigUtil {
                     setCacheGallery(true);
                 else
                     setCacheGallery(false);
+            }else if("cache_file".equals(mySetting.getKey())){
+                if(mySetting.getValue().equals("1"))
+                    setCacheFile(true);
+                else
+                    setCacheFile(false);
             }
         }
         Log.i(TAG, "第一次把设置加载成功");
@@ -183,5 +189,13 @@ public class MySettingConfigUtil {
 
     public static boolean getCacheGallery() {
         return cache_gallery;
+    }
+
+    public static void setCacheFile(boolean cache_file) {
+        MySettingConfigUtil.cache_file = cache_file;
+    }
+
+    public static boolean getCacheFile() {
+        return cache_file;
     }
 }

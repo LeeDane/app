@@ -6,19 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.leedane.cn.File.FileBean;
-import com.leedane.cn.download.DownloadItem;
-import com.leedane.cn.download.PortDownload;
+import com.leedane.cn.bean.FileBean;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,16 +23,13 @@ import java.util.List;
 public class FileAdapter extends BaseAdapter{
 
     public static final String TAG = "FileAdapter";
-    private ListView mListView ;
-
     public List<FileBean> mList;  //所有下载列表
     private Context mContext; //上下文对象
 
-    public FileAdapter(List<FileBean> list, Context context, ListView listView){
+    public FileAdapter(Context context, List<FileBean> list){
         super();
         this.mList = list;
         this.mContext = context;
-        this.mListView = listView;
     }
 
     @Override
@@ -86,7 +78,7 @@ public class FileAdapter extends BaseAdapter{
         }else{
             myHolder.getCreateTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
-        myHolder.getFileName().setText(fileBean.getFileName());
+        myHolder.getFileName().setText(fileBean.getPath());
         return convertView;
     }
 

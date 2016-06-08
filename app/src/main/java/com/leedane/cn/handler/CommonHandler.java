@@ -17,14 +17,20 @@ import com.leedane.cn.activity.UpdateUserHeaderActivity;
 import com.leedane.cn.activity.UserBaseActivity;
 import com.leedane.cn.activity.UserInfoActivity;
 import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.service.LoadUserFriendService;
+import com.leedane.cn.task.TaskListener;
+import com.leedane.cn.task.TaskLoader;
+import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.Base64Util;
+import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -202,5 +208,21 @@ public class CommonHandler {
             sourceStr = "leedane:"+ new String(Base64Util.encode(sourceStr.getBytes()));
         }
         return sourceStr;
+    }
+
+    /**
+     * 获取翻译的请求
+     * @param listener
+     * @param content
+     */
+    public static void getFanYiRequest(TaskListener listener, String content){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("content", content);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("leedane/tool_fanyi.action");
+        TaskLoader.getInstance().startTaskForResult(TaskType.FANYI, listener, requestBean);
     }
 }

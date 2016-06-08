@@ -12,6 +12,7 @@ import com.leedane.cn.bean.HttpResponseCollectionBean;
 import com.leedane.cn.bean.HttpResponseCommentOrTransmitBean;
 import com.leedane.cn.bean.HttpResponseCommonBean;
 import com.leedane.cn.bean.HttpResponseFanBean;
+import com.leedane.cn.bean.HttpResponseFileBean;
 import com.leedane.cn.bean.HttpResponseFriendBean;
 import com.leedane.cn.bean.HttpResponseGalleryBean;
 import com.leedane.cn.bean.HttpResponseLoginHistoryBean;
@@ -182,6 +183,22 @@ public class BeanConvertUtil {
             return gson.fromJson(str, HttpResponseGalleryBean.class);
         }catch (Exception e){
             Log.d(TAG, "响应HttpResponseGalleryBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将字符串转化成List<FileBean>集合
+     * @param str
+     * @return
+     */
+    public static HttpResponseFileBean strConvertToFileBeans(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应HttpResponseFileBean对象开始转换。。。");
+            return gson.fromJson(str, HttpResponseFileBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应HttpResponseFileBean对象转换失败");
         }
         return null;
     }

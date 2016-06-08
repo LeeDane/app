@@ -54,6 +54,7 @@ public enum TaskType {
     LOAD_SEARCH_USER, //加载搜索用户列表
     LOAD_SEARCH_BLOG, //加载搜索博客列表
     LOAD_SEARCH_MOOD, //加载搜索心情列表
+    LOAD_FILE, //加载文件列表
     DO_LOGIN_PHONE, //手机登录
     DO_GET_LOGIN_CODE, //获取手机登录的验证码
     GET_APP_VERSION, //检查APP版本
@@ -72,7 +73,9 @@ public enum TaskType {
     DELETE_ZAN, //删除点赞记录
     DELETE_ATTENTION, //删除关注记录
     DELETE_CHAT, //删除聊天列表
+    DELETE_FILE, //删除文件
     UPDATE_HANDER, //更新用户头像
     UPDATE_USER_BASE, //更新用户的基本信息
     UPDATE_LOGIN_PSW, //更新登录密码
+    FANYI, //翻译
 }
