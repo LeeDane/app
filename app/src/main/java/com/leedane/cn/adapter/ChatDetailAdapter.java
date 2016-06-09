@@ -15,6 +15,7 @@ import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.DateUtil;
+import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.volley.ImageCacheManager;
@@ -63,7 +64,9 @@ public class ChatDetailAdapter extends BaseAdapter{
             if(view == null) {
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail_listview_left, null);
                 viewHolder = new ViewHolder();
-                viewHolder.setmContent((TextView) view.findViewById(R.id.chat_detail_content));
+                TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
+                tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
+                viewHolder.setmContent(tContent);
                 viewHolder.setmUserPicPath((CircularImageView) view.findViewById(R.id.chat_detail_user_pic));
                 viewHolder.setmTime((TextView)view.findViewById(R.id.chat_detail_time));
                 view.setTag(R.string.chat_detail_layout_left, viewHolder);
@@ -72,7 +75,9 @@ public class ChatDetailAdapter extends BaseAdapter{
             if(viewHolder == null) {
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail_listview_left, null);
                 viewHolder = new ViewHolder();
-                viewHolder.setmContent((TextView) view.findViewById(R.id.chat_detail_content));
+                TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
+                tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
+                viewHolder.setmContent(tContent);
                 viewHolder.setmUserPicPath((CircularImageView) view.findViewById(R.id.chat_detail_user_pic));
                 viewHolder.setmTime((TextView) view.findViewById(R.id.chat_detail_time));
                 view.setTag(R.string.chat_detail_layout_left, viewHolder);
@@ -95,7 +100,9 @@ public class ChatDetailAdapter extends BaseAdapter{
             if(view == null) {
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail_listview_right, null);
                 viewHolder = new ViewHolder();
-                viewHolder.setmContent((TextView) view.findViewById(R.id.chat_detail_content));
+                TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
+                tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
+                viewHolder.setmContent(tContent);
                 viewHolder.setmUserPicPath((CircularImageView) view.findViewById(R.id.chat_detail_user_pic));
                 viewHolder.setmTime((TextView) view.findViewById(R.id.chat_detail_time));
                 view.setTag(R.string.chat_detail_layout_right, viewHolder);
@@ -104,7 +111,9 @@ public class ChatDetailAdapter extends BaseAdapter{
             if(viewHolder == null) {
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail_listview_right, null);
                 viewHolder = new ViewHolder();
-                viewHolder.setmContent((TextView) view.findViewById(R.id.chat_detail_content));
+                TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
+                tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
+                viewHolder.setmContent(tContent);
                 viewHolder.setmUserPicPath((CircularImageView) view.findViewById(R.id.chat_detail_user_pic));
                 viewHolder.setmTime((TextView) view.findViewById(R.id.chat_detail_time));
                 view.setTag(R.string.chat_detail_layout_right, viewHolder);

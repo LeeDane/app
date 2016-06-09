@@ -450,12 +450,12 @@
                 android:background="@drawable/shape_no_corner_without_bottom"
                 android:padding="10dip" >
                 <LinearLayout
+                    android:id="@+id/my_setting_chat_bg"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="32dp"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/my_setting_chat_bg"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"

@@ -551,8 +551,9 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
 
     @Override
     public void onDestroy() {
+        if(moodDataBase != null)
+            moodDataBase.destroy();
         super.onDestroy();
-        moodDataBase.destroy();
     }
 
     @Override

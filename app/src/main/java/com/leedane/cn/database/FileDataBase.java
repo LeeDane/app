@@ -248,6 +248,7 @@ public class FileDataBase {
         }
     }
     public void destroy() {
-        dbHelper.close();
+        if(dbHelper != null)
+            dbHelper.close();
     }
 }

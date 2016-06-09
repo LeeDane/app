@@ -42,6 +42,7 @@
     <string name="clear_history">清除全部搜索历史</string>
     <string name="add_top">置顶</string>
     <string name="fanyi">翻译</string>
+    <string name="tip_double_click_exit">再按一次退出程序</string>
 
     <!-- 异常相关 -->
     <string name="crash_file_path">"/crash"</string>
@@ -303,4 +304,7 @@
     <string name="my_setting_chat_bg">背景图片</string>
     <string name="my_setting_chat_delete">信息删除</string>
     <string name="my_setting_chat_send_enter">回车键发送消息</string>
+
+    <!--   更改聊天背景   -->
+    <string name="update_chat_bg">更改聊天背景</string>
 </resources>

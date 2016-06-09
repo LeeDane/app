@@ -41,6 +41,7 @@ import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.DialogHandler;
 import com.leedane.cn.handler.TransmitHandler;
+import com.leedane.cn.helper.DoubleClickExitHelper;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ImageUtil;
@@ -136,6 +137,8 @@ public class MainActivity extends NavigationActivity
     private int mLoginAccountId;
 
     public static boolean isForeground = false;
+
+    private DoubleClickExitHelper mDoubleClickExit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,7 +147,7 @@ public class MainActivity extends NavigationActivity
         //registerMessageReceiver();
         //Toast.makeText(MainActivity.this, "宽："+ BaseApplication.newInstance().getScreenWidthAndHeight()[0]+",高："+BaseApplication.newInstance().getScreenWidthAndHeight()[1], Toast.LENGTH_LONG).show();
         //初始化控件
-        init();
+        initView();
     }
 
     /**
@@ -203,7 +206,8 @@ public class MainActivity extends NavigationActivity
     /**
      * 初始化控件
      */
-    private void init() {
+    private void initView() {
+        mDoubleClickExit = new DoubleClickExitHelper(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -596,7 +600,11 @@ public class MainActivity extends NavigationActivity
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             // return true;//返回真表示返回键被屏蔽掉
-            createLeaveAlertDialog();
+            if(MySettingConfigUtil.getDoubleClickOut()){
+                return mDoubleClickExit.onKeyDown(keyCode, event);
+            }else{
+                createLeaveAlertDialog();
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -887,7 +895,8 @@ public class MainActivity extends NavigationActivity
 
     @Override
     protected void onDestroy() {
+        if(blogDataBase != null)
+            blogDataBase.destroy();
         super.onDestroy();
-        blogDataBase.destroy();
     }
 }

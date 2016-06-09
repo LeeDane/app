@@ -116,6 +116,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+
+        <activity
+            android:name="com.leedane.cn.activity.UpdateChatBGActivity"
+            android:label="@string/update_chat_bg"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
         <activity
             android:name="com.leedane.cn.activity.SettingActivity"
             android:label="@string/settings"

@@ -111,6 +111,8 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         tempList.addAll(mChatDetailBeans);
         tempList.add(chatDetailBean);
         mAdapter.refreshData(tempList);
+        mListView.smoothScrollToPosition(mChatDetailBeans.size() - 1);
+        //mListView.setSelection(0);
     }
 
     @Override

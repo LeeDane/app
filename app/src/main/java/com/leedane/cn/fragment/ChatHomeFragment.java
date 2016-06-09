@@ -285,7 +285,8 @@ public class ChatHomeFragment extends Fragment implements TaskListener
 
     @Override
     public void onDestroy() {
-        database.destroy();
+        if(database != null)
+            database.destroy();
         super.onDestroy();
     }
 

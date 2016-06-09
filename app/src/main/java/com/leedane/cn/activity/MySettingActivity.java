@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -20,6 +21,7 @@ import com.leedane.cn.database.FileDataBase;
 import com.leedane.cn.database.GalleryDataBase;
 import com.leedane.cn.database.MoodDataBase;
 import com.leedane.cn.database.MySettingDataBase;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -54,7 +56,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
     private TextView mClearMood; //清除缓存的心情
     private TextView mClearMoodShow; //目前缓存心情的数量
     private TextView mChatTextSize; //聊天字体大小
-    private TextView mChatBg; //设置聊天背景
+    private LinearLayout mChatBg; //设置聊天背景
     private Spinner mChatDelete;  //聊天删除设置
     private Switch mChatSendEnter; //聊天回车发送
 
@@ -63,7 +65,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         super.onCreate(savedInstanceState);
         //检查是否登录
         if(!checkedIsLogin()){
-            Intent it = new Intent(MySettingActivity.this, LoginActivity.class);
+            Intent it = new Intent(this, LoginActivity.class);
             //设置跳转的activity
             it.putExtra("returnClass", "com.leedane.cn.activity.MySettingActivity");
             it.setData(getIntent().getData());
@@ -88,7 +90,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
     }
 
     public void test(View v){
-        ToastUtil.success(MySettingActivity.this);
+        ToastUtil.success(this);
     }
 
     /**
@@ -117,31 +119,33 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         mClearMood = (TextView)findViewById(R.id.my_setting_cache_clear_mood);
         mClearMoodShow = (TextView)findViewById(R.id.my_setting_cache_clear_mood_show);
         mChatTextSize = (TextView)findViewById(R.id.my_setting_chat_text_size);
-        mChatBg = (TextView)findViewById(R.id.my_setting_chat_bg);
+        mChatBg = (LinearLayout)findViewById(R.id.my_setting_chat_bg);
         mChatDelete = (Spinner)findViewById(R.id.my_setting_chat_delete);
         mChatSendEnter = (Switch)findViewById(R.id.my_setting_chat_send_enter);
 
-        mLoadImage.setOnCheckedChangeListener(MySettingActivity.this);
-        mNoNotification.setOnCheckedChangeListener(MySettingActivity.this);
-        mDoubleClickOut.setOnCheckedChangeListener(MySettingActivity.this);
-        mCacheBlog.setOnCheckedChangeListener(MySettingActivity.this);
-        mCacheMood.setOnCheckedChangeListener(MySettingActivity.this);
-        mChatSendEnter.setOnCheckedChangeListener(MySettingActivity.this);
-        mCacheGallery.setOnCheckedChangeListener(MySettingActivity.this);
-        mCacheFile.setOnCheckedChangeListener(MySettingActivity.this);
+        mLoadImage.setOnCheckedChangeListener(this);
+        mNoNotification.setOnCheckedChangeListener(this);
+        mDoubleClickOut.setOnCheckedChangeListener(this);
+        mCacheBlog.setOnCheckedChangeListener(this);
+        mCacheMood.setOnCheckedChangeListener(this);
+        mChatSendEnter.setOnCheckedChangeListener(this);
+        mCacheGallery.setOnCheckedChangeListener(this);
+        mCacheFile.setOnCheckedChangeListener(this);
 
-        mClearBlog.setOnClickListener(MySettingActivity.this);
-        mClearBlogShow.setOnClickListener(MySettingActivity.this);
-        mClearGallery.setOnClickListener(MySettingActivity.this);
-        mClearGalleryShow.setOnClickListener(MySettingActivity.this);
-        mClearFile.setOnClickListener(MySettingActivity.this);
-        mClearFileShow.setOnClickListener(MySettingActivity.this);
-        mClearMood.setOnClickListener(MySettingActivity.this);
-        mClearMoodShow.setOnClickListener(MySettingActivity.this);
-        mFirstLoad.setOnClickListener(MySettingActivity.this);
-        mOtherLoad.setOnClickListener(MySettingActivity.this);
+        mClearBlog.setOnClickListener(this);
+        mClearBlogShow.setOnClickListener(this);
+        mClearGallery.setOnClickListener(this);
+        mClearGalleryShow.setOnClickListener(this);
+        mClearFile.setOnClickListener(this);
+        mClearFileShow.setOnClickListener(this);
+        mClearMood.setOnClickListener(this);
+        mClearMoodShow.setOnClickListener(this);
+        mFirstLoad.setOnClickListener(this);
+        mOtherLoad.setOnClickListener(this);
+        mChatTextSize.setOnClickListener(this);
+        mChatBg.setOnClickListener(this);
 
-        mySettingDataBase = new MySettingDataBase(MySettingActivity.this);
+        mySettingDataBase = new MySettingDataBase(this);
         initData();
     }
 
@@ -155,6 +159,11 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         mChatDelete.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                MySettingBean mySettingBean = new MySettingBean();
+                mySettingBean.setValue(String.valueOf(position));
+                mySettingBean.setId(9);
+                mySettingDataBase.update(mySettingBean);
+                MySettingConfigUtil.setChatDelete(position);
             }
 
             @Override
@@ -176,7 +185,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         mClearBlog.setEnabled(MySettingConfigUtil.getCacheBlog());
         mClearBlogShow.setEnabled(MySettingConfigUtil.getCacheBlog());
         if(MySettingConfigUtil.getCacheBlog()){
-            BlogDataBase blogDataBase = new BlogDataBase(MySettingActivity.this);
+            BlogDataBase blogDataBase = new BlogDataBase(this);
             mClearBlogShow.setText(blogDataBase.getTotal() + "条");
             blogDataBase.destroy();
         }
@@ -185,7 +194,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         mClearMood.setEnabled(MySettingConfigUtil.getCacheMood());
         mClearMoodShow.setEnabled(MySettingConfigUtil.getCacheMood());
         if(MySettingConfigUtil.getCacheMood()){
-            MoodDataBase moodDataBase = new MoodDataBase(MySettingActivity.this);
+            MoodDataBase moodDataBase = new MoodDataBase(this);
             mClearMoodShow.setText(moodDataBase.getTotal() + "条");
             moodDataBase.destroy();
         }
@@ -200,7 +209,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         mClearGallery.setEnabled(MySettingConfigUtil.getCacheGallery());
         mClearGalleryShow.setEnabled(MySettingConfigUtil.getCacheGallery());
         if(MySettingConfigUtil.getCacheGallery()){
-            GalleryDataBase galleryDataBase = new GalleryDataBase(MySettingActivity.this);
+            GalleryDataBase galleryDataBase = new GalleryDataBase(this);
             mClearGalleryShow.setText(galleryDataBase.getTotal() + "条");
             galleryDataBase.destroy();
         }
@@ -209,7 +218,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         mClearFile.setEnabled(MySettingConfigUtil.getCacheFile());
         mClearFileShow.setEnabled(MySettingConfigUtil.getCacheFile());
         if(MySettingConfigUtil.getCacheFile()){
-            FileDataBase fileDataBase = new FileDataBase(MySettingActivity.this);
+            FileDataBase fileDataBase = new FileDataBase(this);
             mClearFileShow.setText(fileDataBase.getTotal() + "条");
             fileDataBase.destroy();
         }
@@ -220,57 +229,58 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         super.onClick(v);
         switch (v.getId()){
             case R.id.my_setting_cache_clear_blog:
-                BlogDataBase blogDataBase = new BlogDataBase(MySettingActivity.this);
+                BlogDataBase blogDataBase = new BlogDataBase(this);
                 blogDataBase.deleteAll();
                 blogDataBase.destroy();
                 mClearBlogShow.setText(0+"条");
                 break;
             case R.id.my_setting_cache_clear_blog_show:
-                BlogDataBase blogDataBase1 = new BlogDataBase(MySettingActivity.this);
+                BlogDataBase blogDataBase1 = new BlogDataBase(this);
                 blogDataBase1.deleteAll();
                 blogDataBase1.destroy();
                 mClearBlogShow.setText(0+"条");
                 break;
             case R.id.my_setting_cache_clear_gallery:
-                GalleryDataBase galleryDataBase = new GalleryDataBase(MySettingActivity.this);
+                GalleryDataBase galleryDataBase = new GalleryDataBase(this);
                 galleryDataBase.deleteAll();
                 galleryDataBase.destroy();
                 mClearGalleryShow.setText(0+"条");
                 break;
             case R.id.my_setting_cache_clear_gallery_show:
-                GalleryDataBase galleryDataBase1 = new GalleryDataBase(MySettingActivity.this);
+                GalleryDataBase galleryDataBase1 = new GalleryDataBase(this);
                 galleryDataBase1.deleteAll();
                 galleryDataBase1.destroy();
                 mClearGalleryShow.setText(0+"条");
                 break;
             case R.id.my_setting_cache_clear_file:
-                FileDataBase fileDataBase = new FileDataBase(MySettingActivity.this);
+                FileDataBase fileDataBase = new FileDataBase(this);
                 fileDataBase.deleteAll();
                 fileDataBase.destroy();
                 mClearFileShow.setText(0+"条");
                 break;
             case R.id.my_setting_cache_clear_file_show:
-                FileDataBase fileDataBase1 = new FileDataBase(MySettingActivity.this);
+                FileDataBase fileDataBase1 = new FileDataBase(this);
                 fileDataBase1.deleteAll();
                 fileDataBase1.destroy();
                 mClearFileShow.setText(0+"条");
                 break;
             case R.id.my_setting_cache_clear_mood:
-                MoodDataBase moodDataBase = new MoodDataBase(MySettingActivity.this);
+                MoodDataBase moodDataBase = new MoodDataBase(this);
                 moodDataBase.deleteAll();
                 moodDataBase.destroy();
                 mClearMoodShow.setText(0+"条");
                 break;
             case R.id.my_setting_cache_clear_mood_show:
-                MoodDataBase moodDataBase1 = new MoodDataBase(MySettingActivity.this);
+                MoodDataBase moodDataBase1 = new MoodDataBase(this);
                 moodDataBase1.deleteAll();
                 moodDataBase1.destroy();
                 mClearMoodShow.setText(0+"条");
                 break;
             case R.id.my_setting_first_load:
-                NumberPicker mPicker = new NumberPicker(MySettingActivity.this);
-                mPicker.setMinValue(6);
-                mPicker.setMaxValue(15);
+                NumberPicker mPicker = new NumberPicker(this);
+                mPicker.setMinValue(10);
+                mPicker.setMaxValue(25);
+                mPicker.setValue(MySettingConfigUtil.getFirstLoad());
                 mPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
                     @Override
@@ -285,14 +295,15 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 });
 
 
-                AlertDialog mAlertDialog = new AlertDialog.Builder(MySettingActivity.this)
-                        .setTitle("NumberPicker").setView(mPicker).setPositiveButton("ok", null).create();
+                AlertDialog mAlertDialog = new AlertDialog.Builder(this)
+                        .setTitle("选择首次加载获取列表的数量").setView(mPicker).setPositiveButton("选择", null).create();
                 mAlertDialog.show();
                 break;
             case R.id.my_setting_other_load:
-                NumberPicker mPicker1 = new NumberPicker(MySettingActivity.this);
-                mPicker1.setMinValue(4);
-                mPicker1.setMaxValue(8);
+                NumberPicker mPicker1 = new NumberPicker(this);
+                mPicker1.setMinValue(5);
+                mPicker1.setMaxValue(15);
+                mPicker1.setValue(MySettingConfigUtil.getOtherLoad());
                 mPicker1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
                     @Override
@@ -307,17 +318,44 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 });
 
 
-                AlertDialog mAlertDialog1 = new AlertDialog.Builder(MySettingActivity.this)
-                        .setTitle("NumberPicker").setView(mPicker1).setPositiveButton("ok", null).create();
+                AlertDialog mAlertDialog1 = new AlertDialog.Builder(this)
+                        .setTitle("选择其他次加载获取列表的数量").setView(mPicker1).setPositiveButton("选择", null).create();
                 mAlertDialog1.show();
+                break;
+            case R.id.my_setting_chat_text_size:
+                NumberPicker mPicker2 = new NumberPicker(this);
+                mPicker2.setMinValue(12);
+                mPicker2.setMaxValue(30);
+                mPicker2.setValue(MySettingConfigUtil.getChatTextSize());
+                mPicker2.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+
+                    @Override
+                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        MySettingBean mySettingBean = new MySettingBean();
+                        mySettingBean.setValue(String.valueOf(newVal));
+                        mySettingBean.setId(8);
+                        mySettingDataBase.update(mySettingBean);
+                        mChatTextSize.setText(newVal + "条");
+                        MySettingConfigUtil.setChatTextSize(newVal);
+                    }
+                });
+
+
+                AlertDialog mAlertDialog2 = new AlertDialog.Builder(this)
+                        .setTitle("选择聊天字体的大小").setView(mPicker2).setPositiveButton("选择", null).create();
+                mAlertDialog2.show();
+                break;
+            case R.id.my_setting_chat_bg:
+                CommonHandler.startUpdateChatBGActivity(this);
                 break;
         }
     }
 
     @Override
     protected void onDestroy() {
+        if(mySettingDataBase != null)
+            mySettingDataBase.destroy();
         super.onDestroy();
-        mySettingDataBase.destroy();
     }
 
     @Override
@@ -351,7 +389,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 else{
                     mClearBlog.setEnabled(false);
                     mClearBlogShow.setEnabled(false);
-                    BlogDataBase blogDataBase = new BlogDataBase(MySettingActivity.this);
+                    BlogDataBase blogDataBase = new BlogDataBase(this);
                     blogDataBase.deleteAll();
                     blogDataBase.destroy();
                     mClearBlogShow.setText(0 + "条");
@@ -367,7 +405,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 else{
                     mClearMood.setEnabled(false);
                     mClearMoodShow.setEnabled(false);
-                    MoodDataBase moodDataBase = new MoodDataBase(MySettingActivity.this);
+                    MoodDataBase moodDataBase = new MoodDataBase(this);
                     moodDataBase.deleteAll();
                     moodDataBase.destroy();
                     mClearMoodShow.setText(0+"条");
@@ -383,7 +421,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 else{
                     mClearGallery.setEnabled(false);
                     mClearGalleryShow.setEnabled(false);
-                    GalleryDataBase galleryDataBase = new GalleryDataBase(MySettingActivity.this);
+                    GalleryDataBase galleryDataBase = new GalleryDataBase(this);
                     galleryDataBase.deleteAll();
                     galleryDataBase.destroy();
                     mClearGalleryShow.setText(0+"条");
@@ -399,7 +437,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 else{
                     mClearFile.setEnabled(false);
                     mClearFileShow.setEnabled(false);
-                    FileDataBase fileDataBase = new FileDataBase(MySettingActivity.this);
+                    FileDataBase fileDataBase = new FileDataBase(this);
                     fileDataBase.deleteAll();
                     fileDataBase.destroy();
                     mClearFileShow.setText(0+"条");

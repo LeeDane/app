@@ -13,6 +13,7 @@ import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.activity.MySettingActivity;
 import com.leedane.cn.activity.NotificationActivity;
 import com.leedane.cn.activity.PersonalActivity;
+import com.leedane.cn.activity.UpdateChatBGActivity;
 import com.leedane.cn.activity.UpdateUserHeaderActivity;
 import com.leedane.cn.activity.UserBaseActivity;
 import com.leedane.cn.activity.UserInfoActivity;
@@ -137,6 +138,15 @@ public class CommonHandler {
      */
     public static void startUpdateHeaderActivity(Context context){
         Intent it = new Intent(context, UpdateUserHeaderActivity.class);
+        context.startActivity(it);
+    }
+
+    /**
+     * 触发修改聊天背景的activity
+     * @param context
+     */
+    public static void startUpdateChatBGActivity(Context context){
+        Intent it = new Intent(context, UpdateChatBGActivity.class);
         context.startActivity(it);
     }
 

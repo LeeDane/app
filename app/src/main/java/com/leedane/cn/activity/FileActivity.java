@@ -262,6 +262,8 @@ public class FileActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
     @Override
     protected void onDestroy() {
+        if(fileDataBase != null)
+            fileDataBase.destroy();
         super.onDestroy();
     }
 

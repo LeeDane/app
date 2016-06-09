@@ -282,6 +282,7 @@ public class MoodDataBase {
         }
     }
     public void destroy() {
-        dbHelper.close();
+        if(dbHelper != null)
+            dbHelper.close();
     }
 }

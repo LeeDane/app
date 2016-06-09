@@ -277,6 +277,7 @@ public class BlogDataBase {
         }
     }
     public void destroy() {
-        dbHelper.close();
+        if(dbHelper != null)
+            dbHelper.close();
     }
 }

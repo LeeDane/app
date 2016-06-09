@@ -174,6 +174,7 @@ public class MySettingDataBase {
         }
     }
     public void destroy() {
-        dbHelper.close();
+        if(dbHelper != null)
+            dbHelper.close();
     }
 }
