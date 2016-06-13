@@ -30,6 +30,7 @@ public class MySettingConfigUtil {
     private static boolean chat_send_enter = true;
     private static boolean cache_gallery = true;
     private static boolean cache_file = true;
+    private static String cache_chat_bg_path = "";
 
     public static synchronized MySettingConfigUtil getInstance() {
         if (instance == null) {
@@ -97,6 +98,8 @@ public class MySettingConfigUtil {
                     setCacheFile(true);
                 else
                     setCacheFile(false);
+            }else if("cache_chat_bg_path".equals(mySetting.getKey())){
+                setCacheChatBgPath(StringUtil.changeNotNull(mySetting.getValue()));
             }
         }
         Log.i(TAG, "第一次把设置加载成功");
@@ -197,5 +200,13 @@ public class MySettingConfigUtil {
 
     public static boolean getCacheFile() {
         return cache_file;
+    }
+
+    public static void setCacheChatBgPath(String cache_chat_bg_path) {
+        MySettingConfigUtil.cache_chat_bg_path = cache_chat_bg_path;
+    }
+
+    public static String getCacheChatBgPath() {
+        return cache_chat_bg_path;
     }
 }

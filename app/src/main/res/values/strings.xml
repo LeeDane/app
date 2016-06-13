@@ -307,4 +307,12 @@
 
     <!--   更改聊天背景   -->
     <string name="update_chat_bg">更改聊天背景</string>
+    <string name="chat_bg_web">选择web背景模板</string>
+    <string name="chat_bg_select_system_tip">请选择一张图片</string>
+    <string name="publish_chat_bg">发布聊天背景</string>
+    <string name="as_chat_bg">设置为聊天背景</string>
+    <string name="chat_bg_free">免费</string>
+    <string name="chat_bg_charge">收费</string>
+    <string name="chat_bg_score">用户每次下载扣除的积分</string>
+    <string name="chat_bg_filepath">chatbg</string>
 </resources>

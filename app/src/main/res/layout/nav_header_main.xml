@@ -36,7 +36,7 @@
         android:visibility="gone"
         android:layout_gravity="center"
         android:gravity="center"
-        android:src="@drawable/error_cat"
+        android:src="@drawable/no_pic"
         app:border_width="2dp"/>
 
     <TextView

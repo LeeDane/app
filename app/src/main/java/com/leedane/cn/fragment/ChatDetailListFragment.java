@@ -3,7 +3,9 @@ package com.leedane.cn.fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +35,7 @@ import com.leedane.cn.handler.ChatDetailHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.Base64Util;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
@@ -42,6 +47,8 @@ import com.leedane.cn.volley.ImageCacheManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -180,10 +187,23 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (mChatDetailBeans.size() > 0)
-                    onItemClickListener.onItemClick(position, mChatDetailBeans.get(position -1));
+                    onItemClickListener.onItemClick(position, mChatDetailBeans.get(position - 1));
             }
         });
-        
+
+        if(StringUtil.isNotNull(MySettingConfigUtil.getCacheChatBgPath())){
+            RelativeLayout mainLayout = (RelativeLayout)mRootView.findViewById(R.id.chat_detail_main);
+            try{
+                BitmapDrawable drawable = BitmapUtil.getImageDrawable(getChatBgDir(mContext) + File.separator + MySettingConfigUtil.getCacheChatBgPath());
+                if(drawable != null)
+                    mainLayout.setBackground(drawable);
+                else
+                    ToastUtil.failure(mContext, "背景图片获取失败");
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+        }
         mListView.setOnScrollListener(new ListViewOnScrollListener());
         viewHeader = LayoutInflater.from(mContext).inflate(R.layout.listview_header_item, null);
         mListView.addHeaderView(viewHeader, null, false);
@@ -463,5 +483,25 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
 
         }
         return true;
+    }
+
+    /**
+     * 获取临时文件的文件夹
+     * @param context
+     * @return
+     */
+    private File getChatBgDir(Context context){
+        File sdDir = null;
+        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+            sdDir = Environment.getExternalStorageDirectory();
+        }
+        else{
+            sdDir = context.getCacheDir();
+        }
+        File cacheDir = new File(sdDir, context.getResources().getString(R.string.app_dirsname) + File.separator+ getStringResource(R.string.chat_bg_filepath));
+        if(!cacheDir.exists()){
+            cacheDir.mkdirs();
+        }
+        return cacheDir;
     }
 }

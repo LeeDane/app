@@ -41,11 +41,13 @@ import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.bean.HttpResponseGalleryBean;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.database.GalleryDataBase;
+import com.leedane.cn.handler.ChatBgSelectWebHandler;
 import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -377,9 +379,9 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
         HashMap<String, Object> params = new HashMap<>();
         params.put("method", method);
         if(method.equalsIgnoreCase("firstloading")){
-            params.put("pageSize", 18);
+            params.put("pageSize", MySettingConfigUtil.getFirstLoad());
         }else{
-            params.put("pageSize", 8);
+            params.put("pageSize", MySettingConfigUtil.getOtherLoad());
         }
         params.put("last_id", last_id);
         params.put("first_id", first_id);
@@ -482,6 +484,14 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                     }else{
                         ToastUtil.success(getContext(), "举报失败，请稍后重试" + (jsonObject.has("message") ? ",原因是：" + jsonObject.getString("message") : ""));
                         //Toast.makeText(getContext(), "举报失败，请稍后重试", Toast.LENGTH_LONG).show();
+                    }
+                }else{
+                    JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
+                    if(jsonObject != null && jsonObject.has("isSuccess")){
+                        ToastUtil.success(getContext(), jsonObject);
+                        if(jsonObject.getBoolean("isSuccess")){
+                            dismissPublishChatBgDialog();
+                        }
                     }
                 }
             }else{
@@ -586,6 +596,8 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
         menus.add(getResources().getString(R.string.gallery_menu_report));
         menus.add(getResources().getString(R.string.copyLink));
         menus.add(getResources().getString(R.string.setWallpaper));
+        menus.add(getResources().getString(R.string.publish_chat_bg));
+        menus.add(getResources().getString(R.string.as_chat_bg));
 
         SimpleListAdapter adapter = new SimpleListAdapter(getContext().getApplicationContext(), menus);
         listView.setAdapter(adapter);
@@ -604,29 +616,35 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                     case 2:
                         //Toast.makeText(getContext(), index + "复制：" + mBeans.get(index).getPath(), Toast.LENGTH_SHORT).show();
                         try {
-                            ClipboardManager clipboardManager = (ClipboardManager)getContext().getSystemService(getContext().CLIPBOARD_SERVICE);
+                            ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(getContext().CLIPBOARD_SERVICE);
                             clipboardManager.setPrimaryClip(ClipData.newPlainText(null, mBeans.get(index).getPath()));
                             Toast.makeText(getContext(), "复制成功", Toast.LENGTH_SHORT).show();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         break;
                     case 3://设为壁纸
-                        try{
+                        try {
                             showLoadingDialog("Wallpaper", "set wallpaper...");
                             ImageView imageView = imageViewList.get(index).getImageView();
                             Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                            WallpaperManager wallpaperManager= WallpaperManager.getInstance(getContext());
+                            WallpaperManager wallpaperManager = WallpaperManager.getInstance(getContext());
                             wallpaperManager.setBitmap(bitmap);
                             ToastUtil.success(getContext(), "设为壁纸成功");
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                             ToastUtil.failure(getContext(), "设为壁纸失败");
-                        }finally {
+                        } finally {
                             dismissLoadingDialog();
                         }
 
                         break;
+                    case 4: //发布聊天背景
+                        showPublishChatBgDialog(index);
+                        break;
+                    case 5://设置为聊天背景
+                        break;
+
                 }
 
                 dismissListItemMenuDialog();
@@ -640,9 +658,79 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                 dismissListItemMenuDialog();
             }
         });
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(800, (menus.size() + 1) * 90 + 20);
-        mDialog.setContentView(view, params);
+        //ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(800, (menus.size() + 1) * 90 + 20);
+        mDialog.setContentView(view);
         mDialog.show();
+    }
+
+    private Dialog publishChatBgDialog;
+    private boolean isFree;
+    /**
+     * 显示弹出自定义发布聊天背景view
+     */
+    public void showPublishChatBgDialog(final int index){
+        //判断是否已经存在菜单，存在则把以前的记录取消
+        dismissPublishChatBgDialog();
+        isFree = true;
+        publishChatBgDialog = new Dialog(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.publish_chat_bg_dialog, null);
+
+        final EditText editText = (EditText)view.findViewById(R.id.chat_bg_charge_score);
+        final EditText editTextDesc = (EditText)view.findViewById(R.id.chat_bg_charge_desc);
+        final LinearLayout chagerLayout = (LinearLayout)view.findViewById(R.id.chat_bg_charge_layout);
+        TextView submitBtn = (TextView)view.findViewById(R.id.chat_bg_dialog_submit);
+        RadioGroup radioGroup = (RadioGroup)view.findViewById(R.id.chat_bg_group);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.chat_bg_charge:
+                        chagerLayout.setVisibility(View.VISIBLE);
+                        isFree = false;
+                        break;
+                    case R.id.chat_bg_free:
+                        chagerLayout.setVisibility(View.GONE);
+                        isFree = true;
+                        break;
+                }
+            }
+        });
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String score = editText.getText().toString();
+                if (!isFree && StringUtil.isNull(score)) {
+                    editText.setFocusable(true);
+                    ToastUtil.failure(getContext(), "请先输入用户每次下载的积分");
+                    return;
+                }
+                HashMap<String, Object> params = new HashMap<String, Object>();
+                params.put("path", mBeans.get(index).getPath());
+                params.put("type", isFree ? 0: 1);
+                params.put("score", StringUtil.changeObjectToInt(score));
+                params.put("desc", editTextDesc.getText().toString());
+                ChatBgSelectWebHandler.publishChatBg(GalleryScrollView.this, params);
+                showLoadingDialog("ChatBg", "try best to publish......");
+            }
+        });
+
+        publishChatBgDialog.setTitle("操作");
+        publishChatBgDialog.setCancelable(true);
+        publishChatBgDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dismissPublishChatBgDialog();
+            }
+        });
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(800,500);
+        publishChatBgDialog.setContentView(view, layoutParams);
+        publishChatBgDialog.show();
+    }
+
+    private void dismissPublishChatBgDialog(){
+        if(publishChatBgDialog != null && publishChatBgDialog.isShowing()){
+            publishChatBgDialog.dismiss();
+        }
     }
 
     private AlertDialog deleteAlertDialog;

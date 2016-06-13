@@ -15,7 +15,7 @@
             android:id="@+id/search_user_pic"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/no_user"/>
+            android:src="@drawable/no_pic"/>
         <TextView
             android:id="@+id/search_user_name"
             android:layout_width="wrap_content"

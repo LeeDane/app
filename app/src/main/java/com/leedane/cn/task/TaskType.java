@@ -39,6 +39,7 @@ public enum TaskType {
     ADD_COLLECTION, //添加收藏
     ADD_REPORT, //增加举报
     ADD_CHAT, //发聊天信息
+    PUBLISH_CHAT_BG, //发布聊天背景
     LOAD_COMMENT, //加载评论列表
     LOAD_TRANSMIT, //加载转发列表
     LOAD_ZAN, //加载赞列表
@@ -55,6 +56,7 @@ public enum TaskType {
     LOAD_SEARCH_BLOG, //加载搜索博客列表
     LOAD_SEARCH_MOOD, //加载搜索心情列表
     LOAD_FILE, //加载文件列表
+    LOAD_CHAT_BG_SELECT_WEB,//获取聊天背景的选择图片
     DO_LOGIN_PHONE, //手机登录
     DO_GET_LOGIN_CODE, //获取手机登录的验证码
     GET_APP_VERSION, //检查APP版本
