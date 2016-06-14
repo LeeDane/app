@@ -80,4 +80,5 @@ public enum TaskType {
     UPDATE_USER_BASE, //更新用户的基本信息
     UPDATE_LOGIN_PSW, //更新登录密码
     FANYI, //翻译
+    VERIFY_CHAT_BG, //校验聊天背景
 }

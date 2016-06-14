@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.leedane.cn.adapter.ChatBgSelectWebAdapter;
 import com.leedane.cn.application.BaseApplication;
@@ -27,6 +28,8 @@ import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,6 +55,8 @@ public class ChatBgSelectWebFragment extends BaseFragment{
     private boolean isFirstLoading = true;
 
     private int type = 2;//聊天背景的类型，0：免费,1:收费, 2:全部
+
+    private ChatBgSelectWebBean selectWebBean; //用户点击下载的bean
 
     public ChatBgSelectWebFragment(){
     }
@@ -164,13 +169,27 @@ public class ChatBgSelectWebFragment extends BaseFragment{
                     }
                 }
                 return;
+            }else if(type == TaskType.VERIFY_CHAT_BG){
+
+                JSONObject jsonObject = new JSONObject(String.valueOf(result));
+                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                    /*if (selectWebBean.getType() == 1) {
+
+                    }else{
+                        downLoadBitMap(selectWebBean.getPath());
+                    }*/
+                    ToastUtil.success(mContext, jsonObject, Toast.LENGTH_SHORT);
+                    downLoadBitMap(selectWebBean.getPath());
+                }else{
+                    ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
+                    dismissLoadingDialog();
+
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-
-
 
     /**
      * 发送第一次刷新的任务
@@ -280,16 +299,24 @@ public class ChatBgSelectWebFragment extends BaseFragment{
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                if (mChatBgSelectWebBeans.get(position).getType() == 1) {
+                selectWebBean = mChatBgSelectWebBeans.get(position);
+
+                //该聊天资源是自己上传的直接获取
+                if(selectWebBean.getCreateUserId() == BaseApplication.getLoginUserId()){
+                    downLoadBitMap(selectWebBean.getPath());
+                    return;
+                }
+                if (selectWebBean.getType() == 1) {
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
                     builder.setCancelable(true);
                     builder.setIcon(R.drawable.menu_feedback);
                     builder.setTitle("提示");
-                    builder.setMessage("该背景是付费背景，下载需要扣除" + mChatBgSelectWebBeans.get(position).getScore() + "积分,该积分只扣除一次,之后多次下载该背景不再扣除积分?");
+                    builder.setMessage("该背景是付费背景，下载需要扣除" + selectWebBean.getScore() + "积分,该积分只扣除一次,之后多次下载该背景不再扣除积分?");
                     builder.setPositiveButton("下载",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    downLoadBitMap(mChatBgSelectWebBeans.get(position).getPath());
+                                    ChatBgSelectWebHandler.verifyChatBg(ChatBgSelectWebFragment.this, selectWebBean.getId());
+                                    //downLoadBitMap(selectWebBean.getPath());
                                 }
                             });
                     builder.setNegativeButton("取消",
@@ -300,8 +327,10 @@ public class ChatBgSelectWebFragment extends BaseFragment{
                             });
                     builder.show();
                 } else {
-                    downLoadBitMap(mChatBgSelectWebBeans.get(position).getPath());
+                    ChatBgSelectWebHandler.verifyChatBg(ChatBgSelectWebFragment.this, selectWebBean.getId());
+                    //downLoadBitMap(mChatBgSelectWebBeans.get(position).getPath());
                 }
+
             }
         });
 
@@ -330,6 +359,7 @@ public class ChatBgSelectWebFragment extends BaseFragment{
         mySettingDataBase.update(mySettingBean);
         mySettingDataBase.destroy();
         dismissLoadingDialog();
+        ToastUtil.success(mContext, "已将该资源设置为聊天背景");
     }
 
     /**

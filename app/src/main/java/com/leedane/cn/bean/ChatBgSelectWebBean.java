@@ -30,6 +30,12 @@ public class ChatBgSelectWebBean extends IdBean{
      * 创建人账号
      */
 	private String account;
+
+    /**
+     * 创建人ID
+     */
+    @SerializedName("create_user_id")
+    private int createUserId;
     /**
      * 创建时间
      */
@@ -90,5 +96,13 @@ public class ChatBgSelectWebBean extends IdBean{
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(int createUserId) {
+        this.createUserId = createUserId;
     }
 }

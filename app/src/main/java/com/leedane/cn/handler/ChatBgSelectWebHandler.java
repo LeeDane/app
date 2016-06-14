@@ -50,4 +50,20 @@ public class ChatBgSelectWebHandler {
         requestBean.setServerMethod("leedane/chatBg_paging.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_CHAT_BG_SELECT_WEB, listener, requestBean);
     }
+
+    /**
+     * 校验聊天背景是否可以下载
+     * @param listener
+     * @param cid
+     */
+    public static void verifyChatBg(TaskListener listener, int cid){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        Map<String, Object> params = new HashMap<>();
+        params.put("cid", cid);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("leedane/chatBg_verifyChatBg.action");
+        TaskLoader.getInstance().startTaskForResult(TaskType.VERIFY_CHAT_BG, listener, requestBean);
+    }
 }
