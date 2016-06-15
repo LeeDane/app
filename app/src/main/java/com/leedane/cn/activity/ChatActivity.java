@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.leedane.cn.adapter.ChatFragmentPagerAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatBean;
 import com.leedane.cn.customview.RightBorderTextView;
@@ -24,7 +25,6 @@ import com.leedane.cn.database.BaseSQLiteDatabase;
 import com.leedane.cn.fragment.ChatContactFragment;
 import com.leedane.cn.fragment.ChatHomeFragment;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ToastUtil;
 

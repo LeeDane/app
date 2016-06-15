@@ -13,11 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.adapter.FriendAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.FriendBean;
 import com.leedane.cn.bean.HttpResponseFriendBean;
 import com.leedane.cn.handler.FriendHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.MySettingConfigUtil;

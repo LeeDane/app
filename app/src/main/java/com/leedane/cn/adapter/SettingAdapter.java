@@ -11,12 +11,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.SettingBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
-import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,11 +2,6 @@ package com.leedane.cn.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,24 +13,19 @@ import android.widget.Toast;
 
 import com.leedane.cn.activity.MoodActivity;
 import com.leedane.cn.activity.PersonalActivity;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.MoodBean;
-import com.leedane.cn.bean.ZanUserBean;
 import com.leedane.cn.customview.AutoLinkTextView;
 import com.leedane.cn.customview.RightBorderTextView;
 import com.leedane.cn.fragment.PersonalMoodFragment;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.helper.PraiseUserHelper;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
-import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
-import org.json.JSONException;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**

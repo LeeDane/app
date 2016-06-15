@@ -11,9 +11,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.leedane.cn.activity.ZanUserActivity;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ZanUserBean;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.StringUtil;
 
 import org.json.JSONException;

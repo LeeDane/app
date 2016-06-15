@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.leedane.cn.activity.AddressListActivity;
 import com.leedane.cn.adapter.expandRecyclerviewadapter.StickyRecyclerHeadersAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ContactBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.widget.SwipeItemLayout;
 

@@ -15,8 +15,6 @@
  */
 package org.androidpn.client;
 
-import java.util.Random;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,8 +25,10 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 import com.leedane.cn.util.StringUtil;
+
+import java.util.Random;
 
 /** 
  * This class is to notify the user of messages with NotificationManager.

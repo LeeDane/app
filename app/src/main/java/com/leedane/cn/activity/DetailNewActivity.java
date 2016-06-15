@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 import com.leedane.cn.util.StringUtil;
 /*import com.thefinestartist.finestwebview.FinestWebView;
 import com.thefinestartist.finestwebview.helpers.DipPixelHelper;*/

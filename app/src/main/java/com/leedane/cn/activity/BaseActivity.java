@@ -1,13 +1,10 @@
 package com.leedane.cn.activity;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -17,8 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
@@ -26,10 +23,7 @@ import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.SystemUtil;
 import com.leedane.cn.util.ToastUtil;
 
-import org.json.JSONObject;
-
 import java.io.Serializable;
-import java.util.HashMap;
 
 /**
  * 基本的activity

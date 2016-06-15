@@ -13,9 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.search.SearchHistoryAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.search.SearchHistoryBean;
 import com.leedane.cn.database.SearchHistoryDataBase;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;

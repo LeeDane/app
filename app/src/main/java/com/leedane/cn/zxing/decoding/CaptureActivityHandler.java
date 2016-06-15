@@ -30,7 +30,7 @@ import android.util.Log;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.leedane.cn.activity.MipcaActivityCapture;
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 import com.leedane.cn.zxing.camera.CameraManager;
 import com.leedane.cn.zxing.view.ViewfinderResultPointCallback;
 

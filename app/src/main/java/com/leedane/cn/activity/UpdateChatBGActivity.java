@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.fragment.ChatBgSelectSystemFragment;
 import com.leedane.cn.fragment.ChatBgSelectWebFragment;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 
 /**

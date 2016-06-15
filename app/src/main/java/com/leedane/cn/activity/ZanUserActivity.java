@@ -2,37 +2,21 @@ package com.leedane.cn.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leedane.cn.adapter.CommentOrTransmitAdapter;
-import com.leedane.cn.adapter.HomeAdapter;
 import com.leedane.cn.adapter.ZanUserAdapter;
-import com.leedane.cn.bean.BlogBean;
-import com.leedane.cn.bean.CommentOrTransmitBean;
-import com.leedane.cn.bean.HttpResponseBlogBean;
-import com.leedane.cn.bean.HttpResponseCommentOrTransmitBean;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpResponseZanUserBean;
 import com.leedane.cn.bean.ZanUserBean;
-import com.leedane.cn.fragment.FanFragment;
-import com.leedane.cn.handler.DialogHandler;
 import com.leedane.cn.handler.PraiseHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;

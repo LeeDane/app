@@ -3,7 +3,7 @@ package com.leedane.cn.handler;
 import android.content.Context;
 import android.content.DialogInterface;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

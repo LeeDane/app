@@ -2,21 +2,13 @@ package com.leedane.cn.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.leedane.cn.adapter.DownloadAdapter;
-import com.leedane.cn.bean.DownloadBean;
+import com.leedane.cn.app.R;
 import com.leedane.cn.download.DownloadItem;
 import com.leedane.cn.download.PortDownload;
-import com.leedane.cn.leedaneAPP.R;
-import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
-import com.leedane.cn.util.ConstantsUtil;
 
 import java.util.ArrayList;
 import java.util.Date;

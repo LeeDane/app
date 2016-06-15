@@ -14,13 +14,13 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.leedane.cn.adapter.ChatBgSelectWebAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatBgSelectWebBean;
 import com.leedane.cn.bean.HttpResponseChatBgSelectWebBean;
 import com.leedane.cn.bean.MySettingBean;
 import com.leedane.cn.database.MySettingDataBase;
 import com.leedane.cn.handler.ChatBgSelectWebHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.BitmapUtil;

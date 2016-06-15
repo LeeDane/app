@@ -9,9 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 import com.leedane.cn.util.BitmapUtil;
-import com.leedane.cn.util.ToastUtil;
 
 /**
  * 从本地获取聊天背景图片的fragment类

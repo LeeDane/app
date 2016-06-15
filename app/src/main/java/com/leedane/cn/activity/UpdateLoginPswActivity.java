@@ -7,8 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.handler.UserHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;

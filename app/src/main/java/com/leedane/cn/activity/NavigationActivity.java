@@ -12,24 +12,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.handler.AppVersionHandler;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
-import com.leedane.cn.util.MySettingConfigUtil;
-import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.ToastUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
-import cn.sharesdk.sina.weibo.SinaWeibo;
 
 /**
  * 带导航的activity

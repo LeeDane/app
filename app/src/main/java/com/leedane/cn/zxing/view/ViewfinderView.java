@@ -31,7 +31,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.google.zxing.ResultPoint;
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 import com.leedane.cn.zxing.camera.CameraManager;
 
 /**

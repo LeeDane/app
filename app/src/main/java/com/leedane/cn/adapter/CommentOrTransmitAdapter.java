@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CommentOrTransmitBean;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;

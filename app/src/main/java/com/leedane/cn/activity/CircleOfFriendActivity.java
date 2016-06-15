@@ -1,6 +1,5 @@
 package com.leedane.cn.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,12 +12,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.CircleOfFriendAdapter;
-import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpResponseCircleOfFriendBean;
 import com.leedane.cn.bean.TimeLineBean;
 import com.leedane.cn.handler.CircleOfFriendHandler;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.MySettingConfigUtil;

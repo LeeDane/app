@@ -3,13 +3,8 @@ package com.leedane.cn.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.Html;
 import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.TypefaceSpan;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,28 +15,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.leedane.cn.activity.ImageDetailActivity;
 import com.leedane.cn.activity.PersonalActivity;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.BlogBean;
 import com.leedane.cn.bean.ImageDetailBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.NetworkImageLoader;
-import com.leedane.cn.task.TaskLoader;
-import com.leedane.cn.task.TaskType;
-import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
-import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 首页显示文章列表的适配器类

@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 
 /**
  * 通知栏工具类

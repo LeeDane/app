@@ -1,10 +1,8 @@
 package com.leedane.cn.activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.MySettingBean;
 import com.leedane.cn.database.BlogDataBase;
 import com.leedane.cn.database.FileDataBase;
@@ -22,7 +21,6 @@ import com.leedane.cn.database.GalleryDataBase;
 import com.leedane.cn.database.MoodDataBase;
 import com.leedane.cn.database.MySettingDataBase;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.ToastUtil;
 

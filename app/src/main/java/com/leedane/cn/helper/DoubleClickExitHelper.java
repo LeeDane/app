@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 
 /**
  * 双击退出的辅助类

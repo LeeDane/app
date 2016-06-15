@@ -1,10 +1,8 @@
 package com.leedane.cn.adapter;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +10,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 import com.leedane.cn.task.LocalImageLoader;
-import com.leedane.cn.task.NetworkImageLoader;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.StringUtil;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 /**

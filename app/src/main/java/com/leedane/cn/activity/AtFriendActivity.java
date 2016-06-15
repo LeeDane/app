@@ -8,17 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leedane.cn.adapter.MyFriendsAdapter;
 import com.leedane.cn.adapter.expandRecyclerviewadapter.StickyRecyclerHeadersDecoration;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.bean.MyFriendsBean;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.handler.FriendHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.pinyin.CharacterParser;
 import com.leedane.cn.pinyin.MyFriendsPinyinComparator;
 import com.leedane.cn.util.SharedPreferenceUtil;
@@ -30,10 +28,8 @@ import com.leedane.cn.widget.SideBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**

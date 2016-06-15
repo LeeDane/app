@@ -8,7 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 
 /**
  * 自定义右侧带分割竖线的TextView

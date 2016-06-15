@@ -39,7 +39,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 
 /**
  * Created by LeeDane on 16/4/21.

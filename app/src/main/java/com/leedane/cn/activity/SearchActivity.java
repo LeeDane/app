@@ -8,14 +8,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.search.SearchHistoryBean;
 import com.leedane.cn.database.SearchHistoryDataBase;
-import com.leedane.cn.fragment.search.SearchHistoryFragment;
 import com.leedane.cn.fragment.search.SearchBlogFragment;
+import com.leedane.cn.fragment.search.SearchHistoryFragment;
 import com.leedane.cn.fragment.search.SearchMoodFragment;
 import com.leedane.cn.fragment.search.SearchUserFragment;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.StringUtil;

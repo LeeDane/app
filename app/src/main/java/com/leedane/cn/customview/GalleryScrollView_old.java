@@ -16,10 +16,10 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.leedane.cn.activity.GalleryActivity;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.GalleryBean;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.bean.HttpResponseGalleryBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;

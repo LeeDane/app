@@ -15,8 +15,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpRequestBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.uploadfile.PortUpload;
@@ -27,7 +27,6 @@ import com.leedane.cn.util.FileUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
-import com.leedane.cn.util.http.AppUploadAndDownloadUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +37,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * 上传文件activity

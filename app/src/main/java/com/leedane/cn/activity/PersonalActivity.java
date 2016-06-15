@@ -21,6 +21,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.PersonalFragmentPagerAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.customview.RightBorderTextView;
@@ -35,10 +36,8 @@ import com.leedane.cn.fragment.ZanFragment;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.handler.SignInHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
-import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.SerializableMap;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;

@@ -16,7 +16,7 @@ import android.support.v7.graphics.Palette;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 
 public class CircularImageView extends ImageView {
 

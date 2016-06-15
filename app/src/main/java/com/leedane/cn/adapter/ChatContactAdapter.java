@@ -5,13 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.expandRecyclerviewadapter.StickyRecyclerHeadersAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.MyFriendsBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.widget.SwipeItemLayout;
 
 import java.util.ArrayList;

@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.MenuBean;
-import com.leedane.cn.leedaneAPP.R;
 
 import java.util.List;
 

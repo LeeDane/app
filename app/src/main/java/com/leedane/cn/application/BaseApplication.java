@@ -14,31 +14,23 @@ import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.baidu.mapapi.SDKInitializer;
+import com.leedane.cn.app.R;
 import com.leedane.cn.handler.CrashUncaughtExceptionHandler;
-
-
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.service.LocationService;
 import com.leedane.cn.task.Task;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
-import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.util.http.HttpConnectionUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Set;
-
-import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.api.TagAliasCallback;
 
 /**
  * android启动加载的上下文类(需要在AndroidManifest.xml中注册)
@@ -54,6 +46,8 @@ public class BaseApplication extends Application {
     private static  boolean isLogin;
     public LocationService locationService;
     public Vibrator mVibrator;
+
+
     @Override
     public void onCreate() {
         long start = System.currentTimeMillis();
@@ -84,6 +78,7 @@ public class BaseApplication extends Application {
         queue = Volley.newRequestQueue(getApplicationContext());//使用全局上下文
 
         MySettingConfigUtil.getInstance();
+
         Log.i(TAG, "创建上下文信息完成，耗时：" + (end - start));
     }
 
@@ -122,7 +117,7 @@ public class BaseApplication extends Application {
      * 获取当图像获取失败后显示的错误提示图像的Bitmap
      * @return
      */
-    public static Bitmap getErrorImage(){
+    public static Bitmap getErrorImage() {
         return getBitmapFromRes(R.drawable.no_pic);
     }
     public static Bitmap getBitmapFromRes(int resId) {
@@ -216,7 +211,7 @@ public class BaseApplication extends Application {
         int userId = 0;
         try {
             JSONObject jsonObject = getLoginUserInfo();
-            if(jsonObject != null && jsonObject.has("id")){
+            if(jsonObject != null && jsonObject.has("id")) {
                 userId = jsonObject.getInt("id");
             }
         }catch (JSONException e){
@@ -260,4 +255,5 @@ public class BaseApplication extends Application {
         }
         return userName;
     }
+
 }

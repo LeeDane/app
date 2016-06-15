@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.adapter.PersonalListViewAdapter;
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 
 import java.util.ArrayList;
 import java.util.List;

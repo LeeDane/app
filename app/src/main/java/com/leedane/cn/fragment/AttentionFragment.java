@@ -14,11 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.adapter.AttentionAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.AttentionBean;
 import com.leedane.cn.bean.HttpResponseAttentionBean;
 import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.MySettingConfigUtil;

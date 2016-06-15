@@ -11,11 +11,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.search.SearchMoodAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.search.HttpResponseSearchMoodBean;
 import com.leedane.cn.bean.search.SearchMoodBean;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.SearchHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;

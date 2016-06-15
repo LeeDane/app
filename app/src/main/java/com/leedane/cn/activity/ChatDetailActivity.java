@@ -9,13 +9,11 @@ import android.support.v4.app.FragmentManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ChatDetailBean;
-import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.fragment.ChatDetailListFragment;
 import com.leedane.cn.fragment.SendChatToolbarFragment;
 import com.leedane.cn.fragment.SendToolbarFragment;
-import com.leedane.cn.leedaneAPP.R;
-import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
 /**

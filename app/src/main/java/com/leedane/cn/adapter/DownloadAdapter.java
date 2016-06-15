@@ -10,9 +10,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.download.DownloadItem;
 import com.leedane.cn.download.PortDownload;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.RelativeDateFormat;
 
 import java.util.Date;

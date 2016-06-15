@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.leedane.cn.leedaneAPP" >
+    package="com.leedane.cn.app" >
 
     <!-- 读取手机状态权限 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -41,9 +41,9 @@
 
     <!--  JPush -->
     <permission
-        android:name="com.leedane.cn.leedaneAPP.permission.JPUSH_MESSAGE"
+        android:name="com.leedane.cn.app.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.leedane.cn.leedaneAPP.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="com.leedane.cn.app.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
@@ -267,6 +267,7 @@
             android:label="@string/chat_detail"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
 
         <activity
@@ -293,7 +294,7 @@
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.leedane.cn.leedaneAPP" />
+                <category android:name="com.leedane.cn.app" />
             </intent-filter>
         </activity>
         <!-- Required  SDK核心功能-->
@@ -325,7 +326,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
-                <category android:name="com.leedane.cn.leedaneAPP" />
+                <category android:name="com.leedane.cn.app" />
             </intent-filter>
         </service>
 
@@ -336,7 +337,7 @@
             android:exported="false">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />   <!--Required  显示通知栏 -->
-                <category android:name="com.leedane.cn.leedaneAPP" />
+                <category android:name="com.leedane.cn.app" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -367,14 +368,14 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!--Required  用户打开自定义通知栏的intent-->
                 <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" /> <!--Optional 用户接受Rich Push Javascript 回调函数的intent-->
                 <action android:name="cn.jpush.android.intent.CONNECTION" /><!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="com.leedane.cn.leedaneAPP" />
+                <category android:name="com.leedane.cn.app" />
             </intent-filter>
         </receiver>
 
 
         <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
-        <meta-data android:name="JPUSH_APPKEY" android:value="24a548f53d47a3d68498dbcc" /> <!--  </>值来自开发者平台取得的AppKey-->
+        <meta-data android:name="JPUSH_APPKEY" android:value="52a273ed4a53533801809f1b" /> <!--  </>值来自开发者平台取得的AppKey-->
 
         <!-- 无序广播注册获取用户的数据信息 -->
         <receiver android:name="com.leedane.cn.broadcast.UserInfoDataReceiver">
@@ -386,7 +387,7 @@
         <!--  百度地图 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="VxBxLWIGa2zK6O3LNA4E3FfNDcuf17bE" />
+            android:value="ZWvyW58f607GYMyPKXWy03tK4WKXcHAD" />
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
         </service>
 

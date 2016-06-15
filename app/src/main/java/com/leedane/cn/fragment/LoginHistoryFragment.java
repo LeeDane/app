@@ -11,10 +11,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.LoginHistotyAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpResponseLoginHistoryBean;
 import com.leedane.cn.bean.LoginHistoryBean;
 import com.leedane.cn.handler.LoginHistoryHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.MySettingConfigUtil;

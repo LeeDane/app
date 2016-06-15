@@ -18,13 +18,13 @@ import android.widget.Toast;
 
 import com.google.zxing.WriterException;
 import com.leedane.cn.adapter.UserInfoMenuAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.MenuBean;
 import com.leedane.cn.broadcast.UserInfoDataReceiver;
 import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.EncodingHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.service.LoadUserInfoDataService;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;

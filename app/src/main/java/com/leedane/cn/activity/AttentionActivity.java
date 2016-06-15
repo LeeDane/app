@@ -2,25 +2,18 @@ package com.leedane.cn.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpRequestBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
-import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
-import com.leedane.cn.util.http.HttpConnectionUtil;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 /**

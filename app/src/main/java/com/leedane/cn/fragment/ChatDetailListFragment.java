@@ -2,7 +2,6 @@ package com.leedane.cn.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,35 +13,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.leedane.cn.adapter.ChatDetailAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.bean.ChatBean;
 import com.leedane.cn.bean.ChatDetailBean;
 import com.leedane.cn.bean.HttpResponseChatDetailBean;
 import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.bean.MyFriendsBean;
-import com.leedane.cn.database.BaseSQLiteDatabase;
 import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.handler.ChatDetailHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
-import com.leedane.cn.util.Base64Util;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
-import com.leedane.cn.volley.ImageCacheManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +45,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 聊天详情列表的Fragment

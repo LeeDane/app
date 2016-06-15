@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.leedane.cn.adapter.PersonalMoodListViewAdapter;
 import com.leedane.cn.adapter.SimpleListAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpResponseMoodBean;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.database.MoodDataBase;
@@ -26,7 +27,6 @@ import com.leedane.cn.handler.CollectionHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.MoodHandler;
 import com.leedane.cn.handler.PraiseHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.MySettingConfigUtil;

@@ -5,11 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.leedane.cn.adapter.SettingAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.SettingBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 

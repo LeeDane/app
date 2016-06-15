@@ -15,15 +15,15 @@
  */
 package org.androidpn.demoapp;
 
-import org.androidpn.client.ServiceManager;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
+
+import org.androidpn.client.ServiceManager;
 
 /**
  * This is an androidpn client demo application.

@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.adapter.CommentOrTransmitAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.CommentOrTransmitBean;
 import com.leedane.cn.bean.HttpRequestBean;
@@ -37,7 +38,6 @@ import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.PraiseHandler;
 import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.helper.PraiseUserHelper;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;

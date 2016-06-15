@@ -6,8 +6,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.leedane.cn.adapter.FindAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.MenuBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;

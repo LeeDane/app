@@ -1,6 +1,5 @@
 package com.leedane.cn.activity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,13 +21,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.adapter.MoodGridViewAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.handler.CommentHandler;
-import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.TransmitHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.service.SendMoodService;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
@@ -47,7 +45,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 处理心情的activity类

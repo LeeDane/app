@@ -11,11 +11,11 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.leedane.cn.activity.MoodActivity;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.database.BaseSQLiteDatabase;
 import com.leedane.cn.database.BaseSQLiteOpenHelper;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;

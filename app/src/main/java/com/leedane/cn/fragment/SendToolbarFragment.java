@@ -15,11 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.leedane.cn.activity.MoodDetailActivity;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CommentOrTransmitBean;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.helper.SoftKeyboardStateHelper;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.NotificationUtil;

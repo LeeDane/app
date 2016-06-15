@@ -5,15 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CollectionBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
-import com.leedane.cn.volley.ImageCacheManager;
 
 import java.util.List;
 

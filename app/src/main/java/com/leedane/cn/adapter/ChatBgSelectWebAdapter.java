@@ -1,7 +1,6 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.bean.AttentionBean;
 import com.leedane.cn.bean.ChatBgSelectWebBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;

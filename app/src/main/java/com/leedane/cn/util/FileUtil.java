@@ -5,8 +5,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.uploadfile.PortUpload;
 import com.leedane.cn.uploadfile.UploadItem;
 

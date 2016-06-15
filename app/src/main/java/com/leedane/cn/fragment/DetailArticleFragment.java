@@ -13,7 +13,7 @@ import android.webkit.WebViewClient;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.leedane.cn.leedaneAPP.R;
+import com.leedane.cn.app.R;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 

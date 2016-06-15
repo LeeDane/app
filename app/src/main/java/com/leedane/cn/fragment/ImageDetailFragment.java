@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ImageDetailBean;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.NetworkImageLoader;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;

@@ -2,8 +2,6 @@ package com.leedane.cn.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,14 +11,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.app.R;
 import com.leedane.cn.handler.UserHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
-import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;

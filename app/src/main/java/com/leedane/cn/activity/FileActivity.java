@@ -18,13 +18,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.FileAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.FileBean;
 import com.leedane.cn.bean.HttpResponseFileBean;
-import com.leedane.cn.database.BaseSQLiteDatabase;
 import com.leedane.cn.database.FileDataBase;
 import com.leedane.cn.handler.FileHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.MySettingConfigUtil;

@@ -12,13 +12,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.zxing.WriterException;
-import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CommentOrTransmitBean;
 import com.leedane.cn.fragment.MoodDetailFragment;
 import com.leedane.cn.fragment.SendToolbarFragment;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.EncodingHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;

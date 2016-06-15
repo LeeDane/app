@@ -1,19 +1,17 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatDetailBean;
-import com.leedane.cn.bean.CollectionBean;
 import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.RelativeDateFormat;

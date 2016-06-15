@@ -13,9 +13,9 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.leedane.cn.adapter.ImageDetailFragmentPagerAdapter;
+import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.fragment.ImageDetailFragment;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.ToastUtil;
 
 import java.lang.reflect.Type;

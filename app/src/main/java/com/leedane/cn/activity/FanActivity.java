@@ -7,8 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.leedane.cn.app.R;
 import com.leedane.cn.fragment.FanFragment;
-import com.leedane.cn.leedaneAPP.R;
 import com.leedane.cn.util.ToastUtil;
 
 /**
