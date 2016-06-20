@@ -27,6 +27,9 @@ public class MoodDataBase {
             "froms varchar(30), " + //来自
             "has_img integer, "+// 是否有主图, 0：表示没有， 1表示有
             "imgs text, " + //多张图像的路径，多个用","分隔开
+            "location varchar(255), " + //位置信息
+            "longitude double, " + //经度
+            "latitude double, " + //纬度
             "zan_number integer, " + //赞的数量
             "comment_number integer, " + //评论数
             "transmit_number integer, " + //转发数
@@ -66,7 +69,7 @@ public class MoodDataBase {
             }
         }
         String sql = "insert into " + MOOD_TABLE_NAME;
-        sql += "(mid,content,froms,has_img,imgs,zan_number,comment_number,transmit_number,zan_users,create_user_id,account,user_pic_path,create_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        sql += "(mid,content,froms,has_img,imgs,location,longitude,latitude,zan_number,comment_number,transmit_number,zan_users,create_user_id,account,user_pic_path,create_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int hasImg = 0;
         if(data.isHasImg()){
             hasImg = 1;
@@ -74,7 +77,7 @@ public class MoodDataBase {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         sqlite.execSQL(sql, new String[] {
                 data.getId() + "", data.getContent(), data.getFroms(), hasImg +"",
-                data.getImgs(), data.getZanNumber() +"", data.getCommentNumber() +"", data.getTransmitNumber()+"",
+                data.getImgs(), data.getLocation(), data.getLongitude() +"", data.getLatitude()+"", data.getZanNumber() +"", data.getCommentNumber() +"", data.getTransmitNumber()+"",
                 data.getPraiseUserList(), data.getCreateUserId() +"", data.getAccount(), data.getUserPicPath(), data.getCreateTime() });
         sqlite.close();
         Log.i(TAG, "数据插入成功:" + data.getId());
@@ -88,7 +91,7 @@ public class MoodDataBase {
      */
     public int getTotal(int userId){
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
-        Cursor cursor = sqlite.rawQuery("select count(mid) from " +MOOD_TABLE_NAME +" where create_user_id=?" , new String[]{String.valueOf(userId)});
+        Cursor cursor = sqlite.rawQuery("select count(*) from " +MOOD_TABLE_NAME +" where create_user_id=?" , new String[]{String.valueOf(userId)});
         int total = 0;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             total = cursor.getInt(0);
@@ -106,7 +109,7 @@ public class MoodDataBase {
      */
     public int getTotal(){
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
-        Cursor cursor = sqlite.rawQuery("select count(mid) from " +MOOD_TABLE_NAME , null);
+        Cursor cursor = sqlite.rawQuery("select count(*) from " +MOOD_TABLE_NAME , null);
         int total = 0;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             total = cursor.getInt(0);
@@ -189,10 +192,11 @@ public class MoodDataBase {
             hasImg = 1;
         }
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        String sql = ("update " + MOOD_TABLE_NAME + " set mid=?,content=?,froms=?,has_img=?,imgs=?,zan_number=?,comment_number=?,transmit_number=?,zan_users=?,create_user_id=?,account=?,user_pic_path=?,create_time=?");
+        String sql = ("update " + MOOD_TABLE_NAME + " set mid=?,content=?,froms=?,has_img=?,imgs=?,location=?,longitude=?,latitude=?,zan_number=?,comment_number=?,transmit_number=?,zan_users=?,create_user_id=?,account=?,user_pic_path=?,create_time=?");
         sqlite.execSQL(sql, new String[] {
                 data.getId() + "", data.getContent(), data.getFroms(), hasImg +"",
-                data.getImgs(), data.getZanNumber() +"", data.getCommentNumber() +"", data.getTransmitNumber()+"",
+                data.getImgs(), data.getLocation(), data.getLongitude() +"", data.getLatitude() + "",
+                data.getZanNumber() +"", data.getCommentNumber() +"", data.getTransmitNumber()+"",
                 data.getPraiseUserList(), data.getCreateUserId() +"", data.getAccount(), data.getUserPicPath(), data.getCreateTime() });
         sqlite.close();
     }
@@ -210,7 +214,7 @@ public class MoodDataBase {
     public List<MoodBean> query(String where) {
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
         ArrayList<MoodBean> datas = new ArrayList<>();
-        Cursor cursor = sqlite.rawQuery("select mid,content,froms,has_img,imgs,zan_number,comment_number,transmit_number,zan_users,create_user_id,account,user_pic_path,create_time  from "
+        Cursor cursor = sqlite.rawQuery("select mid,content,froms,has_img,imgs,location,longitude,latitude,zan_number,comment_number,transmit_number,zan_users,create_user_id,account,user_pic_path,create_time  from "
                 + MOOD_TABLE_NAME + where, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             MoodBean moodBean = new MoodBean();
@@ -222,14 +226,17 @@ public class MoodDataBase {
                 moodBean.setHasImg(true);
             }
             moodBean.setImgs(cursor.getString(4));
-            moodBean.setZanNumber(cursor.getInt(5));
-            moodBean.setCommentNumber(cursor.getInt(6));
-            moodBean.setTransmitNumber(cursor.getInt(7));
-            moodBean.setPraiseUserList(cursor.getString(8));
-            moodBean.setCreateUserId(cursor.getInt(9));
-            moodBean.setAccount(cursor.getString(10));
-            moodBean.setUserPicPath(cursor.getString(11));
-            moodBean.setCreateTime(cursor.getString(12));
+            moodBean.setLocation(cursor.getString(5));
+            moodBean.setLongitude(cursor.getDouble(6));
+            moodBean.setLatitude(cursor.getDouble(7));
+            moodBean.setZanNumber(cursor.getInt(8));
+            moodBean.setCommentNumber(cursor.getInt(9));
+            moodBean.setTransmitNumber(cursor.getInt(10));
+            moodBean.setPraiseUserList(cursor.getString(11));
+            moodBean.setCreateUserId(cursor.getInt(12));
+            moodBean.setAccount(cursor.getString(13));
+            moodBean.setUserPicPath(cursor.getString(14));
+            moodBean.setCreateTime(cursor.getString(15));
             datas.add(moodBean);
         }
         if (!cursor.isClosed()) {

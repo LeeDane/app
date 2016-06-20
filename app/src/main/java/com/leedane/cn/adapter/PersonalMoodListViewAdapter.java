@@ -79,6 +79,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             viewHolder.setmTime((TextView) view.findViewById(R.id.personal_mood_time));
             viewHolder.setmMore((ImageView) view.findViewById(R.id.personal_mood_more));
 
+            viewHolder.setmLocation((TextView)view.findViewById(R.id.personal_mood_location_show));
             viewHolder.setmImgMain((ImageView) view.findViewById(R.id.personal_mood_img_main));
             viewHolder.setmTransmit((RightBorderTextView) view.findViewById(R.id.personal_mood_operate_transmit));
             viewHolder.setmComment((RightBorderTextView) view.findViewById(R.id.personal_mood_operate_comment));
@@ -143,6 +144,13 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             viewHolder.getmTime().setText("");
         }else{
             viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
+        }
+
+        if(StringUtil.isNotNull(moodBean.getLocation())){
+            viewHolder.getmLocation().setVisibility(View.VISIBLE);
+            viewHolder.getmLocation().setText("位置："+moodBean.getLocation());
+        }else{
+            viewHolder.getmLocation().setVisibility(View.GONE);
         }
 
         String praiseList = moodBean.getPraiseUserList();
@@ -241,6 +249,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         private TextView mPraiseList;
         private RightBorderTextView mComment;
         private RightBorderTextView mTransmit;
+        private TextView mLocation;
         //private RightBorderTextView mPraise;
 
         public ImageView getmMore() {
@@ -313,6 +322,14 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
 
         public void setmPraiseList(TextView mPraiseList) {
             this.mPraiseList = mPraiseList;
+        }
+
+        public TextView getmLocation() {
+            return mLocation;
+        }
+
+        public void setmLocation(TextView mLocation) {
+            this.mLocation = mLocation;
         }
     }
 

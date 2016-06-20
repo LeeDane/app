@@ -47,6 +47,12 @@
             android:textSize="16sp"
             android:padding="5dp"
             android:background="#FFFAFA"/>
+        <TextView
+            android:id="@+id/mood_detail_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/action_settings"/>
         <ImageView
             android:id="@+id/mood_detail_img"
             android:layout_width="120dp"

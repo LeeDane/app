@@ -42,6 +42,14 @@
         android:singleLine="false"
         android:layout_marginTop="8dp"
         android:text="网站：http://www.baidu.com, 电话：13712345671 Today is very cold!Today is very cold!Today is very cold!Today is very cold!"/>
+
+    <TextView
+        android:id="@+id/personal_mood_location_show"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_padding"
+        android:visibility="gone"
+        android:text="@string/action_settings"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,7 +61,7 @@
             android:id="@+id/personal_mood_img_main"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:src="@drawable/head"/>
+            android:src="@drawable/no_pic"/>
     </LinearLayout>
     <TextView
         android:id="@+id/personal_mood_praise_list"

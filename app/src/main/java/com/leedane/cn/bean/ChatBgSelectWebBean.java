@@ -20,6 +20,8 @@ public class ChatBgSelectWebBean extends IdBean{
 
     private int score; //当是收费类型的时候需要扣除的积分(收费的时候这个字段必填)
 
+    private boolean download; // 是否下载过
+
     /**
      * 用户的头像图片
      */
@@ -104,5 +106,13 @@ public class ChatBgSelectWebBean extends IdBean{
 
     public void setCreateUserId(int createUserId) {
         this.createUserId = createUserId;
+    }
+
+    public boolean isDownload() {
+        return download;
+    }
+
+    public void setDownload(boolean download) {
+        this.download = download;
     }
 }

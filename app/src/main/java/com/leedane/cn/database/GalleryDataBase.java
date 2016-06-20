@@ -80,7 +80,7 @@ public class GalleryDataBase {
      */
     private int getTotal(int userId){
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
-        Cursor cursor = sqlite.rawQuery("select count(gid) from " +GALLERY_TABLE_NAME +" where create_user_id=?" , new String[]{String.valueOf(userId)});
+        Cursor cursor = sqlite.rawQuery("select count(*) from " +GALLERY_TABLE_NAME +" where create_user_id=?" , new String[]{String.valueOf(userId)});
         int total = 0;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             total = cursor.getInt(0);

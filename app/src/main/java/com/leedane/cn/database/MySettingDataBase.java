@@ -45,7 +45,7 @@ public class MySettingDataBase {
         MySettingBean mySettingBean6 = new MySettingBean(6, "cache_blog", "1");
         MySettingBean mySettingBean7 = new MySettingBean(7, "cache_mood", "1");
         MySettingBean mySettingBean8 = new MySettingBean(8, "chat_text_size", "16");
-        MySettingBean mySettingBean9 = new MySettingBean(9, "chat_delete", "只删除本地记录");
+        MySettingBean mySettingBean9 = new MySettingBean(9, "chat_delete", "0");
         MySettingBean mySettingBean10 = new MySettingBean(10, "chat_send_enter", "0");
         MySettingBean mySettingBean11 = new MySettingBean(11, "cache_gallery", "1");
         MySettingBean mySettingBean12 = new MySettingBean(12, "cache_file", "1");

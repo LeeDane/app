@@ -23,6 +23,7 @@ import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.leedane.cn.app.R;
@@ -79,44 +80,13 @@ public class TestActivity extends Activity {
         baiduMap.addOverlay(option);
 
         mLocationClient = new LocationClient(this.getApplicationContext());
-        //mMyLocationListener = new MyLocationListener();
-        //mLocationClient.registerLocationListener(mMyLocationListener);
-
-        //InitLocation();//初始化
-        //mLocationClient.start();
+        mMyLocationListener = new MyLocationListener();
+        mLocationClient.registerLocationListener(mMyLocationListener);
+        InitLocation();//初始化
+        mLocationClient.start();
 
         mPoiSearch = PoiSearch.newInstance();
-        OnGetPoiSearchResultListener poiListener = new OnGetPoiSearchResultListener(){
-            public void onGetPoiResult(PoiResult result){
-                textView.setText(result.getTotalPageNum() +"");
-                Log.i(TAG, "onGetPoiResult检索结果" +result.getTotalPageNum());
-                         List < PoiInfo > poiInfos = result.getAllPoi();
-                if(poiInfos != null && poiInfos.size()> 0){
-                    for(int i=0; i < poiInfos.size(); i++)
-                        Log.i(TAG, "poi检索结果:"+poiInfos.get(i).name);
-                }else{
-                    Log.i(TAG, "没有poi检索结果");
-                }
-            }
-            public void onGetPoiDetailResult(PoiDetailResult result){
-                //获取Place详情页检索结果
-                Log.i(TAG, "onGetPoiDetailResult检索结果:"+ result.getCheckinNum());
-            }
-        };
-        mPoiSearch.setOnGetPoiSearchResultListener(poiListener);
-        // 搜索该坐标附近的餐厅
-       /* mPoiSearch.searchNearby(new PoiNearbySearchOption().keyword("餐厅")
-                .location(new LatLng(23.147441, 113.348554))
-                .pageCapacity(10).pageNum(10).radius(10000));*/
 
-        mPoiSearch.searchInCity((new PoiCitySearchOption())
-                .city("广州")
-                .keyword("建设银行")
-                .pageNum(10));
-        /*mPoiSearch.searchInCity((new PoiCitySearchOption())
-                .city("北京")
-                .keyword("美食")
-                .pageNum(10));*/
     }
 
     @Override
@@ -150,6 +120,44 @@ public class TestActivity extends Activity {
         super.onResume();
         // 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
         mMapView.onResume();
+        OnGetPoiSearchResultListener poiListener = new OnGetPoiSearchResultListener(){
+            public void onGetPoiResult(PoiResult result){
+                textView.setText(result.getTotalPageNum() +"");
+                Log.i(TAG, "onGetPoiResult检索结果" +result.getTotalPageNum());
+                List < PoiInfo > poiInfos = result.getAllPoi();
+                if(poiInfos != null && poiInfos.size()> 0){
+                    for(int i=0; i < poiInfos.size(); i++)
+                        Log.i(TAG, "poi检索结果:"+poiInfos.get(i).name);
+                }else{
+                    Log.i(TAG, "没有poi检索结果");
+                }
+            }
+            public void onGetPoiDetailResult(PoiDetailResult result){
+                //获取Place详情页检索结果
+                Log.i(TAG, "onGetPoiDetailResult检索结果:"+ result.getCheckinNum());
+            }
+        };
+
+        mPoiSearch.setOnGetPoiSearchResultListener(poiListener);
+        // 搜索该坐标附近的餐厅
+       /* mPoiSearch.searchNearby(new PoiNearbySearchOption().keyword("餐厅")
+                .location(new LatLng(23.147441, 113.348554))
+                .pageCapacity(10).pageNum(10).radius(10000));*/
+
+        mPoiSearch.searchInCity((new PoiCitySearchOption())
+                .city("广州")
+                .keyword("建设银行")
+                .pageNum(10));
+        /*PoiNearbySearchOption nearbySearchOption = new PoiNearbySearchOption();
+        nearbySearchOption.location(new LatLng(latitude, longitude));
+        nearbySearchOption.keyword(editSearchKeyEt.getText().toString());
+        nearbySearchOption.radius(1000);// 检索半径，单位是米
+        nearbySearchOption.pageNum(page);
+        poiSearch.searchNearby(nearbySearchOption);// 发起附近检索请求  */
+        /*mPoiSearch.searchInCity((new PoiCitySearchOption())
+                .city("北京")
+                .keyword("美食")
+                .pageNum(10));*/
     }
 
     @Override

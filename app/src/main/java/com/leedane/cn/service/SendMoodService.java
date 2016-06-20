@@ -8,12 +8,14 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.Toast;
 
 import com.leedane.cn.activity.MoodActivity;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.bean.LocationBean;
 import com.leedane.cn.database.BaseSQLiteDatabase;
 import com.leedane.cn.database.BaseSQLiteOpenHelper;
 import com.leedane.cn.task.TaskListener;
@@ -58,6 +60,7 @@ public class SendMoodService extends Service implements TaskListener {
     boolean isItemFinish = false;//判断单个文件下载任务是否完成
     private String tempFilePath = null;
     private BaseSQLiteDatabase sqLiteDatabase;
+    private Intent currentIntent;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -77,6 +80,7 @@ public class SendMoodService extends Service implements TaskListener {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
+        currentIntent = intent;
         //service被杀死后重启将没有intent，这里不做进一步处理即可
         if(intent == null){
             return super.onStartCommand(intent, flags, startId);
@@ -165,6 +169,14 @@ public class SendMoodService extends Service implements TaskListener {
                     HttpRequestBean requestBean = new HttpRequestBean();
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("content", content);
+                    String location = currentIntent.getStringExtra("location");
+                    if(StringUtil.isNotNull(location)){
+                        double longitude = currentIntent.getDoubleExtra("longitude", 0);
+                        double latitude = currentIntent.getDoubleExtra("latitude", 0);
+                        params.put("location", location);
+                        params.put("longitude", longitude);
+                        params.put("latitude", latitude);
+                    }
                     params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                     requestBean.setParams(params);
                     requestBean.setServerMethod("leedane/mood_sendWord.action");
@@ -290,6 +302,14 @@ public class SendMoodService extends Service implements TaskListener {
                     HttpRequestBean requestBean = new HttpRequestBean();
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("content", content);
+                    String location = currentIntent.getStringExtra("location");
+                    if(StringUtil.isNotNull(location)){
+                        double longitude = currentIntent.getDoubleExtra("longitude", 0);
+                        double latitude = currentIntent.getDoubleExtra("latitude", 0);
+                        params.put("location", location);
+                        params.put("longitude", longitude);
+                        params.put("latitude", latitude);
+                    }
                     params.put("uuid", mItems.get(0).getUuid());
                     params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                     requestBean.setParams(params);

@@ -205,7 +205,7 @@ public class ChatDataBase {
         ArrayList<ChatBean> data = new ArrayList<ChatBean>();
         if(myFriendsBeans != null && myFriendsBeans.size() > 0) {
             String sql = "select cid, content, _type, to_user_id, create_user_id, create_time, code, " +
-                    "(SELECT count(cid) from " + CHAT_TABLE_NAME + " where code = o.code and read = 0) no_read_number " +
+                    "(SELECT count(*) from " + CHAT_TABLE_NAME + " where code = o.code and read = 0) no_read_number " +
                     "from " + CHAT_TABLE_NAME + " o  " +
                     "where not EXISTS(" +
                     "select 0 from " + CHAT_TABLE_NAME + " o1  where o1.code = o.code and o1.cid > o.cid" +

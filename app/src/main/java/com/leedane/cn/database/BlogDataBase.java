@@ -93,7 +93,7 @@ public class BlogDataBase {
      */
     public int getTotal(){
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
-        Cursor cursor = sqlite.rawQuery("select count(bid) from " +BLOG_TABLE_NAME , null);
+        Cursor cursor = sqlite.rawQuery("select count(*) from " +BLOG_TABLE_NAME , null);
         int total = 0;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             total = cursor.getInt(0);

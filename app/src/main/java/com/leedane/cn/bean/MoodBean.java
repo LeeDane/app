@@ -26,6 +26,10 @@ public class MoodBean extends IdBean {
 	 */
 	@SerializedName("has_img")
 	private boolean hasImg;
+
+	private String location; //位置的名称
+	private double longitude; //经度
+	private double latitude; //纬度
 	
 	/**
 	 * 阅读次数
@@ -213,5 +217,29 @@ public class MoodBean extends IdBean {
 
 	public void setPraiseUserList(String praiseUserList) {
 		this.praiseUserList = praiseUserList;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 }

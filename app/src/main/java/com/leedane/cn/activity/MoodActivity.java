@@ -24,6 +24,7 @@ import com.leedane.cn.adapter.MoodGridViewAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.bean.LocationBean;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.TransmitHandler;
@@ -53,6 +54,18 @@ import java.util.List;
 public class MoodActivity extends BaseActivity {
 
     public static final String TAG = "MoodActivity";
+
+    /**
+     * 位置信息
+     */
+    private ImageView mMoodLocation;
+
+    private TextView mMoodLocationShow;
+
+    /**
+     * 选择At好友
+     */
+    private ImageView mMoodFriend;
     /**
      * 发表的按钮
      */
@@ -108,10 +121,16 @@ public class MoodActivity extends BaseActivity {
     private MoodGridViewAdapter mMoodGridViewAdapter;
     Intent it_mood;
 
+    private LocationBean locationBean; //位置信息
     /**
      * 调用系统图库的请求编码
      */
     public static final int GET_SYSTEM_IMAGE_CODE = 2;
+
+    /**
+     * 调用位置activity的请求编码
+     */
+    public static final int GET_LOCATION_CODE = 21;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,12 +223,24 @@ public class MoodActivity extends BaseActivity {
         mBtnPublish.setVisibility(View.VISIBLE);
         mBtnPublish.setOnClickListener(this);
 
+        mMoodLocationShow = (TextView)findViewById(R.id.mood_location_show);
+
         if(mOperateType == 1){
             mBtnPublish.setText(getStringResource(R.string.mood_transmit));
         }else if(mOperateType == 2){
             mBtnPublish.setText(getStringResource(R.string.mood_comment));
         }
         if(mOperateType == 0){
+
+            mMoodLocation = (ImageView)findViewById(R.id.mood_location);
+            mMoodLocation.setVisibility(View.VISIBLE);
+            mMoodLocation.setOnClickListener(this);
+
+            //选择好友
+            mMoodFriend = (ImageView)findViewById(R.id.mood_friend);
+            mMoodFriend.setVisibility(View.VISIBLE);
+            mMoodFriend.setOnClickListener(this);
+
             //添加照片
             mMoodAdd = (ImageView)findViewById(R.id.mood_add);
             mMoodAdd.setVisibility(View.VISIBLE);
@@ -239,14 +270,6 @@ public class MoodActivity extends BaseActivity {
         }
         //mGridview.setColumnWidth(getGridViewColumnWidth());
     }
-
-    /**
-     * 选择好友
-     * @param view
-     */
-    public void selectFriend(View view){
-        startATFriendActivity();
-    }
     /**
      * 触发AT朋友的activity
      */
@@ -258,6 +281,14 @@ public class MoodActivity extends BaseActivity {
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
+            case R.id.mood_location:
+                locationBean = null;
+                Intent intent_location = new Intent(MoodActivity.this, LocationActivity.class);
+                startActivityForResult(intent_location, GET_LOCATION_CODE );
+                break;
+            case R.id.mood_friend: //选择好友
+                startATFriendActivity();
+                break;
             case R.id.mood_add:
                 if(mUris.size() > 2){
                     Toast.makeText(MoodActivity.this, "最多允许选择3张图片", Toast.LENGTH_LONG).show();
@@ -300,9 +331,9 @@ public class MoodActivity extends BaseActivity {
                 }
                 if(StringUtil.isNull(content) && mUris.size() == 0){
                     if(mOperateType == 0)
-                        Toast.makeText(getBaseContext(), "内容不能为空或者至少选择一张图片", Toast.LENGTH_LONG).show();
+                        ToastUtil.failure(getBaseContext(), "内容不能为空或者至少选择一张图片");
                     else
-                        Toast.makeText(getBaseContext(), "至少输入点什么吧", Toast.LENGTH_LONG).show();
+                        ToastUtil.failure(getBaseContext(), "至少输入点什么吧");
                     mMoodContent.setFocusable(true);
                     return;
                 }
@@ -322,6 +353,12 @@ public class MoodActivity extends BaseActivity {
                                     if (mOldMoodBean != null)
                                         it_service.putExtra("oldMoodId", mOldMoodBean.getId());
                                     it_service.putExtra("content", content);
+                                    if(locationBean != null){
+                                        it_service.putExtra("location", locationBean.getName());
+                                        it_service.putExtra("longitude", locationBean.getLongitude());
+                                        it_service.putExtra("latitude", locationBean.getLatitude());
+                                    }
+
                                     StringBuffer buffer = new StringBuffer();
                                     String uris = "";
                                     if(mUriList.size() > 0){
@@ -354,7 +391,7 @@ public class MoodActivity extends BaseActivity {
                     builder.setNegativeButton("取消",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    Toast.makeText(MoodActivity.this, "正在发表...", Toast.LENGTH_LONG).show();
+                                    ToastUtil.success(MoodActivity.this, "正在发表...");
                                 }
                             });
                     builder.show();
@@ -363,6 +400,12 @@ public class MoodActivity extends BaseActivity {
                     HttpRequestBean requestBean = new HttpRequestBean();
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("content", content);
+                    if(locationBean != null){
+                        params.put("location", locationBean.getName());
+                        params.put("longitude", locationBean.getLongitude());
+                        params.put("latitude", locationBean.getLatitude());
+                    }
+
                     params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                     requestBean.setParams(params);
                     requestBean.setServerMethod("leedane/mood_sendWord.action");
@@ -552,7 +595,7 @@ public class MoodActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             System.out.println("requestCode"+requestCode);
-            if (requestCode == GET_SYSTEM_IMAGE_CODE) {
+            if (requestCode == GET_SYSTEM_IMAGE_CODE) {//图库返回
                 List<String> tempUris = new ArrayList<>();
                 for(String uri: mUris){
                     tempUris.add(uri);
@@ -576,6 +619,20 @@ public class MoodActivity extends BaseActivity {
                 }else{
                     mMoodContent.setText(select);
                 }
+            }
+        }
+
+        if(requestCode == GET_LOCATION_CODE && data != null){//位置返回
+            String location = data.getStringExtra("location");
+            if(StringUtil.isNotNull(location)){
+                double longitude = data.getDoubleExtra("longitude", 0);
+                double latitude = data.getDoubleExtra("latitude", 0);
+                locationBean = new LocationBean();
+                locationBean.setName(location);
+                locationBean.setLongitude(longitude);
+                locationBean.setLatitude(latitude);
+                mMoodLocationShow.setVisibility(View.VISIBLE);
+                mMoodLocationShow.setText(location);
             }
         }
     }

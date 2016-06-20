@@ -81,7 +81,7 @@ public class FileDataBase {
      */
     public int getTotal(){
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
-        Cursor cursor = sqlite.rawQuery("select count(fid) from " +FILE_TABLE_NAME , null);
+        Cursor cursor = sqlite.rawQuery("select count(*) from " +FILE_TABLE_NAME , null);
         int total = 0;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             total = cursor.getInt(0);

@@ -136,6 +136,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     private LinearLayout mLLTransmit;
     private TextView mTVPraise;
 
+    private TextView mTVLocation; //显示位置信息
     private ImageView mIVImg;
     private Context mContext;
 
@@ -233,8 +234,8 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mCommentOrTransmits.size() > 0){
-                    ToastUtil.success(mContext, "type:"+getOperateType());
+                if (mCommentOrTransmits.size() > 0) {
+                    ToastUtil.success(mContext, "type:" + getOperateType());
                     onItemClickListener.onItemClick(position, mCommentOrTransmits.get(position - 1), getOperateType());
                 }
             }
@@ -256,6 +257,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         mLLComment.setOnClickListener(this);
         mLLTransmit.setOnClickListener(this);
 
+        mTVLocation = (TextView)viewHeader.findViewById(R.id.mood_detail_location);
         mIVImg = (ImageView)viewHeader.findViewById(R.id.mood_detail_img);
         mPraiseUser = (TextView)viewHeader.findViewById(R.id.mood_detail_praise);
         mTVPraise = (TextView)viewHeader.findViewById(R.id.mood_detail_praise_show);
@@ -288,8 +290,12 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             mTVContent.setText(detail.getString("content"));
             mTVPraise.setText(getStringResource(mContext, R.string.personal_praise) +"("+ detail.getInt("zan_number")+")");
             mTVComment.setText("评论("+detail.getInt("comment_number")+")");
-            mTVTransmit.setText("转发("+detail.getInt("transmit_number")+")");
+            mTVTransmit.setText("转发(" + detail.getInt("transmit_number") + ")");
 
+            if(detail.has("location") && StringUtil.isNotNull(detail.getString("location"))){
+                mTVLocation.setVisibility(View.VISIBLE);
+                mTVLocation.setText("我的位置:"+detail.getString("location"));
+            }
             showPraiseUser();
         }catch (JSONException e){
             e.printStackTrace();

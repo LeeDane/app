@@ -315,4 +315,9 @@
     <string name="chat_bg_charge">收费</string>
     <string name="chat_bg_score">用户每次下载扣除的积分</string>
     <string name="chat_bg_filepath">chatbg</string>
+
+    <!--     位置定位     -->
+    <string name="location">位置定位</string>
+    <string name="location_hint_search">搜索当前位置1公里内的位置</string>
+    <string name="location_current">当前位置:</string>
 </resources>

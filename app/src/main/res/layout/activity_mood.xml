@@ -31,25 +31,38 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:gravity="right"
         android:orientation="horizontal">
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:onClick="selectFriend"
-            android:layout_gravity="left"
-            android:layout_marginRight="8dp"
-            android:gravity="center"
-            android:text="\@"/>
+        <ImageView
+            android:id="@+id/mood_location"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/location"/>
+        <ImageView
+            android:id="@+id/mood_friend"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/at"/>
         <ImageView
             android:id="@+id/mood_add"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:background="@mipmap/add"/>
+            android:background="@mipmap/photo"/>
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/mood_location_show"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_padding"
+        android:visibility="gone"
+        android:gravity="right"
+        android:text="@string/action_settings"/>
     <GridView
         android:id="@+id/mood_gridview"
         android:layout_width="match_parent"

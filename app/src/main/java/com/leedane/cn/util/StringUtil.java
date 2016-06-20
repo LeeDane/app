@@ -33,7 +33,7 @@ public class StringUtil {
      */
     public static boolean isNull(String origin) {
 
-        return origin == null || origin.trim() == "" || origin.trim().equals("") ? true : false;
+        return origin == null || origin.trim() == "" || origin.trim().equals("")  || origin.equals("null") ? true : false;
     }
 
     /**

@@ -60,6 +60,7 @@ public class ChatBgSelectWebAdapter extends BaseAdapter{
             imageView.setLayoutParams(para);
             viewHolder.setmPath(imageView);
             viewHolder.setmIcon((ImageView) view.findViewById(R.id.gridview_icon));
+            viewHolder.setmDownload((TextView)view.findViewById(R.id.gridview_download));
             viewHolder.setmShow((TextView)view.findViewById(R.id.gridview_show));
             view.setTag(viewHolder);
         }
@@ -79,6 +80,15 @@ public class ChatBgSelectWebAdapter extends BaseAdapter{
             viewHolder.getmIcon().setImageResource(R.drawable.charge);
         }
 
+        if(chatBgSelectWebBean.getCreateUserId() == BaseApplication.getLoginUserId()){
+            viewHolder.getmDownload().setText("我上传的");
+        }else{
+            if(chatBgSelectWebBean.isDownload()){
+                viewHolder.getmDownload().setText(chatBgSelectWebBean.getAccount() +"上传的,已下载过");
+            }else{
+                viewHolder.getmDownload().setText(chatBgSelectWebBean.getAccount() +"上传的,还未下载");
+            }
+        }
         return view;
     }
 
@@ -90,6 +100,7 @@ public class ChatBgSelectWebAdapter extends BaseAdapter{
 
     private class ViewHolder{
         private TextView mShow;
+        private TextView mDownload; //是否下载过
         private ImageView mPath;
         private ImageView mIcon; //是否免费
 
@@ -115,6 +126,14 @@ public class ChatBgSelectWebAdapter extends BaseAdapter{
 
         public void setmShow(TextView mShow) {
             this.mShow = mShow;
+        }
+
+        public TextView getmDownload() {
+            return mDownload;
+        }
+
+        public void setmDownload(TextView mDownload) {
+            this.mDownload = mDownload;
         }
     }
 }

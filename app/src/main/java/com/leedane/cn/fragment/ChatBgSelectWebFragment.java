@@ -302,7 +302,7 @@ public class ChatBgSelectWebFragment extends BaseFragment{
                 selectWebBean = mChatBgSelectWebBeans.get(position);
 
                 //该聊天资源是自己上传的直接获取
-                if(selectWebBean.getCreateUserId() == BaseApplication.getLoginUserId()){
+                if(selectWebBean.getCreateUserId() == BaseApplication.getLoginUserId() || selectWebBean.isDownload()){
                     downLoadBitMap(selectWebBean.getPath());
                     return;
                 }
