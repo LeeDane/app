@@ -10,3 +10,5 @@ JPushExample(358174)
 app/src/main/java/com/leedane/cn/util/ConstantsUtil.java
 settings.gradle
 app\libs
+app/app-release.apk
+/.gitignore
