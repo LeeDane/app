@@ -270,8 +270,6 @@ public class PersonalActivity extends BaseActivity {
         String headPath = mUserInfo.getString("user_pic_path");
         if(StringUtil.isNotNull(headPath)){
             ImageCacheManager.loadImage(headPath, mPersonalPic);
-        }else{
-            mPersonalPic.setVisibility(View.GONE);
         }
 
 

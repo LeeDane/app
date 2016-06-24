@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leedane.cn.app.R;
@@ -20,13 +19,13 @@ import com.leedane.cn.volley.ImageCacheManager;
 import java.util.List;
 
 /**
- * 好友列表数据展示的adapter对象
- * Created by LeeDane on 2016/4/19.
+ * 暂时还未是好友列表数据展示的adapter对象
+ * Created by LeeDane on 2016/6/23.
  */
-public class FriendAdapter extends BaseAdapter{
+public class FriendNotYetAdapter extends BaseAdapter{
     private Context mContext;
     private List<FriendBean> mFriendBeans;
-    public FriendAdapter(Context context, List<FriendBean> friendBeans) {
+    public FriendNotYetAdapter(Context context, List<FriendBean> friendBeans) {
         this.mContext = context;
         this.mFriendBeans = friendBeans;
     }

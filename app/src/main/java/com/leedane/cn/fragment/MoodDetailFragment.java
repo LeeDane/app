@@ -420,6 +420,10 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         try{
 
             if(type == TaskType.DETAIL_MOOD){
+                if(result == null){
+                    ToastUtil.failure(mContext, "服务器返回异常");
+                    return;
+                }
                 JSONObject resultObject = new JSONObject(String.valueOf(result));
                 if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
                     detail = resultObject.getJSONArray("message").getJSONObject(0);

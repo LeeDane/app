@@ -230,6 +230,7 @@ public class HttpConnectionUtil {
         if(dos != null) dos.close();
 
         InputStream is = null;
+        int code = urlConnection.getResponseCode();
         //响应成功
         if(urlConnection.getResponseCode() == ConstantsUtil.RESPONSE_CODE_SUCCESS){
             is = urlConnection.getInputStream();
