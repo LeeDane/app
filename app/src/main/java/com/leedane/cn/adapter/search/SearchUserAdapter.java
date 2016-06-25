@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,7 +75,6 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
         if(convertView == null){
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_search_user_listview, null);
             myHolder = new MyHolder();
-            myHolder.setmUserInfo((LinearLayout)convertView.findViewById(R.id.search_user_info));
             TextView time = (TextView) convertView.findViewById(R.id.search_user_time);
             time.setSelected(true);
             myHolder.setmCreateTime(time);
@@ -152,7 +150,7 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
         if(StringUtil.isNull(createTime)){
             myHolder.getmCreateTime().setText("");
         }else{
-            myHolder.getmCreateTime().setText("注册:"+RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
+            myHolder.getmCreateTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 
         myHolder.getmIntroduction().setText("简介:"+StringUtil.changeNotNull(searchUserBean.getIntroduction()));
@@ -161,12 +159,12 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
         myHolder.getmEmail().setText("邮件:"+StringUtil.changeNotNull(searchUserBean.getEmail()));
         myHolder.getmPhone().setText("手机:"+ StringUtil.changeNotNull(searchUserBean.getPhone()));
         if(StringUtil.isNotNull(searchUserBean.getUserPicPath())){
-            ImageCacheManager.loadImage(searchUserBean.getUserPicPath(), myHolder.getmPicPath(), 40, 40);
+            ImageCacheManager.loadImage(searchUserBean.getUserPicPath(), myHolder.getmPicPath(), 45, 45);
         }
         myHolder.getmQq().setText("QQ:"+StringUtil.changeNotNull(searchUserBean.getQq()));
         myHolder.getmSex().setText("性别:"+StringUtil.changeNotNull(searchUserBean.getSex()));
 
-        myHolder.getmUserInfo().setOnClickListener(new View.OnClickListener() {
+        myHolder.getmPicPath().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommonHandler.startPersonalActivity(mContext, searchUserBean.getId());
@@ -255,8 +253,6 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
     }
 
     private class MyHolder{
-
-        private LinearLayout mUserInfo;
         /**
          * 搜索用户的账号
          */
@@ -358,14 +354,6 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
 
         public void setmSex(TextView mSex) {
             this.mSex = mSex;
-        }
-
-        public LinearLayout getmUserInfo() {
-            return mUserInfo;
-        }
-
-        public void setmUserInfo(LinearLayout mUserInfo) {
-            this.mUserInfo = mUserInfo;
         }
 
         public TextView getmFan() {

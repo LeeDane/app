@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.search.SearchBlogBean;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
@@ -72,7 +73,7 @@ public class SearchBlogAdapter extends BaseAdapter{
         }else{
             myHolder = (MyHolder)convertView.getTag();
         }
-        SearchBlogBean searchBlogBean = mSearchBlogBeans.get(position);
+        final SearchBlogBean searchBlogBean = mSearchBlogBeans.get(position);
 
         String createTime = searchBlogBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
@@ -83,7 +84,14 @@ public class SearchBlogAdapter extends BaseAdapter{
 
         myHolder.getmAccount().setText(StringUtil.changeNotNull(searchBlogBean.getAccount()));
         if(StringUtil.isNotNull(searchBlogBean.getUserPicPath()))
-            ImageCacheManager.loadImage(searchBlogBean.getUserPicPath(), myHolder.getmPicPath(), 30, 30);
+            ImageCacheManager.loadImage(searchBlogBean.getUserPicPath(), myHolder.getmPicPath(), 45, 45);
+
+        myHolder.getmPicPath().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonHandler.startPersonalActivity(mContext, searchBlogBean.getCreateUserId());
+            }
+        });
         myHolder.getmSource().setText(StringUtil.changeNotNull(searchBlogBean.getSource()));
         myHolder.getmTitle().setText(StringUtil.changeNotNull(searchBlogBean.getTitle()));
         myHolder.getmDigest().setText(StringUtil.changeNotNull(searchBlogBean.getDigest()) +"...");

@@ -2,33 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="@dimen/default_padding">
+    android:paddingBottom="@dimen/default_padding"
+    android:paddingTop="@dimen/default_padding"
+    android:orientation="horizontal">
     <LinearLayout
-        android:id="@+id/search_user_info"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_marginRight="5dp"
         android:orientation="vertical">
         <com.leedane.cn.customview.CircularImageView
             android:id="@+id/search_user_pic"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:src="@drawable/no_pic"/>
         <TextView
-            android:id="@+id/search_user_name"
+            android:id="@+id/search_user_time"
             android:layout_width="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_height="40dp"
-            android:textColor="@color/blueAccountLink"
-            android:text="@string/no_text"/>
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            android:layout_marginTop="@dimen/default_5dp"
+            android:text="@string/default_time"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="3"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/search_user_name"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/default_account_text_size"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blueAccountLink"
+            android:text="@string/no_text"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -104,17 +113,6 @@
                 android:scrollHorizontally="true"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:text="@string/no_text"/>
-            <TextView
-                android:id="@+id/search_user_time"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:singleLine="true"
-                android:focusableInTouchMode="true"
-                android:ellipsize="marquee"
-                android:scrollHorizontally="true"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:text="@string/no_text"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -142,5 +140,4 @@
                 android:text="@string/personal_add_fan"/>
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

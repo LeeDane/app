@@ -61,6 +61,7 @@ public enum TaskType {
     DO_GET_LOGIN_CODE, //获取手机登录的验证码
     GET_APP_VERSION, //检查APP版本
     LOAD_FRIENDS_PAGING, //获取已经跟我成为好友关系的分页列表
+    LOAD_NOT_YET_FRIENDS_PAGING, //获取暂时未跟我成为好友关系的分页列表
     LOAD_REQUEST_PAGING, //获取我发送的好友请求列表
     LOAD_RESPONSE_PAGING, //获取等待我同意的好友关系列表
     LOAD_NOTIFICATION,  //获取通知列表
@@ -81,4 +82,5 @@ public enum TaskType {
     UPDATE_LOGIN_PSW, //更新登录密码
     FANYI, //翻译
     VERIFY_CHAT_BG, //校验聊天背景
+    SEND_EMAIL, //发送电子邮件
 }

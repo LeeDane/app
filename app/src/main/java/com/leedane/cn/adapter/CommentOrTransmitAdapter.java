@@ -75,7 +75,7 @@ public class CommentOrTransmitAdapter extends BaseAdapter{
         }
         viewHolder = (ViewHolder)view.getTag();
         viewHolder.getmContent().setText(commentOrTransmitBean.getContent());
-        viewHolder.getmFrom().setText(StringUtil.changeNotNull(commentOrTransmitBean.getFroms()));
+        viewHolder.getmFrom().setText("来自：" +StringUtil.changeNotNull(commentOrTransmitBean.getFroms()));
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(commentOrTransmitBean.getCreateTime())));
         if(StringUtil.isNotNull(commentOrTransmitBean.getSource())){
             viewHolder.getmSource().setText(commentOrTransmitBean.getSource());

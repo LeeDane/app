@@ -36,7 +36,7 @@
             <TextView
                 android:id="@+id/collection_time"
                 android:layout_width="match_parent"
-                android:textSize="10sp"
+                android:textSize="@dimen/default_10sp"
                 android:layout_height="wrap_content"
                 android:text="@string/no_text"/>
             <TextView

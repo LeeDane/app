@@ -196,9 +196,7 @@ public class FriendFragment extends BaseFragment{
         if(type == 0) {
             FriendHandler.sendFriendsPaging(FriendFragment.this, params);
         }else if(type == 1) {
-            FriendHandler.sendRequestPaging(FriendFragment.this, params);
-        }else if(type ==2){
-            FriendHandler.sendResponsePaging(FriendFragment.this, params);
+            FriendHandler.sendNotYetRequestPaging(FriendFragment.this, params);
         }
     }
     /**

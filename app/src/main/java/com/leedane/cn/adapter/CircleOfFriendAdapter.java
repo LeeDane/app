@@ -72,7 +72,7 @@ public class CircleOfFriendAdapter extends BaseAdapter{
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(timeLineBean.getCreateTime())));
         viewHolder.getmUserName().setText(timeLineBean.getAccount());
 
-        viewHolder.getmFrom().setText(timeLineBean.getFroms());
+        viewHolder.getmFrom().setText("来自：" +timeLineBean.getFroms());
 
         viewHolder.getmUserInfo().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,13 +83,13 @@ public class CircleOfFriendAdapter extends BaseAdapter{
 
         if(timeLineBean.getCreateUserId() == loginUserId){
             if(StringUtil.isNotNull(loginUserPicPath))
-                ImageCacheManager.loadImage(loginUserPicPath, viewHolder.getmUserPic(), 30, 30);
+                ImageCacheManager.loadImage(loginUserPicPath, viewHolder.getmUserPic(), 45, 45);
             else{
                 viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
             }
         }else{
             if(timeLineBean.getUserPicPath() != null)
-                ImageCacheManager.loadImage(timeLineBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);
+                ImageCacheManager.loadImage(timeLineBean.getUserPicPath(), viewHolder.getmUserPic(), 45, 45);
             else{
                 viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
             }

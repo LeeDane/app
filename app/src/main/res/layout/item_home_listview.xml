@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp"
-    android:paddingLeft="15dp">
+    android:padding="8dp">
     <TextView
         android:id="@+id/home_item_title"
         android:layout_width="match_parent"
@@ -18,12 +17,28 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="8dp">
-        <ImageView
-            android:id="@+id/home_item_img"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="5dp"
-            android:src="@drawable/no_pic"/>
+        <LinearLayout
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="8dp"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/home_item_img"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/no_pic"/>
+            <TextView
+                android:id="@+id/home_item_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginTop="@dimen/default_5dp"
+                android:text="@string/default_time"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -37,24 +52,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:text="@string/action_settings"
                     android:layout_marginLeft="2dp"
-                    android:textSize="12sp"/>
+                    android:textSize="@dimen/default_account_text_size"/>
                 <TextView
                     android:id="@+id/home_item_from"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:maxWidth="100dp"
                     android:text="@string/action_settings"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="12sp"/>
-                <TextView
-                    android:id="@+id/home_item_time"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/action_settings"
-                    android:layout_marginLeft="10dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:layout_marginRight="10dp"
                     android:textSize="12sp"/>
             </LinearLayout>
 
@@ -63,10 +75,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/home_item_desc"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/default_5dp"
                 android:textSize="14sp"
                 android:text="@string/action_settings"/>
         </RelativeLayout>
     </LinearLayout>
-
 </LinearLayout>

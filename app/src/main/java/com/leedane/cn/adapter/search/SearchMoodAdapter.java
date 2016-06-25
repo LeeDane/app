@@ -82,8 +82,8 @@ public class SearchMoodAdapter extends BaseAdapter{
 
         myHolder.getmAccount().setText(StringUtil.changeNotNull(searchMoodBean.getAccount()));
         if(StringUtil.isNotNull(searchMoodBean.getUserPicPath()))
-            ImageCacheManager.loadImage(searchMoodBean.getUserPicPath(), myHolder.getmPicPath(), 30, 30);
-        myHolder.getmFroms().setText(StringUtil.changeNotNull(searchMoodBean.getFroms()));
+            ImageCacheManager.loadImage(searchMoodBean.getUserPicPath(), myHolder.getmPicPath(), 45, 45);
+        myHolder.getmFroms().setText("来自："+StringUtil.changeNotNull(searchMoodBean.getFroms()));
         myHolder.getmContent().setText(StringUtil.changeNotNull(searchMoodBean.getContent()));
         if(StringUtil.isNotNull(searchMoodBean.getImgs())){
             myHolder.getmMainImg().setVisibility(View.VISIBLE);

@@ -4,6 +4,7 @@
     <string name="temp_filepath">temp</string>
     <string name="qr_code_filepath">qrcode</string>
     <string name="action_settings">设置</string>
+    <string name="default_time">2016-06-25 10:10:10</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="hello">Hello Android, DemoAppActivity!</string>
@@ -241,6 +242,7 @@
     <string name="my_friends">我的好友</string>
     <string name="my_add_friends">我加的好友</string>
     <string name="add_my_friends">加我的好友</string>
+    <string name="no_friends">未成为好友</string>
 
     <!--  JPush  -->
     <string name="tag_hint">Tag为大小写字母，数字，下划线,中文， 多个用以逗号分隔</string>
