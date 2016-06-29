@@ -78,6 +78,8 @@ public enum TaskType {
     UPDATE_HANDER, //更新用户头像
     UPDATE_USER_BASE, //更新用户的基本信息
     UPDATE_LOGIN_PSW, //更新登录密码
+    UPDATE_COMMENT_STATUS, //更新评论状态
+    UPDATE_TRANSMIT_STATUS, //更新转发状态
     FANYI, //翻译
     VERIFY_CHAT_BG, //校验聊天背景
     SEND_EMAIL, //发送电子邮件

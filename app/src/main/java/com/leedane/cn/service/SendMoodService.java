@@ -177,6 +177,9 @@ public class SendMoodService extends Service implements TaskListener {
                         params.put("longitude", longitude);
                         params.put("latitude", latitude);
                     }
+
+                    params.put("can_comment", currentIntent.getBooleanExtra("can_comment", true));
+                    params.put("can_transmit", currentIntent.getBooleanExtra("can_transmit", true));
                     params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                     requestBean.setParams(params);
                     requestBean.setServerMethod("leedane/mood_sendWord.action");
@@ -311,6 +314,8 @@ public class SendMoodService extends Service implements TaskListener {
                         params.put("latitude", latitude);
                     }
                     params.put("uuid", mItems.get(0).getUuid());
+                    params.put("can_comment", currentIntent.getBooleanExtra("can_comment", true));
+                    params.put("can_transmit", currentIntent.getBooleanExtra("can_transmit", true));
                     params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                     requestBean.setParams(params);
                     requestBean.setServerMethod("leedane/mood_sendWord.action");

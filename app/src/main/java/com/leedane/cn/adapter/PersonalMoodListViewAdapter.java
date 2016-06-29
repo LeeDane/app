@@ -166,7 +166,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         viewHolder.getmMore().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.showMoodListItemMenuDialog(index, mData.get(index).getCreateUserId(), mData.get(index).isHasImg());
+                fragment.showMoodListItemMenuDialog(index, mData.get(index));
             }
         });
 

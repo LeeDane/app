@@ -54,6 +54,18 @@ public class MoodBean extends IdBean {
 	 */
 	@SerializedName("transmit_number")
 	private int transmitNumber ;
+
+	/**
+	 * 是否可以评论(默认可以评论)
+	 */
+	@SerializedName("can_comment")
+	private boolean canComment;
+
+	/**
+	 * 是否可以转发(默认可以转发)
+	 */
+	@SerializedName("can_transmit")
+	private boolean canTransmit;
 	
 	/**
 	 * 统计分享的数量
@@ -241,5 +253,21 @@ public class MoodBean extends IdBean {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public boolean isCanComment() {
+		return canComment;
+	}
+
+	public void setCanComment(boolean canComment) {
+		this.canComment = canComment;
+	}
+
+	public boolean isCanTransmit() {
+		return canTransmit;
+	}
+
+	public void setCanTransmit(boolean canTransmit) {
+		this.canTransmit = canTransmit;
 	}
 }

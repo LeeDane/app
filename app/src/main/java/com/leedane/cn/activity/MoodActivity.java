@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -55,12 +57,23 @@ public class MoodActivity extends BaseActivity {
 
     public static final String TAG = "MoodActivity";
 
+    private LinearLayout mOperate;
     /**
      * 位置信息
      */
     private ImageView mMoodLocation;
 
     private TextView mMoodLocationShow;
+
+    /**
+     * 是否可以评论
+     */
+    private CheckBox mCanComment;
+
+    /**
+     * 是否可以转发
+     */
+    private CheckBox mCanTransmit;
 
     /**
      * 选择At好友
@@ -169,7 +182,6 @@ public class MoodActivity extends BaseActivity {
                 finish();
                 return;
             }
-
         }
         setContentView(R.layout.activity_mood);
         initView();
@@ -181,6 +193,8 @@ public class MoodActivity extends BaseActivity {
     private void initView() {
         mUserInfo = SharedPreferenceUtil.getUserInfo(getApplicationContext());
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
+
+        mOperate = (LinearLayout)findViewById(R.id.mood_operate);
 
         //内容
         mMoodContent = (EditText)findViewById(R.id.mood_content);
@@ -231,28 +245,42 @@ public class MoodActivity extends BaseActivity {
             mBtnPublish.setText(getStringResource(R.string.mood_comment));
         }
         if(mOperateType == 0){
-
+            mOperate.setVisibility(View.VISIBLE);
             mMoodLocation = (ImageView)findViewById(R.id.mood_location);
-            mMoodLocation.setVisibility(View.VISIBLE);
             mMoodLocation.setOnClickListener(this);
 
             //选择好友
             mMoodFriend = (ImageView)findViewById(R.id.mood_friend);
-            mMoodFriend.setVisibility(View.VISIBLE);
             mMoodFriend.setOnClickListener(this);
 
             //添加照片
             mMoodAdd = (ImageView)findViewById(R.id.mood_add);
-            mMoodAdd.setVisibility(View.VISIBLE);
             mMoodAdd.setOnClickListener(this);
             mMoodGridViewAdapter = new MoodGridViewAdapter(MoodActivity.this, mUris);
             //显示添加后的图片
             mGridview = (GridView)findViewById(R.id.mood_gridview);
             mGridview.setAdapter(mMoodGridViewAdapter);
+
+            mCanComment = (CheckBox)findViewById(R.id.mood_can_comment);
+            mCanTransmit = (CheckBox)findViewById(R.id.mood_can_transmit);
+            mCanComment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    ToastUtil.success(MoodActivity.this, "点：" + mCanComment.isChecked());
+                }
+            });
+            mCanTransmit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                }
+            });
         }else{
+            mOperate.setVisibility(View.GONE);
             mOldMood = (TextView)findViewById(R.id.mood_show_old);
             mMoodTransmitCommentContent = (LinearLayout)findViewById(R.id.mood_transmit_comment_content);
             mMoodTransmitCommentContent.setVisibility(View.VISIBLE);
+            mOldMood.setVisibility(View.VISIBLE);
             mOldMood.setText(mOldMoodBean.getContent());
             String imgs = mOldMoodBean.getImgs();
             if(StringUtil.isNotNull(imgs)){
@@ -264,11 +292,8 @@ public class MoodActivity extends BaseActivity {
                 //显示添加后的图片
                 mGridview = (GridView)findViewById(R.id.mood_gridview);
                 mGridview.setAdapter(adapter);
-
             }
-
         }
-        //mGridview.setColumnWidth(getGridViewColumnWidth());
     }
     /**
      * 触发AT朋友的activity
@@ -359,6 +384,8 @@ public class MoodActivity extends BaseActivity {
                                         it_service.putExtra("latitude", locationBean.getLatitude());
                                     }
 
+                                    it_service.putExtra("can_comment", mCanComment.isChecked());
+                                    it_service.putExtra("can_transmit", mCanTransmit.isChecked());
                                     StringBuffer buffer = new StringBuffer();
                                     String uris = "";
                                     if(mUriList.size() > 0){
@@ -400,6 +427,8 @@ public class MoodActivity extends BaseActivity {
                     HttpRequestBean requestBean = new HttpRequestBean();
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("content", content);
+                    params.put("can_comment", mCanComment.isChecked());
+                    params.put("can_transmit", mCanTransmit.isChecked());
                     if(locationBean != null){
                         params.put("location", locationBean.getName());
                         params.put("longitude", locationBean.getLongitude());
@@ -413,51 +442,6 @@ public class MoodActivity extends BaseActivity {
                     TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_NORMAL, MoodActivity.this, requestBean);
                     showLoadingDialog("发表心情", "正在发表，请稍等...");
                 }
-
-
-                //finish();
-
-                /*HttpRequestBean requestBean = new HttpRequestBean();
-                HashMap<String, Object> params = new HashMap<>();
-                params.put("content", content);
-                params.put("froms", Build.MODEL);
-                //Toast.makeText(MoodActivity.this, "手机型号："+ Build.MODEL+",手机厂家："+Build.MANUFACTURER, Toast.LENGTH_LONG).show();
-                if(mUris.size() > 0){
-                    StringBuffer buffer = new StringBuffer();
-
-                    try {
-                        for( Uri uri: mUris){
-                            ContentResolver cr = getContentResolver();
-
-                                Bitmap bmp = BitmapFactory.decodeStream(cr.openInputStream(uri));
-                                if (bmp != null) {
-                                    String base64 = ImageUtil.bitmapToBase64(bmp);
-                                    if(!StringUtil.isNull(base64)){
-                                        buffer.append(base64 + "&&");
-                                    }
-                                }
-
-                        }
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    String str = buffer.toString();
-                    if(!StringUtil.isNull(str) && str.endsWith("&&")){
-                        str = str.substring(0, str.length() -2);
-                    }
-                    params.put("base64", str);
-                }
-                //每一张图片增加30秒请求超时限制
-                requestBean.setRequestTimeOut(ConstantsUtil.DEFAULT_REQUEST_TIME_OUT + 30000 * mUris.size());
-
-                //每一张图片增加30秒响应超时限制
-                requestBean.setResponseTimeOut(ConstantsUtil.DEFAULT_RESPONSE_TIME_OUT + 30000*mUris.size());
-                params.putAll(getBaseRequestParams());
-                requestBean.setParams(params);
-                requestBean.setServerMethod("leedane/mood_sendDraft.action");
-                showLoadingDialog("发表心情", "正在处理上传草稿。。。");
-                TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_DRAFT, this, requestBean);
-*/
                 break;
         }
     }
@@ -536,58 +520,39 @@ public class MoodActivity extends BaseActivity {
         super.taskFinished(type, result);
         try{
             JSONObject jsonObject = new JSONObject(String.valueOf(result));
-            //发送草稿
-            /*if(type == TaskType.SEND_MOOD_DRAFT){
-                dismissLoadingDialog();
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-
-                    int mid = jsonObject.getInt("message");
-                    HttpRequestBean requestBean = new HttpRequestBean();
-                    HashMap<String, Object> params = new HashMap<>();
-                    params.put("mid", mid);
-                    params.putAll(getBaseRequestParams());
-                    requestBean.setParams(params);
-                    requestBean.setServerMethod("leedane/mood_send.action");
-
-                    showLoadingDialog("发表心情", "正在更新心情状态。。。");
-                    //更新心情状态
-                    TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_NORMAL, this, requestBean);
-                }else {
-                    Toast.makeText(MoodActivity.this, "服务器连接失败，请稍后重试", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }*/
             dismissLoadingDialog();
             //发表心情
-            if(type == TaskType.SEND_MOOD_NORMAL){
+            if(type == TaskType.SEND_MOOD_NORMAL || type == TaskType.ADD_COMMENT || type == TaskType.ADD_TRANSMIT){
                 if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-                    new NotificationUtil(1, MoodActivity.this).sendTipNotification("信息提示", "您的发表的心情发送成功", "测试", 1, 0);
+                    ToastUtil.success(MoodActivity.this, "您的心情" + getNameByType()+ "成功");
+                    if(mOperateType == 2){
+                        Intent intent = new Intent();
+                        setResult(PersonalActivity.MOOD_COMMENT_REQUEST_CODE, intent);
+                    }
                     finish();//关闭当前activity
                 }else{
-                    new NotificationUtil(1, MoodActivity.this).sendActionNotification("信息提示", "心情发送失败" +":"+(jsonObject.has("message")? jsonObject.getString("message"):""), "测试", 1, 0, MoodActivity.class);
+                    ToastUtil.failure(MoodActivity.this, "心情" + getNameByType()+ "失败" + ":" + (jsonObject.has("message") ? jsonObject.getString("message") : ""));
                 }
-            }else if(type == TaskType.ADD_COMMENT){
-
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-                    new NotificationUtil(1, MoodActivity.this).sendTipNotification("信息提示", "您的评论发表成功", "测试", 1, 0);
-                    Intent intent = new Intent();
-                    setResult(PersonalActivity.MOOD_COMMENT_REQUEST_CODE, intent);
-                    finish();//关闭当前activity
-                }else{
-                    new NotificationUtil(1, MoodActivity.this).sendActionNotification("信息提示", "评论发表失败"+(jsonObject.has("message")? ":" +jsonObject.getString("message"):""), "测试", 1, 0, MoodActivity.class);
-                }
-            }else if(type == TaskType.ADD_TRANSMIT){
-
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-                new NotificationUtil(1, MoodActivity.this).sendTipNotification("信息提示", "转发成功", "测试", 1, 0);
-                finish();//关闭当前activity
-            }else{
-                new NotificationUtil(1, MoodActivity.this).sendActionNotification("信息提示", "转发失败"+(jsonObject.has("message")? ":"+jsonObject.getString("message"):""), "测试", 1, 0, MoodActivity.class);
-            }
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private String getNameByType(){
+        String name = "";
+        switch (mOperateType){
+            case 0: //发表
+                name = "发表";
+                break;
+            case 1://转发
+                name = "转发";
+                break;
+            case 2: //评论
+                name = "评论";
+                break;
+        }
+        return name;
     }
 
     @Override

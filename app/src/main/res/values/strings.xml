@@ -11,6 +11,7 @@
     <string name="welcome">您好，欢迎您使用leedane，本系统目前还在开发测试阶段，难免存在很多问题，希望多多谅解，谢谢。。。。。。</string>
 
     <!-- 系统级别 -->
+    <string name="no_text">无内容</string>
     <string name="dane">leedane</string>
     <string name="dane_email">email:leedane9@gmail.com</string>
     <string name="out">退出</string>
@@ -123,7 +124,10 @@
     <string name="personal_info">基本信息</string>
     <string name="personal_shielding">屏蔽</string>
     <string name="personal_report">举报</string>
-    <string name="no_text">无内容</string>
+    <string name="personal_can_comment">设置可以评论</string>
+    <string name="personal_no_comment">设置不可评论</string>
+    <string name="personal_can_transmit">设置可以转发</string>
+    <string name="personal_no_transmit">设置不可转发</string>
 
     <!--  更新用户头像  -->
     <string name="update_header">更换头像</string>
@@ -137,6 +141,8 @@
     <string name="mood_content_hint">请输入不大于140个文字</string>
     <string name="old_mood">原文：</string>
     <string name="comment_hint">说点什么吧</string>
+    <string name="mood_can_comment">是否能评论</string>
+    <string name="mood_can_transmit">是否能转发</string>
 
     <!-- 基本信息 -->
     <string name="info_age">年龄：</string>

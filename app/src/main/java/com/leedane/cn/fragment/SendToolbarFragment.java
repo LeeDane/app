@@ -232,11 +232,12 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
                     imm.hideSoftInputFromWindow(mContentText.getWindowToken(), 0);
                     //注册发表评论或者转发后的监听
                     onAddCommentOrTransmitListener.afterSuccessAddCommentOrTransmit(commentOrTransmit);
-
-                    new NotificationUtil(1, mContext).sendTipNotification("信息提示", "您的评论发表成功", "测试", 1, 0);
+                    ToastUtil.success(mContext, "发送成功");
+                    //new NotificationUtil(1, mContext).sendTipNotification("信息提示", "您的评论发表成功", "测试", 1, 0);
                     mContentText.setText("");
                 } else {
-                    new NotificationUtil(1, mContext).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0, MoodDetailActivity.class);
+                    ToastUtil.failure(mContext, "发送失败" + ":" + (jsonObject.has("message") ? jsonObject.getString("message") : ""));
+                    //new NotificationUtil(1, mContext).sendActionNotification("信息提示", "您的评论发表失败，点击重试", "测试", 1, 0, MoodDetailActivity.class);
                 }
             }
         }catch (JSONException e){

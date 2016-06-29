@@ -92,4 +92,24 @@ public class CommentHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_COMMENT, listener, requestBean);
     }
+
+    /**
+     * 更新评论状态
+     * @param listener
+     * @param tableName
+     * @param tableId
+     * @param canComment
+     */
+    public static void updateCommentStatus(TaskListener listener, String tableName, int tableId, boolean canComment){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("table_name",tableName);
+        params.put("table_id", tableId);
+        params.put("can_comment", canComment);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/comment_updateCommentStatus.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_COMMENT_STATUS, listener, requestBean);
+    }
 }

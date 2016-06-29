@@ -19,14 +19,17 @@ import android.widget.Toast;
 import com.leedane.cn.adapter.PersonalMoodListViewAdapter;
 import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.app.R;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpResponseMoodBean;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.database.MoodDataBase;
 import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.CollectionHandler;
+import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.MoodHandler;
 import com.leedane.cn.handler.PraiseHandler;
+import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
@@ -182,7 +185,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
             }else  if(type == TaskType.ADD_ZAN) {
                 dismissMoodListItemMenuDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
+                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
                     ToastUtil.success(mContext, "点赞成功", Toast.LENGTH_SHORT);
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
@@ -191,7 +194,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                 dismissMoodListItemMenuDialog();
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
+                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
                     ToastUtil.success(mContext, "关注成功", Toast.LENGTH_SHORT);
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
@@ -200,7 +203,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                 dismissMoodListItemMenuDialog();
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
+                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
                     ToastUtil.success(mContext, "添加收藏成功", Toast.LENGTH_SHORT);
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
@@ -209,7 +212,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                 dismissMoodListItemMenuDialog();
 
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
+                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
                     ToastUtil.success(mContext, "删除心情成功", Toast.LENGTH_SHORT);
                     List<MoodBean> tempList = new ArrayList<>();
                     for(int i = 0;i < mMoodBeans.size(); i++){
@@ -228,10 +231,34 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
             }else  if(type == TaskType.FANYI) { //翻译
                 dismissMoodListItemMenuDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
+                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
                     showFanyiDialog(jsonObject.getString("message"));
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
+                }
+                dismissLoadingDialog();
+            }else if(type == TaskType.UPDATE_COMMENT_STATUS){//更新评论状态
+                dismissMoodListItemMenuDialog();
+                JSONObject jsonObject = new JSONObject(String.valueOf(result));
+                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                    ToastUtil.success(mContext, "更新评论状态成功");
+                    boolean canComment = mMoodBeans.get(clickListItemPosition).isCanComment();
+                    mMoodBeans.get(clickListItemPosition).setCanComment(!canComment);
+                    mAdapter.notifyDataSetChanged();
+                }else{
+                    ToastUtil.failure(mContext, "更新评论状态失败:" + jsonObject);
+                }
+                dismissLoadingDialog();
+            }else if(type == TaskType.UPDATE_TRANSMIT_STATUS){//更新转发状态
+                dismissMoodListItemMenuDialog();
+                JSONObject jsonObject = new JSONObject(String.valueOf(result));
+                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                    ToastUtil.failure(mContext, "更新转发状态成功");
+                    boolean canTransmit = mMoodBeans.get(clickListItemPosition).isCanTransmit();
+                    mMoodBeans.get(clickListItemPosition).setCanTransmit(!canTransmit);
+                    mAdapter.notifyDataSetChanged();
+                }else{
+                    ToastUtil.failure(mContext, "更新转发状态失败:" + jsonObject);
                 }
                 dismissLoadingDialog();
             }
@@ -254,10 +281,10 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         try {
-                            ClipboardManager clipboardManager = (ClipboardManager)mContext.getSystemService(getContext().CLIPBOARD_SERVICE);
+                            ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(getContext().CLIPBOARD_SERVICE);
                             clipboardManager.setPrimaryClip(ClipData.newPlainText(null, message));
                             ToastUtil.success(getContext(), "复制成功", Toast.LENGTH_SHORT);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -328,9 +355,9 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
     /**
      * 显示弹出自定义view
      * @param index
-     * @param hasImg
+     * @param mb 操作对象
      */
-    public void showMoodListItemMenuDialog(int index, int createUserId, boolean hasImg){
+    public void showMoodListItemMenuDialog(int index, final MoodBean mb){
         clickListItemPosition = index;
         //判断是否已经存在菜单，存在则把以前的记录取消
         dismissMoodListItemMenuDialog();
@@ -346,12 +373,22 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         menus.add(getStringResource(mContext, R.string.personal_praise));
         menus.add(getStringResource(mContext, R.string.fanyi));
         menus.add(getStringResource(mContext, R.string.copyText));
-        if(hasImg){
+        if(mb.isHasImg()){
             menus.add(getStringResource(mContext, R.string.copyLink));
         }
-        //登录的用户：查看，点赞，复制文字，复制图像链接，删除，
-        if(mPreUid == createUserId){
+        //登录的用户：查看，点赞，复制文字，复制图像链接，删除，是否可以评论，是否可以转发
+        if(BaseApplication.getLoginUserId() == mb.getCreateUserId()){
             menus.add(getStringResource(mContext, R.string.delete));
+            if(mb.isCanComment()){
+                menus.add(getStringResource(mContext, R.string.personal_no_comment));
+            }else{
+                menus.add(getStringResource(mContext, R.string.personal_can_comment));
+            }
+            if(mb.isCanTransmit()){
+                menus.add(getStringResource(mContext, R.string.personal_no_transmit));
+            }else{
+                menus.add(getStringResource(mContext, R.string.personal_can_transmit));
+            }
             //非登录用户：查看, 点赞，复制文字，复制图像链接，屏蔽，举报
         }else{
             menus.add(getStringResource(mContext, R.string.personal_attention));
@@ -427,6 +464,22 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                 }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.fanyi))){
                     CommonHandler.getFanYiRequest(PersonalMoodFragment.this, mMoodBeans.get(clickListItemPosition).getContent());
                     showLoadingDialog("Fanyi", "try best to fanyi......", true);
+                    //设置为不可评论
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_no_comment))){
+                    CommentHandler.updateCommentStatus(PersonalMoodFragment.this, "t_mood", mb.getId(), !mb.isCanComment());
+                    showLoadingDialog("Loading", "try best to update comment status......", true);
+                    //设置为可以评论
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_can_comment))){
+                    CommentHandler.updateCommentStatus(PersonalMoodFragment.this, "t_mood", mb.getId(), !mb.isCanComment());
+                    showLoadingDialog("Loading", "try best to update comment status......", true);
+                    //设置为不可转发
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_no_transmit))){
+                    TransmitHandler.updateTransmitStatus(PersonalMoodFragment.this, "t_mood", mb.getId(), !mb.isCanTransmit());
+                    showLoadingDialog("Loading", "try best to update transmit status......", true);
+                    //设置为可以转发
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_can_transmit))){
+                    TransmitHandler.updateTransmitStatus(PersonalMoodFragment.this, "t_mood", mb.getId(), !mb.isCanTransmit());
+                    showLoadingDialog("Loading", "try best to update transmit status......", true);
                 }
             }
         });

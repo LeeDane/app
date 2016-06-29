@@ -65,4 +65,24 @@ public class TransmitHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_TRANSMIT, listener, requestBean);
     }
+
+    /**
+     * 更新转发状态
+     * @param listener
+     * @param tableName
+     * @param tableId
+     * @param canTransmit
+     */
+    public static void updateTransmitStatus(TaskListener listener, String tableName, int tableId, boolean canTransmit){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("table_name",tableName);
+        params.put("table_id", tableId);
+        params.put("can_transmit", canTransmit);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/transmit_updateTransmitStatus.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_TRANSMIT_STATUS, listener, requestBean);
+    }
 }
