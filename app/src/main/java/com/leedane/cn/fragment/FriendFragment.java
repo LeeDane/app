@@ -45,7 +45,6 @@ public class FriendFragment extends BaseFragment{
 
     //是否是第一次加载
     private boolean isFirstLoading = true;
-    private int type; //0:获取已经跟我成为好友关系的分页列表 1:获取我发送的好友请求列表  2:获取等待我同意的好友关系列表
     private int toUserId;
 
     public FriendFragment(){
@@ -73,13 +72,13 @@ public class FriendFragment extends BaseFragment{
     public void taskFinished(TaskType type, Object result) {
         isLoading = false;
         if(result instanceof Error){
-            if(type == TaskType.LOAD_FRIENDS_PAGING || type == TaskType.LOAD_REQUEST_PAGING || type == TaskType.LOAD_RESPONSE_PAGING && !mPreLoadMethod.equalsIgnoreCase("uploading")){
+            if(type == TaskType.LOAD_FRIENDS_PAGING && !mPreLoadMethod.equalsIgnoreCase("uploading")){
                 mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
         try{
-            if(type == TaskType.LOAD_FRIENDS_PAGING || type == TaskType.LOAD_REQUEST_PAGING || type == TaskType.LOAD_RESPONSE_PAGING){
+            if(type == TaskType.LOAD_FRIENDS_PAGING){
                 mSwipeLayout.setRefreshing(false);
                 HttpResponseFriendBean responseFriendBean = BeanConvertUtil.strConvertToFriendBeans(String.valueOf(result));
                 if(responseFriendBean != null && responseFriendBean.isSuccess()){
@@ -162,15 +161,7 @@ public class FriendFragment extends BaseFragment{
         params.put("pageSize", MySettingConfigUtil.getFirstLoad());
         params.put("method", mPreLoadMethod);
         taskCanceled(TaskType.LOAD_FRIENDS_PAGING);
-        taskCanceled(TaskType.LOAD_REQUEST_PAGING);
-        taskCanceled(TaskType.LOAD_RESPONSE_PAGING);
-        if(type == 0) {
-            FriendHandler.sendFriendsPaging(FriendFragment.this, params);
-        }else if(type == 1) {
-            FriendHandler.sendRequestPaging(FriendFragment.this, params);
-        }else if(type ==2){
-            FriendHandler.sendResponsePaging(FriendFragment.this, params);
-        }
+        FriendHandler.sendFriendsPaging(FriendFragment.this, params);
     }
 
     /**
@@ -191,13 +182,7 @@ public class FriendFragment extends BaseFragment{
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         taskCanceled(TaskType.LOAD_FRIENDS_PAGING);
-        taskCanceled(TaskType.LOAD_REQUEST_PAGING);
-        taskCanceled(TaskType.LOAD_RESPONSE_PAGING);
-        if(type == 0) {
-            FriendHandler.sendFriendsPaging(FriendFragment.this, params);
-        }else if(type == 1) {
-            FriendHandler.sendNotYetRequestPaging(FriendFragment.this, params);
-        }
+        FriendHandler.sendFriendsPaging(FriendFragment.this, params);
     }
     /**
      * 发送向下刷新的任务
@@ -222,15 +207,7 @@ public class FriendFragment extends BaseFragment{
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         taskCanceled(TaskType.LOAD_FRIENDS_PAGING);
-        taskCanceled(TaskType.LOAD_REQUEST_PAGING);
-        taskCanceled(TaskType.LOAD_RESPONSE_PAGING);
-        if(type == 0) {
-            FriendHandler.sendFriendsPaging(FriendFragment.this, params);
-        }else if(type == 1) {
-            FriendHandler.sendRequestPaging(FriendFragment.this, params);
-        }else if(type ==2){
-            FriendHandler.sendResponsePaging(FriendFragment.this, params);
-        }
+        FriendHandler.sendFriendsPaging(FriendFragment.this, params);
     }
 
     /**
@@ -250,16 +227,7 @@ public class FriendFragment extends BaseFragment{
             params.put("method", mPreLoadMethod);
             params.put("toUserId", toUserId);
             mListViewFooter.setText(getStringResource(mContext, R.string.loading));
-            taskCanceled(TaskType.LOAD_FRIENDS_PAGING);
-            taskCanceled(TaskType.LOAD_REQUEST_PAGING);
-            taskCanceled(TaskType.LOAD_RESPONSE_PAGING);
-            if(type == 0) {
-                FriendHandler.sendFriendsPaging(FriendFragment.this, params);
-            }else if(type == 1) {
-                FriendHandler.sendRequestPaging(FriendFragment.this, params);
-            }else if(type ==2){
-                FriendHandler.sendResponsePaging(FriendFragment.this, params);
-            }
+            FriendHandler.sendFriendsPaging(FriendFragment.this, params);
         }
     }
     @Override
@@ -268,7 +236,6 @@ public class FriendFragment extends BaseFragment{
         Bundle bundle = getArguments();
         if(bundle != null){
             this.itemSingleClick = true;
-            this.type = bundle.getInt("type");
             this.toUserId = BaseApplication.getLoginUserId();
         }
         if(mContext == null)

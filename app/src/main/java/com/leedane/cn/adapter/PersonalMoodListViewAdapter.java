@@ -137,7 +137,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         //设置字体
         //mSpanTitle.setSpan(new TypefaceSpan("monospace"), 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        viewHolder.getmContent().setText("  "+ content, TextView.BufferType.SPANNABLE);
+        viewHolder.getmContent().setText(content, TextView.BufferType.SPANNABLE);
         viewHolder.getmFroms().setText("来自："+moodBean.getFroms());
         String createTime = moodBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
@@ -177,7 +177,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             String[] showImages = imgs.split(",");
             for(String img: showImages){
                 //拿到图像的路径后再去回去base64位的图像字符串填充到相应的ImageView
-                ImageCacheManager.loadImage(img, viewHolder.getmImgMain(), 100 , 50);
+                ImageCacheManager.loadImage(img, viewHolder.getmImgMain(), 80 , 100);
             }
 
             viewHolder.getmImgMain().setOnClickListener(new View.OnClickListener() {

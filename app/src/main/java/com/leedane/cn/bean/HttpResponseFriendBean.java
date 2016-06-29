@@ -1,5 +1,7 @@
 package com.leedane.cn.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -9,6 +11,7 @@ import java.util.List;
 public class HttpResponseFriendBean {
     private boolean isSuccess;
     private List<FriendBean> message;
+    @SerializedName("responseCode")
     private int code;
 
     public boolean isSuccess() {

@@ -29,6 +29,7 @@
     <string name="load_more">点击加载更多</string>
     <string name="load_finish">数据加载完成</string>
     <string name="no_load_more">没有更多数据</string>
+    <string name="click_to_load">点击重试</string>
     <string name="load_more_error">加载失败,点击重新加载</string>
     <string name="submit">提交</string>
     <string name="copyText">复制文字</string>

@@ -62,8 +62,6 @@ public enum TaskType {
     GET_APP_VERSION, //检查APP版本
     LOAD_FRIENDS_PAGING, //获取已经跟我成为好友关系的分页列表
     LOAD_NOT_YET_FRIENDS_PAGING, //获取暂时未跟我成为好友关系的分页列表
-    LOAD_REQUEST_PAGING, //获取我发送的好友请求列表
-    LOAD_RESPONSE_PAGING, //获取等待我同意的好友关系列表
     LOAD_NOTIFICATION,  //获取通知列表
     LOAD_USER_INFO_DATA, //加载用户的基本数据
     LOAD_USER_FRIENS, //加载用户的好友列表

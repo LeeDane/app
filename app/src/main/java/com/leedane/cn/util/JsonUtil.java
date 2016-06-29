@@ -1,6 +1,7 @@
 package com.leedane.cn.util;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -39,6 +40,22 @@ public class JsonUtil {
         }
         return obj;
     }
+
+    /**
+     * 从异常在获取信息
+     * @param result
+     * @return
+     */
+    public static String getErrorMessage(Object result){
+        String error = null;
+        try{
+            error = EnumUtil.getResponseValue(new JSONObject(StringUtil.changeNotNull(result)).getInt("responseCode"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return StringUtil.isNull(error) ? "网络异常" : error;
+    }
+
 
 
 }

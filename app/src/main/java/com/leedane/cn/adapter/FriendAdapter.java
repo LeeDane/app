@@ -66,13 +66,17 @@ public class FriendAdapter extends BaseAdapter{
         if(StringUtil.isNotNull(friendBean.getUserPicPath()))
             ImageCacheManager.loadImage(friendBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);
 
-        viewHolder.getmAccount().setText(StringUtil.changeNotNull(friendBean.getAccount()) + (StringUtil.isNotNull(friendBean.getRemark())? "(" + friendBean.getRemark() + ")" : ""));
-
+        if(StringUtil.isNotNull(friendBean.getAccount()) && !friendBean.getAccount().equals(friendBean.getRemark())){
+            viewHolder.getmAccount().setText(friendBean.getAccount() + (StringUtil.isNotNull(friendBean.getRemark())? "(" + friendBean.getRemark() + ")" : ""));
+        }else{
+            viewHolder.getmAccount().setText(StringUtil.changeNotNull(friendBean.getRemark()));
+        }
         if(StringUtil.isNotNull(friendBean.getCreateTime()))
             viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(friendBean.getCreateTime())));
         else
             viewHolder.getmTime().setText("");
         viewHolder.getmIntroduce().setText(StringUtil.changeNotNull(friendBean.getIntroduce()));
+        viewHolder.getmOperate().setText(mContext.getString(R.string.personal_no_friend));
         viewHolder.getmOperate().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
