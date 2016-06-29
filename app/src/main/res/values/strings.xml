@@ -124,10 +124,10 @@
     <string name="personal_info">基本信息</string>
     <string name="personal_shielding">屏蔽</string>
     <string name="personal_report">举报</string>
-    <string name="personal_can_comment">设置可以评论</string>
-    <string name="personal_no_comment">设置不可评论</string>
-    <string name="personal_can_transmit">设置可以转发</string>
-    <string name="personal_no_transmit">设置不可转发</string>
+    <string name="personal_can_comment">设置可以评论(启用)</string>
+    <string name="personal_no_comment">设置不可评论(禁用)</string>
+    <string name="personal_can_transmit">设置可以转发(启用)</string>
+    <string name="personal_no_transmit">设置不可转发(禁用)</string>
 
     <!--  更新用户头像  -->
     <string name="update_header">更换头像</string>

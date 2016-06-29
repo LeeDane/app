@@ -263,18 +263,6 @@ public class MoodActivity extends BaseActivity {
 
             mCanComment = (CheckBox)findViewById(R.id.mood_can_comment);
             mCanTransmit = (CheckBox)findViewById(R.id.mood_can_transmit);
-            mCanComment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    ToastUtil.success(MoodActivity.this, "点：" + mCanComment.isChecked());
-                }
-            });
-            mCanTransmit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                }
-            });
         }else{
             mOperate.setVisibility(View.GONE);
             mOldMood = (TextView)findViewById(R.id.mood_show_old);

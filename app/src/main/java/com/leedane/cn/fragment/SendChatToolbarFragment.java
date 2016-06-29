@@ -3,14 +3,17 @@ package com.leedane.cn.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -102,22 +105,37 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
         this.mContentText = (EditText) mRootView.findViewById(R.id.mood_detail_comment_or_transmit_text);
         this.mContentSend = (ImageView)mRootView.findViewById(R.id.mood_detail_comment_or_transmit_send);
         mContentSend.setOnClickListener(this);
+        this.mContentText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    goSend();
+                }
+                return false;
+            }
+        });
     }
 
+    /**
+     * 执行发送指令
+     */
+    private void goSend(){
+        String contentText = mContentText.getText().toString();
+        if(StringUtil.isNull(contentText)){
+            ToastUtil.failure(mContext, "聊天内容不能为空", Toast.LENGTH_SHORT);
+            return;
+        }
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("toUserId", toUserId);
+        params.put("content", contentText);
+        params.put("type", 0);
+        ChatDetailHandler.sendChatDetail(SendChatToolbarFragment.this, params);
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.mood_detail_comment_or_transmit_send:
-                String contentText = mContentText.getText().toString();
-                if(StringUtil.isNull(contentText)){
-                    ToastUtil.failure(mContext, "聊天内容不能为空", Toast.LENGTH_SHORT);
-                    return;
-                }
-                HashMap<String, Object> params = new HashMap<>();
-                params.put("toUserId", toUserId);
-                params.put("content", contentText);
-                params.put("type", 0);
-                ChatDetailHandler.sendChatDetail(SendChatToolbarFragment.this, params);
+                goSend();
                 break;
         }
     }

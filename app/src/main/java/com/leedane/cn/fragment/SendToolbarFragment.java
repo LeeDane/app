@@ -4,14 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.activity.MoodDetailActivity;
@@ -112,35 +115,51 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
         this.mContentText = (EditText) mRootView.findViewById(R.id.mood_detail_comment_or_transmit_text);
         this.mContentSend = (ImageView)mRootView.findViewById(R.id.mood_detail_comment_or_transmit_send);
         mContentSend.setOnClickListener(this);
+        this.mContentText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    goSend();
+                }
+                return false;
+            }
+        });
+    }
+
+    /**
+     * 执行发送指令
+     */
+    private void goSend(){
+        String commentOrTransmitText = mContentText.getText().toString();
+        if(StringUtil.isNull(commentOrTransmitText) && commentOrTransmit == 0){
+            ToastUtil.failure(mContext, "评论内容不能为空", Toast.LENGTH_SHORT);
+            return;
+        }
+        HashMap<String, Object> params = new HashMap<>();
+        if(commentOrTransmit == 0){
+            showLoadingDialog("Comment", "try to commeting...", true);
+            params.put("content", commentOrTransmitText);
+            params.put("table_name", "t_mood");
+            params.put("table_id", mid);
+            params.put("level", 1);
+            if(itemClickPosition > 0 && commentOrTransmitBean != null)
+                params.put("pid", commentOrTransmitBean.getId());
+            CommentHandler.sendComment(SendToolbarFragment.this, params);
+        }else{
+            showLoadingDialog("Transmit", "try to transmiting...", true);
+            params.put("content", StringUtil.isNull(commentOrTransmitText)? "转发了这条心情" :commentOrTransmitText);
+            params.put("table_name", "t_mood");
+            params.put("table_id", mid);
+            TransmitHandler.sendTransmit(this, params);
+        }
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.mood_detail_comment_or_transmit_send:
-                String commentOrTransmitText = mContentText.getText().toString();
-                if(StringUtil.isNull(commentOrTransmitText) && commentOrTransmit == 0){
-                    ToastUtil.failure(mContext, "评论内容不能为空", Toast.LENGTH_SHORT);
-                    return;
-                }
-                HashMap<String, Object> params = new HashMap<>();
-                if(commentOrTransmit == 0){
-                    showLoadingDialog("Comment", "try to commeting...", true);
-                    params.put("content", commentOrTransmitText);
-                    params.put("table_name", "t_mood");
-                    params.put("table_id", mid);
-                    params.put("level", 1);
-                    if(itemClickPosition > 0 && commentOrTransmitBean != null)
-                        params.put("pid", commentOrTransmitBean.getId());
-                    CommentHandler.sendComment(SendToolbarFragment.this, params);
-                }else{
-                    showLoadingDialog("Transmit", "try to transmiting...", true);
-                    params.put("content", StringUtil.isNull(commentOrTransmitText)? "转发了这条心情" :commentOrTransmitText);
-                    params.put("table_name", "t_mood");
-                    params.put("table_id", mid);
-                    TransmitHandler.sendTransmit(this, params);
-                }
-
+                goSend();
                 break;
         }
     }
