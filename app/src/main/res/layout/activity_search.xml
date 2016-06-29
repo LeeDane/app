@@ -19,6 +19,7 @@
             android:layout_width="200dp"
             android:layout_height="match_parent"
             android:singleLine="true"
+            android:imeOptions="actionSearch"
             android:hint="@string/search_key_hint"/>
         <Button
             android:id="@+id/do_search"

@@ -1,12 +1,15 @@
 package com.leedane.cn.activity;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
@@ -77,6 +80,16 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
         mSearchGo = (Button)findViewById(R.id.do_search);
         mSearchGo.setOnClickListener(this);
 
+        mSearchKey.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    goSearch();
+                }
+                return false;
+            }
+        });
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, types);
         mSearchType.setAdapter(arrayAdapter);
         mSearchType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -92,6 +105,37 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
         });
     }
 
+    /**
+     * 执行搜索操作
+     */
+    public void goSearch(){
+        String key = mSearchKey.getText().toString();
+        if(StringUtil.isNull(key)){
+            ToastUtil.failure(SearchActivity.this, "请先输入搜索内容");
+            mSearchKey.setSelected(true);
+            return;
+        }
+        ToastUtil.failure(SearchActivity.this, "类型："+selectType);
+        SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(SearchActivity.this);
+        SearchHistoryBean searchHistoryBean = new SearchHistoryBean();
+        searchHistoryBean.setCreateTime(DateUtil.DateToString(new Date()));
+        searchHistoryBean.setSearchType(selectType);
+        searchHistoryBean.setSearchKey(key);
+        searchHistoryDataBase.insert(searchHistoryBean);
+        searchHistoryDataBase.destroy();
+        Bundle bundle = new Bundle();
+        bundle.putString("searchKey", key);
+        if(selectType.equalsIgnoreCase("用户名")){//搜索用户
+            SearchUserFragment searchUserFragment = SearchUserFragment.newInstance(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchUserFragment).commit();
+        }else if(selectType.equalsIgnoreCase("博客")){//搜索博客
+            SearchBlogFragment searchBlogFragment = SearchBlogFragment.newInstance(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchBlogFragment).commit();
+        }else if(selectType.equalsIgnoreCase("心情")){//搜索心情
+            SearchMoodFragment searchMoodFragment = SearchMoodFragment.newInstance(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchMoodFragment).commit();
+        }
+    }
     @Override
     public void taskFinished(TaskType type, Object result) {
         super.taskFinished(type, result);
@@ -108,33 +152,7 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
         super.onClick(v);
         switch (v.getId()){
             case R.id.do_search:
-
-                String key = mSearchKey.getText().toString();
-                if(StringUtil.isNull(key)){
-                    ToastUtil.failure(SearchActivity.this, "请先输入搜索内容");
-                    mSearchKey.setSelected(true);
-                    return;
-                }
-                ToastUtil.failure(SearchActivity.this, "类型："+selectType);
-                SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(SearchActivity.this);
-                SearchHistoryBean searchHistoryBean = new SearchHistoryBean();
-                searchHistoryBean.setCreateTime(DateUtil.DateToString(new Date()));
-                searchHistoryBean.setSearchType(selectType);
-                searchHistoryBean.setSearchKey(key);
-                searchHistoryDataBase.insert(searchHistoryBean);
-                searchHistoryDataBase.destroy();
-                Bundle bundle = new Bundle();
-                bundle.putString("searchKey", key);
-                if(selectType.equalsIgnoreCase("用户名")){//搜索用户
-                    SearchUserFragment searchUserFragment = SearchUserFragment.newInstance(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchUserFragment).commit();
-                }else if(selectType.equalsIgnoreCase("博客")){//搜索博客
-                    SearchBlogFragment searchBlogFragment = SearchBlogFragment.newInstance(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchBlogFragment).commit();
-                }else if(selectType.equalsIgnoreCase("心情")){//搜索心情
-                    SearchMoodFragment searchMoodFragment = SearchMoodFragment.newInstance(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchMoodFragment).commit();
-                }
+                goSearch();
                 break;
         }
     }
