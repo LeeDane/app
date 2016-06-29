@@ -11,5 +11,11 @@
         android:src="@drawable/error_cat"
         android:layout_gravity="center_horizontal"
         android:gravity="center"/>
-
+    <!--<uk.co.senab.photoview.PhotoView
+        android:id="@+id/image_detail_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/error_cat"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"/>-->
 </LinearLayout>

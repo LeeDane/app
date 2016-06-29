@@ -17,9 +17,14 @@ import com.leedane.cn.task.NetworkImageLoader;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.volley.ImageCacheManager;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * 多图像详情的frament类
@@ -91,6 +96,22 @@ public class ImageDetailFragment extends Fragment{
            //ImageCacheManager.loadImage(currentImageUrl, (ImageView) getView().findViewById(R.id.image_detail_imageview), width, height);
             SubsamplingScaleImageView imageView = (SubsamplingScaleImageView)getView().findViewById(R.id.image_detail_imageview);
             ImageCacheManager.loadImage(currentImageUrl, imageView, width, height);
+
+            /*PhotoView photoView = (PhotoView )getView().findViewById(R.id.image_detail_imageview);
+            final PhotoViewAttacher attacher = new PhotoViewAttacher(photoView);
+
+            Picasso.with(mContext)
+                    .load(currentImageUrl)
+                    .into(photoView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            attacher.update();
+                        }
+
+                        @Override
+                        public void onError() {
+                        }
+                    });*/
         }else{
             Map<String, Object> map = new HashMap<>();
 
