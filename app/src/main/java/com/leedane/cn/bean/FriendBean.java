@@ -9,22 +9,17 @@ import com.leedane.cn.bean.base.StatusBean;
  */
 public class FriendBean extends StatusBean{
 
-    //状态：0:请求好友，1:正式好友，2：已经删除的好友，3：黑名单好友
+    //状态：0:请求好友，1:正式好友，2：已经删除的好友，3：黑名单好友， 4、等待我同意添加(跟0是对应的，只用于展示)， 5、对方已经拒绝
     private static final long serialVersionUID = 1L;
-
-    @SerializedName("fid")
     private int fid;  //用户ID
     @SerializedName("user_pic_path")
     private String userPicPath; //朋友头像
 
-    @SerializedName("accout")
     private String account;  //用户名
 
     private String remark;//备注
 
     private String introduce;//介绍信息
-
-
     /**
      * 创建时间
      */

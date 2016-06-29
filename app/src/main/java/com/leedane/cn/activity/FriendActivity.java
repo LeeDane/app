@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.fragment.FriendFragment;
+import com.leedane.cn.fragment.FriendNotYetFragment;
 
 /**
  * 我的好友Activity
@@ -45,14 +46,17 @@ public class FriendActivity extends BaseActivity {
         viewPager = (ViewPager) findViewById(R.id.vp_viewpager);
         tl = (TabLayout) findViewById(R.id.tl_tabs);
 
-        mTitles = new String[]{getStringResource(R.string.my_friends), getStringResource(R.string.my_add_friends), getStringResource(R.string.add_my_friends)};
+        mTitles = new String[]{getStringResource(R.string.my_friends), getStringResource(R.string.no_friends)};
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 Bundle bundle = new Bundle();
-                bundle.putInt("type", position);
-                return FriendFragment.newInstance(bundle);
+                if(position == 0){
+                    return FriendFragment.newInstance(bundle);
+                }else{
+                    return FriendNotYetFragment.newInstance(bundle);
+                }
             }
 
             @Override

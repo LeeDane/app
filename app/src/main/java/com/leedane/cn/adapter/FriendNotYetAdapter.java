@@ -50,28 +50,36 @@ public class FriendNotYetAdapter extends BaseAdapter{
         final FriendBean friendBean = mFriendBeans.get(position);
         ViewHolder viewHolder;
         if(view == null){
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_friend_listview, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_friend_no_yet_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmUserPic((ImageView) view.findViewById(R.id.friend_user_pic));
-            viewHolder.setmAccount((TextView) view.findViewById(R.id.friend_user_name));
-            viewHolder.setmTime((TextView) view.findViewById(R.id.friend_time));
-            TextView introduce = (TextView)view.findViewById(R.id.friend_introduce);
+            viewHolder.setmUserPic((ImageView) view.findViewById(R.id.friend_no_yet_user_pic));
+            viewHolder.setmAccount((TextView) view.findViewById(R.id.friend_no_yet_user_name));
+            viewHolder.setmTime((TextView) view.findViewById(R.id.friend_no_yet_time));
+            TextView introduce = (TextView)view.findViewById(R.id.friend_no_yet_introduce);
             introduce.setSelected(true);
             viewHolder.setmIntroduce(introduce);
-            viewHolder.setmOperate((TextView) view.findViewById(R.id.friend_operate));
+            viewHolder.setmOperate((TextView) view.findViewById(R.id.friend_no_yet_operate));
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
         if(StringUtil.isNotNull(friendBean.getUserPicPath()))
             ImageCacheManager.loadImage(friendBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);
-
-        viewHolder.getmAccount().setText(StringUtil.changeNotNull(friendBean.getAccount()) + (StringUtil.isNotNull(friendBean.getRemark())? "(" + friendBean.getRemark() + ")" : ""));
-
+        if(StringUtil.isNotNull(friendBean.getAccount()) && !friendBean.getAccount().equals(friendBean.getRemark())){
+            viewHolder.getmAccount().setText(friendBean.getAccount() + (StringUtil.isNotNull(friendBean.getRemark())? "(" + friendBean.getRemark() + ")" : ""));
+        }else{
+            viewHolder.getmAccount().setText(StringUtil.changeNotNull(friendBean.getRemark()));
+        }
         if(StringUtil.isNotNull(friendBean.getCreateTime()))
             viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(friendBean.getCreateTime())));
         else
             viewHolder.getmTime().setText("");
         viewHolder.getmIntroduce().setText(StringUtil.changeNotNull(friendBean.getIntroduce()));
+
+        if(friendBean.getStatus() == 0){
+            viewHolder.getmOperate().setText("等待确认");
+        }else{
+            viewHolder.getmOperate().setText("同意添加");
+        }
         viewHolder.getmOperate().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

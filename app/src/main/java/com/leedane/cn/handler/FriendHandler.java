@@ -95,7 +95,7 @@ public class FriendHandler {
      * @param listener
      * @param params
      */
-    public static void sendNotYetRequestPaging(TaskListener listener, Map<String, Object> params){
+    public static void sendNotYetFriendsPaging(TaskListener listener, Map<String, Object> params){
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
@@ -103,35 +103,6 @@ public class FriendHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_NOT_YET_FRIENDS_PAGING, listener, requestBean);
     }
-
-    /**
-     * 获取我发送的好友请求列表
-     * @param listener
-     * @param params
-     */
-    public static void sendRequestPaging(TaskListener listener, Map<String, Object> params){
-        HttpRequestBean requestBean = new HttpRequestBean();
-        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/friend_requestPaging.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_REQUEST_PAGING, listener, requestBean);
-    }
-
-    /**
-     * 获取等待我同意的好友关系列表
-     * @param listener
-     * @param params
-     */
-    public static void sendResponsePaging(TaskListener listener, Map<String, Object> params){
-        HttpRequestBean requestBean = new HttpRequestBean();
-        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/friend_responsePaging.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_RESPONSE_PAGING, listener, requestBean);
-    }
-
     /**
      * 获取登录用户的全部好友信息
      * @param listener
