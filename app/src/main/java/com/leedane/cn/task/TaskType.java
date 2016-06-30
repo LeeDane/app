@@ -19,6 +19,7 @@ public enum TaskType {
     IS_FRIEND,   //判断是否是朋友
     IS_FAN,   //判断是否粉他或她
     ADD_FRIEND,   //加好友
+    AGREE_FRIEND, //同意添加好友
     ADD_FAN,  //成为他/她的粉丝
     IS_SIGN_IN, //判断是否签到
     DO_SIGN_IN, //签到
@@ -66,6 +67,7 @@ public enum TaskType {
     LOAD_USER_INFO_DATA, //加载用户的基本数据
     LOAD_USER_FRIENS, //加载用户的好友列表
     LOAD_HEAD_PATH, //加载用户新头像
+    LOAD_NO_READ_CHAT, //加载未读的聊天记录
     CANCEL_FAN, //不再成为TA的粉丝
     CANCEL_FRIEND, //解除好友关系
     DELETE_COMMENT, //删除评论

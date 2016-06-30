@@ -454,6 +454,12 @@
             </intent-filter>
         </service>
 
+        <service android:name="com.leedane.cn.service.LoadNoReadChatService">
+            <intent-filter>
+                <action android:name="com.leedane.cn.LoadNoReadChatService"></action>
+            </intent-filter>
+        </service>
+
         <service android:name="com.leedane.cn.service.LoadUserFriendService">
             <intent-filter>
                 <action android:name="com.leedane.cn.LoadUserFriendService"></action>

@@ -121,7 +121,7 @@ public class ChatDataBase {
     public void deleteByUser(int userId) {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("delete from " + CHAT_TABLE_NAME + " where create_user_id=?");
-        sqlite.execSQL(sql, new Integer[] { userId });
+        sqlite.execSQL(sql, new Integer[]{userId});
         sqlite.close();
     }
 
@@ -153,6 +153,21 @@ public class ChatDataBase {
                         data.getCreateUserId() +"", data.getCreateTime(),
                         read +"", data.getId() + "" });
         sqlite.close();
+    }
+
+    /**
+     * 将对应用户的聊天记录全部未读状态改为已读
+     * @param toUserId
+     */
+    public void updateAllForRead(int toUserId) {
+
+        List<ChatDetailBean> chatDetailBeans = query("where read=0 and create_user_id="+toUserId);
+        if(chatDetailBeans != null && chatDetailBeans.size() > 0){
+            for(ChatDetailBean chatDetailBean: chatDetailBeans){
+                chatDetailBean.setRead(true);
+                update(chatDetailBean);
+            }
+        }
     }
 
     public List<ChatDetailBean> query() {

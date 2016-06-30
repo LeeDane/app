@@ -32,6 +32,7 @@ public class ChatBean extends IdBean {
 	/**
 	 * 是否读取(0：未读，1：已读)
 	 */
+	@SerializedName("is_read")
 	private int read;
 	/**
 	 * 未读取数量

@@ -202,6 +202,14 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         mListViewHeader = (TextView)viewHeader.findViewById(R.id.listview_header_reLoad);
         mListViewHeader.setText(getStringResource(R.string.loading));
         mListViewHeader.setOnClickListener(this);//添加点击事件
+
+        //启动异步线程去更新所有的为已读
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dataBase.updateAllForRead(toUserId);
+            }
+        }).start();
     }
 
     @Override

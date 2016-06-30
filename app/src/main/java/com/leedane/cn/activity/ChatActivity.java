@@ -25,6 +25,8 @@ import com.leedane.cn.database.BaseSQLiteDatabase;
 import com.leedane.cn.fragment.ChatContactFragment;
 import com.leedane.cn.fragment.ChatHomeFragment;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.service.LoadNoReadChatService;
+import com.leedane.cn.service.LoadUserInfoDataService;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ToastUtil;
 
@@ -88,6 +90,16 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
         mFragments.add(chatHomeFragment);
         mFragments.add(contactFragment);
         mFragments.add(null);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Intent it_service = new Intent();
+                it_service.setClass(getApplicationContext(), LoadNoReadChatService.class);
+                it_service.setAction("com.leedane.cn.LoadNoReadChatService");
+                it_service.putExtra("toUserId", BaseApplication.getLoginUserId());
+                getApplicationContext().startService(it_service);
+            }
+        }).start();
     }
     /**
      * 初始化控件

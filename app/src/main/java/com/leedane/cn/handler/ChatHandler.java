@@ -2,10 +2,14 @@ package com.leedane.cn.handler;
 
 import android.content.Context;
 
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatBean;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.task.TaskListener;
+import com.leedane.cn.task.TaskLoader;
+import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 
 import java.util.ArrayList;
@@ -59,5 +63,19 @@ public class ChatHandler {
         chatBean1.setCreateTime(DateUtil.DateToString(new Date()));
         chatBeans.add(chatBean1);
         return chatBeans;
+    }
+
+    /**
+     * 加载未读的列表
+     * @param listener
+     */
+    public static void loadNoReadChat(TaskListener listener){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/chat_noReadList.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_NO_READ_CHAT, listener, requestBean);
     }
 }
