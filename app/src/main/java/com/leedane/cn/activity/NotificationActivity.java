@@ -32,7 +32,7 @@ public class NotificationActivity extends BaseActivity {
             startActivity(it);
             finish();
         }
-        setContentView(R.layout.activity_fan);
+        setContentView(R.layout.activity_notification);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.message);
         backLayoutVisible();
