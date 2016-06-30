@@ -71,7 +71,7 @@ public class NotificationAdapter extends BaseAdapter{
         viewHolder.getmUserInfo().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonHandler.startPersonalActivity(mContext, notificationBean.getToUserId());
+                CommonHandler.startPersonalActivity(mContext, notificationBean.getFromUserId());
             }
         });
         if(StringUtil.isNotNull(notificationBean.getToUserPicPath())){
@@ -79,7 +79,7 @@ public class NotificationAdapter extends BaseAdapter{
             viewHolder.getmUserPic().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CommonHandler.startPersonalActivity(mContext, notificationBean.getToUserId());
+                    CommonHandler.startPersonalActivity(mContext, notificationBean.getFromUserId());
                 }
             });
         }else{
