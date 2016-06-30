@@ -6,16 +6,15 @@
     android:paddingTop="@dimen/default_padding">
     <LinearLayout
         android:id="@+id/comment_user_info"
-        android:layout_width="50dp"
+        android:layout_width="65dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_marginRight="5dp"
         android:visibility="gone"
         android:orientation="vertical">
         <com.leedane.cn.customview.CircularImageView
             android:id="@+id/comment_user_pic"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:src="@drawable/no_pic"/>
         <TextView
             android:id="@+id/comment_user_name"
@@ -23,7 +22,6 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:ellipsize="end"
-            android:textSize="12sp"
             android:layout_marginTop="@dimen/default_5dp"
             android:textColor="@color/blueAccountLink"
             android:text="@string/default_time"/>
