@@ -235,4 +235,24 @@ public class CommonHandler {
         requestBean.setServerMethod("leedane/tool_fanyi.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.FANYI, listener, requestBean);
     }
+
+    /**
+     * 发送电子邮件
+     * @param listener
+     * @param toUserId  接收邮件的用户的Id，必须
+     * @param content  邮件的内容，必须
+     * @param object  邮件的标题，必须
+     */
+    public static void sendEmail(TaskListener listener, int toUserId, String content, String object){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("to_user_id",toUserId);
+        params.put("content", content);
+        params.put("object", object);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/tool_sendEmail.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.SEND_EMAIL, listener, requestBean);
+    }
 }

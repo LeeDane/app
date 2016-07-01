@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,17 @@ import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.FriendBean;
+import com.leedane.cn.handler.FriendHandler;
+import com.leedane.cn.task.TaskListener;
+import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -76,16 +83,11 @@ public class FriendNotYetAdapter extends BaseAdapter{
         viewHolder.getmIntroduce().setText(StringUtil.changeNotNull(friendBean.getIntroduce()));
 
         if(friendBean.getStatus() == 0){
-            viewHolder.getmOperate().setText("等待确认");
-        }else{
             viewHolder.getmOperate().setText("同意添加");
+        }else{
+            viewHolder.getmOperate().setText("发送邮件提醒TA");
         }
-        viewHolder.getmOperate().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToastUtil.success(mContext, "点击啦:"+friendBean.getStatus());
-            }
-        });
+
         return view;
     }
 

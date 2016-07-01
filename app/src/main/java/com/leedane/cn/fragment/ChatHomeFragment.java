@@ -225,9 +225,9 @@ public class ChatHomeFragment extends Fragment implements TaskListener
                 //删除
                 if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.delete))){
                     if(ChatHandler.deleteLocalChat(mContext, mChatBeans.get(index).getToUserId())){
-                        ToastUtil.success(mContext, "本地聊天记录删除成功");
                         mChatBeans.remove(index);
                         mAdapter.notifyDataSetChanged();
+                        ToastUtil.success(mContext, "本地聊天记录删除成功");
                     }else{
                         ToastUtil.success(mContext, "本地聊天记录删除失败");
                     }

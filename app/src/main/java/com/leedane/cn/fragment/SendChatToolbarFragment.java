@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ChatDetailBean;
 import com.leedane.cn.handler.ChatDetailHandler;
@@ -95,9 +96,6 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
         if(mContext == null)
             mContext = getActivity();
 
-        if(mContext == null)
-            mContext = getActivity();
-
         mKeyboardHelper = new SoftKeyboardStateHelper(getActivity().getWindow()
                 .getDecorView());
         mKeyboardHelper.addSoftKeyboardStateListener(this);
@@ -130,6 +128,7 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
         params.put("content", contentText);
         params.put("type", 0);
         ChatDetailHandler.sendChatDetail(SendChatToolbarFragment.this, params);
+        ((ChatDetailActivity)getActivity()).showLoadingDialog("Chat", "try best to loading...");
     }
     @Override
     public void onClick(View v) {

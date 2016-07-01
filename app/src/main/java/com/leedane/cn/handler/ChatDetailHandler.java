@@ -59,4 +59,20 @@ public class ChatDetailHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_CHAT, listener, requestBean);
     }
+
+    /**
+     * 更新聊天状态为已读
+     * @param listener
+     * @param chatIds
+     */
+    public static void updateRead(TaskListener listener, String chatIds){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        Map<String, Object> params = new HashMap<>();
+        params.put("cids", chatIds);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/chat_updateRead.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_CHAT_READ_STATUS, listener, requestBean);
+    }
 }

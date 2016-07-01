@@ -50,18 +50,16 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:text="@string/no_text"/>
     </LinearLayout>
-    <TextView
+    <Button
         android:id="@+id/friend_no_yet_operate"
-        android:layout_width="80dp"
-        android:layout_height="45dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:background="@drawable/btn_login_seletorbg"
-        android:clickable="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:enabled="false"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/personal_add_friend"
-        android:textColor="#000"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:textSize="17dp" />
+        android:textSize="@dimen/default_16sp" />
 </LinearLayout>

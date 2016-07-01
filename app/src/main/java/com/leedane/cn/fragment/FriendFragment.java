@@ -1,6 +1,8 @@
 package com.leedane.cn.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -12,16 +14,27 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.leedane.cn.adapter.FriendAdapter;
+import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.FriendBean;
 import com.leedane.cn.bean.HttpResponseFriendBean;
+import com.leedane.cn.bean.HttpResponseMyFriendsBean;
+import com.leedane.cn.bean.MyFriendsBean;
+import com.leedane.cn.database.ChatDataBase;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.FriendHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
+import com.leedane.cn.util.SharedPreferenceUtil;
+import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +59,8 @@ public class FriendFragment extends BaseFragment{
     //是否是第一次加载
     private boolean isFirstLoading = true;
     private int toUserId;
+
+    private int clickListItemPosition;
 
     public FriendFragment(){
     }
@@ -143,8 +158,41 @@ public class FriendFragment extends BaseFragment{
                         mListViewFooter.setOnClickListener(this);
                     }
                 }
-            }else{
-                ToastUtil.failure(mContext, "数据加载失败", Toast.LENGTH_SHORT);
+            }else if(type == TaskType.CANCEL_FRIEND){
+                dismissLoadingDialog();
+                JSONObject jsonObject = new JSONObject(String.valueOf(result));
+                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                    //异步去加载用户的好友数据
+                    String friendsStr = SharedPreferenceUtil.getFriends(mContext);
+                    int fid = mFriendBeans.get(clickListItemPosition).getFid();
+                    if(StringUtil.isNotNull(friendsStr)){
+                        Gson gson = new GsonBuilder().create();
+                        HttpResponseMyFriendsBean myFriendsBean = gson.fromJson(friendsStr, HttpResponseMyFriendsBean.class);
+                        List<MyFriendsBean> myFriendsBeans = myFriendsBean.getMessage();
+                        if(myFriendsBeans != null && myFriendsBeans.size() > 0){
+                            for(MyFriendsBean myFriendsBean1: myFriendsBeans){
+                                if(myFriendsBean1.getId() == fid){
+                                    myFriendsBeans.remove(myFriendsBean1);
+                                    break;
+                                }
+                            }
+                        }
+                        SharedPreferenceUtil.saveFriends(mContext, gson.toJson(myFriendsBean).toString());
+                        mFriendBeans.remove(clickListItemPosition);
+                        mAdapter.notifyDataSetChanged();
+                        dismissItemMenuDialog();
+                        ToastUtil.success(mContext, jsonObject);
+                    }else{
+                        ToastUtil.failure(mContext, "没有好友");
+                    }
+
+                    //删除本地的聊天记录
+                    ChatDataBase chatDataBase = new ChatDataBase(mContext);
+                    chatDataBase.deleteByUser(fid);
+                    chatDataBase.destroy();
+                }else{
+                    ToastUtil.failure(mContext, jsonObject);
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -249,8 +297,7 @@ public class FriendFragment extends BaseFragment{
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        ToastUtil.success(mContext, "点击的位置是：" + position + ",内容：" + mFriendBeans.get(position).getId());
-                        //CommonHandler.startDetailActivity(mContext,mFriendBeans.get(position).getTableName(), mFriendBeans.get(position).getTableId(), null);
+                        showItemMenuDialog(position);
                     }
                 });
             }
@@ -271,6 +318,64 @@ public class FriendFragment extends BaseFragment{
         }
         mListView.setAdapter(mAdapter);
        // mListView.setOnItemClickListener(this);
+    }
+
+    private Dialog mDialog;
+    /**
+     * 显示弹出自定义view
+     * @param index
+     */
+    public void showItemMenuDialog(int index){
+        clickListItemPosition = index;
+        //判断是否已经存在菜单，存在则把以前的记录取消
+        dismissItemMenuDialog();
+
+        mDialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.mood_list_menu, null);
+
+        ListView listView = (ListView)view.findViewById(R.id.mood_list_menu_listview);
+        listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        List<String> menus = new ArrayList<>();
+
+        menus.add(getStringResource(mContext, R.string.nav_personnal_centre));
+        //解除好友关系
+        menus.add(getStringResource(mContext, R.string.personal_no_friend));
+
+        SimpleListAdapter adapter = new SimpleListAdapter(getActivity().getApplicationContext(), menus);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView textView = (TextView)view.findViewById(R.id.simple_listview_item);
+                //解除好友关系
+                if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_no_friend))){
+                    FriendHandler.cancelFriend(FriendFragment.this, mFriendBeans.get(clickListItemPosition).getId());
+                    showLoadingDialog("DELETE", "try best to loading...");
+                    //个人中心
+                } else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.nav_personnal_centre))){
+                    CommonHandler.startPersonalActivity(mContext, mFriendBeans.get(clickListItemPosition).getFid());
+                    dismissItemMenuDialog();
+                }
+            }
+        });
+        mDialog.setTitle("操作");
+        mDialog.setCancelable(true);
+        mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dismissItemMenuDialog();
+            }
+        });
+        mDialog.setContentView(view);
+        mDialog.show();
+    }
+
+    /**
+     * 隐藏弹出自定义view
+     */
+    public void dismissItemMenuDialog(){
+        if(mDialog != null && mDialog.isShowing())
+            mDialog.dismiss();
     }
 
     @Override

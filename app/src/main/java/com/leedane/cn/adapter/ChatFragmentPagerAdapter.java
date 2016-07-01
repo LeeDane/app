@@ -46,8 +46,7 @@ public class ChatFragmentPagerAdapter extends FragmentPagerAdapter {
                 bundle.putBoolean("isLoginUser", false);
                 this.mMainFragment.set(position, CommentOrTransmitFragment.newInstance(bundle));
             }
-
-            Log.i(TAG, "当前frament为空，重新创建" + position);
+            Log.i(TAG, "frament空，重新创建" + position);
         }
         return this.mMainFragment.get(position);
     }

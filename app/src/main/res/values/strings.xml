@@ -250,6 +250,8 @@
     <string name="my_add_friends">我加的好友</string>
     <string name="add_my_friends">加我的好友</string>
     <string name="no_friends">未成为好友</string>
+    <string name="agree_friend">同意添加</string>
+    <string name="send_email">发送电子邮件</string>
 
     <!--  JPush  -->
     <string name="tag_hint">Tag为大小写字母，数字，下划线,中文， 多个用以逗号分隔</string>

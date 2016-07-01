@@ -39,6 +39,7 @@ import java.util.List;
  */
 public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnItemClickListener{
     private static final String TAG = "ChatActivity";
+    public static final int START_CHAT_DETAIL_CODE = 16;
     private BaseSQLiteDatabase sqLiteDatabase;
 
     private ImageView mImageViewLine;
@@ -50,6 +51,7 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
 
     private int tabWidth;
 
+    private ChatFragmentPagerAdapter mChatFragmentAdapter;
 
     private LinearLayout mChatBottom;
 
@@ -110,11 +112,13 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
         //初始化线图像
         initImageView();
         mViewPager = (ViewPager)findViewById(R.id.chat_viewpager);
-        mViewPager.setAdapter(new ChatFragmentPagerAdapter(getSupportFragmentManager(), mFragments));
+        mChatFragmentAdapter = new ChatFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
+        mViewPager.setAdapter(mChatFragmentAdapter);
         mViewPager.setCurrentItem(0);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             float positionOffsetOld;
+
             @Override
             public void onPageSelected(int position) {
                 current_index = position;
@@ -237,13 +241,45 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
 
     @Override
     public void onItemClick(int position, ChatBean chatBean) {
-        ToastUtil.success(ChatActivity.this, chatBean.getAccount());
         int toUserId  = 0;
         if(chatBean.getCreateUserId() == BaseApplication.getLoginUserId()){
             toUserId = chatBean.getToUserId();
         }else{
             toUserId = chatBean.getCreateUserId();
         }
-        CommonHandler.startChatDetailActivity(ChatActivity.this, toUserId, chatBean.getAccount());
+        startForChatDetailActivity(toUserId, chatBean.getAccount(), 0);
+
+    }
+
+    /**
+     *
+     * @param toUserId
+     * @param account
+     * @param model 0:首页， 1：联系人列表，2:未知
+     */
+    public void startForChatDetailActivity(int toUserId, String account, int model){
+        Intent it = new Intent(ChatActivity.this, ChatDetailActivity.class);
+        it.putExtra("toUserId", toUserId);
+        it.putExtra("toUserAccount", account);
+        it.putExtra("model", model);
+        startActivityForResult(it, START_CHAT_DETAIL_CODE);
+        //context.startActivity(it);
+        //CommonHandler.startChatDetailActivity(ChatActivity.this, toUserId, chatBean.getAccount());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        /*if (resultCode == 0) {
+            if (requestCode == START_CHAT_DETAIL_CODE && data != null){
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                List<Fragment> list = fragmentManager.getFragments();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                ChatHomeFragment chatHomeFragment = ChatHomeFragment.newInstance(new Bundle());
+                chatHomeFragment.setOnItemClickListener(ChatActivity.this);
+                //fragmentTransaction.replace(R.id.chat_viewpager, mFragments.get(data.getIntExtra("model", 0)));
+                fragmentTransaction.replace(R.id.chat_viewpager, chatHomeFragment);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        }*/
     }
 }

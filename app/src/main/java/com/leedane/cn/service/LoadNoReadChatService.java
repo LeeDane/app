@@ -26,7 +26,7 @@ public class LoadNoReadChatService extends Service implements TaskListener {
 
     private int toUserId;
     private boolean isShowErrorNotification;
-    private ChatDataBase dataBase =  new ChatDataBase(getApplicationContext());
+    private ChatDataBase dataBase;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -46,6 +46,8 @@ public class LoadNoReadChatService extends Service implements TaskListener {
         }else{
             taskCanceled(TaskType.LOAD_NO_READ_CHAT);
         }
+
+        dataBase =  new ChatDataBase(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

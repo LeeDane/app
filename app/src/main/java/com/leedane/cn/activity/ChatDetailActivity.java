@@ -1,5 +1,6 @@
 package com.leedane.cn.activity;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +35,7 @@ public class ChatDetailActivity extends BaseActivity implements ChatDetailListFr
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_EXTRAS = "extras";
 
+    private int model; // 0:首页， 1：联系人列表，2:未知
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class ChatDetailActivity extends BaseActivity implements ChatDetailListFr
         setContentView(R.layout.activity_chat_detail);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         Intent it = getIntent();
+        model = it.getIntExtra("model", 0);
         toUserAccount = it.getStringExtra("toUserAccount");
         toUserId = it.getIntExtra("toUserId", 0);
 
@@ -88,6 +91,33 @@ public class ChatDetailActivity extends BaseActivity implements ChatDetailListFr
     protected void onDestroy() {
         unregisterReceiver(mMessageReceiver);
         super.onDestroy();
+        Intent intent = new Intent();
+        intent.putExtra("model", model);
+        setResult(ChatActivity.START_CHAT_DETAIL_CODE, intent);
+    }
+
+    /**
+     * 弹出加载ProgressDiaLog
+     */
+    private ProgressDialog mProgressDialog;
+
+    /**
+     * 显示加载Dialog
+     * @param title  标题
+     * @param main  内容
+     */
+    public void showLoadingDialog(String title, String main){
+        dismissLoadingDialog();
+        mProgressDialog = ProgressDialog.show(ChatDetailActivity.this, title, main, true);
+    }
+
+    /**
+     * 隐藏加载Dialog
+     */
+    public void dismissLoadingDialog(){
+        if(mProgressDialog != null && mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
+        }
     }
 
     @Override
@@ -109,6 +139,7 @@ public class ChatDetailActivity extends BaseActivity implements ChatDetailListFr
         //找到ChatDetailListFragment
         ChatDetailListFragment chatDetailListFragment = (ChatDetailListFragment) fragmentManager.findFragmentById(R.id.chat_detail_container);
         chatDetailListFragment.afterSuccessSendMessage(chatDetailBean);
+        dismissLoadingDialog();
     }
 
     /**

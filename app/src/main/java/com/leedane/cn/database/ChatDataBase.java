@@ -120,7 +120,7 @@ public class ChatDataBase {
      */
     public void deleteByUser(int userId) {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        String sql = ("delete from " + CHAT_TABLE_NAME + " where create_user_id=?");
+        String sql = ("delete from " + CHAT_TABLE_NAME + " where code=?");
         sqlite.execSQL(sql, new Integer[]{userId});
         sqlite.close();
     }
@@ -145,14 +145,17 @@ public class ChatDataBase {
         if(data.isRead()){
             read = 1;
         }
+        data.setContent("呵呵");
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("update " + CHAT_TABLE_NAME + " set cid=?, content=?, _type=?, to_user_id=?, create_user_id=?, create_time=?, code=?, read=? where cid=?");
         sqlite.execSQL(sql,
-                new String[] { data.getId() +"", data.getContent() + "",
+                new Object[] { data.getId(), data.getContent() + "",
                         data.getType() +"", data.getToUserId() +"",
-                        data.getCreateUserId() +"", data.getCreateTime(),
-                        read +"", data.getId() + "" });
+                        data.getCreateUserId() +"", data.getCreateTime(), data.getCode(), read, data.getId() });
         sqlite.close();
+
+        /*List<ChatDetailBean> ss = query(" where cid=" +data.getId());
+        Log.i(TAG, "cid---------->是："+ss.get(0).isRead());*/
     }
 
     /**
@@ -161,7 +164,7 @@ public class ChatDataBase {
      */
     public void updateAllForRead(int toUserId) {
 
-        List<ChatDetailBean> chatDetailBeans = query("where read=0 and create_user_id="+toUserId);
+        List<ChatDetailBean> chatDetailBeans = query(" where read='0' and code ="+String.valueOf(toUserId));
         if(chatDetailBeans != null && chatDetailBeans.size() > 0){
             for(ChatDetailBean chatDetailBean: chatDetailBeans){
                 chatDetailBean.setRead(true);

@@ -2,6 +2,7 @@ package com.leedane.cn.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.leedane.cn.activity.ChatActivity;
+import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.adapter.ChatContactAdapter;
 import com.leedane.cn.adapter.expandRecyclerviewadapter.StickyRecyclerHeadersDecoration;
 import com.leedane.cn.app.R;
@@ -206,6 +209,7 @@ public class ChatContactFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onItemClick(int position) {
-        CommonHandler.startChatDetailActivity(mContext, mAllLists.get(position).getId(), mAllLists.get(position).getAccount());
+        ((ChatActivity)getActivity()).startForChatDetailActivity(mAllLists.get(position).getId(), mAllLists.get(position).getAccount(), 1);
+        //CommonHandler.startChatDetailActivity(mContext, mAllLists.get(position).getId(), mAllLists.get(position).getAccount());
     }
 }

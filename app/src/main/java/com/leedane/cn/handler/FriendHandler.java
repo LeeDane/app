@@ -26,12 +26,12 @@ public class FriendHandler {
     /**
      * 添加好友
      * @param listener
-     * @param toUserId
+     * @param fid
      */
-    public static void addFriend(TaskListener listener, int toUserId){
+    public static void addFriend(TaskListener listener, int fid){
         HttpRequestBean requestBean = new HttpRequestBean();
         Map<String, Object> params = new HashMap<>();
-        params.put("to_user_id", toUserId);
+        params.put("to_user_id", fid);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setServerMethod("leedane/friend_add.action");
@@ -40,14 +40,31 @@ public class FriendHandler {
     }
 
     /**
-     * 解除与某用户的好友关系
+     * 同意添加好友
      * @param listener
-     * @param toUserId
+     * @param fid 好友关系ID
      */
-    public static void cancelFriend(TaskListener listener, int toUserId){
+    public static void agreeFriend(TaskListener listener, int fid, String fromUserRemark){
         HttpRequestBean requestBean = new HttpRequestBean();
         Map<String, Object> params = new HashMap<>();
-        params.put("to_user_id", String.valueOf(toUserId));
+        params.put("fid", fid);
+        params.put("from_user_remark", fromUserRemark);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/friend_agreeFriend.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.AGREE_FRIEND, listener, requestBean);
+    }
+
+    /**
+     * 解除与某用户的好友关系
+     * @param listener
+     * @param fid
+     */
+    public static void cancelFriend(TaskListener listener, int fid){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        Map<String, Object> params = new HashMap<>();
+        params.put("fid", fid);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setServerMethod("leedane/friend_delete.action");

@@ -103,7 +103,18 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
      * 发送消息成功后的回调
      * @param chatDetailBean
      */
-    public void afterSuccessSendMessage(ChatDetailBean chatDetailBean) {
+    public void afterSuccessSendMessage(final ChatDetailBean chatDetailBean) {
+
+        //未读状态异步改为已读状态
+        if(!chatDetailBean.isRead()){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //自己发出的信息，更新服务器状态为已读
+                    ChatDetailHandler.updateRead(ChatDetailListFragment.this, String.valueOf(chatDetailBean.getId()));
+                }
+            }).start();
+        }
         chatDetailBean.setRead(true);
         dataBase.insert(chatDetailBean);
         List<ChatDetailBean> tempList = new ArrayList<>();
@@ -257,12 +268,22 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
                         }
                         mListViewHeader.setText(getStringResource(R.string.load_finish));
 
+                        StringBuffer chatIds = new StringBuffer();
                         //将记录保存在本地数据库
                         for(ChatDetailBean chatDetailBean: chatDetailBeans){
+                            //未读状态异步改为已读状态
+                            if(!chatDetailBean.isRead()){
+                                chatIds.append(chatDetailBean.getId());
+                                chatIds.append(",");
+                            }
                             chatDetailBean.setRead(true);
                             dataBase.insert(chatDetailBean);
                         }
-
+                        if(StringUtil.isNotNull(chatIds.toString())){
+                            String cids = chatIds.toString().substring(0, chatIds.toString().length() -1);
+                            if(StringUtil.isNotNull(cids))
+                                ChatDetailHandler.updateRead(ChatDetailListFragment.this, cids);
+                        }
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){

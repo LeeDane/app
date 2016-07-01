@@ -7,7 +7,7 @@
         android:id="@+id/fan_user_pic"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:src="@drawable/no_user"
+        android:src="@drawable/no_pic"
         android:layout_margin="15dp"/>
     <LinearLayout
         android:layout_width="0dp"
