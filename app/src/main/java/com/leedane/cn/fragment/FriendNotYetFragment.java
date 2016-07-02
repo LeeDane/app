@@ -412,8 +412,26 @@ public class FriendNotYetFragment extends BaseFragment{
                 TextView textView = (TextView)view.findViewById(R.id.simple_listview_item);
                 //删除
                 if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.delete))){
-                    FriendHandler.cancelFriend(FriendNotYetFragment.this, mFriendBeans.get(clickListItemPosition).getId());
-                    showLoadingDialog("DELETE", "try best to loading...");
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
+                    builder.setCancelable(true);
+                    builder.setIcon(R.drawable.menu_feedback);
+                    builder.setTitle("提示");
+                    builder.setMessage("删除该记录将同时删除对方相应的记录?");
+                    builder.setPositiveButton("删除",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    FriendHandler.cancelFriend(FriendNotYetFragment.this, mFriendBeans.get(clickListItemPosition).getId());
+                                    showLoadingDialog("DELETE", "try best to loading...");
+                                }
+                            });
+                    builder.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                }
+                            });
+                    builder.show();
+
                     //同意好友
                 }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.agree_friend))){
                     FriendHandler.agreeFriend(FriendNotYetFragment.this, mFriendBeans.get(clickListItemPosition).getId(), "");
@@ -421,7 +439,7 @@ public class FriendNotYetFragment extends BaseFragment{
                     //发送电子邮件
                 }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.send_email))){
                     String content = "用户："+BaseApplication.getLoginUserName() +"已经添加您为好友，请您尽快处理，谢谢！";
-                    String object = "LeeDane好友添加请求确认";
+                    String object = "LeeDane好友添加请求确认(请勿回复)";
                     CommonHandler.sendEmail(FriendNotYetFragment.this, mFriendBeans.get(clickListItemPosition).getFid(), content, object);
                     showLoadingDialog("Send Email", "try best to loading...");
                     //个人中心

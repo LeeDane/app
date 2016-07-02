@@ -512,11 +512,20 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                 break;
         }
     }
+
+    /**
+     * 将列表移动到最顶部
+     */
+    public void smoothScrollToTop(){
+        if(mMoodBeans != null && mMoodBeans.size() > 0 && mListView != null /*&& !isLoading*/){
+            mListView.smoothScrollToPosition(0);
+        }
+    }
     /**
      * 发送第一次刷新的任务
      */
     @Override
-    protected void sendFirstLoading() {
+    public void sendFirstLoading() {
         //第一次操作取消全部数据
         taskCanceled(TaskType.PERSONAL_LOADMOODS);
         mPreLoadMethod = "firstloading";

@@ -462,13 +462,19 @@ public class PersonalActivity extends BaseActivity {
     public void tabClick(View view){
         TextView currentTextView = (TextView)view;
         currentTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
+
         mPreTab = mCurrentTab;
-        //设置上一个tab的字体背景为灰色
-        TextView preTextView = (TextView)mRadioGroup.getChildAt(mPreTab);
-        preTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.default_font));
 
         //获取当前点击tab的索引
         mCurrentTab = getTabPosition(currentTextView);
+
+        if(mPreTab == mCurrentTab){
+            smoothScrollToTop(view);
+            return;
+        }
+        //设置上一个tab的字体背景为灰色
+        TextView preTextView = (TextView)mRadioGroup.getChildAt(mPreTab);
+        preTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.default_font));
 
         //获得当前tab的坐标
         getCurrentTabCoordinate(currentTextView);
@@ -482,24 +488,71 @@ public class PersonalActivity extends BaseActivity {
             }
         }), 5);
 
+
+    }
+
+    /**
+     * 列表滚动到顶部
+     * @param view
+     */
+    private void smoothScrollToTop(View view){
         switch (view.getId()){
             case R.id.personal_mood:  //心情
-
-                break;
-            case R.id.personal_attention: //关注
-
-                break;
-            case R.id.personal_fans: //粉丝
-
+                ((PersonalMoodFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
                 break;
             case R.id.personal_comment: //评论
-
+                ((CommentOrTransmitFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
                 break;
             case R.id.personal_transmit: //转发
-
+                ((CommentOrTransmitFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
                 break;
             case R.id.personal_praise: //赞
+                ((ZanFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
+                break;
+            case R.id.personal_attention: //关注
+                ((AttentionFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
+                break;
+            case R.id.personal_collection: //收藏
+                ((CollectionFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
+                break;
+            case R.id.personal_login_history: //登录历史
+                ((LoginHistoryFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
+                break;
+            case R.id.personal_sign_in_history: //积分
+                ((ScoreFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
+                break;
+        }
+    }
 
+    /**
+     * 发送第一次加载的请求
+     * @param view
+     */
+    private void sendFirstLoading(View view){
+        switch (view.getId()){
+            case R.id.personal_mood:  //心情
+                ((PersonalMoodFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
+                break;
+            case R.id.personal_comment: //评论
+                ((CommentOrTransmitFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
+                break;
+            case R.id.personal_transmit: //转发
+                ((CommentOrTransmitFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
+                break;
+            case R.id.personal_praise: //赞
+                ((ZanFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
+                break;
+            case R.id.personal_attention: //关注
+                ((AttentionFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
+                break;
+            case R.id.personal_collection: //收藏
+                ((CollectionFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
+                break;
+            case R.id.personal_login_history: //登录历史
+                ((LoginHistoryFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
+                break;
+            case R.id.personal_sign_in_history: //积分
+                ((ScoreFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
                 break;
         }
     }

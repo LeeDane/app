@@ -167,11 +167,21 @@ public class AttentionFragment extends BaseFragment{
             e.printStackTrace();
         }
     }
+
+    /**
+     * 将列表移动到最顶部
+     */
+    public void smoothScrollToTop(){
+        if(mAttentionBeans != null && mAttentionBeans.size() > 0 && mListView != null /*&& !isLoading*/){
+            mListView.smoothScrollToPosition(0);
+        }
+    }
+
     /**
      * 发送第一次刷新的任务
      */
     @Override
-    protected void sendFirstLoading(){
+    public void sendFirstLoading(){
 
         mPreLoadMethod = "firstloading";
         mFirstId = 0;

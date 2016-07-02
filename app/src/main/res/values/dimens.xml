@@ -15,6 +15,7 @@
     <dimen name="default_12sp">12sp</dimen>
     <dimen name="default_10sp">10sp</dimen>
 
+    <dimen name="default_12dp">12dp</dimen>
     <dimen name="default_10dp">10dp</dimen>
     <dimen name="default_8dp">8dp</dimen>
     <dimen name="default_5dp">5dp</dimen>

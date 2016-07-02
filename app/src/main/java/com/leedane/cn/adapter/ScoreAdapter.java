@@ -54,15 +54,13 @@ public class ScoreAdapter extends BaseAdapter{
             tvDesc.setSelected(true);
             viewHolder.setmDesc(tvDesc);
             viewHolder.setmNumber((TextView) view.findViewById(R.id.score_number));
-            viewHolder.setmTotalNumber((TextView)view.findViewById(R.id.score_total_number));
             viewHolder.setmStatus((TextView)view.findViewById(R.id.score_status));
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(scoreBean.getCreateTime())));
         viewHolder.getmDesc().setText("描述:" +scoreBean.getDesc());
-        viewHolder.getmTotalNumber().setText("总积分:" +scoreBean.getTotalScore());
-        viewHolder.getmNumber().setText("积分:" +scoreBean.getScore());
+        viewHolder.getmNumber().setText("当/总:" +scoreBean.getScore() +"/" +scoreBean.getTotalScore());
         viewHolder.getmStatus().setText("状态:" +getStatusText(scoreBean.getStatus()));
         return view;
     }
@@ -99,7 +97,7 @@ public class ScoreAdapter extends BaseAdapter{
         private TextView mTime;
         private TextView mDesc;
         private TextView mNumber;
-        private TextView mTotalNumber;
+        //private TextView mTotalNumber;
         private TextView mStatus;
 
         public TextView getmDesc() {
@@ -116,14 +114,6 @@ public class ScoreAdapter extends BaseAdapter{
 
         public void setmNumber(TextView mNumber) {
             this.mNumber = mNumber;
-        }
-
-        public TextView getmTotalNumber() {
-            return mTotalNumber;
-        }
-
-        public void setmTotalNumber(TextView mTotalNumber) {
-            this.mTotalNumber = mTotalNumber;
         }
 
         public TextView getmStatus() {

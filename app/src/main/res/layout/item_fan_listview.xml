@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:padding="8dp">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/default_5dp"
+    android:paddingBottom="@dimen/default_padding"
+    android:paddingTop="@dimen/default_padding">
     <com.leedane.cn.customview.CircularImageView
         android:id="@+id/fan_user_pic"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:src="@drawable/no_pic"
-        android:layout_margin="15dp"/>
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/no_pic"/>
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="3"
+        android:layout_weight="1"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:layout_marginLeft="@dimen/default_12dp"
         android:orientation="vertical">
         <TextView
             android:id="@+id/fan_user_name"
@@ -34,8 +36,7 @@
 
     <TextView
         android:id="@+id/fan_add_fan"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:minWidth="100dp"
         android:layout_gravity="center"

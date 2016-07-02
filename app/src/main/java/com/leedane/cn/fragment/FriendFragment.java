@@ -349,8 +349,26 @@ public class FriendFragment extends BaseFragment{
                 TextView textView = (TextView)view.findViewById(R.id.simple_listview_item);
                 //解除好友关系
                 if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.personal_no_friend))){
-                    FriendHandler.cancelFriend(FriendFragment.this, mFriendBeans.get(clickListItemPosition).getId());
-                    showLoadingDialog("DELETE", "try best to loading...");
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
+                    builder.setCancelable(true);
+                    builder.setIcon(R.drawable.menu_feedback);
+                    builder.setTitle("提示");
+                    builder.setMessage("解除好友相关将同时删除对方相应的记录?");
+                    builder.setPositiveButton("删除",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    FriendHandler.cancelFriend(FriendFragment.this, mFriendBeans.get(clickListItemPosition).getId());
+                                    showLoadingDialog("DELETE", "try best to loading...");
+                                }
+                            });
+                    builder.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                }
+                            });
+                    builder.show();
+
                     //个人中心
                 } else if(textView.getText().toString().equalsIgnoreCase(getStringResource(mContext, R.string.nav_personnal_centre))){
                     CommonHandler.startPersonalActivity(mContext, mFriendBeans.get(clickListItemPosition).getFid());
