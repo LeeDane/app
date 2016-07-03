@@ -22,8 +22,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.google.zxing.WriterException;
 import com.leedane.cn.adapter.CommentOrTransmitAdapter;
 import com.leedane.cn.app.R;
@@ -54,7 +52,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -660,7 +657,6 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
         HashMap<String, Object> params = new HashMap<>();
         switch (v.getId()){
             case R.id.mood_detail_img:
-                Intent it_detail = new Intent(MoodDetailOldActivity.this, ImageDetailActivity.class);
                 List<ImageDetailBean> list = new ArrayList<ImageDetailBean>();
                 ImageDetailBean imageDetailBean;
                 for(MoodImagesBean bean: mMoodImagesBean.getMessage()){
@@ -676,12 +672,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
                         continue;
                     }
                 }
-
-                Type type = new TypeToken<ArrayList<ImageDetailBean>>(){}.getType();
-                String json = new Gson().toJson(list,type);
-                it_detail.putExtra("ImageDetailBeans", json);
-                //it_detail.putExtra("imageUrls", imageUrls);
-                startActivity(it_detail);
+                CommonHandler.startImageDetailActivity(MoodDetailOldActivity.this, list, 0);
                 break;
             case R.id.mood_detail_comment:
                 //Toast.makeText(MoodDetailActivity.this, "评论", Toast.LENGTH_SHORT).show();

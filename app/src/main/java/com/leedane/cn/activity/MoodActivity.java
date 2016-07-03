@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.service.SendMoodService;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.MediaUtil;
@@ -280,6 +282,24 @@ public class MoodActivity extends BaseActivity {
                 //显示添加后的图片
                 mGridview = (GridView)findViewById(R.id.mood_gridview);
                 mGridview.setAdapter(adapter);
+            }
+        }
+        if(getIntent().getType() != null){
+            if(getIntent().getType().startsWith("image/")){
+                List<String> images = AppUtil.getListPicPaths(MoodActivity.this);
+                if(images.size() > 0){
+                    if(images.size() > 1){
+                        ToastUtil.success(MoodActivity.this, "抱歉，目前系统只接受一张图片，已自动为您选择一张图片展示。");
+                    }
+                    mUris.add(images.get(0));
+                    mMoodGridViewAdapter.notifyDataSetChanged();
+                }
+            }else if(getIntent().getType().startsWith("text/")){
+                String v =  getIntent().getStringExtra(Intent.EXTRA_TEXT);
+                if(StringUtil.isNotNull(v)){
+                    mMoodContent.setText(v);
+                }
+                Log.i(TAG, "文字信息是：" + v);
             }
         }
     }

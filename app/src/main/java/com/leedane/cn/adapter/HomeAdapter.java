@@ -15,14 +15,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.leedane.cn.activity.ImageDetailActivity;
 import com.leedane.cn.activity.PersonalActivity;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.BlogBean;
 import com.leedane.cn.bean.ImageDetailBean;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.NetworkImageLoader;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
@@ -30,7 +28,6 @@ import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,12 +84,12 @@ public class HomeAdapter extends BaseAdapter{
         if(convertView == null){
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_home_listview, null);
             myHolder = new MyHolder();
-            myHolder.setHome_item_title((TextView)convertView.findViewById(R.id.home_item_title));
-            myHolder.setHome_item_img((ImageView) convertView.findViewById(R.id.home_item_img));
-            myHolder.setHome_item_account((TextView) convertView.findViewById(R.id.home_item_account));
-            myHolder.setHome_item_time((TextView)convertView.findViewById(R.id.home_item_time));
-            myHolder.setHome_item_from((TextView) convertView.findViewById(R.id.home_item_from));
-            myHolder.setHome_item_digest((TextView)convertView.findViewById(R.id.home_item_digest));
+            myHolder.setmTitle((TextView) convertView.findViewById(R.id.home_item_title));
+            myHolder.setmImg((ImageView) convertView.findViewById(R.id.home_item_img));
+            myHolder.setmAccount((TextView) convertView.findViewById(R.id.home_item_account));
+            myHolder.setmTime((TextView) convertView.findViewById(R.id.home_item_time));
+            myHolder.setmFrom((TextView) convertView.findViewById(R.id.home_item_from));
+            myHolder.setmDigest((TextView)convertView.findViewById(R.id.home_item_digest));
             convertView.setTag(myHolder);
         }else{
             myHolder = (MyHolder)convertView.getTag();
@@ -107,7 +104,7 @@ public class HomeAdapter extends BaseAdapter{
         //设置字体
         //mSpanTitle.setSpan(new TypefaceSpan("monospace"), 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        myHolder.getHome_item_title().setText(title);
+        myHolder.getmTitle().setText(title);
 
         int bid = blogBean.getId();
         final String imgUrl = blogBean.getImgUrl();
@@ -115,7 +112,7 @@ public class HomeAdapter extends BaseAdapter{
         //final String imgUrl = ConstantsUtil.DEFAULT_SERVER_URL + "leedane/download_executeDown.action";
 
         if(imgUrl.startsWith("http://") || imgUrl.startsWith("https://")){
-            ImageCacheManager.loadImage(imgUrl, myHolder.getHome_item_img(), BaseApplication.getDefaultImage(), BaseApplication.getErrorImage());
+            ImageCacheManager.loadImage(imgUrl, myHolder.getmImg(), BaseApplication.getDefaultImage(), BaseApplication.getErrorImage());
         }else{
             //从base64格式的字符串中截取
             String imageTag = imgUrl.substring(10,30) + blogBean.getId();
@@ -133,25 +130,16 @@ public class HomeAdapter extends BaseAdapter{
                 }
             });
         }
-        myHolder.getHome_item_img().setOnClickListener(new View.OnClickListener() {
+        myHolder.getmImg().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String picPath = blogBean.getImgUrl();
                 if(StringUtil.isNotNull(picPath)){
                     List<ImageDetailBean> list = new ArrayList<ImageDetailBean>();
-
                     ImageDetailBean imageDetailBean = new ImageDetailBean();
                     imageDetailBean.setPath(picPath);
                     list.add(imageDetailBean);
-
-                    Intent itImageDetail = new Intent();
-                    itImageDetail.setClass(mContext, ImageDetailActivity.class);
-                    Type type = new TypeToken<ArrayList<ImageDetailBean>>() {
-                    }.getType();
-                    String json = new Gson().toJson(list, type);
-                    itImageDetail.putExtra("ImageDetailBeans", json);
-                    itImageDetail.putExtra("current", 0);
-                    mContext.startActivity(itImageDetail);
+                    CommonHandler.startImageDetailActivity(mContext, list, 0);
                 }else{
                     ToastUtil.success(mContext, "暂无图片");
                 }
@@ -159,84 +147,84 @@ public class HomeAdapter extends BaseAdapter{
         });
 
         final int userId = blogBean.getCreateUserId();
-        myHolder.getHome_item_account().setText(Html.fromHtml("<font color=\"blue\">" + StringUtil.changeNotNull(blogBean.getAccount()) + "</font>"));
-        myHolder.getHome_item_account().setOnClickListener(new View.OnClickListener() {
+        myHolder.getmAccount().setText(Html.fromHtml("<font color=\"blue\">" + StringUtil.changeNotNull(blogBean.getAccount()) + "</font>"));
+        myHolder.getmAccount().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "点击作者的ID" + userId, Toast.LENGTH_LONG).show();
                 Intent it = new Intent(mContext, PersonalActivity.class);
                 it.putExtra("userId", userId);
                 mContext.startActivity(it);
             }
         });
 
-        myHolder.getHome_item_from().setText("来自：" + StringUtil.changeNotNull(blogBean.getFroms()));
+        myHolder.getmFrom().setText("来自：" + StringUtil.changeNotNull(blogBean.getFroms()));
 
         String createTime = blogBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
-            myHolder.getHome_item_time().setText("");
+            myHolder.getmTime().setText("");
         }else{
-            myHolder.getHome_item_time().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
+            myHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 
-        myHolder.getHome_item_digest().setText(StringUtil.changeNotNull(blogBean.getDigest()) +"...");
+        myHolder.getmDigest().setText(StringUtil.changeNotNull(blogBean.getDigest()) +"...");
         return convertView;
     }
 
     private class MyHolder{
 
-        private TextView home_item_title;
-        private ImageView home_item_img;
-        private TextView home_item_account;
-        private TextView home_item_from;
-        private TextView home_item_time;
-        private TextView home_item_digest;
+        private TextView mTitle;
+        private ImageView mImg;
+        private TextView mAccount;
+        private TextView mFrom;
+        private TextView mTime;
+        private TextView mDigest;
 
-        public TextView getHome_item_title() {
-            return home_item_title;
+        public TextView getmTitle() {
+            return mTitle;
         }
 
-        public void setHome_item_title(TextView home_item_title) {
-            this.home_item_title = home_item_title;
-        }
-        public ImageView getHome_item_img() {
-            return home_item_img;
+        public void setmTitle(TextView mTitle) {
+            this.mTitle = mTitle;
         }
 
-        public void setHome_item_img(ImageView home_item_img) {
-            this.home_item_img = home_item_img;
+        public ImageView getmImg() {
+            return mImg;
         }
 
-        public TextView getHome_item_from() {
-            return home_item_from;
+        public void setmImg(ImageView mImg) {
+            this.mImg = mImg;
         }
 
-        public void setHome_item_from(TextView home_item_from) {
-            this.home_item_from = home_item_from;
+        public TextView getmFrom() {
+            return mFrom;
         }
 
-        public TextView getHome_item_digest() {
-            return home_item_digest;
+        public void setmFrom(TextView mFrom) {
+            this.mFrom = mFrom;
         }
 
-        public void setHome_item_digest(TextView home_item_digest) {
-            this.home_item_digest = home_item_digest;
+        public TextView getmDigest() {
+            return mDigest;
         }
 
-        public TextView getHome_item_account() {
-            return home_item_account;
+        public void setmDigest(TextView mDigest) {
+            this.mDigest = mDigest;
         }
 
-        public void setHome_item_account(TextView home_item_account) {
-            this.home_item_account = home_item_account;
+        public TextView getmAccount() {
+            return mAccount;
         }
 
-        public TextView getHome_item_time() {
-            return home_item_time;
+        public void setmAccount(TextView mAccount) {
+            this.mAccount = mAccount;
         }
 
-        public void setHome_item_time(TextView home_item_time) {
-            this.home_item_time = home_item_time;
+        public TextView getmTime() {
+            return mTime;
+        }
+
+        public void setmTime(TextView mTime) {
+            this.mTime = mTime;
         }
     }
 }

@@ -228,6 +228,7 @@ public class ChatHomeFragment extends Fragment implements TaskListener
                         mChatBeans.remove(index);
                         mAdapter.notifyDataSetChanged();
                         ToastUtil.success(mContext, "本地聊天记录删除成功");
+                        dismissMenuDialog();
                     }else{
                         ToastUtil.success(mContext, "本地聊天记录删除失败");
                     }

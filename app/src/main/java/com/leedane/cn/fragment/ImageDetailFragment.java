@@ -63,19 +63,15 @@ public class ImageDetailFragment extends Fragment{
         }
     }*/
 
-    /**
-     * 构建Frament对象
-     * @param current 当前frament是第几个
-     * @param context
-     */
-    public ImageDetailFragment(int current, Context context, ImageDetailBean imageDetailBean){
-        this.mContext = context;
-        this.mCurrent = current;
-        this.mImageDetailBean = imageDetailBean;
-        this.mNetworkImageLoader = new NetworkImageLoader();
-        int[] widthAndHeight = BaseApplication.newInstance().getScreenWidthAndHeight();
-        this.acreenWidth = widthAndHeight[0];
-        this.screenHeight = widthAndHeight[1]*3/4;
+    @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+    }
+
+    public static final ImageDetailFragment newInstance(Bundle bundle){
+        ImageDetailFragment fragment = new ImageDetailFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -88,6 +84,19 @@ public class ImageDetailFragment extends Fragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            this.mCurrent = bundle.getInt("current");
+            this.mImageDetailBean = (ImageDetailBean)bundle.getSerializable("imageDetailBean");
+            this.mNetworkImageLoader = new NetworkImageLoader();
+            int[] widthAndHeight = BaseApplication.newInstance().getScreenWidthAndHeight();
+            this.acreenWidth = widthAndHeight[0];
+            this.screenHeight = widthAndHeight[1]*3/4;
+        }
+
+        if(mContext == null)
+            mContext = getActivity();
 
         String currentImageUrl = mImageDetailBean.getPath();
         int width = mImageDetailBean.getWidth() == 0 ||  mImageDetailBean.getWidth() > acreenWidth ? acreenWidth: mImageDetailBean.getWidth();

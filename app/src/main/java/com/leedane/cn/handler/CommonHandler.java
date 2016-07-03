@@ -58,12 +58,14 @@ public class CommonHandler {
      * 触发图片列表详情的activity
      * @param context
      * @param list
+     * @param showCurrent 展示当前的位置索引
      */
-    public static void startImageDetailActivity(Context context, List<ImageDetailBean> list){
+    public static void startImageDetailActivity(Context context, List<ImageDetailBean> list, int showCurrent){
         Intent it_detail = new Intent(context, ImageDetailActivity.class);
         Type type = new TypeToken<ArrayList<ImageDetailBean>>(){}.getType();
         String json = new Gson().toJson(list,type);
         it_detail.putExtra("ImageDetailBeans", json);
+        it_detail.putExtra("current", showCurrent);
         context.startActivity(it_detail);
     }
 
@@ -81,7 +83,7 @@ public class CommonHandler {
             imageDetailBean.setPath(img);
             list.add(imageDetailBean);
         }
-        startImageDetailActivity(context, list);
+        startImageDetailActivity(context, list, 0);
     }
 
     /**

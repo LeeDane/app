@@ -786,7 +786,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                         continue;
                     }
                 }
-                CommonHandler.startImageDetailActivity(mContext, list);
+                CommonHandler.startImageDetailActivity(mContext, list, 0);
                 break;
             case R.id.mood_detail_comment:
                 //Toast.makeText(MoodDetailActivity.this, "评论", Toast.LENGTH_SHORT).show();

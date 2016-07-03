@@ -95,8 +95,13 @@ public class ImageDetailActivity extends BaseActivity {
 
         List< Fragment> framents = new ArrayList<>();
         for(int i = 0; i < mTotalTabs; i++){
-            if(mCurrentTab == i)
-                framents.add(new ImageDetailFragment(i, ImageDetailActivity.this, mImageDetailBeans.get(i)));
+            if(mCurrentTab == i){
+                //framents.add(new ImageDetailFragment(i, ImageDetailActivity.this, mImageDetailBeans.get(i)));
+                Bundle bundle = new Bundle();
+                bundle.putInt("current", i);
+                bundle.putSerializable("imageDetailBean", mImageDetailBeans.get(i));
+                framents.add(ImageDetailFragment.newInstance(bundle));
+            }
             else
                 framents.add(null);
         }

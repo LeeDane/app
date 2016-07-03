@@ -135,6 +135,7 @@
     <string name="confirm_upload_hander">确定上传图像</string>
 
     <!-- 心情相关 -->
+    <string name="mood">我的心情</string>
     <string name="mood_publish">立即发表</string>
     <string name="mood_transmit">立即转发</string>
     <string name="mood_comment">立即评论</string>

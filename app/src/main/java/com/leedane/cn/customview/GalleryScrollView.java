@@ -7,7 +7,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
@@ -30,10 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.leedane.cn.activity.GalleryActivity;
-import com.leedane.cn.activity.ImageDetailActivity;
 import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
@@ -43,6 +39,7 @@ import com.leedane.cn.bean.HttpResponseGalleryBean;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.database.GalleryDataBase;
 import com.leedane.cn.handler.ChatBgSelectWebHandler;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
@@ -56,7 +53,6 @@ import com.leedane.cn.volley.ImageCacheUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -254,17 +250,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                             list.add(imageDetailBean);
                             //imageBuffer.append(path);
                         }
-                        Toast.makeText(getContext(), "current：" + current, Toast.LENGTH_LONG).show();
-                        //String imageUrls = imageBuffer.toString().substring(0, imageBuffer.length() -1);
-                        Intent itImageDetail = new Intent();
-                        itImageDetail.setClass(getContext(), ImageDetailActivity.class);
-                        Type type = new TypeToken<ArrayList<ImageDetailBean>>() {
-                        }.getType();
-                        String json = new Gson().toJson(list, type);
-                        itImageDetail.putExtra("ImageDetailBeans", json);
-                        //itImageDetail.putExtra("imageUrls", imageUrls);
-                        itImageDetail.putExtra("current", current);
-                        getContext().startActivity(itImageDetail);
+                        CommonHandler.startImageDetailActivity(getContext(), list, current);
                     }
                 });
             }else{
@@ -558,17 +544,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                     list.add(imageDetailBean);
                     //imageBuffer.append(path);
                 }
-                Toast.makeText(getContext(), "current：" + current, Toast.LENGTH_LONG).show();
-                //String imageUrls = imageBuffer.toString().substring(0, imageBuffer.length() -1);
-                Intent itImageDetail = new Intent();
-                itImageDetail.setClass(getContext(), ImageDetailActivity.class);
-                Type type = new TypeToken<ArrayList<ImageDetailBean>>() {
-                }.getType();
-                String json = new Gson().toJson(list, type);
-                itImageDetail.putExtra("ImageDetailBeans", json);
-                //itImageDetail.putExtra("imageUrls", imageUrls);
-                itImageDetail.putExtra("current", current);
-                getContext().startActivity(itImageDetail);
+                CommonHandler.startImageDetailActivity(getContext(), list, current);
             }
         });
         findColumnToAdd(imageView, widthAndHeight[1]).addView(imageView);
