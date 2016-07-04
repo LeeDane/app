@@ -9,7 +9,6 @@
         android:id="@+id/mood_detail_info_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,21 +20,30 @@
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/no_pic"/>
-            <TextView
-                android:id="@+id/mood_detail_user"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="18dp"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:textColor="#8181F7"/>
-            <TextView
-                android:id="@+id/mood_detail_time"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:textSize="12dp"
-                android:gravity="center"/>
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/mood_detail_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:textSize="@dimen/default_16sp"
+                    android:textColor="#8181F7"
+                    android:text="@string/no_text"/>
+                <TextView
+                    android:id="@+id/mood_detail_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:text="@string/no_text"/>
+            </LinearLayout>
         </LinearLayout>
         <TextView
             android:id="@+id/mood_detail_content"

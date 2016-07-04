@@ -250,15 +250,22 @@ public class PersonalActivity extends BaseActivity {
         mRadioGroup = (RadioGroup) findViewById(R.id.personal_tabs);
         mRadioGroup.setVisibility(View.VISIBLE);
         mPersonalPic = (CircularImageView)findViewById(R.id.personal_pic);
-
-        if(mIsLoginUser){
-            mPersonalPic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CommonHandler.startUpdateHeaderActivity(PersonalActivity.this);
-                }
-            });
+        final String headPath = mUserInfo.getString("user_pic_path");
+        if(StringUtil.isNotNull(headPath)){
+            ImageCacheManager.loadImage(headPath, mPersonalPic);
         }
+        mPersonalPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mIsLoginUser) {
+                    CommonHandler.startUpdateHeaderActivity(PersonalActivity.this);
+                }else {
+                    if(StringUtil.isNotNull(headPath)) {
+                        CommonHandler.startImageDetailActivity(PersonalActivity.this, headPath);
+                    }
+                }
+            }
+        });
 
         mPersonalInfo = (TextView)findViewById(R.id.personal_info);
         mPersonalFans = (TextView)findViewById(R.id.personal_fans);
@@ -266,12 +273,6 @@ public class PersonalActivity extends BaseActivity {
         mPersonalFan = (TextView)findViewById(R.id.personal_add_fan);
 
         mPersonalFans.setOnClickListener(this);
-        //mPersonalPic.setImageBitmap(ImageUtil.getInstance().getBitmapByBase64());
-        String headPath = mUserInfo.getString("user_pic_path");
-        if(StringUtil.isNotNull(headPath)){
-            ImageCacheManager.loadImage(headPath, mPersonalPic);
-        }
-
 
         //以用户名称作为个人中心的标题
         if(StringUtil.isNull(mUserInfo.getString("account"))){

@@ -170,6 +170,8 @@ public class FriendNotYetFragment extends BaseFragment{
                         mListView.addFooterView(viewFooter, null, false);
                         mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
                         mListViewFooter.setOnClickListener(this);
+                    }else{
+                        ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                     }
                 }
             }else if(type == TaskType.AGREE_FRIEND){
@@ -213,7 +215,7 @@ public class FriendNotYetFragment extends BaseFragment{
                             }
 
                             if(myFriendsBeans == null)
-                                myFriendsBeans = new ArrayList<MyFriendsBean>();
+                                myFriendsBeans = new ArrayList<>();
 
                             myFriendsBeans.add(myFriendsBean);
                             httpResponseMyFriendsBean.setMessage(myFriendsBeans);
@@ -322,7 +324,7 @@ public class FriendNotYetFragment extends BaseFragment{
      * @param view
      */
     public void sendLoadAgain(View view){
-        //只有在加载失败或者点击加载更多的情况下点击才有效
+        //加载失败或者点击加载更多的情况下才不能点击
         if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())
                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mListViewFooter.getText().toString())){
             return;

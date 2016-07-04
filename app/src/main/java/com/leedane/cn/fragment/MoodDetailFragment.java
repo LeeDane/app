@@ -42,6 +42,7 @@ import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
@@ -283,9 +284,13 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     private void init() {
         try{
             //mIVUserPic
-            if(detail.has("user_pic_path") && StringUtil.isNotNull(detail.getString("user_pic_path")))
+            if(detail.has("user_pic_path") && StringUtil.isNotNull(detail.getString("user_pic_path"))){
                 ImageCacheManager.loadImage(detail.getString("user_pic_path"), mIVUserPic);
+                mIVUserPic.setOnClickListener(MoodDetailFragment.this);
+            }
             mTVUser.setText(detail.getString("account"));
+            if(detail.has("create_user_id") && detail.getInt("create_user_id") > 0)
+                mTVUser.setOnClickListener(MoodDetailFragment.this);
             mTVTime.setText(detail.getString("create_time"));
             mTVContent.setText(detail.getString("content"));
             mTVPraise.setText(getStringResource(mContext, R.string.personal_praise) +"("+ detail.getInt("zan_number")+")");
@@ -534,9 +539,12 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                             mCommentOrTransmitAdapter.refreshData(new ArrayList<CommentOrTransmitBean>());
                         }
                         mListView.removeFooterView(viewFooter);
-                        mListView.addFooterView(viewFooter, null ,false);
-                        mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
+                        mListView.addFooterView(viewFooter, null, false);
+                        //mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
+                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
                         mListViewFooter.setOnClickListener(this);
+                    }else{
+                        ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                     }
                 }
             }else if(type == TaskType.ADD_COMMENT || type == TaskType.ADD_TRANSMIT){
@@ -741,29 +749,28 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
      * @param view
      */
     public void sendLoadAgain(View view){
-        //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getStringResource(mContext, R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
-                || getStringResource(mContext, R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
-            Toast.makeText(mContext, "请求重新加载", Toast.LENGTH_SHORT).show();
-            taskCanceled(TaskType.LOAD_COMMENT);
-            taskCanceled(TaskType.LOAD_TRANSMIT);
-            isLoading = true;
-            HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("table_name", "t_mood");
-            params.put("table_id", mid);
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
-            params.put("first_id", mFirstId);
-            params.put("last_id", mLastId);
-            params.put("method", mPreLoadMethod);
-            params.put("showUserInfo", true);
-            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
-            if(commentOrTransmit == 0){
-                CommentHandler.getCommentsRequest(MoodDetailFragment.this, params);
-            }else{
-                TransmitHandler.getTransmitsRequest(MoodDetailFragment.this, params);
-            }
+        //加载失败或者点击加载更多的情况下才不能点击
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())
+                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mListViewFooter.getText().toString())){
+            return;
         }
-
+        taskCanceled(TaskType.LOAD_COMMENT);
+        taskCanceled(TaskType.LOAD_TRANSMIT);
+        isLoading = true;
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("table_name", "t_mood");
+        params.put("table_id", mid);
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
+        params.put("first_id", mFirstId);
+        params.put("last_id", mLastId);
+        params.put("method", mPreLoadMethod);
+        params.put("showUserInfo", true);
+        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        if(commentOrTransmit == 0){
+            CommentHandler.getCommentsRequest(MoodDetailFragment.this, params);
+        }else{
+            TransmitHandler.getTransmitsRequest(MoodDetailFragment.this, params);
+        }
     }
     @Override
     public void onClick(View v) {
@@ -810,6 +817,20 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                 break;
             case R.id.listview_footer_reLoad:
                 sendLoadAgain(v);
+                break;
+            case R.id.mood_detail_user:
+                try {
+                    CommonHandler.startPersonalActivity(mContext, detail.getInt("create_user_id"));
+                }catch (JSONException e){
+                    Log.i(TAG, "获取从json中获取创建人失败："+e.getMessage().toString());
+                }
+                break;
+            case R.id.mood_detail_user_pic:
+                try {
+                    CommonHandler.startPersonalActivity(mContext, detail.getInt("create_user_id"));
+                }catch (JSONException e){
+                    Log.i(TAG, "获取从json中获取创建人失败："+e.getMessage().toString());
+                }
                 break;
         }
     }

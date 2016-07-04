@@ -1,10 +1,15 @@
 package com.leedane.cn.util;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.app.Service;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -48,11 +53,7 @@ public class AppUtil {
                     if(!imageUri.getPath().contains("external/images/media"))
                         picPaths.add(imageUri.getPath());
                     else {
-                        String[] proj = {MediaStore.Images.Media.DATA};
-                        Cursor actualimagecursor = activity.managedQuery(imageUri, proj, null, null, null);
-                        int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                        actualimagecursor.moveToFirst();
-                        String img_path = actualimagecursor.getString(actual_image_column_index);
+                        String img_path = MediaUtil.getImageAbsolutePath(activity, imageUri);
                         picPaths.add(img_path);
                     }
                 }
@@ -67,11 +68,7 @@ public class AppUtil {
                         if(!imageUris.get(i).getPath().contains("external/images/media"))
                             picPaths.add(imageUris.get(i).getPath());
                         else {
-                            String[] proj = {MediaStore.Images.Media.DATA};
-                            Cursor actualimagecursor = activity.managedQuery(imageUris.get(i), proj, null, null, null);
-                            int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                            actualimagecursor.moveToFirst();
-                            String img_path = actualimagecursor.getString(actual_image_column_index);
+                            String img_path = MediaUtil.getImageAbsolutePath(activity, imageUris.get(i));
                             picPaths.add(img_path);
                         }
                     }
@@ -81,4 +78,45 @@ public class AppUtil {
 
         return picPaths;
     }
+
+    /**
+     * 从uri中获取文件的真实路径
+     * @param activity
+     * @param uri
+     * @return
+     */
+    /*public static String getPathByUri(Activity activity, Uri uri){
+        String imagePath = uri.getPath();
+        if(imagePath.contains("external/images/media")){
+            String[] proj = {MediaStore.Images.Media.DATA};
+            Cursor actualimagecursor = activity.managedQuery(uri, proj, null, null, null);
+            int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            actualimagecursor.moveToFirst();
+            imagePath = actualimagecursor.getString(actual_image_column_index);
+        }
+
+        return imagePath;
+    }*/
+
+    /**
+     * 手机设置震动
+     * @param context
+     * @param milliSeconds 振动时长，单位是毫秒
+     */
+    public static void vibrate(final Context context, long milliSeconds){
+        Vibrator vib = (Vibrator)context.getSystemService(Service.VIBRATOR_SERVICE);
+        vib.vibrate(milliSeconds);
+    }
+
+    /**
+     * 手机设置震动
+     * @param context
+     * @param pattern 自定义振动模式，数组中的数字含义依次是【静止时长，振动时长，静止时长，振动时长。。。】时长的单位是毫秒
+     * @param isRepeat 是否反复振动，如果是true，反复振动，如果是false,只振动一次
+     */
+    public static void vibrate(final Context context, long[] pattern, boolean isRepeat){
+        Vibrator vib = (Vibrator)context.getSystemService(Service.VIBRATOR_SERVICE);
+        vib.vibrate(pattern, isRepeat? 1: -1);
+    }
+
 }

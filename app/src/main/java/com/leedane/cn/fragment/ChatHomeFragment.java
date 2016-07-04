@@ -145,29 +145,30 @@ public class ChatHomeFragment extends Fragment implements TaskListener
     private void initData(){
 
         String tempData = SharedPreferenceUtil.getFriends(mContext.getApplicationContext());
-        if(StringUtil.isNull(tempData)){
-            ToastUtil.success(mContext, "您还没有好友");
-            //后台去获取用户的好友信息
-            CommonHandler.startUserFreidnsService(mContext.getApplicationContext(), false);
-            return;
-        }
-        try {
-            Gson gson = new GsonBuilder().create();
-            HttpResponseMyFriendsBean model = gson.fromJson(tempData, HttpResponseMyFriendsBean.class);
-            mChatBeans = new ArrayList<>();
-            if(model != null && model.getMessage() != null){
-                mChatBeans.addAll(database.queryChatHome(mContext, model.getMessage()));
+        if(StringUtil.isNotNull(tempData)){
+            try {
+                Gson gson = new GsonBuilder().create();
+                HttpResponseMyFriendsBean model = gson.fromJson(tempData, HttpResponseMyFriendsBean.class);
+                mChatBeans = new ArrayList<>();
+                if(model != null && model.getMessage() != null && model.getMessage().size() > 0){
+                    mChatBeans.addAll(database.queryChatHome(mContext, model.getMessage()));
+                    List<ChatBean> tempChatBeans = new ArrayList<>();
+                    tempChatBeans.addAll(mChatBeans);
+                    mAdapter.refreshData(tempChatBeans);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            List<ChatBean> tempChatBeans = new ArrayList<>();
-            tempChatBeans.addAll(mChatBeans);
-            mAdapter.refreshData(tempChatBeans);
-             //mChatBeans.addAll(ChatHandler.getLocalChatBeans(mContext));
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        //进入这个页面都会去加载、检查好友信息
+        loadMyFriends();
     }
 
-
+    private void loadMyFriends(){
+        //后台去获取用户的好友信息
+        CommonHandler.startUserFreidnsService(mContext.getApplicationContext(), false);
+    }
 
     private void initView(){
 

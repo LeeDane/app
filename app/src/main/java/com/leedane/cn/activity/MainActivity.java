@@ -45,6 +45,7 @@ import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.helper.DoubleClickExitHelper;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ImageUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
@@ -392,7 +393,8 @@ public class MainActivity extends NavigationActivity
         if(result instanceof Error){
             Toast.makeText(MainActivity.this, ((Error) result).getMessage(), Toast.LENGTH_SHORT).show();
             if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getStringResource(R.string.load_more_error));
+                //mListViewFooter.setText(getStringResource(R.string.load_more_error));
+                mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
                 mListViewFooter.setOnClickListener(this);
             }
             return;
@@ -704,20 +706,20 @@ public class MainActivity extends NavigationActivity
      * @param view
      */
     public void sendLoadAgain(View view){
-        //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getStringResource(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
-                || getStringResource(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
-            taskCanceled(TaskType.HOME_LOADBLOGS);
-            isLoading = true;
-            HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
-            params.put("first_id", mFirstId);
-            params.put("last_id", mLastId);
-            params.put("method", mPreLoadMethod);
-            mListViewFooter.setText(getStringResource(R.string.loading));
-            BlogHandler.getBlogsRequest(this, params);
+        //加载失败或者点击加载更多的情况下才不能点击
+        if(getStringResource(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())
+                ||  getStringResource(R.string.load_finish).equalsIgnoreCase(mListViewFooter.getText().toString())){
+            return;
         }
-
+        taskCanceled(TaskType.HOME_LOADBLOGS);
+        isLoading = true;
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
+        params.put("first_id", mFirstId);
+        params.put("last_id", mLastId);
+        params.put("method", mPreLoadMethod);
+        mListViewFooter.setText(getStringResource(R.string.loading));
+        BlogHandler.getBlogsRequest(this, params);
     }
 
     @Override

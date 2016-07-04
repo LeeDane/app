@@ -16,9 +16,10 @@
         android:layout_alignParentBottom="true"/>
     <ImageView
         android:id="@+id/mood_detail_comment_or_transmit_send"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="25dp"
         android:layout_gravity="center"
+        android:scaleType="fitXY"
         android:src="@mipmap/send_mood"
-        android:layout_height="wrap_content" />
+        android:layout_marginRight="@dimen/default_3dp"
+        android:layout_height="25dp" />
 </LinearLayout>

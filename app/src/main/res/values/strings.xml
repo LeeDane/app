@@ -288,7 +288,7 @@
     <string name="update_user_old_psw">原密码：</string>
     <string name="update_user_hint_old_psw">请输入您原来的登录密码</string>
     <string name="update_user_new_psw">新密码：</string>
-    <string name="update_user_hint_new_psw">请输入长度不能低于8位的新密码</string>
+    <string name="update_user_hint_new_psw">请输入不能低于8位的新密码</string>
     <string name="update_user_confirm_psw">确认密码：</string>
     <string name="update_user_hint_confirm_psw">请再次输入新密码</string>
 

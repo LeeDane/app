@@ -16,9 +16,11 @@ import com.leedane.cn.adapter.FanAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.FanBean;
 import com.leedane.cn.bean.HttpResponseFanBean;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -137,9 +139,12 @@ public class FanFragment extends BaseFragment{
                             mAdapter.refreshData(new ArrayList<FanBean>());
                         }
                         mListView.removeFooterView(viewFooter);
-                        mListView.addFooterView(viewFooter, null ,false);
-                        mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
+                        mListView.addFooterView(viewFooter, null, false);
+                        //mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
+                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
                         mListViewFooter.setOnClickListener(this);
+                    }else{
+                        ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                     }
                 }
             }else{
@@ -257,36 +262,34 @@ public class FanFragment extends BaseFragment{
      * @param view
      */
     public void sendLoadAgain(View view){
-        //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getStringResource(mContext, R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
-                || getStringResource(mContext, R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
-            ToastUtil.success(mContext, "请求重新加载", Toast.LENGTH_SHORT);
-            isLoading = true;
-            HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad() : MySettingConfigUtil.getOtherLoad());
-            params.put("first_id", mFirstId);
-            params.put("last_id", mLastId);
-            params.put("method", mPreLoadMethod);
-            params.put("toUserId", toUserId);
-            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
-            taskCanceled(TaskType.LOAD_MY_ATTENTION);
-            taskCanceled(TaskType.LOAD_MY_FAN);
-            if(fanOrAttention == 0) {
-                if(isLoginUser){
-                    FanHandler.getMyFansRequest(FanFragment.this, params);
-                }else{
-                    FanHandler.getToFansRequest(FanFragment.this, params);
-                }
-            }else {
-                if(isLoginUser){
-                    FanHandler.getMyAttentionsRequest(FanFragment.this, params);
-                }else{
-                    FanHandler.getToAttentionsRequest(FanFragment.this, params);
-                }
-            }
-
+        //加载失败或者点击加载更多的情况下才不能点击
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())
+                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mListViewFooter.getText().toString())){
+            return;
         }
-
+        isLoading = true;
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad() : MySettingConfigUtil.getOtherLoad());
+        params.put("first_id", mFirstId);
+        params.put("last_id", mLastId);
+        params.put("method", mPreLoadMethod);
+        params.put("toUserId", toUserId);
+        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        taskCanceled(TaskType.LOAD_MY_ATTENTION);
+        taskCanceled(TaskType.LOAD_MY_FAN);
+        if(fanOrAttention == 0) {
+            if(isLoginUser){
+                FanHandler.getMyFansRequest(FanFragment.this, params);
+            }else{
+                FanHandler.getToFansRequest(FanFragment.this, params);
+            }
+        }else {
+            if(isLoginUser){
+                FanHandler.getMyAttentionsRequest(FanFragment.this, params);
+            }else{
+                FanHandler.getToAttentionsRequest(FanFragment.this, params);
+            }
+        }
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -314,7 +317,8 @@ public class FanFragment extends BaseFragment{
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        ToastUtil.success(getContext(), "点击的位置是：" + position + ",内容：" + mFanBeans.get(position).getAccount());
+                        CommonHandler.startPersonalActivity(mContext, mFanBeans.get(position).getToUserId());
+                        //ToastUtil.success(getContext(), "点击的位置是：" + position + ",内容：" + mFanBeans.get(position).getAccount());
                         //CommonHandler.startDetailActivity(mContext,mFanBeans.get(position).getTableName(), mFanBeans.get(position).getTableId(), null);
                     }
                 });

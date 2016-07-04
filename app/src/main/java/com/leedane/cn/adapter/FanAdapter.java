@@ -72,20 +72,20 @@ public class FanAdapter extends BaseAdapter implements TaskListener{
         }
         viewHolder = (ViewHolder)view.getTag();
         viewHolder.getmUserName().setText(fanBean.getAccount());
-        viewHolder.getmUserName().setOnClickListener(new View.OnClickListener() {
+        /*viewHolder.getmUserName().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommonHandler.startPersonalActivity(mContext, fanBean.getToUserId());
             }
-        });
+        });*/
         if(StringUtil.isNotNull(fanBean.getUserPicPath())){
             ImageCacheManager.loadImage(fanBean.getUserPicPath(), viewHolder.getmUserPic());
-            viewHolder.getmUserPic().setOnClickListener(new View.OnClickListener() {
+            /*viewHolder.getmUserPic().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     CommonHandler.startPersonalActivity(mContext, fanBean.getToUserId());
                 }
-            });
+            });*/
         }else{
             viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
         }

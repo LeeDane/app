@@ -163,16 +163,11 @@ public class MoodActivity extends BaseActivity {
         if(mOperateType == EnumUtil.MoodOperateType.转发.value || mOperateType == EnumUtil.MoodOperateType.评论.value){
             try{
                 mOldMoodBean = (MoodBean) it_mood.getSerializableExtra("moodObj");
-                if(mOldMoodBean != null){
+                if(mOldMoodBean == null){
                     if(mOperateType == EnumUtil.MoodOperateType.转发.value)
-                        ToastUtil.success(MoodActivity.this, "该心情可以转发" + mOldMoodBean.getContent());
+                        ToastUtil.success(MoodActivity.this, "该心情无法转发");
                     else
-                        ToastUtil.success(MoodActivity.this, "该心情可以评论" + mOldMoodBean.getContent());
-                }else{
-                    if(mOperateType == EnumUtil.MoodOperateType.转发.value)
-                        ToastUtil.success(MoodActivity.this, "无法转发");
-                    else
-                        ToastUtil.success(MoodActivity.this, "无法评论");
+                        ToastUtil.success(MoodActivity.this, "该心情无法评论");
                     finish();
                     return;
                 }

@@ -1,5 +1,6 @@
 package com.leedane.cn.fragment;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.leedane.cn.activity.ChatActivity;
 import com.leedane.cn.adapter.ChatDetailAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
@@ -30,8 +32,10 @@ import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.handler.ChatDetailHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.BitmapUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
@@ -121,7 +125,8 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         tempList.addAll(mChatDetailBeans);
         tempList.add(chatDetailBean);
         mAdapter.refreshData(tempList);
-        mListView.smoothScrollToPosition(mChatDetailBeans.size() - 1);
+        mListView.smoothScrollToPosition(mChatDetailBeans.size());
+        AppUtil.vibrate(mContext, 100);
         //mListView.setSelection(0);
     }
 
@@ -151,6 +156,10 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         initUserPicPath();
         initView();
         loadLocalData();
+
+        //清空通知栏相应的信息
+        NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(ChatActivity.BASE_USER_CHAT_DETAIL_CODE + toUserId);
     }
 
     /**
@@ -303,7 +312,8 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
                     }
                     mListView.removeHeaderView(viewHeader);
                     mListView.addHeaderView(viewHeader, null, false);
-                    mListViewHeader.setText(getStringResource(R.string.load_more_error));
+                    //mListViewHeader.setText(getStringResource(R.string.load_more_error));
+                    mListViewHeader.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
                     mListViewHeader.setOnClickListener(this);
                 }
             }else if(type == TaskType.ADD_CHAT){
@@ -471,22 +481,21 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
      * @param view
      */
     public void sendLoadAgain(View view){
-        //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getStringResource(R.string.load_more_error).equalsIgnoreCase(mListViewHeader.getText().toString())
-                || getStringResource(R.string.load_more).equalsIgnoreCase(mListViewHeader.getText().toString())){
-            //Toast.makeText(mContext, "请求重新加载", Toast.LENGTH_SHORT).show();
-            taskCanceled(TaskType.LOAD_CHAT);
-            isLoading = true;
-            HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad() : MySettingConfigUtil.getOtherLoad());
-            params.put("first_id", mFirstId);
-            params.put("last_id", mLastId);
-            params.put("method", mPreLoadMethod);
-            params.put("toUserId", toUserId);
-            mListViewHeader.setText(getStringResource(R.string.loading));
-            ChatDetailHandler.getChatDetailsRequest(ChatDetailListFragment.this, params);
+        //加载失败或者点击加载更多的情况下才不能点击
+        if(getStringResource(R.string.no_load_more).equalsIgnoreCase(mListViewHeader.getText().toString())
+                ||  getStringResource(R.string.load_finish).equalsIgnoreCase(mListViewHeader.getText().toString())){
+            return;
         }
-
+        taskCanceled(TaskType.LOAD_CHAT);
+        isLoading = true;
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad() : MySettingConfigUtil.getOtherLoad());
+        params.put("first_id", mFirstId);
+        params.put("last_id", mLastId);
+        params.put("method", mPreLoadMethod);
+        params.put("toUserId", toUserId);
+        mListViewHeader.setText(getStringResource(R.string.loading));
+        ChatDetailHandler.getChatDetailsRequest(ChatDetailListFragment.this, params);
     }
     @Override
     public void onClick(View v) {

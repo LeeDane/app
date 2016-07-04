@@ -145,8 +145,9 @@ public class JPushReceiver extends BroadcastReceiver {
 						//判断是否是已经存在数据库
 						if(dataBase.insert(chatDetailBean)){
 							String friendAccount = FriendHandler.getFriendAccout(chatDetailBean.getCreateUserId());
+							int notificationId = ChatActivity.BASE_USER_CHAT_DETAIL_CODE + chatDetailBean.getCreateUserId();
 							if(StringUtil.isNotNull(friendAccount))
-								new NotificationUtil(1, context).sendActionNotification("与"+friendAccount +"聊天", friendAccount +":" +chatDetailBean.getContent(), "测试", 16, 0, ChatActivity.class);
+								new NotificationUtil(notificationId, context).sendActionNotification("与"+friendAccount +"聊天", friendAccount +":" +chatDetailBean.getContent(), "聊天", 1, 0, ChatActivity.class);
 						}
 					}
 				}

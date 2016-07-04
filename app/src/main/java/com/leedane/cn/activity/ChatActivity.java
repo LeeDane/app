@@ -39,7 +39,8 @@ import java.util.List;
  */
 public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnItemClickListener{
     private static final String TAG = "ChatActivity";
-    public static final int START_CHAT_DETAIL_CODE = 16;
+    public static final int START_CHAT_DETAIL_CODE = 16; //聊天更新状态码
+    public static final int BASE_USER_CHAT_DETAIL_CODE = 11000;//基本的用户聊天码
     private BaseSQLiteDatabase sqLiteDatabase;
 
     private ImageView mImageViewLine;

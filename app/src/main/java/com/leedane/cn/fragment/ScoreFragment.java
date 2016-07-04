@@ -18,6 +18,7 @@ import com.leedane.cn.bean.ScoreBean;
 import com.leedane.cn.handler.ScoreHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -136,10 +137,11 @@ public class ScoreFragment extends BaseFragment{
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
-                        mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
+                        //mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
+                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
                         mListViewFooter.setOnClickListener(this);
                     }else{
-                        ToastUtil.failure(mContext);
+                        ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                     }
                 }
                 return;
@@ -237,21 +239,20 @@ public class ScoreFragment extends BaseFragment{
      */
     @Override
     protected void sendLoadAgain(View view){
-        //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getStringResource(mContext, R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
-                || getStringResource(mContext, R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
-
-            isLoading = true;
-            HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
-            params.put("first_id", mFirstId);
-            params.put("last_id", mLastId);
-            params.put("method", mPreLoadMethod);
-            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
-            taskCanceled(TaskType.LOAD_SCORE);
-            ScoreHandler.getScoresRequest(this, params);
+        //加载失败或者点击加载更多的情况下才不能点击
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())
+                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mListViewFooter.getText().toString())){
+            return;
         }
-
+        isLoading = true;
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
+        params.put("first_id", mFirstId);
+        params.put("last_id", mLastId);
+        params.put("method", mPreLoadMethod);
+        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        taskCanceled(TaskType.LOAD_SCORE);
+        ScoreHandler.getScoresRequest(this, params);
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

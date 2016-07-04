@@ -39,9 +39,9 @@ public class MySettingDataBase {
         List<MySettingBean> mySettingBeans = new ArrayList<>();
         MySettingBean mySettingBean1 = new MySettingBean(1, "load_image", "0");
         MySettingBean mySettingBean2 = new MySettingBean(2, "no_notification", "0");
-        MySettingBean mySettingBean3 = new MySettingBean(3, "first_load", "10");
-        MySettingBean mySettingBean4 = new MySettingBean(4, "other_load", "5");
-        MySettingBean mySettingBean5 = new MySettingBean(5, "double_click_out", "0");
+        MySettingBean mySettingBean3 = new MySettingBean(3, "first_load", "25");
+        MySettingBean mySettingBean4 = new MySettingBean(4, "other_load", "15");
+        MySettingBean mySettingBean5 = new MySettingBean(5, "double_click_out", "1");
         MySettingBean mySettingBean6 = new MySettingBean(6, "cache_blog", "1");
         MySettingBean mySettingBean7 = new MySettingBean(7, "cache_mood", "1");
         MySettingBean mySettingBean8 = new MySettingBean(8, "chat_text_size", "16");

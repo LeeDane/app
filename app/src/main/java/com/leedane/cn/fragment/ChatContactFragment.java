@@ -19,6 +19,7 @@ import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.adapter.ChatContactAdapter;
 import com.leedane.cn.adapter.expandRecyclerviewadapter.StickyRecyclerHeadersDecoration;
 import com.leedane.cn.app.R;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.bean.MyFriendsBean;
 import com.leedane.cn.handler.CommonHandler;
@@ -121,22 +122,25 @@ public class ChatContactFragment extends Fragment implements View.OnClickListene
 
     public void getNetData() {
         String tempData = SharedPreferenceUtil.getFriends(mContext.getApplicationContext());
-        if(StringUtil.isNull(tempData)){
-            ToastUtil.success(mContext, "您还没有好友");
-            //后台去获取用户的好友信息
-            CommonHandler.startUserFreidnsService(mContext.getApplicationContext(), false);
-            mActivity.finish();
-            return;
-        }
-        try {
+        if(StringUtil.isNotNull(tempData)){
             Gson gson = new GsonBuilder().create();
             mModel = gson.fromJson(tempData, HttpResponseMyFriendsBean.class);
-            setUI();
-        } catch (Exception e) {
-
+            if(mModel != null && mModel.getMessage().size() > 0){
+                setUI();
+            }else{
+                loadMyFriends();
+            }
+        }else{
+            loadMyFriends();
         }
     }
-
+    private void loadMyFriends(){
+        ToastUtil.success(mContext, "您还没有好友");
+        //后台去获取用户的好友信息
+        CommonHandler.startUserFreidnsService(BaseApplication.newInstance(), false);
+        mActivity.finish();
+        return;
+    }
     private void setUI() {
 
         mSideBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {

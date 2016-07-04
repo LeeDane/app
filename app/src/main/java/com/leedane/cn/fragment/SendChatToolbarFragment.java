@@ -123,6 +123,7 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
             ToastUtil.failure(mContext, "聊天内容不能为空", Toast.LENGTH_SHORT);
             return;
         }
+        mContentText.setText("");
         HashMap<String, Object> params = new HashMap<>();
         params.put("toUserId", toUserId);
         params.put("content", contentText);

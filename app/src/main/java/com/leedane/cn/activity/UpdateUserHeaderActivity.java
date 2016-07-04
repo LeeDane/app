@@ -2,11 +2,13 @@ package com.leedane.cn.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,10 +23,12 @@ import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.uploadfile.PortUpload;
 import com.leedane.cn.uploadfile.UploadItem;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.FileUtil;
+import com.leedane.cn.util.MediaUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -127,7 +131,8 @@ public class UpdateUserHeaderActivity extends BaseActivity {
             return;
         }
 
-
+        Uri mUri = Uri.parse(imagePath);
+        String p = mUri.getPath();
         File file = new File(imagePath);//源文件
         if(!file.isFile()){
             ToastUtil.failure(getApplicationContext(), "请选择文件", Toast.LENGTH_LONG);
@@ -213,18 +218,19 @@ public class UpdateUserHeaderActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            System.out.println("requestCode"+requestCode);
+            System.out.println("requestCode" + requestCode);
             if (requestCode == MoodActivity.GET_SYSTEM_IMAGE_CODE) {
-                Uri uri = data.getData();
                 Bitmap bitmap = null;
                 try{
-                    imagePath = uri.getPath();
-                    bitmap = BitmapUtil.getSmallBitmap(getApplicationContext(), imagePath, 300, 300);
-                    showImage.setImageBitmap(bitmap);
+                    //imagePath = AppUtil.getPathByUri(UpdateUserHeaderActivity.this, data.getData());
+                    imagePath = MediaUtil.getImageAbsolutePath(UpdateUserHeaderActivity.this, data.getData());
+                    if(StringUtil.isNotNull(imagePath)){
+                        bitmap = BitmapUtil.getSmallBitmap(getApplicationContext(), imagePath, 300, 300);
+                        showImage.setImageBitmap(bitmap);
+                    }else
+                        ToastUtil.failure(UpdateUserHeaderActivity.this, "获取不到图片路径");
                 }catch (Exception e){
                     e.printStackTrace();
-                }finally {
-                    //BitmapUtil.recycled(bitmap);
                 }
             }
         }

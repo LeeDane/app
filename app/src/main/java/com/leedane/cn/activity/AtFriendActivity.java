@@ -97,20 +97,25 @@ public class AtFriendActivity extends BaseActivity implements MyFriendsAdapter.O
 
     public void getNetData() {
         String tempData = SharedPreferenceUtil.getFriends(getApplicationContext());
-        if(StringUtil.isNull(tempData)){
-            ToastUtil.success(AtFriendActivity.this, "您还没有好友");
-            //后台去获取用户的好友信息
-            CommonHandler.startUserFreidnsService(getApplicationContext(), false);
-            finish();
-            return;
-        }
-        try {
+        if(StringUtil.isNotNull(tempData)){
             Gson gson = new GsonBuilder().create();
             mModel = gson.fromJson(tempData, HttpResponseMyFriendsBean.class);
-            setUI();
-        } catch (Exception e) {
-
+            if(mModel != null && mModel.getMessage().size() > 0){
+                setUI();
+            }else{
+                loadMyFriends();
+            }
+        }else{
+            loadMyFriends();
         }
+    }
+
+    private void loadMyFriends(){
+        ToastUtil.success(AtFriendActivity.this, "您还没有好友");
+        //后台去获取用户的好友信息
+        CommonHandler.startUserFreidnsService(getApplicationContext(), false);
+        finish();
+        return;
     }
 
     private void setUI() {

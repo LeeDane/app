@@ -24,6 +24,7 @@ import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
 import java.util.List;
@@ -190,12 +191,12 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             viewHolder.getmImgMain().setVisibility(View.GONE);
         }
 
-        viewHolder.getmTransmit().setText(mContext.getResources().getString(R.string.personal_transmit) + "(" +String.valueOf(moodBean.getTransmitNumber()) + ")");
-        viewHolder.getmComment().setText(mContext.getResources().getString(R.string.personal_comment) + "(" + String.valueOf(moodBean.getCommentNumber()) + ")");
+        viewHolder.getmTransmit().setText(mContext.getResources().getString(R.string.personal_transmit) + "(" +StringUtil.changeNotNull(moodBean.getTransmitNumber()) + ")");
+        viewHolder.getmComment().setText(mContext.getResources().getString(R.string.personal_comment) + "(" + StringUtil.changeNotNull(moodBean.getCommentNumber()) + ")");
         viewHolder.getmTransmit().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "转发", Toast.LENGTH_SHORT).show();
+                //ToastUtil.success(mContext, "转发", Toast.LENGTH_SHORT);
                 Intent it_transmit = new Intent();
                 PersonalActivity activity =  (PersonalActivity)mContext;
                 it_transmit.setClass(activity, MoodActivity.class);
@@ -209,7 +210,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         viewHolder.getmComment().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show();
+                //ToastUtil.success(mContext, "评论", Toast.LENGTH_SHORT);
                 Intent it_transmit = new Intent();
                 PersonalActivity activity =  (PersonalActivity)mContext;
                 it_transmit.setClass(activity, MoodActivity.class);
@@ -217,26 +218,9 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
                 it_transmit.putExtra("moodObj",mData.get(index));
                 it_transmit.putExtra("width","30");//展示的图像的宽度
                 it_transmit.putExtra("height", "30"); //展示的图像的高度
-                //activity.startActivity(it_transmit);
                 activity.startActivityForResult(it_transmit, PersonalActivity.MOOD_COMMENT_REQUEST_CODE);
             }
         });
-        /*viewHolder.getmPraise().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(mContext, "赞:"+moodBean.getContent(), Toast.LENGTH_SHORT).show();
-                HttpRequestBean requestBean = new HttpRequestBean();
-                HashMap<String, Object> params = new HashMap<>();
-                params.put("table_name", "t_mood");
-                params.put("table_id", moodBean.getId());
-                params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-                requestBean.setParams(params);
-                requestBean.setServerMethod("leedane/zan_add.action");
-                TaskLoader.getInstance().startTaskForResult(TaskType.ADD_ZAN, PersonalMoodListViewAdapter.this, requestBean);
-                //String serverUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() +"leedane/zan_add.action";
-
-            }
-        });*/
         return view;
     }
 

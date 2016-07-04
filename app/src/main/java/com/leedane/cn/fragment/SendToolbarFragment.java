@@ -135,6 +135,7 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
             ToastUtil.failure(mContext, "评论内容不能为空", Toast.LENGTH_SHORT);
             return;
         }
+        mContentText.setText("");
         HashMap<String, Object> params = new HashMap<>();
         if(commentOrTransmit == 0){
             showLoadingDialog("Comment", "try to commeting...", true);
