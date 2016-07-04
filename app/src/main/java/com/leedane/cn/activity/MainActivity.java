@@ -67,6 +67,11 @@ import cn.jpush.android.api.TagAliasCallback;
 public class MainActivity extends NavigationActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
 
+    public static final int[] bgColors = new int[]{R.drawable.tag_textview_bg_blue_account_link, R.drawable.tag_textview_bg_blue_primary_dark, R.drawable.tag_textview_bg_blue_primary_light
+            , R.drawable.tag_textview_bg_color_accent, R.drawable.tag_textview_bg_gray, R.drawable.tag_textview_bg_unknow_color_1, R.drawable.tag_textview_bg_red
+            , R.drawable.tag_textview_bg_result_view, R.drawable.tag_textview_bg_unknow_color_2, R.drawable.tag_textview_bg_unknow_color_3, R.drawable.tag_textview_bg_unknow_color_4
+            , R.drawable.tag_textview_bg_unknow_color_5};
+
     public static final String TAG = "MainActivity";
 
     private BlogDataBase blogDataBase; //数据库
@@ -425,7 +430,7 @@ public class MainActivity extends NavigationActivity
                         //评论
                         if(TaskType.ADD_COMMENT == type){
                             dismissLoadingDialog();
-                            dismissCommentOrTransmitDialog();
+                            dismissTextDialog();
                             if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
                                 ToastUtil.success(MainActivity.this, "评论成功");
                             }else{
@@ -435,7 +440,7 @@ public class MainActivity extends NavigationActivity
                         //转发
                         if(TaskType.ADD_TRANSMIT == type){
                             dismissLoadingDialog();
-                            dismissCommentOrTransmitDialog();
+                            dismissTextDialog();
                             if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
                                 ToastUtil.success(MainActivity.this, "转发成功");
                             }else{
@@ -464,6 +469,15 @@ public class MainActivity extends NavigationActivity
                                 DialogHandler.showNewestVersion(MainActivity.this, jsonArray.getJSONObject(0));
                             }else{
                                 ToastUtil.failure(MainActivity.this, "获取新版本失败", Toast.LENGTH_SHORT);
+                            }
+                            return;
+                        }else if(type == TaskType.ADD_TAG){
+                            dismissLoadingDialog();
+                            dismissTextDialog();
+                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                                ToastUtil.success(MainActivity.this, jsonObject);
+                            }else{
+                                ToastUtil.failure(MainActivity.this, jsonObject);
                             }
                             return;
                         }
@@ -745,12 +759,14 @@ public class MainActivity extends NavigationActivity
         menu.add(0, Menu.FIRST+3, 0, getStringResource(R.string.attention));
         menu.add(0, Menu.FIRST+4, 0, getStringResource(R.string.comment));
         menu.add(0, Menu.FIRST+5, 0, getStringResource(R.string.transmit));
-        menu.add(0, Menu.FIRST+6, 0, getStringResource(R.string.unlike));
+        menu.add(0, Menu.FIRST+6, 0, getStringResource(R.string.add_tag));
+        menu.add(0, Menu.FIRST+7, 0, getStringResource(R.string.unlike));
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        StringBuffer notice = new StringBuffer();
         switch (item.getItemId()){
             case 1://查看详情
                 startLookDetailActivity();
@@ -768,73 +784,101 @@ public class MainActivity extends NavigationActivity
                 executeAttention();
                 break;
             case 5: //评论
-                showCommentOrTransmitDialog(true);
+                notice.append("注意事项：\r\n");
+                notice.append("1、输入的内容不能为空值，长度最好不要超过255个字符。\r\n");
+                notice.append("2、请不要输入跟该博客无关的内容。\r\n");
+                notice.append("3、不能包含违法中华人民共和国相关法律法规的信息(内容)。\r\n");
+                notice.append("4、建议不要输入一些特殊字符/字符串/emoji表情(系统会自动过滤掉)。\r\n");
+                showTextDialog(0, notice.toString());
                 break;
             case 6://转发
-                showCommentOrTransmitDialog(false);
+                notice.append("注意事项：\r\n");
+                notice.append("1、输入的内容不能为空值，长度最好不要超过255个字符。\r\n");
+                notice.append("2、请不要输入跟该博客无关的内容。\r\n");
+                notice.append("3、不能包含违法中华人民共和国相关法律法规的信息(内容)。\r\n");
+                notice.append("4、建议不要输入一些特殊字符/字符串/emoji表情(系统会自动过滤掉)。\r\n");
+                showTextDialog(1, notice.toString());
                 break;
-            case 7: //不喜欢
+            case 7: //添加标签
+                notice.append("注意事项：\r\n");
+                notice.append("1、输入的内容不能为空值，长度不要超过5个字符。\r\n");
+                notice.append("2、标签内容不能出现\",\"或者\"，\"分号\r\n");
+                notice.append("3、不能包含违法中华人民共和国相关法律法规的信息(内容)。\r\n");
+                notice.append("4、建议不要输入一些特殊字符/字符串/emoji表情(系统会自动过滤掉)。\r\n");
+                showTextDialog(2, notice.toString());
+                break;
+            case 8: //不喜欢
                 Toast.makeText(MainActivity.this, mClickPosition + "-----"+ item.getTitle(), Toast.LENGTH_LONG).show();
                 break;
         }
         return super.onContextItemSelected(item);
     }
 
-    private Dialog commentOrTransmitDialog;
+    private Dialog textDialog;
     /**
-     * 显示弹出自定义评论或者转发view
-     * @param isComment
+     * 显示弹出自定义文本view
+     * @param type 0: 评论， 1：转发， 2：添加标签
      */
-    public void showCommentOrTransmitDialog(final boolean isComment){
+    public void showTextDialog(final int type, String notice){
         //判断是否已经存在菜单，存在则把以前的记录取消
-        dismissCommentOrTransmitDialog();
+        dismissTextDialog();
 
-        commentOrTransmitDialog = new Dialog(MainActivity.this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
-        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_comment_or_transmit_dialog, null);
+        textDialog = new Dialog(MainActivity.this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.show_text_dialog, null);
 
-        final EditText editText = (EditText)view.findViewById(R.id.comment_or_transmit_dialog_text);
-        TextView submitBtn = (TextView)view.findViewById(R.id.comment_or_transmit_dialog_submit);
+        final EditText editText = (EditText)view.findViewById(R.id.show_text_dialog_text);
+        TextView submitBtn = (TextView)view.findViewById(R.id.show_text_dialog_submit);
+        TextView noticeTV = (TextView)view.findViewById(R.id.show_text_dialog_notice);
+        noticeTV.setText(StringUtil.changeNotNull(notice));
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String content = editText.getText().toString();
-                if(StringUtil.isNull(content) && isComment){
+                if(StringUtil.isNull(content) && (type == 0 || type == 2)){
                     editText.setFocusable(true);
-                    ToastUtil.failure(MainActivity.this, "请先输入您想评论的话吧");
+                    ToastUtil.failure(MainActivity.this, "请输入点什么吧");
+                    return;
+                }
+
+                if(StringUtil.isNotNull(content) && type == 2 && content.length() > 5){
+                    editText.setFocusable(true);
+                    ToastUtil.failure(MainActivity.this, "标签长度不能超过5位");
                     return;
                 }
                 HashMap<String, Object> params = new HashMap<String, Object>();
                 params.put("table_name", "t_blog");
                 params.put("table_id", mBlogs.get(mClickPosition).getId());
-                if(isComment){
+                if(type == 0){
                     params.put("content", content);
                     params.put("level", 1);
                     CommentHandler.sendComment(MainActivity.this,params);
-                }else{
+                }else if(type == 1){
                     params.put("content", StringUtil.isNull(content)? "转发了这条心情" :content);
                     TransmitHandler.sendTransmit(MainActivity.this, params);
+                }else if(type == 2){
+                    BlogHandler.addTag(MainActivity.this, mBlogs.get(mClickPosition).getId(), content);
                 }
 
                 showLoadingDialog();
             }
         });
 
-        commentOrTransmitDialog.setTitle("操作");
-        commentOrTransmitDialog.setCancelable(true);
-        commentOrTransmitDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        textDialog.setTitle("操作");
+        textDialog.setCancelable(true);
+        textDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                dismissCommentOrTransmitDialog();
+                dismissTextDialog();
             }
         });
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(800,500);
-        commentOrTransmitDialog.setContentView(view, layoutParams);
-        commentOrTransmitDialog.show();
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(800, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textDialog.setContentView(view, layoutParams);
+        textDialog.show();
     }
 
-    private void dismissCommentOrTransmitDialog(){
-        if(commentOrTransmitDialog != null && commentOrTransmitDialog.isShowing()){
-            commentOrTransmitDialog.dismiss();
+    private void dismissTextDialog(){
+        if(textDialog != null && textDialog.isShowing()){
+            textDialog.dismiss();
         }
     }
 

@@ -6,15 +6,17 @@ import android.graphics.Bitmap;
 import android.text.Html;
 import android.text.SpannableString;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.leedane.cn.activity.MainActivity;
 import com.leedane.cn.activity.PersonalActivity;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
@@ -89,7 +91,8 @@ public class HomeAdapter extends BaseAdapter{
             myHolder.setmAccount((TextView) convertView.findViewById(R.id.home_item_account));
             myHolder.setmTime((TextView) convertView.findViewById(R.id.home_item_time));
             myHolder.setmFrom((TextView) convertView.findViewById(R.id.home_item_from));
-            myHolder.setmDigest((TextView)convertView.findViewById(R.id.home_item_digest));
+            myHolder.setmDigest((TextView) convertView.findViewById(R.id.home_item_digest));
+            myHolder.setmTags((LinearLayout)convertView.findViewById(R.id.home_item_tags));
             convertView.setTag(myHolder);
         }else{
             myHolder = (MyHolder)convertView.getTag();
@@ -167,7 +170,32 @@ public class HomeAdapter extends BaseAdapter{
         }
 
         myHolder.getmDigest().setText(StringUtil.changeNotNull(blogBean.getDigest()) +"...");
+        myHolder.getmTags().removeAllViewsInLayout();
+        if(StringUtil.isNotNull(blogBean.getTag())){
+            String[] tagArray = blogBean.getTag().split(",");
+            for(int i = 0; i< tagArray.length; i++){
+                myHolder.getmTags().addView(buildTagTextView(tagArray[i]), i);
+            }
+        }
         return convertView;
+    }
+
+    private TextView buildTagTextView(String tag){
+        TextView textView = new TextView(mContext);
+        textView.setGravity(Gravity.CENTER);
+        //这里的Textview的父layout是ListView，所以要用ListView.LayoutParams
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.topMargin = 10;
+        layoutParams.rightMargin = 45;
+        textView.setLayoutParams(layoutParams);
+        textView.setPadding(20, 10, 20, 10);
+        textView.setText(tag);
+        int rn = (int) (Math.random() * MainActivity.bgColors.length);
+        textView.setTextColor(mContext.getResources().getColor(R.color.white));
+        textView.setBackgroundResource(MainActivity.bgColors[rn]);
+        textView.setTextSize(14);
+
+        return textView;
     }
 
     private class MyHolder{
@@ -178,6 +206,7 @@ public class HomeAdapter extends BaseAdapter{
         private TextView mFrom;
         private TextView mTime;
         private TextView mDigest;
+        private LinearLayout mTags;
 
         public TextView getmTitle() {
             return mTitle;
@@ -225,6 +254,14 @@ public class HomeAdapter extends BaseAdapter{
 
         public void setmTime(TextView mTime) {
             this.mTime = mTime;
+        }
+
+        public LinearLayout getmTags() {
+            return mTags;
+        }
+
+        public void setmTags(LinearLayout mTags) {
+            this.mTags = mTags;
         }
     }
 }

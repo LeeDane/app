@@ -2,7 +2,6 @@ package com.leedane.cn.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -38,7 +36,6 @@ import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.MediaUtil;
-import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -118,20 +115,12 @@ public class MoodActivity extends BaseActivity {
      */
     private int mOperateType;
 
-    /**
-     * 转发等操作的心情对象
-     */
-    private JSONObject mMoodObj;
-
-    private JSONObject mUserInfo;
-
     //private BaseSQLiteDatabase sqLiteDatabase;
 
     /**
      * 用户选择的图片地址列表
      */
     private List<String> mUris = new ArrayList<>();
-    private List<Uri> mUriList = new ArrayList<>();
 
     private MoodGridViewAdapter mMoodGridViewAdapter;
     Intent it_mood;
@@ -188,7 +177,6 @@ public class MoodActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        mUserInfo = SharedPreferenceUtil.getUserInfo(getApplicationContext());
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
 
         mOperate = (LinearLayout)findViewById(R.id.mood_operate);
@@ -391,29 +379,14 @@ public class MoodActivity extends BaseActivity {
                                     it_service.putExtra("can_transmit", mCanTransmit.isChecked());
                                     StringBuffer buffer = new StringBuffer();
                                     String uris = "";
-                                    if(mUriList.size() > 0){
-                                        for (Uri uri : mUriList) {
-                                            buffer.append(MediaUtil.getImageAbsolutePath(MoodActivity.this, uri));
-                                            buffer.append(",");
-                                            //itemList.add(FileUtil.buildUploadItem(MoodActivity.this, uri, mUserInfo, new Date()));
-                                        }
-                                    }else{
-                                        for (String uri : mUris) {
-                                            buffer.append(uri);
-                                            buffer.append(",");
-                                            //itemList.add(FileUtil.buildUploadItem(MoodActivity.this, uri, mUserInfo, new Date()));
-                                        }
+                                    for (String uri : mUris) {
+                                        buffer.append(uri);
+                                        buffer.append(",");
                                     }
                                     if (mUris.size() > 0) {
                                         uris = buffer.toString().substring(0, buffer.toString().length() - 1);
                                     }
-                                    //MediaStore.Images.Media.
                                     it_service.putExtra("uris", uris);
-                                /*UploadBean uploadBean = new UploadBean();
-                                List<UploadItem> itemList = new ArrayList<>();
-
-                                uploadBean.setItemList(itemList);*/
-                                    // it_service.putExtra("uploadBean", uploadBean);
                                     getApplicationContext().startService(it_service);
                                     finish();
                                 }
@@ -497,13 +470,6 @@ public class MoodActivity extends BaseActivity {
                 uStr = uStr.substring(0, uStr.length() -1);
         }
         try{
-            /*Map<String, Object> params = new HashMap<>();
-            params.put("id", 1);
-            params.put("content", mMoodContent.getText().toString());
-            params.put("uris",uStr);
-            params.put("create_time", DateUtil.DateToString(new Date()));
-            params.put("create_user_id", String.valueOf(BaseApplication.getLoginUserId()));
-            sqLiteDatabase.insert(BaseSQLiteOpenHelper.TABLE_MOOD_DRAFT, params);*/
             SharedPreferenceUtil.saveMoodDraft(getApplicationContext(), mMoodContent.getText().toString(), uStr);
         }catch (Exception e){
             e.printStackTrace();
@@ -564,15 +530,9 @@ public class MoodActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             System.out.println("requestCode"+requestCode);
             if (requestCode == GET_SYSTEM_IMAGE_CODE) {//图库返回
-                List<String> tempUris = new ArrayList<>();
-                for(String uri: mUris){
-                    tempUris.add(uri);
-                }
-                Uri uri = data.getData();
-                mUriList.add(uri);
-                tempUris.add(uri.getPath());
-                mMoodGridViewAdapter.refreshData(tempUris);
-                Toast.makeText(getBaseContext(), "获取的图片路径是：" + MediaUtil.getImageAbsolutePath(MoodActivity.this, uri), Toast.LENGTH_LONG).show();
+                mUris.add(MediaUtil.getImageAbsolutePath(MoodActivity.this, data.getData()));
+                mMoodGridViewAdapter.notifyDataSetChanged();
+                Toast.makeText(getBaseContext(), "获取的图片路径是：" + MediaUtil.getImageAbsolutePath(MoodActivity.this, data.getData()), Toast.LENGTH_LONG).show();
             }
         }
         //更新选择

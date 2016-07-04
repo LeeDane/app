@@ -40,6 +40,7 @@ public enum TaskType {
     ADD_COLLECTION, //添加收藏
     ADD_REPORT, //增加举报
     ADD_CHAT, //发聊天信息
+    ADD_TAG, //添加标签
     PUBLISH_CHAT_BG, //发布聊天背景
     LOAD_COMMENT, //加载评论列表
     LOAD_TRANSMIT, //加载转发列表

@@ -42,4 +42,22 @@ public class BlogHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_BLOG, listener, requestBean);
     }
+
+    /**
+     * 添加标签
+     * @param listener
+     * @param bid
+     * @param tag
+     */
+    public static void addTag(TaskListener listener, int bid, String tag){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("bid", bid);
+        params.put("tag", tag);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/blog_addTag.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.ADD_TAG, listener, requestBean);
+    }
 }

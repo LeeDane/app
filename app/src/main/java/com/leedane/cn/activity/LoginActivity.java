@@ -269,9 +269,9 @@ public class LoginActivity extends Activity implements TaskListener {
         searchHistoryDataBase.deleteAll();
         searchHistoryDataBase.destroy();
 
-        MySettingDataBase mySettingDataBase = new MySettingDataBase(LoginActivity.this);
+        /*MySettingDataBase mySettingDataBase = new MySettingDataBase(LoginActivity.this);
         mySettingDataBase.deleteAll();
-        mySettingDataBase.destroy();
+        mySettingDataBase.destroy();*/
     }
 
     /**

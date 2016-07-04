@@ -26,6 +26,7 @@
     <string name="article">正文</string>
     <string name="comment">评论</string>
     <string name="transmit">转发</string>
+    <string name="add_tag">添加标签</string>
     <string name="loading">数据加载中。。。</string>
     <string name="load_more">点击加载更多</string>
     <string name="load_finish">数据加载完成</string>
