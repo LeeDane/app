@@ -114,40 +114,48 @@ public class HomeAdapter extends BaseAdapter{
         //final String imgUrl = ConstantsUtil.QINIU_CLOUD_SERVER + "head.jpg";
         //final String imgUrl = ConstantsUtil.DEFAULT_SERVER_URL + "leedane/download_executeDown.action";
 
-        if(imgUrl.startsWith("http://") || imgUrl.startsWith("https://")){
-            ImageCacheManager.loadImage(imgUrl, myHolder.getmImg(), BaseApplication.getDefaultImage(), BaseApplication.getErrorImage());
-        }else{
-            //从base64格式的字符串中截取
-            String imageTag = imgUrl.substring(10,30) + blogBean.getId();
-            mNetworkImageLoader.loadBase64Bitmap(imageTag, imgUrl, new NetworkImageLoader.ImageCallback() {
-                @Override
-                public void imageLoaded(Bitmap imageBitmap, String imageTag) {
-                    ImageView imageView = (ImageView) mListView.findViewWithTag(imageTag);
-                    if (imageBitmap == null && imageView != null) {
-                        imageView.setImageResource(R.drawable.no_pic);
-                        return;
+        if(StringUtil.isNotNull(imgUrl)){
+            //myHolder.getmImg().setVisibility(View.VISIBLE);
+            if(imgUrl.startsWith("http://") || imgUrl.startsWith("https://")){
+                ImageCacheManager.loadImage(imgUrl, myHolder.getmImg(), BaseApplication.getDefaultImage(), BaseApplication.getErrorImage());
+            }else{
+                //从base64格式的字符串中截取
+                String imageTag = imgUrl.substring(10,30) + blogBean.getId();
+                mNetworkImageLoader.loadBase64Bitmap(imageTag, imgUrl, new NetworkImageLoader.ImageCallback() {
+                    @Override
+                    public void imageLoaded(Bitmap imageBitmap, String imageTag) {
+                        ImageView imageView = (ImageView) mListView.findViewWithTag(imageTag);
+                        if (imageBitmap == null && imageView != null) {
+                            imageView.setImageResource(R.drawable.no_pic);
+                            return;
+                        }
+                        if (imageView != null) {
+                            imageView.setImageBitmap(imageBitmap);
+                        }
                     }
-                    if (imageView != null) {
-                        imageView.setImageBitmap(imageBitmap);
+                });
+            }
+            myHolder.getmImg().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String picPath = blogBean.getImgUrl();
+                    if(StringUtil.isNotNull(picPath)){
+                        List<ImageDetailBean> list = new ArrayList<ImageDetailBean>();
+                        ImageDetailBean imageDetailBean = new ImageDetailBean();
+                        imageDetailBean.setPath(picPath);
+                        list.add(imageDetailBean);
+                        CommonHandler.startImageDetailActivity(mContext, list, 0);
+                    }else{
+                        ToastUtil.success(mContext, "暂无图片");
                     }
                 }
             });
+        }else{
+            myHolder.getmImg().setClickable(false);
+            //myHolder.getmImg().setVisibility(View.GONE);
+            myHolder.getmImg().setImageBitmap(BaseApplication.getNotPicImage());
         }
-        myHolder.getmImg().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String picPath = blogBean.getImgUrl();
-                if(StringUtil.isNotNull(picPath)){
-                    List<ImageDetailBean> list = new ArrayList<ImageDetailBean>();
-                    ImageDetailBean imageDetailBean = new ImageDetailBean();
-                    imageDetailBean.setPath(picPath);
-                    list.add(imageDetailBean);
-                    CommonHandler.startImageDetailActivity(mContext, list, 0);
-                }else{
-                    ToastUtil.success(mContext, "暂无图片");
-                }
-            }
-        });
+
 
         final int userId = blogBean.getCreateUserId();
         myHolder.getmAccount().setText(Html.fromHtml("<font color=\"blue\">" + StringUtil.changeNotNull(blogBean.getAccount()) + "</font>"));

@@ -114,6 +114,15 @@ public class BaseApplication extends Application {
     }
 
     /**
+     * 获取默认图像的bitmap
+     * @return
+     */
+    public static Bitmap getNotPicImage(){
+        return getBitmapFromRes(R.drawable.no_pic);
+
+    }
+
+    /**
      * 获取当图像获取失败后显示的错误提示图像的Bitmap
      * @return
      */
