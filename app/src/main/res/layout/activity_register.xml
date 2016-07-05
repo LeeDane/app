@@ -61,7 +61,7 @@
         android:textColor="#f6fafb"
         android:hint="@string/info_mobile_phone" />
 
-   <EditText
+   <com.leedane.cn.customview.EyeEditText
        	android:id="@+id/register_password"
         android:layout_width="wrap_content"
     	android:layout_height="40dp"
@@ -77,8 +77,9 @@
     	android:textSize="17dp"
     	android:textColor="#f6fafb"
     	android:inputType="textPassword"
+       android:drawableRight="@drawable/eye"
         android:hint="@string/hint_password" />
-    <EditText
+    <com.leedane.cn.customview.EyeEditText
         android:id="@+id/register_confirm_password"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
@@ -94,6 +95,7 @@
         android:textSize="17dp"
         android:textColor="#f6fafb"
         android:inputType="textPassword"
+        android:drawableRight="@drawable/eye"
         android:hint="@string/hint_confirm_password" />
    <TextView
        android:id="@+id/register_btn"

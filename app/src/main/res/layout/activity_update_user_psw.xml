@@ -16,12 +16,13 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="@string/update_user_old_psw"/>
-        <EditText
+        <com.leedane.cn.customview.EyeEditText
             android:id="@+id/update_user_old_psw"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
+            android:drawableRight="@drawable/eye"
             android:hint="@string/update_user_hint_old_psw"/>
     </LinearLayout>
     <LinearLayout
@@ -32,12 +33,13 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="@string/update_user_new_psw"/>
-        <EditText
+        <com.leedane.cn.customview.EyeEditText
             android:id="@+id/update_user_new_psw"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
+            android:drawableRight="@drawable/eye"
             android:hint="@string/update_user_hint_new_psw"/>
     </LinearLayout>
     <LinearLayout
@@ -48,12 +50,13 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="@string/update_user_confirm_psw"/>
-        <EditText
+        <com.leedane.cn.customview.EyeEditText
             android:id="@+id/update_user_confirm_psw"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
+            android:drawableRight="@drawable/eye"
             android:hint="@string/update_user_hint_confirm_psw"/>
     </LinearLayout>
 </LinearLayout>

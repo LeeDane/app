@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.customview.EyeEditText;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
@@ -56,8 +57,8 @@ public class RegisterActivity extends Activity implements TaskListener{
      */
     private void initView() {
         mRegisterUsername = (EditText)findViewById(R.id.register_username);
-        mRegisterPassword = (EditText)findViewById(R.id.register_password);
-        mRegisterConfirmPassword = (EditText)findViewById(R.id.register_confirm_password);
+        mRegisterPassword = (EyeEditText)findViewById(R.id.register_password);
+        mRegisterConfirmPassword = (EyeEditText)findViewById(R.id.register_confirm_password);
         mRegisterMobilePhone = (EditText)findViewById(R.id.register_mobile_phone);
         mRegisterButton = (TextView)findViewById(R.id.register_btn);
     }

@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.leedane.cn.app.R;
+import com.leedane.cn.customview.EyeEditText;
 import com.leedane.cn.handler.UserHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.StringUtil;
@@ -26,9 +27,9 @@ public class UpdateLoginPswActivity extends BaseActivity{
 
     private Button mRight;
 
-    private EditText mOldPsw;
-    private EditText mNewPsw;
-    private EditText mConfirmPsw;
+    private EyeEditText mOldPsw;
+    private EyeEditText mNewPsw;
+    private EyeEditText mConfirmPsw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +50,9 @@ public class UpdateLoginPswActivity extends BaseActivity{
         mRight.setVisibility(View.VISIBLE);
         mRight.setOnClickListener(this);
         mRight.setText(getStringResource(R.string.comlpete));
-        mOldPsw = (EditText)findViewById(R.id.update_user_old_psw);
-        mNewPsw = (EditText)findViewById(R.id.update_user_new_psw);
-        mConfirmPsw = (EditText)findViewById(R.id.update_user_confirm_psw);
+        mOldPsw = (EyeEditText)findViewById(R.id.update_user_old_psw);
+        mNewPsw = (EyeEditText)findViewById(R.id.update_user_new_psw);
+        mConfirmPsw = (EyeEditText)findViewById(R.id.update_user_confirm_psw);
     }
 
     @Override

@@ -44,7 +44,7 @@
     	android:textColor="#f6fafb"
         android:hint="@string/hint_username" />
         
-   <EditText
+   <com.leedane.cn.customview.EyeEditText
        	android:id="@+id/editview_password"
         android:layout_width="wrap_content"
     	android:layout_height="40dp"
@@ -60,6 +60,7 @@
     	android:textSize="17dp"
     	android:textColor="#f6fafb"
     	android:inputType="textPassword"
+       android:drawableRight="@drawable/eye"
         android:hint="@string/hint_password" />
    <TextView
        android:id="@+id/login_btn"

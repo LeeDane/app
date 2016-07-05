@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.customview.EyeEditText;
 import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.database.MySettingDataBase;
 import com.leedane.cn.database.SearchHistoryDataBase;
@@ -101,7 +102,7 @@ public class LoginActivity extends Activity implements TaskListener {
 
     public void onDoneClick(View view){
         final String username = mTextEditUsername.getText().toString();
-        final String password = ((EditText)findViewById(R.id.editview_password)).getText().toString();
+        final String password = ((EyeEditText)findViewById(R.id.editview_password)).getText().toString();
 
         if(username == null || username.length() == 0 || username.replaceAll(" ", "").length() == 0){
             ToastUtil.failure(LoginActivity.this, getResources().getString(R.string.username_null), Toast.LENGTH_SHORT);
