@@ -4,22 +4,42 @@
     android:layout_width="match_parent"
     android:layout_height="48.0dip"
     android:layout_marginBottom="0px"
-    android:orientation="horizontal">
-    <EditText
-        android:id="@+id/mood_detail_comment_or_transmit_text"
-        android:layout_width="0dp"
-        android:layout_weight="9"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="@string/comment_hint"
-        android:imeOptions="actionSend"
-        android:layout_alignParentBottom="true"/>
-    <ImageView
-        android:id="@+id/mood_detail_comment_or_transmit_send"
-        android:layout_width="25dp"
-        android:layout_gravity="center"
-        android:scaleType="fitXY"
-        android:src="@mipmap/send_mood"
-        android:layout_marginRight="@dimen/default_3dp"
-        android:layout_height="25dp" />
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.leedane.cn.customview.RightImgClickEditText
+                android:id="@+id/mood_detail_comment_or_transmit_text"
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/comment_hint"
+                android:imeOptions="actionSend"
+                android:layout_alignParentBottom="true"
+                android:drawableRight="@drawable/emoji_no_click"
+                android:drawablePadding="@dimen/default_5dp"/>
+            <ImageView
+                android:id="@+id/mood_detail_comment_or_transmit_send"
+                android:layout_width="25dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@drawable/send"
+                android:layout_marginRight="@dimen/default_3dp"
+                android:layout_marginBottom="@dimen/default_3dp"
+                android:layout_height="25dp" />
+        </LinearLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/emoji_viewpager"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="200dp">
+        </android.support.v4.view.ViewPager>
+    </LinearLayout>
+
 </LinearLayout>

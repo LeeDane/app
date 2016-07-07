@@ -540,12 +540,34 @@ public class MoodActivity extends BaseActivity {
             String select = data.getStringExtra("select");
             if(StringUtil.isNotNull(select)){
                 String oldContent = mMoodContent.getText().toString();
+                int start = mMoodContent.getSelectionStart();
                 if(StringUtil.isNotNull(oldContent)){
+                    boolean set = start == oldContent.length() - 1;
                     if(oldContent.endsWith("@"))
-                    oldContent = oldContent.substring(0, oldContent.length() -1);
-                    mMoodContent.setText(oldContent + select);
+                        oldContent = oldContent.substring(0, oldContent.length() -1);
+
+                    Editable editable = mMoodContent.getText();
+                    char o = oldContent.charAt(start-1); //判断上一个是不是空格
+                    if((oldContent.length() >= start) && o == ' '){
+                        editable.insert(start, select);
+                    }else{
+                        editable.insert(start, " " + select);
+                    }
+
+
+                    //mMoodContent.setText(oldContent + select);
+
+                    //重置光标位置为最末
+                   /* if(set){
+                        mMoodContent.setSelection(mMoodContent.getText().length());
+                    }*/
                 }else{
                     mMoodContent.setText(select);
+                    //重置光标位置为最末
+                    mMoodContent.setSelection(mMoodContent.getText().length());
+                    /*if(mMoodContent.hasSelection()){
+                        mMoodContent.setSelection(mMoodContent.getText().length());
+                    }*/
                 }
             }
         }

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class ChatFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private static final String TAG = "ChatFragmentPagerAdapter";
+    private static final String TAG = "ChatFragmentAdapter";
 
     private List<Fragment> mMainFragment;
 

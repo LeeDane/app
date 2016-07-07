@@ -46,6 +46,7 @@
     <string name="clear_history">清除全部搜索历史</string>
     <string name="add_top">置顶</string>
     <string name="fanyi">翻译</string>
+    <string name="send">发送</string>
     <string name="tip_double_click_exit">再按一次退出程序</string>
 
     <!-- 异常相关 -->

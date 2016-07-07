@@ -40,6 +40,7 @@ import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.helper.PraiseUserHelper;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.JsonUtil;
@@ -293,6 +294,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                 mTVUser.setOnClickListener(MoodDetailFragment.this);
             mTVTime.setText(detail.getString("create_time"));
             mTVContent.setText(detail.getString("content"));
+            AppUtil.textviewShowImg(mContext, mTVContent);
             mTVPraise.setText(getStringResource(mContext, R.string.personal_praise) +"("+ detail.getInt("zan_number")+")");
             mTVComment.setText("评论("+detail.getInt("comment_number")+")");
             mTVTransmit.setText("转发(" + detail.getInt("transmit_number") + ")");

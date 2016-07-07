@@ -88,6 +88,7 @@ public class EyeEditText extends EditText implements
                         this.setInputType(129);
                         isShow = false;
                     }
+                    ToastUtil.success(getContext(), "dddd");
                 }else{
                     this.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 }

@@ -3,6 +3,7 @@ package com.leedane.cn.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +22,15 @@ import com.google.gson.GsonBuilder;
 import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ChatDetailBean;
+import com.leedane.cn.customview.RightImgClickEditText;
+import com.leedane.cn.emoji.EmojiBean;
+import com.leedane.cn.emoji.EmojiPagerAdapter;
+import com.leedane.cn.emoji.OnEmojiClickListener;
 import com.leedane.cn.handler.ChatDetailHandler;
 import com.leedane.cn.helper.SoftKeyboardStateHelper;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -38,11 +44,13 @@ import java.util.HashMap;
  * Created by LeeDane on 2016/5/3.
  */
 public class SendChatToolbarFragment extends Fragment implements View.OnClickListener,SoftKeyboardStateHelper.SoftKeyboardStateListener
-        , TaskListener {
+        , TaskListener ,RightImgClickEditText.OnEmojiImgClickListener, OnEmojiClickListener {
     public static final String TAG = "SendChatToolbarFragment";
     private Context mContext;
-    private EditText mContentText;
+    private RightImgClickEditText mContentText;
     private ImageView mContentSend;
+
+    private ViewPager mViewPager;
     private LinearLayout mSendBarRootView;
     private View mRootView;
     private SoftKeyboardStateHelper mKeyboardHelper;
@@ -63,6 +71,41 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
 
     public void setOnSendChatListener(OnSendChatListener onSendChatListener) {
         this.onSendChatListener = onSendChatListener;
+    }
+
+    @Override
+    public void onDeleteButtonClick(View v) {
+
+    }
+
+    @Override
+    public void onEmojiClick(EmojiBean v) {
+        mContentText.setText(StringUtil.changeNotNull(mContentText.getText().toString()) + "[" + v.getEmojiStr() + "]");
+        AppUtil.editTextShowImg(mContext, mContentText);
+    }
+
+    @Override
+    public void afterEmojiImgClick(boolean showEmoji) {
+        mContentText.setFocusable(!showEmoji);
+        mContentText.setFocusableInTouchMode(!showEmoji);
+        mContentText.requestFocus();
+        if(showEmoji){
+            InputMethodManager imm = ( InputMethodManager ) mContentText.getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
+            if ( imm.isActive( ) ) {
+                imm.hideSoftInputFromWindow( mContentText.getApplicationWindowToken( ) , InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }else{
+            InputMethodManager imm = ( InputMethodManager ) mContentText.getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
+            if (!imm.isActive()) {
+                imm.showSoftInput(mContentText, InputMethodManager.SHOW_FORCED);
+            }
+        }
+        mKeyboardHelper.setIsSoftKeyboardOpened(!showEmoji);
+        if(showEmoji){
+            mViewPager.setVisibility(View.VISIBLE);
+        }else {
+            mViewPager.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -100,7 +143,7 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
                 .getDecorView());
         mKeyboardHelper.addSoftKeyboardStateListener(this);
         this.mSendBarRootView = (LinearLayout)mRootView.findViewById(R.id.send_bar_root);
-        this.mContentText = (EditText) mRootView.findViewById(R.id.mood_detail_comment_or_transmit_text);
+        this.mContentText = (RightImgClickEditText) mRootView.findViewById(R.id.mood_detail_comment_or_transmit_text);
         this.mContentSend = (ImageView)mRootView.findViewById(R.id.mood_detail_comment_or_transmit_send);
         mContentSend.setOnClickListener(this);
         this.mContentText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -112,6 +155,9 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
                 return false;
             }
         });
+        mContentText.setOnEmojiImgClickListener(SendChatToolbarFragment.this);
+        mViewPager = (ViewPager)mRootView.findViewById(R.id.emoji_viewpager);
+        mViewPager.setAdapter(new EmojiPagerAdapter(getFragmentManager(), SendChatToolbarFragment.this));
     }
 
     /**

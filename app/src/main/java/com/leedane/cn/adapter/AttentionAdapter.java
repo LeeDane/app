@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.AttentionBean;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
@@ -67,6 +68,7 @@ public class AttentionAdapter extends BaseAdapter{
         if(StringUtil.isNotNull(attentionBean.getSource())){
             viewHolder.getmSource().setText(attentionBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
+            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }

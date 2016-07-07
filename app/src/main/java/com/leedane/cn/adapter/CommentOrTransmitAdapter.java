@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CommentOrTransmitBean;
+import com.leedane.cn.emoji.EmojiUtil;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
@@ -75,11 +77,13 @@ public class CommentOrTransmitAdapter extends BaseAdapter{
         }
         viewHolder = (ViewHolder)view.getTag();
         viewHolder.getmContent().setText(commentOrTransmitBean.getContent());
+        AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
         viewHolder.getmFrom().setText("来自：" +StringUtil.changeNotNull(commentOrTransmitBean.getFroms()));
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(commentOrTransmitBean.getCreateTime())));
         if(StringUtil.isNotNull(commentOrTransmitBean.getSource())){
             viewHolder.getmSource().setText(commentOrTransmitBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
+            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }

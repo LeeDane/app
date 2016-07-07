@@ -12,6 +12,7 @@ import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatDetailBean;
 import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.RelativeDateFormat;
@@ -83,6 +84,7 @@ public class ChatDetailAdapter extends BaseAdapter{
 
             viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(chatDetailBean.getCreateTime())));
             viewHolder.getmContent().setText(chatDetailBean.getContent());
+            AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
             viewHolder.getmUserPicPath().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -119,6 +121,7 @@ public class ChatDetailAdapter extends BaseAdapter{
 
             viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(chatDetailBean.getCreateTime())));
             viewHolder.getmContent().setText(chatDetailBean.getContent());
+            AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
             viewHolder.getmUserPicPath().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

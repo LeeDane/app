@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textSize="18sp"
+            android:paddingTop="@dimen/default_3dp"
             android:text="@string/no_text"/>
         <TextView
             android:id="@+id/chat_detail_time"

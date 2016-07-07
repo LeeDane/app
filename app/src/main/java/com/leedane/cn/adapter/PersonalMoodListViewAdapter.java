@@ -20,6 +20,7 @@ import com.leedane.cn.customview.RightBorderTextView;
 import com.leedane.cn.fragment.PersonalMoodFragment;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.helper.PraiseUserHelper;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.RelativeDateFormat;
@@ -140,6 +141,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
 
         viewHolder.getmContent().setText(content, TextView.BufferType.SPANNABLE);
         viewHolder.getmFroms().setText("来自："+moodBean.getFroms());
+        AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
         String createTime = moodBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
             viewHolder.getmTime().setText("");

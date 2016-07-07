@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CollectionBean;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
@@ -65,6 +66,7 @@ public class CollectionAdapter extends BaseAdapter{
         if(StringUtil.isNotNull(collectionBean.getSource())){
             viewHolder.getmSource().setText(collectionBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
+            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }

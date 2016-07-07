@@ -7,14 +7,25 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.leedane.cn.emoji.EmojiUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Administrator on 2015/10/11.
@@ -119,4 +130,94 @@ public class AppUtil {
         vib.vibrate(pattern, isRepeat? 1: -1);
     }
 
+    public static void editTextShowImg(final Context context, EditText editText){
+        /*EditText:
+            通常用于显示文字，但有时候也需要在文字中夹杂一些图片，比如QQ中就可以使用表情图片，又比如需要的文字高亮显示等等，如何在android中也做到这样呢？
+            记得android中有个android.text包，这里提供了对文本
+        */
+
+        //Drawable drawable = context.getResources().getDrawable(imageResId);
+
+        //需要处理的文本，[ha]是需要被替代的文本
+        //drawable.setBounds(0, 0, 60, 60);
+
+        //要让图片替代指定的文字就要用ImageSpan
+        //SpannableString spannable = new SpannableString(editText.getText().toString()+"[ha]");
+
+        //开始替换，注意第2和第3个参数表示从哪里开始替换到哪里替换结束（start和end）
+        //最后一个参数类似数学中的集合,[5,12)表示从5到12，包括5但不包括12
+        //ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+        //spannable.setSpan(span, editText.getText().length(), editText.getText().length() + "[ha]".length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        //editText.setText(spannable);
+
+        String text = editText.getText().toString();
+        //Pattern pattern = Pattern.compile("\[(\S+?)\]");  //这里是过滤出[XX]这种形式的字符串，下面是把这种形式的字符串替换成对应的表情
+        Pattern p=Pattern.compile("\\[([^\\[\\]]+)\\]");
+        Matcher m=p.matcher(text);
+        String group = null;
+        //SpannableString spannableString = new SpannableString(text);
+        int drawableSrc = 0;
+        //要让图片替代指定的文字就要用ImageSpan
+        SpannableString spannable = new SpannableString(text);
+        while(m.find()){
+            group = m.group().trim();
+            if(StringUtil.isNotNull(group) && group.startsWith("[") && group.endsWith("]")){
+
+                int start = m.start();
+                int end = m.end();
+                group = group.substring(1, group.length() -1);
+                drawableSrc = EmojiUtil.getImgId(group);
+                if(drawableSrc > 0){
+                    Drawable drawable = context.getResources().getDrawable(drawableSrc);
+                    //需要处理的文本，[ha]是需要被替代的文本
+                    drawable.setBounds(0, 0, 60, 60);
+
+                    //开始替换，注意第2和第3个参数表示从哪里开始替换到哪里替换结束（start和end）
+                    //最后一个参数类似数学中的集合,[5,12)表示从5到12，包括5但不包括12
+                    ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+                    spannable.setSpan(span, start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                    /*spannableString.setSpan(span, start, end,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);*/
+
+                }
+            }
+        }
+        editText.setText(spannable);
+    }
+
+    public static void textviewShowImg(final Context context, TextView textView){
+        String text = textView.getText().toString();
+        //Pattern pattern = Pattern.compile("\[(\S+?)\]");  //这里是过滤出[XX]这种形式的字符串，下面是把这种形式的字符串替换成对应的表情
+        Pattern p=Pattern.compile("\\[([^\\[\\]]+)\\]");
+        Matcher m=p.matcher(text);
+        String group = null;
+        //SpannableString spannableString = new SpannableString(text);
+        int drawableSrc = 0;
+        //要让图片替代指定的文字就要用ImageSpan
+        SpannableString spannable = new SpannableString(text);
+        while(m.find()){
+            group = m.group().trim();
+            if(StringUtil.isNotNull(group) && group.startsWith("[") && group.endsWith("]")){
+
+                int start = m.start();
+                int end = m.end();
+                group = group.substring(1, group.length() -1);
+                drawableSrc = EmojiUtil.getImgId(group);
+                if(drawableSrc > 0){
+                    Drawable drawable = context.getResources().getDrawable(drawableSrc);
+                    //需要处理的文本，[ha]是需要被替代的文本
+                    drawable.setBounds(0, 0, 60, 60);
+
+                    //开始替换，注意第2和第3个参数表示从哪里开始替换到哪里替换结束（start和end）
+                    //最后一个参数类似数学中的集合,[5,12)表示从5到12，包括5但不包括12
+                    ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+                    spannable.setSpan(span, start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                    /*spannableString.setSpan(new ImageSpan(context, drawableSrc), start, end,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);*/
+
+                }
+            }
+        }
+        textView.setText(spannable);
+    }
 }

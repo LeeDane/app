@@ -1,5 +1,7 @@
 package com.leedane.cn.util;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -198,6 +200,29 @@ public class StringUtil {
             return null;
         }
         return name.substring(name.lastIndexOf("/") + 1, name.length());
+    }
+
+    /**
+     * 获取文本的[]里面的ID(int)作为列表输出
+     * @param content
+     * @return
+     */
+    public static Set<Integer> getImgIdList(String content){
+        Set<Integer> imgIds = new HashSet<Integer>();
+        if(isNotNull(content)){
+            Pattern p=Pattern.compile("\\[([^\\[\\]]+)\\]");
+            Matcher m=p.matcher(content);
+            String group = null;
+            while(m.find()){
+                group = m.group().trim();
+                if(isNotNull(group) && group.startsWith("[") && group.endsWith("]")){
+                    group = group.substring(1, group.length() -1);
+                    if(changeObjectToInt(group) > 0)
+                        imgIds.add(changeObjectToInt(group));
+                }
+            }
+        }
+        return imgIds;
     }
 
     public static void main(String[] args) {

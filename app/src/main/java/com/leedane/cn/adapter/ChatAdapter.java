@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ChatBean;
 import com.leedane.cn.customview.CircularImageView;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
@@ -57,37 +58,43 @@ public class ChatAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MyHolder myHolder;
+        MyHolder viewHolder;
         if(convertView == null){
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_chat_listview, null);
-            myHolder = new MyHolder();
-            myHolder.setmCreateTime((TextView) convertView.findViewById(R.id.chat_time));
-            myHolder.setmAccount((TextView) convertView.findViewById(R.id.chat_account));
-            myHolder.setmUserPicPath((CircularImageView) convertView.findViewById(R.id.chat_user_pic));
-            myHolder.setmContent((TextView) convertView.findViewById(R.id.chat_content));
-            myHolder.setmNoReadNumber((TextView)convertView.findViewById(R.id.chat_no_read));
-            convertView.setTag(myHolder);
+            viewHolder = new MyHolder();
+            viewHolder.setmCreateTime((TextView) convertView.findViewById(R.id.chat_time));
+            viewHolder.setmAccount((TextView) convertView.findViewById(R.id.chat_account));
+            viewHolder.setmUserPicPath((CircularImageView) convertView.findViewById(R.id.chat_user_pic));
+            viewHolder.setmContent((TextView) convertView.findViewById(R.id.chat_content));
+            viewHolder.setmNoReadNumber((TextView)convertView.findViewById(R.id.chat_no_read));
+            convertView.setTag(viewHolder);
         }else{
-            myHolder = (MyHolder)convertView.getTag();
+            viewHolder = (MyHolder)convertView.getTag();
         }
         ChatBean chatBean = mList.get(position);
 
         String createTime = chatBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
-            myHolder.getmCreateTime().setText("");
+            viewHolder.getmCreateTime().setText("");
         }else{
-            myHolder.getmCreateTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
+            viewHolder.getmCreateTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 
         String userPicPath = chatBean.getUserPicPath();
         if(StringUtil.isNotNull(userPicPath)){
-            ImageCacheManager.loadImage(userPicPath, myHolder.getmUserPicPath());
+            ImageCacheManager.loadImage(userPicPath, viewHolder.getmUserPicPath());
         }else{
-            myHolder.getmUserPicPath().setImageResource(R.drawable.no_pic);
+            viewHolder.getmUserPicPath().setImageResource(R.drawable.no_pic);
         }
-        myHolder.getmAccount().setText(chatBean.getAccount());
-        myHolder.getmContent().setText(chatBean.getContent());
-        myHolder.getmNoReadNumber().setText(String.valueOf(chatBean.getNoReadNumber()));
+        viewHolder.getmAccount().setText(chatBean.getAccount());
+        viewHolder.getmContent().setText(chatBean.getContent());
+        AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
+        if(StringUtil.changeObjectToInt(chatBean.getNoReadNumber()) > 0){
+            viewHolder.getmNoReadNumber().setBackgroundResource(R.drawable.chat_has_number_tip_bg);
+        }else{
+            viewHolder.getmNoReadNumber().setBackgroundResource(R.drawable.chat_no_number_tip_bg);
+        }
+        viewHolder.getmNoReadNumber().setText(StringUtil.changeObjectToInt(chatBean.getNoReadNumber()) +"");
         return convertView;
     }
 

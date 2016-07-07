@@ -40,6 +40,7 @@
         android:singleLine="false"
         android:textSize="@dimen/default_16sp"
         android:layout_marginTop="@dimen/default_3dp"
+        android:paddingTop="@dimen/default_3dp"
         android:text="网站：http://www.baidu.com, 电话：13712345671 Today is very cold!Today is very cold!Today is very cold!Today is very cold!"/>
 
     <TextView

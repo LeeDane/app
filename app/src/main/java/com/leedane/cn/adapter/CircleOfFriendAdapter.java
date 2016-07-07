@@ -13,6 +13,7 @@ import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.TimeLineBean;
 import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
@@ -97,12 +98,14 @@ public class CircleOfFriendAdapter extends BaseAdapter{
 
         if(StringUtil.isNotNull(timeLineBean.getSource())){
             viewHolder.getmSource().setText(timeLineBean.getSource());
+            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }
 
         viewHolder.getmContent().setText(timeLineBean.getContent());
+        AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
         return view;
     }
 

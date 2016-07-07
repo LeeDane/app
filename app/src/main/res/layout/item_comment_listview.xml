@@ -57,7 +57,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/default_16sp"
-            android:layout_marginTop="@dimen/default_5dp"
+            android:layout_marginTop="@dimen/default_3dp"
+            android:paddingTop="@dimen/default_3dp"
             android:layout_below="@id/comment_from"
             android:text="@string/no_text"/>
         <TextView

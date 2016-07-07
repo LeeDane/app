@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ZanBean;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
@@ -69,6 +70,7 @@ public class ZanAdapter extends BaseAdapter{
         if(StringUtil.isNotNull(zanBean.getSource())){
             viewHolder.getmSource().setText(zanBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
+            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }

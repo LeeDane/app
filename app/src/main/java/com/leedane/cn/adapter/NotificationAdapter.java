@@ -13,6 +13,7 @@ import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.NotificationBean;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
@@ -86,10 +87,12 @@ public class NotificationAdapter extends BaseAdapter{
             viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
         }
         viewHolder.getmContent().setText(StringUtil.changeNotNull(notificationBean.getContent()));
+        AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
         String source = notificationBean.getSource();
         if(StringUtil.isNotNull(source)){
             viewHolder.getmSource().setVisibility(View.VISIBLE);
             viewHolder.getmSource().setText(source);
+            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }
