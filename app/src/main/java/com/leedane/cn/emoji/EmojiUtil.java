@@ -70,6 +70,27 @@ public class EmojiUtil {
         EmojiBean emojiBean53 = new EmojiBean(R.drawable.wink, 53, "使眼色");
         EmojiBean emojiBean54 = new EmojiBean(R.drawable.worried, 54, "担心");
         EmojiBean emojiBean55 = new EmojiBean(R.drawable.yum, 55, "美味");
+        EmojiBean emojiBean56 = new EmojiBean(R.drawable.scream, 56, "尖叫");
+        EmojiBean emojiBean57 = new EmojiBean(R.drawable.clap, 57, "鼓掌");
+        EmojiBean emojiBean58 = new EmojiBean(R.drawable.couple_with_heart, 58, "结婚");
+        EmojiBean emojiBean59 = new EmojiBean(R.drawable.cupid, 59, "丘比特");
+        EmojiBean emojiBean60 = new EmojiBean(R.drawable.eyes, 60, "眼睛");
+        EmojiBean emojiBean61 = new EmojiBean(R.drawable.moon, 61, "月亮");
+        EmojiBean emojiBean62 = new EmojiBean(R.drawable.muscle, 62, "肌肉");
+        EmojiBean emojiBean63 = new EmojiBean(R.drawable.musical_note, 63, "音乐");
+        EmojiBean emojiBean64 = new EmojiBean(R.drawable.ok_hand, 64, "可以");
+        EmojiBean emojiBean65 = new EmojiBean(R.drawable.pig, 65, "猪头");
+        EmojiBean emojiBean66 = new EmojiBean(R.drawable.pray, 66, "祈祷");
+        EmojiBean emojiBean67 = new EmojiBean(R.drawable.punch, 67, "拳头");
+        EmojiBean emojiBean68 = new EmojiBean(R.drawable.rage, 68, "愤怒");
+        EmojiBean emojiBean69 = new EmojiBean(R.drawable.raising_hand, 69, "举手");
+        EmojiBean emojiBean70 = new EmojiBean(R.drawable.rose, 70, "玫瑰");
+        EmojiBean emojiBean71 = new EmojiBean(R.drawable.thumbsdown, 71, "示弱");
+        EmojiBean emojiBean72 = new EmojiBean(R.drawable.thumbsup, 72, "点赞");
+        EmojiBean emojiBean73 = new EmojiBean(R.drawable.two_men_holding_hands, 73, "基友");
+        EmojiBean emojiBean74 = new EmojiBean(R.drawable.two_women_holding_hands, 74, "闺蜜");
+        EmojiBean emojiBean75 = new EmojiBean(R.drawable.umbrella, 75, "雨伞");
+        EmojiBean emojiBean76 = new EmojiBean(R.drawable.v, 76, "yes");
         emojiBeanList.add(emojiBean1);
         emojiBeanList.add(emojiBean2);
         emojiBeanList.add(emojiBean3);
@@ -125,7 +146,27 @@ public class EmojiUtil {
         emojiBeanList.add(emojiBean53);
         emojiBeanList.add(emojiBean54);
         emojiBeanList.add(emojiBean55);
-
+        emojiBeanList.add(emojiBean56);
+        emojiBeanList.add(emojiBean57);
+        emojiBeanList.add(emojiBean58);
+        emojiBeanList.add(emojiBean59);
+        emojiBeanList.add(emojiBean60);
+        emojiBeanList.add(emojiBean61);
+        emojiBeanList.add(emojiBean62);
+        emojiBeanList.add(emojiBean63);
+        emojiBeanList.add(emojiBean64);
+        emojiBeanList.add(emojiBean65);
+        emojiBeanList.add(emojiBean66);
+        emojiBeanList.add(emojiBean67);
+        emojiBeanList.add(emojiBean68);
+        emojiBeanList.add(emojiBean69);
+        emojiBeanList.add(emojiBean70);
+        emojiBeanList.add(emojiBean71);
+        emojiBeanList.add(emojiBean72);
+        emojiBeanList.add(emojiBean73);
+        emojiBeanList.add(emojiBean74);
+        emojiBeanList.add(emojiBean75);
+        emojiBeanList.add(emojiBean76);
         EMOJI_TAB_CONTENT = emojiBeanList.size() / COLUMNS /4+ 1;
     }
 

@@ -163,7 +163,7 @@ public class ToastUtil {
      * @param offX
      * @param offY
      */
-    private static void show(Context context, String content, int times, int gravity, int offX, int offY){
+    public static void show(Context context, String content, int times, int gravity, int offX, int offY){
         if(context == null)
             context = BaseApplication.newInstance();
 

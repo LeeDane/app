@@ -98,6 +98,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
     private TextView mTVTime;
     private TextView mTVContent;
     private TextView mPraiseZanUser;
+    private LinearLayout mImgContainer; //图像容器
     private TextView mTVComment;
     private TextView mTVTransmit;
     private TextView mTVError;
@@ -106,8 +107,6 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
     private TextView mTVPraise;
     private EditText mETCommentOrTransmit;
     private ImageView mIVCommentOrTransmit;
-
-    private ImageView mIVImg;
     private int itemClickPosition = 0;
 
     /**
@@ -202,8 +201,8 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
         mLLComment.setOnClickListener(this);
         mLLTransmit.setOnClickListener(this);
 
-        mIVImg = (ImageView)viewHeader.findViewById(R.id.mood_detail_img);
         mPraiseZanUser = (TextView)viewHeader.findViewById(R.id.mood_detail_praise);
+        mImgContainer = (LinearLayout)viewHeader.findViewById(R.id.mood_detail_img_container);
         mTVPraise = (TextView)viewHeader.findViewById(R.id.mood_detail_praise_show);
         mTVPraise.setOnClickListener(this);
         mCommentLine = (ImageView)viewHeader.findViewById(R.id.mood_detail_comment_show_line);
@@ -334,7 +333,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
                 List<MoodImagesBean> moodImagesBeans = mMoodImagesBean.getMessage();
                 if(mMoodImagesBean.isSuccess() && moodImagesBeans.size() > 0){
                     //Toast.makeText(MoodDetailActivity.this, "获取图片成功", Toast.LENGTH_SHORT).show();
-                    mIVImg.setVisibility(View.VISIBLE);
+                    /*mIVImg.setVisibility(View.VISIBLE);
                     for(MoodImagesBean imagesBean: moodImagesBeans){
                         if((imagesBean.getSize().equalsIgnoreCase("120x120") || imagesBean.getSize().equalsIgnoreCase("source")) && imagesBean.getOrder() == 0){
                             ImageCacheManager.loadImage(imagesBean.getPath(), mIVImg, 120, 120);
@@ -344,7 +343,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
                         }
                     }
                     mIVImg.setOnClickListener(this);
-                    mIVImg.setOnLongClickListener(this);
+                    mIVImg.setOnLongClickListener(this);*/
 
                 }/*else{
                     Toast.makeText(MoodDetailActivity.this, "获取图片失败", Toast.LENGTH_LONG).show();
@@ -656,7 +655,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
         super.onClick(v);
         HashMap<String, Object> params = new HashMap<>();
         switch (v.getId()){
-            case R.id.mood_detail_img:
+            /*case R.id.mood_detail_img:
                 List<ImageDetailBean> list = new ArrayList<ImageDetailBean>();
                 ImageDetailBean imageDetailBean;
                 for(MoodImagesBean bean: mMoodImagesBean.getMessage()){
@@ -673,7 +672,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
                     }
                 }
                 CommonHandler.startImageDetailActivity(MoodDetailOldActivity.this, list, 0);
-                break;
+                break;*/
             case R.id.mood_detail_comment:
                 //Toast.makeText(MoodDetailActivity.this, "评论", Toast.LENGTH_SHORT).show();
                 commentOrTransmit = 0;
@@ -832,7 +831,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
     @Override
     public boolean onLongClick(View v) {
         switch (v.getId()){
-            case R.id.mood_detail_img:
+            /*case R.id.mood_detail_img:
                  //创建离开的警告提示框
                 AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("添加图库")
                         .setMessage("把该图片加入我的图库？")
@@ -867,7 +866,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
                             }
                         }).create(); // 创建对话框
                 alertDialog.show(); // 显示对话框
-                break;
+                break;*/
         }
         return true;
     }

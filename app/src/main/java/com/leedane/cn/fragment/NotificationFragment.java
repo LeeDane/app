@@ -1,6 +1,7 @@
 package com.leedane.cn.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.leedane.cn.adapter.NotificationAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpResponseNotificationBean;
 import com.leedane.cn.bean.NotificationBean;
+import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.NotificationHandler;
 import com.leedane.cn.task.TaskType;
@@ -23,6 +25,8 @@ import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.ToastUtil;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,8 +152,15 @@ public class NotificationFragment extends BaseFragment{
                         ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                     }
                 }
-            }else{
-                ToastUtil.failure(mContext, "数据加载失败", Toast.LENGTH_SHORT);
+            }else if(type == TaskType.DELETE_NOTIFICATION){
+                dismissLoadingDialog();
+                JSONObject jsonObject = new JSONObject(String.valueOf(result));
+                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                    ToastUtil.success(mContext, jsonObject);
+                    sendFirstLoading();
+                }else{
+                    ToastUtil.failure(mContext, jsonObject);
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -258,8 +269,35 @@ public class NotificationFragment extends BaseFragment{
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    ToastUtil.success(mContext, "点击的位置是：" + position + ",内容：" + mNotificationBeans.get(position).getToUserAccount());
+                    //ToastUtil.success(mContext, "点击的位置是：" + position + ",内容：" + mNotificationBeans.get(position).getToUserAccount());
                     CommonHandler.startDetailActivity(mContext, mNotificationBeans.get(position).getTableName(), mNotificationBeans.get(position).getTableId(), null);
+                }
+            });
+
+            //长按执行删除的操作
+            mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
+                    builder.setCancelable(true);
+                    builder.setIcon(R.drawable.menu_feedback);
+                    builder.setTitle("提示");
+                    builder.setMessage("删除该通知记录?");
+                    builder.setPositiveButton("删除",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    NotificationHandler.delete(NotificationFragment.this, mNotificationBeans.get(position).getId());
+                                    showLoadingDialog("Delete", "try best to delete...");
+                                }
+                            });
+                    builder.setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                }
+                            });
+                    builder.show();
+                    return true;
                 }
             });
 

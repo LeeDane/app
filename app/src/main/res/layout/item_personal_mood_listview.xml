@@ -50,16 +50,12 @@
         android:visibility="gone"
         android:textColor="@color/darker_gray"
         android:text="@string/action_settings"/>
-
-    <ImageView
-        android:id="@+id/personal_mood_img_main"
-        android:layout_width="80dp"
-        android:layout_height="100dp"
-        android:maxWidth="100dp"
-        android:maxHeight="120dp"
-        android:scaleType="fitXY"
-        android:layout_marginTop="@dimen/default_3dp"
-        android:src="@drawable/no_pic"/>
+    <LinearLayout
+        android:id="@+id/personal_mood_img_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    </LinearLayout>
     <TextView
         android:id="@+id/personal_mood_praise_list"
         android:layout_width="match_parent"

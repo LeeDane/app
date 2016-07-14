@@ -25,7 +25,7 @@ public class MoodGridViewAdapter extends BaseAdapter{
     /**
      * 图像在本地存储的url地址
      */
-    private List<String> mUrls;
+    private List<String> mLocalUris;
 
     /**
      * SD卡图片读取
@@ -36,19 +36,19 @@ public class MoodGridViewAdapter extends BaseAdapter{
      * 上下文
      */
     private Context mContext;
-    public MoodGridViewAdapter(Context context, List<String> urls){
-        mUrls = urls;
+    public MoodGridViewAdapter(Context context, List<String> localUris){
+        mLocalUris = localUris;
         mContext = context;
         mLocalImageLoader = new LocalImageLoader(mContext);
     }
     @Override
     public int getCount() {
-        return mUrls.size();
+        return mLocalUris.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mUrls.get(position);
+        return mLocalUris.get(position);
     }
 
     @Override
@@ -56,9 +56,9 @@ public class MoodGridViewAdapter extends BaseAdapter{
         return position;
     }
 
-    public void refreshData(List<String> urls){
-        this.mUrls.clear();
-        this.mUrls.addAll(urls);
+    public void refreshData(List<String> localUris){
+        this.mLocalUris.clear();
+        this.mLocalUris.addAll(localUris);
         this.notifyDataSetChanged();
     }
 
@@ -73,7 +73,7 @@ public class MoodGridViewAdapter extends BaseAdapter{
         }else{
             myHolder = (MyHolder)convertView.getTag();
         }
-        String uri = mUrls.get(position);
+        String uri = mLocalUris.get(position);
 
         if(StringUtil.isNull(uri)){
             Toast.makeText(mContext, "图片路径为空", Toast.LENGTH_SHORT).show();

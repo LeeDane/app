@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Map;
 
@@ -306,6 +307,30 @@ public class HttpConnectionUtil {
 
         //断开连接
         if(urlConnection != null) urlConnection.disconnect();
+        return null;
+    }
+
+    /**
+     * 获取网络图片的InputStream流
+     * @param imgUrl
+     * @return
+     */
+    public static InputStream getInputStream(String imgUrl){
+        if(StringUtil.isNull(imgUrl))
+            return null;
+
+        URL url = null;
+        try {
+            url = new URL(imgUrl);
+            URLConnection uc = url.openConnection();
+            uc.setConnectTimeout(60000);
+            uc.setDoInput(true);
+            uc.setDoInput(true);
+            uc.setReadTimeout(30000);
+            return uc.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

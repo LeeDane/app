@@ -3,12 +3,14 @@ package com.leedane.cn.emoji;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.util.ToastUtil;
@@ -40,7 +42,7 @@ public class EmojiPageFragment extends Fragment {
         if(index < EmojiUtil.EMOJI_TAB_CONTENT-1){
             end = start + EmojiUtil.COLUMNS * 4;
         }else{
-            end = EmojiUtil.emojiBeanList.size() -1 ;
+            end = EmojiUtil.emojiBeanList.size() ;
         }
         for(int i = start; i < end; i++){
             datas.add(EmojiUtil.emojiBeanList.get(i));
@@ -62,6 +64,13 @@ public class EmojiPageFragment extends Fragment {
                     listener.onEmojiClick((EmojiBean) parent.getAdapter()
                             .getItem(position));
                 }
+            }
+        });
+        sGrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                ToastUtil.show(getContext(), ((EmojiBean) parent.getAdapter().getItem(position)).getEmojiStr(), Toast.LENGTH_SHORT, Gravity.CENTER, 0, 0);
+                return true;
             }
         });
         sGrid.setSelector(new ColorDrawable(getContext().getResources().getColor(android.R.color.transparent)));

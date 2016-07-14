@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +24,9 @@ import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.helper.PraiseUserHelper;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
+import com.leedane.cn.util.DensityUtil;
 import com.leedane.cn.util.EnumUtil;
+import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -81,8 +85,8 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             viewHolder.setmTime((TextView) view.findViewById(R.id.personal_mood_time));
             viewHolder.setmMore((ImageView) view.findViewById(R.id.personal_mood_more));
 
-            viewHolder.setmLocation((TextView)view.findViewById(R.id.personal_mood_location_show));
-            viewHolder.setmImgMain((ImageView) view.findViewById(R.id.personal_mood_img_main));
+            viewHolder.setmLocation((TextView) view.findViewById(R.id.personal_mood_location_show));
+            viewHolder.setmImgContainer((LinearLayout) view.findViewById(R.id.personal_mood_img_container));
             viewHolder.setmTransmit((RightBorderTextView) view.findViewById(R.id.personal_mood_operate_transmit));
             viewHolder.setmComment((RightBorderTextView) view.findViewById(R.id.personal_mood_operate_comment));
             //viewHolder.setmPraise((RightBorderTextView)view.findViewById(R.id.personal_mood_operate_praise));
@@ -174,26 +178,76 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         });
 
         //异步去获取该心情的图像路径列表
-        if(!StringUtil.isNull(moodBean.getImgs())){
-            viewHolder.getmImgMain().setVisibility(View.VISIBLE);
+        /*if(!StringUtil.isNull(moodBean.getImgs())){
+
             String imgs = moodBean.getImgs();
-            String[] showImages = imgs.split(",");
-            for(String img: showImages){
+            final String[] showImages = imgs.split(";");
+            if(showImages.length == 1){
+                viewHolder.getmImgMain1().setVisibility(View.VISIBLE);
+                ImageCacheManager.loadImage(showImages[0], viewHolder.getmImgMain1(), 80, 100);
+                viewHolder.getmImgMain1().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CommonHandler.startImageDetailActivity(mContext, showImages[0]);
+                    }
+                });
+            }else if(showImages.length == 2){
+                viewHolder.getmImgMain1().setVisibility(View.VISIBLE);
+                viewHolder.getmImgMain2().setVisibility(View.VISIBLE);
+                ImageCacheManager.loadImage(showImages[0], viewHolder.getmImgMain1(), 80, 100);
+                ImageCacheManager.loadImage(showImages[1], viewHolder.getmImgMain2(), 80, 100);
+                viewHolder.getmImgMain1().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CommonHandler.startImageDetailActivity(mContext, showImages[0]);
+                    }
+                });
+                viewHolder.getmImgMain2().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CommonHandler.startImageDetailActivity(mContext, showImages[1]);
+                    }
+                });
+            }else if(showImages.length == 3){
+                viewHolder.getmImgMain1().setVisibility(View.VISIBLE);
+                viewHolder.getmImgMain2().setVisibility(View.VISIBLE);
+                viewHolder.getmImgMain3().setVisibility(View.VISIBLE);
+                ImageCacheManager.loadImage(showImages[0], viewHolder.getmImgMain1(), 80, 100);
+                ImageCacheManager.loadImage(showImages[1], viewHolder.getmImgMain2(), 80, 100);
+                ImageCacheManager.loadImage(showImages[2], viewHolder.getmImgMain3(), 80, 100);
+                viewHolder.getmImgMain1().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CommonHandler.startImageDetailActivity(mContext, showImages[0]);
+                    }
+                });
+                viewHolder.getmImgMain2().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CommonHandler.startImageDetailActivity(mContext, showImages[1]);
+                    }
+                });
+                viewHolder.getmImgMain3().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CommonHandler.startImageDetailActivity(mContext, showImages[2]);
+                    }
+                });
+            }
+            *//*for(int i =0; i< showImages.length; i++){
                 //拿到图像的路径后再去回去base64位的图像字符串填充到相应的ImageView
-                ImageCacheManager.loadImage(img, viewHolder.getmImgMain(), 80 , 100);
+
             }
 
-            viewHolder.getmImgMain().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CommonHandler.startImageDetailActivity(mContext, moodBean.getImgs());
-                }
-            });
+           *//*
         }else{
-            viewHolder.getmImgMain().setVisibility(View.GONE);
-        }
+            viewHolder.getmImgMain1().setVisibility(View.GONE);
+            viewHolder.getmImgMain2().setVisibility(View.GONE);
+            viewHolder.getmImgMain3().setVisibility(View.GONE);
+        }*/
+        ImageUtil.addImages(mContext, moodBean.getImgs(), viewHolder.getmImgContainer());
 
-        viewHolder.getmTransmit().setText(mContext.getResources().getString(R.string.personal_transmit) + "(" +StringUtil.changeNotNull(moodBean.getTransmitNumber()) + ")");
+        viewHolder.getmTransmit().setText(mContext.getResources().getString(R.string.personal_transmit) + "(" + StringUtil.changeNotNull(moodBean.getTransmitNumber()) + ")");
         viewHolder.getmComment().setText(mContext.getResources().getString(R.string.personal_comment) + "(" + StringUtil.changeNotNull(moodBean.getCommentNumber()) + ")");
         viewHolder.getmTransmit().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,7 +285,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         private TextView mTime;
         private ImageView mMore;
         private AutoLinkTextView mContent;
-        private ImageView mImgMain;
+       private LinearLayout mImgContainer;
         private TextView mPraiseList;
         private RightBorderTextView mComment;
         private RightBorderTextView mTransmit;
@@ -270,12 +324,12 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             this.mFroms = mFroms;
         }
 
-        public ImageView getmImgMain() {
-            return mImgMain;
+        public LinearLayout getmImgContainer() {
+            return mImgContainer;
         }
 
-        public void setmImgMain(ImageView mImgMain) {
-            this.mImgMain = mImgMain;
+        public void setmImgContainer(LinearLayout mImgContainer) {
+            this.mImgContainer = mImgContainer;
         }
 
         /*public RightBorderTextView getmPraise() {

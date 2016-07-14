@@ -47,6 +47,8 @@
     <string name="add_top">置顶</string>
     <string name="fanyi">翻译</string>
     <string name="send">发送</string>
+    <string name="img_link">图片链接</string>
+    <string name="save_imgage">保存图片</string>
     <string name="tip_double_click_exit">再按一次退出程序</string>
 
     <!-- 异常相关 -->
@@ -322,6 +324,7 @@
     <!--   更改聊天背景   -->
     <string name="update_chat_bg">更改聊天背景</string>
     <string name="chat_bg_web">选择web背景模板</string>
+    <string name="clear_chat_bg">清除聊天背景</string>
     <string name="chat_bg_select_system_tip">请选择一张图片</string>
     <string name="publish_chat_bg">发布聊天背景</string>
     <string name="as_chat_bg">设置为聊天背景</string>

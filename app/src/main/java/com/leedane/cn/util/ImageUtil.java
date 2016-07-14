@@ -1,12 +1,22 @@
 package com.leedane.cn.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+import com.leedane.cn.bean.ImageDetailBean;
+import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.volley.ImageCacheManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 图像工具类
@@ -94,5 +104,79 @@ public class ImageUtil {
             bitmap.recycle();
             bitmap = null;
         }
+    }
+
+    /**
+     * 将图像添加到Linnear中
+     * @param context
+     * @param imgs
+     * @param linearLayout
+     */
+    public static void addImages(final Context context, String imgs, LinearLayout linearLayout){
+        //异步去获取该心情的图像路径列表
+        if(!StringUtil.isNull(imgs)) {
+            final String[] showImages = imgs.split(";");
+            if(showImages.length > 0){
+                linearLayout.setVisibility(View.VISIBLE);
+                linearLayout.removeAllViewsInLayout();
+                ImageView imageView = null;
+                /*android:id="@+id/personal_mood_img_main3"
+                android:layout_width="80dp"
+                android:layout_height="100dp"
+                android:maxWidth="100dp"
+                android:maxHeight="120dp"
+                android:scaleType="fitXY"
+                android:layout_marginTop="@dimen/default_3dp"
+                android:src="@drawable/no_pic"/>*/
+                final List<ImageDetailBean> list = new ArrayList<>();
+                ImageDetailBean imageDetailBean = null;
+                for(int i = 0; i< showImages.length; i++){
+                    imageDetailBean = new ImageDetailBean();
+                    imageDetailBean.setPath(showImages[i]);
+                    list.add(imageDetailBean);
+                }
+                for(int i = 0; i< showImages.length; i++){
+                    final int index = i;
+                    final String path = showImages[index];
+                    if(StringUtil.isNotNull(showImages[i])){
+                        imageView = new ImageView(context);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, 80) , DensityUtil.dip2px(context, 100));
+                        params.rightMargin = 16;
+                        params.topMargin = 3;
+                        imageView.setLayoutParams(params);
+                        imageView.setMaxWidth(100);
+                        imageView.setMaxHeight(120);
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        ImageCacheManager.loadImage(path, imageView, 80, 100);
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                CommonHandler.startImageDetailActivity(context, list, index);
+                            }
+                        });
+                        linearLayout.addView(imageView);
+                    }
+                }
+                return;
+            }
+        }
+        linearLayout.setVisibility(View.GONE);
+    }
+
+    /**
+     * 判断是否是支持的类型
+     * @param fileName
+     * @return
+     */
+    public static boolean isSupportType(String fileName){
+        //获取文件的后缀
+        String suffix = fileName.substring(fileName.lastIndexOf(".")+1 , fileName.length());
+        for(String supportSuffix : ConstantsUtil.SUPPORTIMAGESUFFIXS){
+            //判断是否在支持的类型里面
+            if(supportSuffix.equalsIgnoreCase(suffix)) return true;
+        }
+
+        System.out.println("该文件不是目前系统支持的类型");
+        return false;
     }
 }

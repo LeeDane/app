@@ -1,5 +1,6 @@
 package com.leedane.cn.activity;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,10 +20,12 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.adapter.MoodGridViewAdapter;
+import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
@@ -65,6 +69,11 @@ public class MoodActivity extends BaseActivity {
     private TextView mMoodLocationShow;
 
     /**
+     * 展示显示的网络图片
+     */
+    private TextView mMoodNetworkShow;
+
+    /**
      * 是否可以评论
      */
     private CheckBox mCanComment;
@@ -106,6 +115,11 @@ public class MoodActivity extends BaseActivity {
     private GridView mGridview;
 
     /**
+     * 网络图片的链接，多个用";"分隔开
+     */
+    private List<String> mNetworkLinks = new ArrayList<>();
+
+    /**
      * 展示心情的内容
      */
     private EditText mMoodContent;
@@ -120,7 +134,7 @@ public class MoodActivity extends BaseActivity {
     /**
      * 用户选择的图片地址列表
      */
-    private List<String> mUris = new ArrayList<>();
+    private List<String> mLocalUris = new ArrayList<>();
 
     private MoodGridViewAdapter mMoodGridViewAdapter;
     Intent it_mood;
@@ -223,6 +237,7 @@ public class MoodActivity extends BaseActivity {
         mBtnPublish.setOnClickListener(this);
 
         mMoodLocationShow = (TextView)findViewById(R.id.mood_location_show);
+        mMoodNetworkShow = (TextView)findViewById(R.id.mood_network_link_show);
 
         if(mOperateType == 1){
             mBtnPublish.setText(getStringResource(R.string.mood_transmit));
@@ -241,7 +256,7 @@ public class MoodActivity extends BaseActivity {
             //添加照片
             mMoodAdd = (ImageView)findViewById(R.id.mood_add);
             mMoodAdd.setOnClickListener(this);
-            mMoodGridViewAdapter = new MoodGridViewAdapter(MoodActivity.this, mUris);
+            mMoodGridViewAdapter = new MoodGridViewAdapter(MoodActivity.this, mLocalUris);
             //显示添加后的图片
             mGridview = (GridView)findViewById(R.id.mood_gridview);
             mGridview.setAdapter(mMoodGridViewAdapter);
@@ -274,7 +289,7 @@ public class MoodActivity extends BaseActivity {
                     if(images.size() > 1){
                         ToastUtil.success(MoodActivity.this, "抱歉，目前系统只接受一张图片，已自动为您选择一张图片展示。");
                     }
-                    mUris.add(images.get(0));
+                    mLocalUris.add(images.get(0));
                     mMoodGridViewAdapter.notifyDataSetChanged();
                 }
             }else if(getIntent().getType().startsWith("text/")){
@@ -306,16 +321,7 @@ public class MoodActivity extends BaseActivity {
                 startATFriendActivity();
                 break;
             case R.id.mood_add:
-                if(mUris.size() > 2){
-                    Toast.makeText(MoodActivity.this, "最多允许选择3张图片", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                //调用系统图库
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                intent.putExtra("crop", true);
-                intent.putExtra("return-data", true);
-                startActivityForResult(intent, GET_SYSTEM_IMAGE_CODE);
+                showSelectItemMenuDialog();
                 break;
             case R.id.view_right_button:
                 final String content = mMoodContent.getText().toString();
@@ -345,15 +351,15 @@ public class MoodActivity extends BaseActivity {
                     showLoadingDialog("转发", "正在转发，请稍等...");
                     return;
                 }
-                if(StringUtil.isNull(content) && mUris.size() == 0){
-                    if(mOperateType == 0)
+                if(StringUtil.isNull(content) && (mLocalUris.size() == 0 || mNetworkLinks.size() ==0)){
+                    if(mOperateType == EnumUtil.MoodOperateType.发表.value)
                         ToastUtil.failure(getBaseContext(), "内容不能为空或者至少选择一张图片");
                     else
                         ToastUtil.failure(getBaseContext(), "至少输入点什么吧");
                     mMoodContent.setFocusable(true);
                     return;
                 }
-                if(mUris.size() > 0){
+                if(mLocalUris.size() > 0){
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MoodActivity.this);
                     builder.setCancelable(false);
                     builder.setIcon(R.drawable.head);
@@ -379,11 +385,11 @@ public class MoodActivity extends BaseActivity {
                                     it_service.putExtra("can_transmit", mCanTransmit.isChecked());
                                     StringBuffer buffer = new StringBuffer();
                                     String uris = "";
-                                    for (String uri : mUris) {
+                                    for (String uri : mLocalUris) {
                                         buffer.append(uri);
                                         buffer.append(",");
                                     }
-                                    if (mUris.size() > 0) {
+                                    if (mLocalUris.size() > 0) {
                                         uris = buffer.toString().substring(0, buffer.toString().length() - 1);
                                     }
                                     it_service.putExtra("uris", uris);
@@ -399,6 +405,8 @@ public class MoodActivity extends BaseActivity {
                             });
                     builder.show();
                 }else{
+
+
                     //简单的发送
                     HttpRequestBean requestBean = new HttpRequestBean();
                     HashMap<String, Object> params = new HashMap<>();
@@ -411,15 +419,37 @@ public class MoodActivity extends BaseActivity {
                         params.put("latitude", locationBean.getLatitude());
                     }
 
+                    if(mNetworkLinks.size() > 0){
+                        requestBean.setServerMethod("leedane/mood_sendWordAndLink.action");
+                        params.put("links", mMoodNetworkShow.getText().toString());
+                    }else {
+                        requestBean.setServerMethod("leedane/mood_sendWord.action");
+                    }
                     params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                     requestBean.setParams(params);
-                    requestBean.setServerMethod("leedane/mood_sendWord.action");
+
                     requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
                     TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_NORMAL, MoodActivity.this, requestBean);
                     showLoadingDialog("发表心情", "正在发表，请稍等...");
                 }
                 break;
         }
+    }
+
+    /**
+     * 将网络图片链接变成字符串
+     * @return
+     */
+    private String getStringByNetworkLinksArray(){
+        StringBuffer buffer = new StringBuffer();
+        for(int i = 0; i < mNetworkLinks.size(); i++){
+            buffer.append(mNetworkLinks.get(i));
+            if(i != mNetworkLinks.size()-1){
+                buffer.append(";");
+            }
+        }
+
+        return buffer.toString();
     }
 
     @Override
@@ -462,8 +492,8 @@ public class MoodActivity extends BaseActivity {
      */
     private void saveData() {
         String uStr = "";
-        if(mUris != null && mUris.size()> 0){
-            for(String u: mUris){
+        if(mLocalUris != null && mLocalUris.size()> 0){
+            for(String u: mLocalUris){
                 uStr = uStr + u + ",";
             }
             if(uStr.endsWith(","))
@@ -530,7 +560,7 @@ public class MoodActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             System.out.println("requestCode"+requestCode);
             if (requestCode == GET_SYSTEM_IMAGE_CODE) {//图库返回
-                mUris.add(MediaUtil.getImageAbsolutePath(MoodActivity.this, data.getData()));
+                mLocalUris.add(MediaUtil.getImageAbsolutePath(MoodActivity.this, data.getData()));
                 mMoodGridViewAdapter.notifyDataSetChanged();
                 Toast.makeText(getBaseContext(), "获取的图片路径是：" + MediaUtil.getImageAbsolutePath(MoodActivity.this, data.getData()), Toast.LENGTH_LONG).show();
             }
@@ -585,6 +615,107 @@ public class MoodActivity extends BaseActivity {
                 mMoodLocationShow.setText(location);
             }
         }
+    }
+
+    private Dialog mDialog;
+    /**
+     * 显示弹出自定义view
+     */
+    public void showSelectItemMenuDialog(){
+        //判断是否已经存在菜单，存在则把以前的记录取消
+        dismissSelectItemMenuDialog();
+
+        mDialog = new Dialog(MoodActivity.this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+        View view = LayoutInflater.from(MoodActivity.this).inflate(R.layout.mood_list_menu, null);
+
+        ListView listView = (ListView)view.findViewById(R.id.mood_list_menu_listview);
+        listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        List<String> menus = new ArrayList<>();
+
+        menus.add(getStringResource(R.string.select_gallery));
+        menus.add(getStringResource(R.string.img_link));
+        SimpleListAdapter adapter = new SimpleListAdapter(MoodActivity.this.getApplicationContext(), menus);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView textView = (TextView)view.findViewById(R.id.simple_listview_item);
+                //选择图库
+                if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.select_gallery))){
+
+                    if(mLocalUris.size() > 2){
+                        ToastUtil.failure(MoodActivity.this, "最多允许选择3张图片");
+                        return;
+                    }
+
+                    //将图片链接清空
+                    mNetworkLinks.clear();
+                    mMoodNetworkShow.setText("");
+                    mMoodNetworkShow.setVisibility(View.GONE);
+
+                    //调用系统图库
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+                    intent.putExtra("crop", true);
+                    intent.putExtra("return-data", true);
+                    startActivityForResult(intent, GET_SYSTEM_IMAGE_CODE);
+                    //选择链接
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.img_link))){
+                    if(mNetworkLinks.size() > 2){
+                        ToastUtil.failure(MoodActivity.this, "最多允许选择3张网络图片");
+                        return;
+                    }
+                    final EditText inputServer = new EditText(MoodActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MoodActivity.this);
+                    builder.setTitle("请输入网络图片(大小最好不要超过500k)").setIcon(android.R.drawable.ic_dialog_info).setView(inputServer)
+                            .setNegativeButton("取消", null);
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+                            String text = inputServer.getText().toString();
+                            if (StringUtil.isNotNull(text)) {
+                                mNetworkLinks.add(text);
+                                buildNetworkLinksShow();
+                            }else{
+                                ToastUtil.failure(MoodActivity.this, "请输入网络图片链接!");
+                            }
+                        }
+                    });
+                    builder.show();
+                }
+                dismissSelectItemMenuDialog();
+            }
+        });
+        mDialog.setTitle("选择");
+        mDialog.setCancelable(true);
+        mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dismissSelectItemMenuDialog();
+            }
+        });
+        //ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(800,(menus.size() +1) * 90 +20);
+        mDialog.setContentView(view);
+        mDialog.show();
+    }
+
+    /**
+     * 显示网络图片链接
+     */
+    private void buildNetworkLinksShow(){
+        //将本地图片清空
+        mLocalUris.clear();
+        mMoodGridViewAdapter.notifyDataSetChanged();
+        mMoodNetworkShow.setText(getStringByNetworkLinksArray());
+        mMoodNetworkShow.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 隐藏弹出自定义view
+     */
+    public void dismissSelectItemMenuDialog(){
+        if(mDialog != null && mDialog.isShowing())
+            mDialog.dismiss();
     }
 
     /**

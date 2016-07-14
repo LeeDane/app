@@ -31,11 +31,10 @@ public class BitmapUtil {
         final int width = options.outWidth;
         int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
-            final int heightRatio = Math.round((float) height/ (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-        }
+        final int heightRatio = height > reqHeight ? Math.round((float) height/ (float) reqHeight) : 1;
+        final int widthRatio  = width > reqWidth ? Math.round((float) width / (float) reqWidth) : 1;
+
+        inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
         return inSampleSize;
     }
     /**
@@ -45,7 +44,7 @@ public class BitmapUtil {
      * @return
      */
     public static Bitmap getSmallBitmap(Context context, String filePath) {
-        return getSmallBitmap(context, filePath, 320, 400);
+        return getSmallBitmap(context, filePath, 720, 1280);
     }
 
     /**

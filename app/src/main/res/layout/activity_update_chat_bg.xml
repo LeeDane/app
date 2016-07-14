@@ -6,9 +6,9 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
         <Button
             android:id="@+id/select_web"
@@ -22,6 +22,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:text="@string/select_gallery"/>
+        <Button
+            android:id="@+id/clear_chat_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/clear_chat_bg"/>
     </LinearLayout>
     <FrameLayout
         android:id="@+id/chat_bg_container"

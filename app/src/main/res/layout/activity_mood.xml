@@ -83,8 +83,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/default_padding"
-            android:gravity="right"
-            android:text="@string/action_settings"/>
+            android:gravity="right"/>
+        <TextView
+            android:id="@+id/mood_network_link_show"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_padding"
+            android:gravity="right"/>
     </LinearLayout>
     <GridView
         android:id="@+id/mood_gridview"

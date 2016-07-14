@@ -43,6 +43,8 @@ import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.DensityUtil;
+import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.NotificationUtil;
@@ -139,7 +141,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     private TextView mTVPraise;
 
     private TextView mTVLocation; //显示位置信息
-    private ImageView mIVImg;
+    private LinearLayout mImgContainer; //图像容器
     private Context mContext;
 
     /**
@@ -260,7 +262,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         mLLTransmit.setOnClickListener(this);
 
         mTVLocation = (TextView)viewHeader.findViewById(R.id.mood_detail_location);
-        mIVImg = (ImageView)viewHeader.findViewById(R.id.mood_detail_img);
+        mImgContainer = (LinearLayout)viewHeader.findViewById(R.id.mood_detail_img_container);
         mPraiseUser = (TextView)viewHeader.findViewById(R.id.mood_detail_praise);
         mTVPraise = (TextView)viewHeader.findViewById(R.id.mood_detail_praise_show);
         mTVPraise.setOnClickListener(this);
@@ -457,21 +459,26 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                 List<MoodImagesBean> moodImagesBeans = mMoodImagesBean.getMessage();
                 if(mMoodImagesBean.isSuccess() && moodImagesBeans.size() > 0){
                     //Toast.makeText(MoodDetailActivity.this, "获取图片成功", Toast.LENGTH_SHORT).show();
-                    mIVImg.setVisibility(View.VISIBLE);
+                    mImgContainer.setVisibility(View.VISIBLE);
+                    StringBuffer buffer = new StringBuffer();
                     for(MoodImagesBean imagesBean: moodImagesBeans){
-                        if((imagesBean.getSize().equalsIgnoreCase("120x120") || imagesBean.getSize().equalsIgnoreCase("source")) && imagesBean.getOrder() == 0){
-                            ImageCacheManager.loadImage(imagesBean.getPath(), mIVImg, 120, 120);
-                            break;
+                        if((imagesBean.getSize().equalsIgnoreCase("120x120") || imagesBean.getSize().equalsIgnoreCase("source"))){
+                            //ImageCacheManager.loadImage(imagesBean.getPath(), mIVImg, 120, 120);
+                            buffer.append(imagesBean.getPath() +";");
                         }else{
                             continue;
                         }
                     }
-                    mIVImg.setOnClickListener(this);
-                    mIVImg.setOnLongClickListener(this);
 
-                }/*else{
-                    Toast.makeText(MoodDetailActivity.this, "获取图片失败", Toast.LENGTH_LONG).show();
-                }*/
+                    String imgs = buffer.toString();
+                    if(imgs.endsWith(";")){
+                        imgs = imgs.substring(0, imgs.length() -1);
+                    }
+                    addImages(mContext, imgs, mImgContainer);
+                   //mIVImg.setOnClickListener(this);
+                    //mIVImg.setOnLongClickListener(this);
+
+                }
             }else if(type == TaskType.ADD_GALLERY){
                 dismissLoadingDialog();
                 JSONObject resultObject = new JSONObject(String.valueOf(result));
@@ -610,6 +617,100 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             e.printStackTrace();
         }
     }
+
+    /**
+     * 将图像添加到Linnear中
+     * @param context
+     * @param imgs
+     * @param linearLayout
+     */
+    public static void addImages(final Context context, String imgs, LinearLayout linearLayout){
+        //异步去获取该心情的图像路径列表
+        if(!StringUtil.isNull(imgs)) {
+            final String[] showImages = imgs.split(";");
+            if(showImages.length > 0){
+                linearLayout.setVisibility(View.VISIBLE);
+                linearLayout.removeAllViewsInLayout();
+                ImageView imageView = null;
+                final List<ImageDetailBean> list = new ArrayList<>();
+                ImageDetailBean imageDetailBean = null;
+                for(int i = 0; i< showImages.length; i++){
+                    imageDetailBean = new ImageDetailBean();
+                    imageDetailBean.setPath(showImages[i]);
+                    list.add(imageDetailBean);
+                }
+                for(int i = 0; i< showImages.length; i++){
+                    final int index = i;
+                    final String path = showImages[index];
+                    if(StringUtil.isNotNull(showImages[i])){
+                        imageView = new ImageView(context);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, 80) , DensityUtil.dip2px(context, 100));
+                        params.rightMargin = 16;
+                        params.topMargin = 3;
+                        imageView.setLayoutParams(params);
+                        imageView.setMaxWidth(100);
+                        imageView.setMaxHeight(120);
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        ImageCacheManager.loadImage(path, imageView, 80, 100);
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                CommonHandler.startImageDetailActivity(context, list, index);
+                            }
+                        });
+                        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                //创建离开的警告提示框
+                                /*AlertDialog alertDialog = new AlertDialog.Builder(MoodDetailFragment.newInstance(null)).setTitle("添加图库")
+                                        .setMessage("把该图片加入我的图库？")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                HttpRequestBean requestBean = new HttpRequestBean();
+                                                HashMap<String, Object> params = new HashMap<>();
+
+                                                for (MoodImagesBean moodImagesBean : mMoodImagesBean.getMessage()) {
+                                                    if ((moodImagesBean.getSize().equalsIgnoreCase("120x120") || moodImagesBean.getSize().equalsIgnoreCase("source")) && moodImagesBean.getOrder() == 0) {
+                                                        params.put("path", moodImagesBean.getPath());
+                                                        params.put("desc", "app心情详情图片加入图库");
+                                                        params.put("width", moodImagesBean.getWidth());
+                                                        params.put("height", moodImagesBean.getHeight());
+                                                        break;
+                                                    } else {
+                                                        continue;
+                                                    }
+                                                }
+                                                params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+                                                requestBean.setParams(params);
+                                                requestBean.setServerMethod("leedane/gallery_addLink.action");
+                                                //showLoadingDialog("Gallery", "Loading, please wait。。。");ss
+                                                TaskLoader.getInstance().startTaskForResult(TaskType.ADD_GALLERY, MoodDetailFragment.this, requestBean);
+                                                showLoadingDialog("Gallery","Loading, try my best to adding gallery...");
+                                            }
+                                        })
+                                        .setNegativeButton("放弃",new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                return;
+                                            }
+                                        }).create(); // 创建对话框
+                                alertDialog.show(); // 显示对话框*/
+                                return true;
+                            }
+                        });
+                        linearLayout.addView(imageView);
+                    }
+                }
+                return;
+            }
+        }
+        linearLayout.setVisibility(View.GONE);
+    }
+
+   /* private void showAddGallery(){
+
+    }*/
+
     class ListViewOnScrollListener implements AbsListView.OnScrollListener {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -779,7 +880,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         super.onClick(v);
         HashMap<String, Object> params = new HashMap<>();
         switch (v.getId()){
-            case R.id.mood_detail_img:
+            /*case R.id.mood_detail_img:
                 List<ImageDetailBean> list = new ArrayList<ImageDetailBean>();
                 ImageDetailBean imageDetailBean;
                 for(MoodImagesBean bean: mMoodImagesBean.getMessage()){
@@ -796,7 +897,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                     }
                 }
                 CommonHandler.startImageDetailActivity(mContext, list, 0);
-                break;
+                break;*/
             case R.id.mood_detail_comment:
                 //Toast.makeText(MoodDetailActivity.this, "评论", Toast.LENGTH_SHORT).show();
                 commentOrTransmit = 0;
@@ -840,7 +941,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     @Override
     public boolean onLongClick(View v) {
         switch (v.getId()){
-            case R.id.mood_detail_img:
+            /*case R.id.mood_detail_img:
                 //创建离开的警告提示框
                 AlertDialog alertDialog = new AlertDialog.Builder(mContext).setTitle("添加图库")
                         .setMessage("把该图片加入我的图库？")
@@ -875,7 +976,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                             }
                         }).create(); // 创建对话框
                 alertDialog.show(); // 显示对话框
-                break;
+                break;*/
         }
         return true;
     }
