@@ -25,7 +25,7 @@ public class AttentionHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/attention_add.action");
+        requestBean.setServerMethod("leedane/attention/add.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_ATTENTION, listener, requestBean);
     }
@@ -40,7 +40,7 @@ public class AttentionHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/attention_paging.action");
+        requestBean.setServerMethod("leedane/attention/paging.action");
 
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_ATTENTION, listener, requestBean);
     }
@@ -58,7 +58,7 @@ public class AttentionHandler {
         params.put("create_user_id", createUserId);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/attention_delete.action");
+        requestBean.setServerMethod("leedane/attention/delete.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_ATTENTION, listener, requestBean);
     }

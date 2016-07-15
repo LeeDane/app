@@ -155,7 +155,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
         //获取心情详情基本信息
         HttpRequestBean requestBean = new HttpRequestBean();
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/mood_detail.action");
+        requestBean.setServerMethod("leedane/mood/detail.action");
         HashMap<String, Object> params = new HashMap<>();
         params.put("mid", mid);
         requestBean.setParams(params);
@@ -315,7 +315,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
                     //if(hasImg){//获取图片的信息
                         HttpRequestBean requestBean = new HttpRequestBean();
                         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-                        requestBean.setServerMethod("leedane/mood_detailImgs.action");
+                        requestBean.setServerMethod("leedane/mood/detailImgs.action");
                         HashMap<String, Object> params = new HashMap<>();
                         params.put("mid", mid);
                         params.put("table_name", "t_mood");
@@ -854,7 +854,7 @@ public class MoodDetailOldActivity extends BaseActivity implements View.OnLongCl
                                 }
                                 params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                                 requestBean.setParams(params);
-                                requestBean.setServerMethod("leedane/gallery_addLink.action");
+                                requestBean.setServerMethod("leedane/gallery/addLink.action");
                                 //showLoadingDialog("Gallery", "Loading, please wait。。。");ss
                                 TaskLoader.getInstance().startTaskForResult(TaskType.ADD_GALLERY, MoodDetailOldActivity.this, requestBean);
                                 showLoadingDialog("Gallery","Loading, try my best to adding gallery...");

@@ -26,7 +26,7 @@ public class FileHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/filepath_paging.action");
+        requestBean.setServerMethod("leedane/filepath/paging.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_FILE, listener, requestBean);
     }
 
@@ -40,7 +40,7 @@ public class FileHandler {
         params.put("fid",id);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/filepath_delete.action");
+        requestBean.setServerMethod("leedane/filepath/delete.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_FILE, listener, requestBean);
     }

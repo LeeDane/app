@@ -25,7 +25,7 @@ public class SignInHandler {
         HashMap<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/signIn_signIn.action");
+        requestBean.setServerMethod("leedane/signIn/signIn.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.DO_SIGN_IN, listener, requestBean);
     }
 
@@ -38,7 +38,7 @@ public class SignInHandler {
         Map<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/signIn_currentDateIsSignIn.action");
+        requestBean.setServerMethod("leedane/signIn/currentDateIsSignIn.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.IS_SIGN_IN, listener, requestBean);
     }

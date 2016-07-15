@@ -58,7 +58,7 @@ public class LoadUserInfoDataService  extends Service implements TaskListener {
                 HashMap<String, Object> params = new HashMap<>();
                 params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                 requestBean.setParams(params);
-                requestBean.setServerMethod("leedane/user_getUserInfoData.action");
+                requestBean.setServerMethod("leedane/user/getUserInfoData.action");
                 requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
                 TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_USER_INFO_DATA, LoadUserInfoDataService.this, requestBean);
             }

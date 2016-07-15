@@ -54,7 +54,7 @@ public class CommentHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/comment_paging.action");
+        requestBean.setServerMethod("leedane/comment/paging.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_COMMENT, listener, requestBean);
     }
 
@@ -70,7 +70,7 @@ public class CommentHandler {
             params.put("content", "评论了这条信息");
         }
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/comment_add.action");
+        requestBean.setServerMethod("leedane/comment/add.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_COMMENT, listener, requestBean);
     }
@@ -88,7 +88,7 @@ public class CommentHandler {
         params.put("create_user_id", createUserId);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/comment_delete.action");
+        requestBean.setServerMethod("leedane/comment/delete.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_COMMENT, listener, requestBean);
     }
@@ -108,7 +108,7 @@ public class CommentHandler {
         params.put("can_comment", canComment);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/comment_updateCommentStatus.action");
+        requestBean.setServerMethod("leedane/comment/updateCommentStatus.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_COMMENT_STATUS, listener, requestBean);
     }

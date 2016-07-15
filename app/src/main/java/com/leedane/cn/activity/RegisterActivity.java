@@ -128,7 +128,7 @@ public class RegisterActivity extends Activity implements TaskListener{
                 params.put("password", MD5Util.compute(password));
                 params.put("mobilePhone", mobilePhone);
                 requestBean.setParams(params);
-                requestBean.setServerMethod("leedane/user_registerByPhoneNoValidate.action");
+                requestBean.setServerMethod("leedane/user/registerByPhoneNoValidate.action");
                 showLoadingDialog("Register", "Try to register now...");
                 TaskLoader.getInstance().startTaskForResult(TaskType.REGISTER_DO, RegisterActivity.this, requestBean);
 

@@ -323,7 +323,7 @@ public class UpdateUserHeaderActivity extends BaseActivity {
     private void merge(){
         //启动合并操作
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/filepath_mergePortFile.action");
+        requestBean.setServerMethod("leedane/filepath/mergePortFile.action");
         requestBean.setResponseTimeOut(60000);
         requestBean.setRequestTimeOut(60000);
         Map<String, Object> params = new HashMap<>();
@@ -344,7 +344,7 @@ public class UpdateUserHeaderActivity extends BaseActivity {
     private void deletePortFile(){
         //启动合并操作
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/filepath_deletePortFile.action");
+        requestBean.setServerMethod("leedane/filepath/deletePortFile.action");
         requestBean.setResponseTimeOut(60000);
         requestBean.setRequestTimeOut(60000);
         Map<String, Object> params = new HashMap<>();

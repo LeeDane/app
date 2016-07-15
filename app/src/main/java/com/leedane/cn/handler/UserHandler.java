@@ -26,7 +26,7 @@ public class UserHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user_paging.action");
+        requestBean.setServerMethod("leedane/user/paging.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_HANDER, listener, requestBean);
     }
@@ -40,7 +40,7 @@ public class UserHandler {
         HashMap<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user_getHeadPath.action");
+        requestBean.setServerMethod("leedane/user/getHeadPath.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_HEAD_PATH, listener, requestBean);
     }
@@ -54,7 +54,7 @@ public class UserHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user_updateUserBase.action");
+        requestBean.setServerMethod("leedane/user/updateUserBase.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_USER_BASE, listener, requestBean);
     }
@@ -72,7 +72,7 @@ public class UserHandler {
         params.put("new_password", MD5Util.compute(newPassword));
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user_updatePassword.action");
+        requestBean.setServerMethod("leedane/user/updatePassword.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_LOGIN_PSW, listener, requestBean);
     }

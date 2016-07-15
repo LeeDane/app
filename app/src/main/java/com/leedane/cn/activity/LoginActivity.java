@@ -123,7 +123,7 @@ public class LoginActivity extends Activity implements TaskListener {
                 params.put("account", username);
                 params.put("password", MD5Util.compute(password));
                 requestBean.setParams(params);
-                requestBean.setServerMethod("leedane/user_login.action");
+                requestBean.setServerMethod("leedane/user/login.action");
                 showLoadingDialog("Login", "Try to login now...");
                 TaskLoader.getInstance().startTaskForResult(TaskType.LOGIN_DO, LoginActivity.this, requestBean);
 
@@ -351,7 +351,7 @@ public class LoginActivity extends Activity implements TaskListener {
 
         showLoadingDialog("Logining", "try to login, please wait...");
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("/leedane/user_loginByPhone.action");
+        requestBean.setServerMethod("/leedane/user/loginByPhone.action");
 
         Map<String, Object> params = new HashMap<>();
         params.put("mobilePhone", phoneNumber);
@@ -373,7 +373,7 @@ public class LoginActivity extends Activity implements TaskListener {
         }
 
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("/leedane/user_getPhoneLoginCode.action");
+        requestBean.setServerMethod("/leedane/user/getPhoneLoginCode.action");
         Map<String, Object> params = new HashMap<>();
         params.put("mobilePhone", phoneNumber);
         requestBean.setParams(params);

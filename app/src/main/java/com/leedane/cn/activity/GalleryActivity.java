@@ -18,6 +18,7 @@ import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.customview.GalleryScrollView;
+import com.leedane.cn.handler.GalleryHandler;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.StringUtil;
@@ -133,12 +134,8 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
                     params.put("lenght", StringUtil.changeObjectToLong(galleryLenght.getText().toString()));
                 }
                 params.put("desc", "app图库上加入");
-                params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-                requestBean.setParams(params);
-                requestBean.setServerMethod("leedane/gallery_addLink.action");
-                //showLoadingDialog("Gallery", "Loading, please wait。。。");ss
-                TaskLoader.getInstance().startTaskForResult(TaskType.ADD_GALLERY, GalleryActivity.this, requestBean);
-                showLoadingDialog("Gallery","Loading, try my best to adding gallery...");
+                GalleryHandler.add(GalleryActivity.this, params);
+                showLoadingDialog("Gallery", "Loading, try my best to adding gallery...");
                 break;
         }
     }

@@ -23,7 +23,7 @@ public class ScoreHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/score_paging.action");
+        requestBean.setServerMethod("leedane/score/paging.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SCORE, listener, requestBean);
     }
 }

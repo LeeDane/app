@@ -23,7 +23,7 @@ public class CircleOfFriendHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/circleOfFriend_paging.action");
+        requestBean.setServerMethod("leedane/circleOfFriend/paging.action");
 
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_CIRCLEOFFRIEND, listener, requestBean);
     }

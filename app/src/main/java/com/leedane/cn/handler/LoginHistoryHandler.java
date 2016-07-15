@@ -23,7 +23,7 @@ public class LoginHistoryHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/operatelog_loginPaging.action");
+        requestBean.setServerMethod("leedane/operatelog/loginPaging.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_LOGIN_HISTORY, listener, requestBean);
     }
 }

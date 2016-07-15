@@ -234,7 +234,7 @@ public class CommonHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/tool_fanyi.action");
+        requestBean.setServerMethod("leedane/tool/fanyi.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.FANYI, listener, requestBean);
     }
 
@@ -253,7 +253,7 @@ public class CommonHandler {
         params.put("object", object);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/tool_sendEmail.action");
+        requestBean.setServerMethod("leedane/tool/sendEmail.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.SEND_EMAIL, listener, requestBean);
     }

@@ -112,7 +112,7 @@ public class HomeAdapter extends BaseAdapter{
         int bid = blogBean.getId();
         final String imgUrl = blogBean.getImgUrl();
         //final String imgUrl = ConstantsUtil.QINIU_CLOUD_SERVER + "head.jpg";
-        //final String imgUrl = ConstantsUtil.DEFAULT_SERVER_URL + "leedane/download_executeDown.action";
+        //final String imgUrl = ConstantsUtil.DEFAULT_SERVER_URL + "leedane/download/executeDown.action";
 
         if(StringUtil.isNotNull(imgUrl)){
             //myHolder.getmImg().setVisibility(View.VISIBLE);

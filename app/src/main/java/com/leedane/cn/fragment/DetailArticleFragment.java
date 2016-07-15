@@ -68,7 +68,7 @@ public class DetailArticleFragment extends Fragment{
         if(isFirstLoading){
             mWebView = (WebView)mRootView.findViewById(R.id.detail_webview);
             mProgressBar = (ProgressBar)mRootView.findViewById(R.id.detail_progressbar);
-            mBlogUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/blog_getContent.action?blog_id=" + mBlogId;
+            mBlogUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/blog/getContent.action?blog_id=" + mBlogId;
             mWebView.loadUrl(mBlogUrl);
             //启用支持javascript
             mSettings = mWebView.getSettings();

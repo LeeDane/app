@@ -28,7 +28,7 @@ public class PraiseHandler {
             params.put("content", "赞了这条信息");
         }
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/zan_add.action");
+        requestBean.setServerMethod("leedane/zan/add.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_ZAN, listener, requestBean);
     }
@@ -43,7 +43,7 @@ public class PraiseHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/zan_paging.action");
+        requestBean.setServerMethod("leedane/zan/paging.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_ZAN, listener, requestBean);
     }
 
@@ -57,7 +57,7 @@ public class PraiseHandler {
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/zan_getAllZanUser.action");
+        requestBean.setServerMethod("leedane/zan/getAllZanUser.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_ZAN_USER, listener, requestBean);
     }
 
@@ -74,7 +74,7 @@ public class PraiseHandler {
         params.put("create_user_id", createUserId);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/zan_delete.action");
+        requestBean.setServerMethod("leedane/zan/delete.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_ZAN, listener, requestBean);
     }

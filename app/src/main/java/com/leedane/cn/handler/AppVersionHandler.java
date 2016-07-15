@@ -33,7 +33,7 @@ public class AppVersionHandler {
             params.put("versionCode", packageInfo.versionCode);
         }
         requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/appVersion_getNewest.action");
+        requestBean.setServerMethod("leedane/appVersion/getNewest.action");
 
         TaskLoader.getInstance().startTaskForResult(TaskType.GET_APP_VERSION, listener, requestBean);
     }

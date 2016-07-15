@@ -420,10 +420,10 @@ public class MoodActivity extends BaseActivity {
                     }
 
                     if(mNetworkLinks.size() > 0){
-                        requestBean.setServerMethod("leedane/mood_sendWordAndLink.action");
+                        requestBean.setServerMethod("leedane/mood/sendWordAndLink.action");
                         params.put("links", mMoodNetworkShow.getText().toString());
                     }else {
-                        requestBean.setServerMethod("leedane/mood_sendWord.action");
+                        requestBean.setServerMethod("leedane/mood/sendWord.action");
                     }
                     params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                     requestBean.setParams(params);

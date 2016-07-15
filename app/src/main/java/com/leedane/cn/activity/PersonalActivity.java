@@ -221,7 +221,7 @@ public class PersonalActivity extends BaseActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String searchUserInfoUrl = SharedPreferenceUtil.getSettingBean(getBaseContext(), ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/user_searchUserByUserId.action";
+                String searchUserInfoUrl = SharedPreferenceUtil.getSettingBean(getBaseContext(), ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/user/searchUserByUserId.action";
                 HashMap<String, Object> params = new HashMap<String, Object>();
                 params.put("searchUserId", mUserId);
                 params.putAll(BaseApplication.newInstance().getBaseRequestParams());

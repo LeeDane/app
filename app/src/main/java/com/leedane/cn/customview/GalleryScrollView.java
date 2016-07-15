@@ -40,6 +40,8 @@ import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.database.GalleryDataBase;
 import com.leedane.cn.handler.ChatBgSelectWebHandler;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.handler.GalleryHandler;
+import com.leedane.cn.handler.ReportHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
@@ -213,8 +215,8 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
         boolean isAdd = false;
         for(int i =0; i< imageViewList.size(); i++){
             imageView = imageViewList.get(i).getImageView();
-            borderTop = (Integer) imageView.getTag(R.string.border_top);
-            borderBottom = (Integer) imageView.getTag(R.string.border_bottom);
+            borderTop = StringUtil.changeObjectToInt(imageView.getTag(R.string.border_top));
+            borderBottom = StringUtil.changeObjectToInt(imageView.getTag(R.string.border_bottom));
             if(borderBottom > getScrollY() && borderTop < getScrollY() +scrollViewHeight){
                 isAdd = true;
                 imageUrl = (String)imageView.getTag(R.string.image_url);
@@ -370,11 +372,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
         }
         params.put("last_id", last_id);
         params.put("first_id", first_id);
-        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/gallery_getGalleryPaging.action");
-        //showLoadingDialog("Gallery", "Loading, please wait。。。");
-        TaskLoader.getInstance().startTaskForResult(TaskType.DO_GALLERY, this, requestBean);
+        GalleryHandler.getPagingRequest(this, params);
     }
 
     @Override
@@ -761,7 +759,6 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                     Toast.makeText(getContext(), "请先选择举报的类型", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                HttpRequestBean requestBean = new HttpRequestBean();
                 HashMap<String, Object> params = new HashMap<>();
                 params.put("table_name", "t_gallery");
                 params.put("table_id", mBeans.get(index).getId());
@@ -775,12 +772,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                     }
                     params.put("reason", qingsuMore.getText().toString());
                 }
-
-
-                params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-                requestBean.setParams(params);
-                requestBean.setServerMethod("leedane/report_add.action");
-                TaskLoader.getInstance().startTaskForResult(TaskType.ADD_REPORT, GalleryScrollView.this, requestBean);
+                ReportHandler.add(GalleryScrollView.this, params);
                 showLoadingDialog("Report", "Loading, add report...", true);
                 dismissReportDialog();
             }
@@ -820,13 +812,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                             Toast.makeText(getContext(), "图库所在的ID不存在",Toast.LENGTH_LONG).show();
                             return;
                         }
-                        HttpRequestBean requestBean = new HttpRequestBean();
-                        HashMap<String, Object> params = new HashMap<>();
-                        params.put("gid", gid);
-                        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-                        requestBean.setParams(params);
-                        requestBean.setServerMethod("leedane/gallery_delete.action");
-                        TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_GALLERY, GalleryScrollView.this, requestBean);
+                        GalleryHandler.delete(GalleryScrollView.this, gid);
                         showLoadingDialog("Gallery", "Loading, delete gallery...");
                     }
                 })
@@ -956,7 +942,6 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
     private LinearLayout findColumnToAdd(ImageView imageView, int imageHeight) {
         if(firstColumnHeight <= secondColumnHeight){
             if(firstColumnHeight <= thirdColumnHeight){
-                imageView.setTag(R.string.border_top, firstColumnHeight);
                 firstColumnHeight += imageHeight;
                 imageView.setTag(R.string.border_bottom, firstColumnHeight);
                 return firstColumn;

@@ -28,7 +28,7 @@ public class FanHandler {
         params.put("toUserId", toUserId);
         requestBean.setParams(params);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setServerMethod("leedane/fan_isFan.action");
+        requestBean.setServerMethod("leedane/fan/isFan.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.IS_FAN, listener, requestBean);
     }
@@ -44,7 +44,7 @@ public class FanHandler {
         params.put("toUserId", toUserId);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/fan_add.action");
+        requestBean.setServerMethod("leedane/fan/add.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_FAN, listener, requestBean);
     }
@@ -55,7 +55,7 @@ public class FanHandler {
      */
     public static void getMyFansRequest(TaskListener listener, HashMap<String, Object> params){
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/fan_myFansPaging.action");
+        requestBean.setServerMethod("leedane/fan/myFansPaging.action");
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
@@ -69,7 +69,7 @@ public class FanHandler {
      */
     public static void getToFansRequest(TaskListener listener, HashMap<String, Object> params){
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/fan_toFansPaging.action");
+        requestBean.setServerMethod("leedane/fan/toFansPaging.action");
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
@@ -83,7 +83,7 @@ public class FanHandler {
      */
     public static void getMyAttentionsRequest(TaskListener listener, HashMap<String, Object> params){
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/fan_myAttentionPaging.action");
+        requestBean.setServerMethod("leedane/fan/myAttentionPaging.action");
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
@@ -97,7 +97,7 @@ public class FanHandler {
      */
     public static void getToAttentionsRequest(TaskListener listener, HashMap<String, Object> params){
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/fan_toAttentionPaging.action");
+        requestBean.setServerMethod("leedane/fan/toAttentionPaging.action");
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
@@ -114,7 +114,7 @@ public class FanHandler {
         params.put("toUserIds", String.valueOf(toUserId));
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/fan_cancel.action");
+        requestBean.setServerMethod("leedane/fan/cancel.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.CANCEL_FAN, listener, requestBean);
     }

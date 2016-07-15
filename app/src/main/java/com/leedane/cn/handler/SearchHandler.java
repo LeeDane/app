@@ -30,7 +30,7 @@ public class SearchHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setRequestTimeOut(60000);
         requestBean.setResponseTimeOut(60000);
-        requestBean.setServerMethod("leedane/search_user.action");
+        requestBean.setServerMethod("leedane/search/user.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SEARCH_USER, listener, requestBean);
     }
 
@@ -48,7 +48,7 @@ public class SearchHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setRequestTimeOut(60000);
         requestBean.setResponseTimeOut(60000);
-        requestBean.setServerMethod("leedane/search_blog.action");
+        requestBean.setServerMethod("leedane/search/blog.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SEARCH_BLOG, listener, requestBean);
     }
 
@@ -66,7 +66,7 @@ public class SearchHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setRequestTimeOut(60000);
         requestBean.setResponseTimeOut(60000);
-        requestBean.setServerMethod("leedane/search_mood.action");
+        requestBean.setServerMethod("leedane/search/mood.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SEARCH_MOOD, listener, requestBean);
     }
 }

@@ -24,7 +24,7 @@ public class BlogHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/blog_getPagingBlog.action");
+        requestBean.setServerMethod("leedane/blog/paging.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.HOME_LOADBLOGS, listener, requestBean);
     }
@@ -38,7 +38,7 @@ public class BlogHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/blog_deleteBlog.action");
+        requestBean.setServerMethod("leedane/blog/delete.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_BLOG, listener, requestBean);
     }
@@ -56,7 +56,7 @@ public class BlogHandler {
         params.put("tag", tag);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/blog_addTag.action");
+        requestBean.setServerMethod("leedane/blog/addTag.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_TAG, listener, requestBean);
     }

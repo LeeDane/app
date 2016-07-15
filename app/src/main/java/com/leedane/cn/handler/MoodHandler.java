@@ -24,7 +24,7 @@ public class MoodHandler {
      */
     public static void sendMood(TaskListener listener, HashMap<String, Object> params){
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/mood_getPagingMood.action");
+        requestBean.setServerMethod("leedane/mood/getPagingMood.action");
         /*params.put("toUserId", mPreUid);
         params.put("pageSize", 10);
         params.put("method", mPreLoadMethod);*/
@@ -45,8 +45,36 @@ public class MoodHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/mood_delete.action");
+        requestBean.setServerMethod("leedane/mood/delete.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_MOOD, listener, requestBean);
+    }
+
+    /**
+     * 获取心情详情基本信息
+     */
+    public static void detail(TaskListener listener, int mid){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("leedane/mood/detail.action");
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("mid", mid);
+        requestBean.setParams(params);
+        TaskLoader.getInstance().startTaskForResult(TaskType.DETAIL_MOOD, listener, requestBean);
+    }
+
+    /**
+     * 获取心情对应的图片列表信息
+     */
+    public static void detailImages(TaskListener listener, int mid, String uuid){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("leedane/mood/detailImgs.action");
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("mid", mid);
+        params.put("table_name", "t_mood");
+        params.put("table_uuid", uuid);
+        requestBean.setParams(params);
+        TaskLoader.getInstance().startTaskForResult(TaskType.DETAIL_MOOD_IMAGE, listener, requestBean);
     }
 }

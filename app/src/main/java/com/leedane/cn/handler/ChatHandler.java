@@ -74,7 +74,7 @@ public class ChatHandler {
         HashMap<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/chat_noReadList.action");
+        requestBean.setServerMethod("leedane/chat/noReadList.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_NO_READ_CHAT, listener, requestBean);
     }

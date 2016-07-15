@@ -35,6 +35,7 @@ import com.leedane.cn.bean.MoodImagesBean;
 import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.handler.MoodHandler;
 import com.leedane.cn.handler.PraiseHandler;
 import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.helper.PraiseUserHelper;
@@ -216,13 +217,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     private void synchronizedData(){
 
         //获取心情详情基本信息
-        HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/mood_detail.action");
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("mid", mid);
-        requestBean.setParams(params);
-        TaskLoader.getInstance().startTaskForResult(TaskType.DETAIL_MOOD, this, requestBean);
+        MoodHandler.detail(MoodDetailFragment.this, mid);
         sendFirstLoading();
     }
     private void initView(){
@@ -439,15 +434,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                     mDetailInfoShowLinearLayout.setVisibility(View.VISIBLE);
                     init();
                     //if(hasImg){//获取图片的信息
-                    HttpRequestBean requestBean = new HttpRequestBean();
-                    requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-                    requestBean.setServerMethod("leedane/mood_detailImgs.action");
-                    HashMap<String, Object> params = new HashMap<>();
-                    params.put("mid", mid);
-                    params.put("table_name", "t_mood");
-                    params.put("table_uuid", detail.getString("uuid"));
-                    requestBean.setParams(params);
-                    TaskLoader.getInstance().startTaskForResult(TaskType.DETAIL_MOOD_IMAGE, this, requestBean);
+                    MoodHandler.detailImages(MoodDetailFragment.this, mid, detail.getString("uuid"));
                     //}
                 }else{
                     //Toast.makeText(MoodDetailActivity.this, "失败"+resultObject, Toast.LENGTH_LONG).show();
@@ -683,7 +670,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                                                 }
                                                 params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                                                 requestBean.setParams(params);
-                                                requestBean.setServerMethod("leedane/gallery_addLink.action");
+                                                requestBean.setServerMethod("leedane/gallery/addLink.action");
                                                 //showLoadingDialog("Gallery", "Loading, please wait。。。");ss
                                                 TaskLoader.getInstance().startTaskForResult(TaskType.ADD_GALLERY, MoodDetailFragment.this, requestBean);
                                                 showLoadingDialog("Gallery","Loading, try my best to adding gallery...");
@@ -964,7 +951,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                                 }
                                 params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                                 requestBean.setParams(params);
-                                requestBean.setServerMethod("leedane/gallery_addLink.action");
+                                requestBean.setServerMethod("leedane/gallery/addLink.action");
                                 //showLoadingDialog("Gallery", "Loading, please wait。。。");ss
                                 TaskLoader.getInstance().startTaskForResult(TaskType.ADD_GALLERY, MoodDetailFragment.this, requestBean);
                                 showLoadingDialog("Gallery","Loading, try my best to adding gallery...");

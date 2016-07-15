@@ -156,7 +156,7 @@ public class ImageDetailFragment extends Fragment{
             map.put("filename", currentImageUrl);
             //获取所有的请求基本参数
             map.putAll(BaseApplication.newInstance().getBaseRequestParams());
-            String imageUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/download_getLocalBase64Image.action";
+            String imageUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/download/getLocalBase64Image.action";
             String imageTag = "imagedetail" + currentImageUrl;
             //执行网络加载post请求图片
             mNetworkImageLoader.loadNetBitmap(imageTag, imageUrl, new NetworkImageLoader.ImageCallback() {

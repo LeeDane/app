@@ -182,7 +182,7 @@ public class SendMoodService extends Service implements TaskListener {
                     params.put("can_transmit", currentIntent.getBooleanExtra("can_transmit", true));
                     params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                     requestBean.setParams(params);
-                    requestBean.setServerMethod("leedane/mood_sendWord.action");
+                    requestBean.setServerMethod("leedane/mood/sendWord.action");
                     requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
                     requestBean.setRequestTimeOut(60000);
                     requestBean.setResponseTimeOut(60000);
@@ -318,7 +318,7 @@ public class SendMoodService extends Service implements TaskListener {
                     params.put("can_transmit", currentIntent.getBooleanExtra("can_transmit", true));
                     params.putAll(BaseApplication.newInstance().getBaseRequestParams());
                     requestBean.setParams(params);
-                    requestBean.setServerMethod("leedane/mood_sendWord.action");
+                    requestBean.setServerMethod("leedane/mood/sendWord.action");
                     requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
                     TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_NORMAL, SendMoodService.this, requestBean);
                     //删除断点文件
@@ -379,7 +379,7 @@ public class SendMoodService extends Service implements TaskListener {
     private void merge(){
         //启动合并操作
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/filepath_mergePortFile.action");
+        requestBean.setServerMethod("leedane/filepath/mergePortFile.action");
         requestBean.setResponseTimeOut(60000);
         requestBean.setRequestTimeOut(60000);
         Map<String, Object> params = new HashMap<>();
@@ -400,7 +400,7 @@ public class SendMoodService extends Service implements TaskListener {
     private void deletePortFile(){
         //启动合并操作
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/filepath_deletePortFile.action");
+        requestBean.setServerMethod("leedane/filepath/deletePortFile.action");
         requestBean.setResponseTimeOut(60000);
         requestBean.setRequestTimeOut(60000);
         Map<String, Object> params = new HashMap<>();

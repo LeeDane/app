@@ -22,7 +22,7 @@ public class NotificationHandler {
      */
     public static void getNotificationsRequest(TaskListener listener, HashMap<String, Object> params){
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/notification_paging.action");
+        requestBean.setServerMethod("leedane/notification/paging.action");
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
@@ -36,7 +36,7 @@ public class NotificationHandler {
      */
     public static void delete(TaskListener listener, int nid){
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/notification_delete.action");
+        requestBean.setServerMethod("leedane/notification/delete.action");
         HashMap<String, Object> params = new HashMap<>();
         params.put("nid", nid);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
