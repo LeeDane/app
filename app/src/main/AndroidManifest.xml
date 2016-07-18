@@ -426,6 +426,13 @@
             </intent-filter>
         </receiver>
 
+        <!-- 无序广播注册获取记账的统计的数据信息 -->
+        <receiver android:name="com.leedane.cn.broadcast.CalculateFinancialReceiver">
+            <intent-filter >
+                <action android:name="com.leedane.cn.broadcast.CalculateFinancialReceiver"/>
+            </intent-filter>
+        </receiver>
+
         <!--  百度地图 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -486,6 +493,12 @@
         <service android:name="com.leedane.cn.service.LoadUserInfoDataService">
             <intent-filter>
                 <action android:name="com.leedane.cn.LoadUserInfoDataService"></action>
+            </intent-filter>
+        </service>
+
+        <service android:name="com.leedane.cn.service.CalculateFinancialService">
+            <intent-filter>
+                <action android:name="com.leedane.cn.CalculateFinancialService"></action>
             </intent-filter>
         </service>
 

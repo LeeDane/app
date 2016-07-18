@@ -4,10 +4,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.leedane.cn.app.R;
+import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.FinancialBean;
+import com.leedane.cn.util.DateUtil;
+import com.leedane.cn.util.RelativeDateFormat;
+import com.leedane.cn.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +59,23 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         final int pos = getRealPosition(viewHolder);
         final FinancialBean data = mFinancialBeans.get(pos);
         if(viewHolder instanceof Holder) {
-            ((Holder) viewHolder).text.setText(String.valueOf(data.getMoney()));
+            Holder holder = ((Holder) viewHolder);
+            //收入
+            if(data.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME){
+                holder.model.setImageResource(R.mipmap.income_increase_32px);
+            }else{
+                holder.model.setImageResource(R.mipmap.income_decrease_32px);
+            }
+            String category = "";
+            if(StringUtil.isNotNull(data.getOneLevel())){
+                category = data.getOneLevel();
+            }
+            if(StringUtil.isNotNull(data.getTwoLevel())){
+                category = category + " >> " +data.getTwoLevel();
+            }
+            holder.category.setText(category);
+            holder.money.setText(String.valueOf(data.getMoney()));
+            holder.addTime.setText(RelativeDateFormat.format(DateUtil.stringToDate(data.getAdditionTime())));
             if(mListener == null) return;
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -73,11 +94,18 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         return mHeaderView == null ? mFinancialBeans.size() : mFinancialBeans.size() + 1;
     }
     class Holder extends RecyclerView.ViewHolder {
-        TextView text;
+        ImageView model;
+        TextView category;
+        TextView money;
+        TextView addTime;
         public Holder(View itemView) {
             super(itemView);
-            if(itemView == mHeaderView) return;
-            text = (TextView) itemView.findViewById(R.id.recyclerview_test_text);
+            if(itemView == mHeaderView)
+                return;
+            model = (ImageView)itemView.findViewById(R.id.financial_list_model);
+            category = (TextView) itemView.findViewById(R.id.financial_list_category);
+            money = (TextView) itemView.findViewById(R.id.financial_list_money);
+            addTime = (TextView) itemView.findViewById(R.id.financial_list_time);
         }
     }
     public interface OnItemClickListener {

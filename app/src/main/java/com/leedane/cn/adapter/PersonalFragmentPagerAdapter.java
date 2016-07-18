@@ -22,8 +22,6 @@ public class PersonalFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private Context mContext;
 
-    private int mBlogId;
-
     public PersonalFragmentPagerAdapter(FragmentManager fragmentManager, Context context, List<Fragment> fragments) {
         super(fragmentManager);
         this.mContext = context;

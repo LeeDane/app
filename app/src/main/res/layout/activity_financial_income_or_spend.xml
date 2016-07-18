@@ -39,7 +39,10 @@
             <EditText
                 android:id="@+id/financial_income_or_spend_money"
                 android:layout_width="match_parent"
-                android:layout_margin="@dimen/default_10dp"
+                android:layout_marginLeft="@dimen/default_10dp"
+                android:layout_marginRight="@dimen/default_10dp"
+                android:layout_marginBottom="@dimen/default_10dp"
+                android:layout_marginTop="@dimen/default_20dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_height="@dimen/default_60dp"

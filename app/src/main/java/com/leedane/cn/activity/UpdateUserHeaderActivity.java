@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.ButterKnife;
+//import butterknife.ButterKnife;
 
 /**
  * 更新用户头像
@@ -79,7 +79,7 @@ public class UpdateUserHeaderActivity extends BaseActivity {
         mLoginUserId = BaseApplication.getLoginUserId();
 
         setContentView(R.layout.activity_update_header);
-        ButterKnife.bind(this);
+        //ButterKnife.bind(this);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.update_header);
         backLayoutVisible();

@@ -10,6 +10,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.leedane.cn.activity.BaseActivity;
 import com.leedane.cn.activity.LoginActivity;
@@ -116,50 +117,57 @@ public class IncomeTestActivity extends BaseActivity {
      */
     private PieData getPieData(int count, float range) {
 
-        ArrayList<String> xValues = new ArrayList<String>();  //xVals用来表示每个饼块上的内容
+        /*mChart.setUsePercentValues(true);
+        mChart.setDescription("");
+        mChart.setExtraOffsets(5, 10, 5, 5);
 
-        for (int i = 0; i < count; i++) {
-            xValues.add("Quarterly" + (i + 1));  //饼块上显示成Quarterly1, Quarterly2, Quarterly3, Quarterly4
-        }
+        mChart.setDragDecelerationFrictionCoef(0.95f);
 
-        ArrayList<Entry> yValues = new ArrayList<Entry>();  //yVals用来表示封装每个饼块的实际数据
+        mChart.setCenterTextTypeface(mTfLight);
+        mChart.setCenterText(generateCenterSpannableText());
 
-        // 饼图数据
-        /**
-         * 将一个饼形图分成四部分， 四部分的数值比例为14:14:34:38
-         * 所以 14代表的百分比就是14%
-         */
-        float quarterly1 = 14;
-        float quarterly2 = 14;
-        float quarterly3 = 34;
-        float quarterly4 = 38;
+        mChart.setDrawHoleEnabled(true);
+        mChart.setHoleColor(Color.WHITE);
 
-        yValues.add(new Entry(quarterly1, 0));
-        yValues.add(new Entry(quarterly2, 1));
-        yValues.add(new Entry(quarterly3, 2));
-        yValues.add(new Entry(quarterly4, 3));
+        mChart.setTransparentCircleColor(Color.WHITE);
+        mChart.setTransparentCircleAlpha(110);
 
-        //y轴的集合
-        PieDataSet pieDataSet = new PieDataSet(yValues, "Quarterly Revenue 2014"/*显示在比例图上*/);
-        pieDataSet.setSliceSpace(0f); //设置个饼状图之间的距离
+        mChart.setHoleRadius(58f);
+        mChart.setTransparentCircleRadius(61f);
 
-        ArrayList<Integer> colors = new ArrayList<Integer>();
+        mChart.setDrawCenterText(true);
 
-        // 饼图颜色
-        colors.add(Color.rgb(205, 205, 205));
-        colors.add(Color.rgb(114, 188, 223));
-        colors.add(Color.rgb(255, 123, 124));
-        colors.add(Color.rgb(57, 135, 200));
+        mChart.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        mChart.setRotationEnabled(true);
+        mChart.setHighlightPerTapEnabled(true);
 
-        pieDataSet.setColors(colors);
+        // mChart.setUnit(" €");
+        // mChart.setDrawUnitsInChart(true);
 
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        float px = 5 * (metrics.densityDpi / 160f);
-        pieDataSet.setSelectionShift(px); // 选中态多出的长度
+        // add a selection listener
+        mChart.setOnChartValueSelectedListener(this);
 
-        PieData pieData = new PieData(xValues, pieDataSet);
+        setData(4, 100);
 
-        return pieData;
+        mChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+        // mChart.spin(2000, 0, 360);
+
+        mSeekBarX.setOnSeekBarChangeListener(this);
+        mSeekBarY.setOnSeekBarChangeListener(this);
+
+        Legend l = mChart.getLegend();
+        l.setPosition(LegendPosition.RIGHT_OF_CHART);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+
+        // entry label styling
+        mChart.setEntryLabelColor(Color.WHITE);
+        mChart.setEntryLabelTypeface(mTfRegular);
+        mChart.setEntryLabelTextSize(12f);*/
+
+        return null;
     }
     @Override
     protected void onPause() {

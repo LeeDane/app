@@ -35,6 +35,7 @@ public class OneLevelCategoryDataBase {
             "status integer, " + // 状态, 0禁用 1正常,
             "value varchar(20), " + // 展示的大类名称
             "icon integer, "+ // 显示的图标
+            "model integer, "+ //模型，1收入，2支出
             "budget float, " + //一级分类的预算
             "is_default integer, " +//是否是默认的分类, 0：表示没有, 1表示有
             "create_user_id integer, " + // 创建人
@@ -195,15 +196,15 @@ public class OneLevelCategoryDataBase {
 
         String sql = "insert into " + ONE_LEVEL_CATEGORY_TABLE_NAME;
 
-        sql += "(order_, status, value, icon, budget, is_default, create_user_id, create_time) " +
-                "values(?, ?, ?, ?, ?, ?, ?, ?)";
+        sql += "(order_, status, value, icon, model, budget, is_default, create_user_id, create_time) " +
+                "values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
 
         // 开始事务
         sqlite.beginTransaction();
         try{
             sqlite.execSQL(sql, new String[] {
-                    data.getOrder() + "", data.getStatus() +"", data.getValue(), data.getIcon() +"", data.getBudget() + "",
+                    data.getOrder() + "", data.getStatus() +"", data.getValue(), data.getIcon() +"", data.getModel() +"", data.getBudget() + "",
                     StringUtil.changeTrueOrFalseToInt(data.isDefault()) +"", data.getCreateUserId() +"", data.getCreateTime() });
             sqlite.setTransactionSuccessful(); // 设置事务成功完成
         } catch (SQLException e) {
@@ -279,10 +280,10 @@ public class OneLevelCategoryDataBase {
      */
     public void update(OneLevelGategory data) {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        String sql = ("update " + ONE_LEVEL_CATEGORY_TABLE_NAME + " set order_=?, status=?, value=?, icon=?" +
+        String sql = ("update " + ONE_LEVEL_CATEGORY_TABLE_NAME + " set order_=?, status=?, value=?, icon=?, model=?" +
                             ", budget=?, is_default=?, create_user_id=?, create_time=?");
         sqlite.execSQL(sql, new String[]{
-                data.getOrder() + "", data.getStatus() +"", data.getValue(), data.getIcon() +"", data.getBudget() + "",
+                data.getOrder() + "", data.getStatus() +"", data.getValue(), data.getIcon() +"", data.getModel() +"", data.getBudget() + "",
                 StringUtil.changeTrueOrFalseToInt(data.isDefault()) +"", data.getCreateUserId() +"", data.getCreateTime() });
         sqlite.close();
     }
@@ -300,7 +301,7 @@ public class OneLevelCategoryDataBase {
     public List<OneLevelGategory> query(String where) {
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
         ArrayList<OneLevelGategory> data = new ArrayList<>();
-        Cursor cursor = sqlite.rawQuery("select id, order_, status, value, icon, budget, is_default, create_user_id, create_time  from "
+        Cursor cursor = sqlite.rawQuery("select id, order_, status, value, icon, model, budget, is_default, create_user_id, create_time  from "
                         + ONE_LEVEL_CATEGORY_TABLE_NAME + where, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             OneLevelGategory oneLevelGategory = new OneLevelGategory();
@@ -309,10 +310,11 @@ public class OneLevelCategoryDataBase {
             oneLevelGategory.setStatus(cursor.getInt(2));
             oneLevelGategory.setValue(cursor.getString(3));
             oneLevelGategory.setIcon(cursor.getInt(4));
-            oneLevelGategory.setBudget(cursor.getFloat(5));
-            oneLevelGategory.setIsDefault(StringUtil.changeIntToTrueOrFalse(cursor.getInt(6)));
-            oneLevelGategory.setCreateUserId(cursor.getInt(7));
-            oneLevelGategory.setCreateTime(cursor.getString(8));
+            oneLevelGategory.setModel(cursor.getInt(5));
+            oneLevelGategory.setBudget(cursor.getFloat(6));
+            oneLevelGategory.setIsDefault(StringUtil.changeIntToTrueOrFalse(cursor.getInt(7)));
+            oneLevelGategory.setCreateUserId(cursor.getInt(8));
+            oneLevelGategory.setCreateTime(cursor.getString(9));
             data.add(oneLevelGategory);
         }
         if (!cursor.isClosed()) {

@@ -158,6 +158,9 @@ public class NavigationActivity extends AppCompatActivity
                 Intent financial_in = new Intent(NavigationActivity.this, HomeActivity.class);
                 startActivity(financial_in);
                 break;
+            case R.id.nav_user_info: //用户中心
+                CommonHandler.startUserInfoActivity(NavigationActivity.this);
+                break;
             case R.id.nav_share:  //分享
                 OnekeyShare oks = new OnekeyShare();
                //关闭sso授权

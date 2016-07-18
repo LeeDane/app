@@ -1,13 +1,21 @@
 package com.leedane.cn.financial.handler;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
+import com.leedane.cn.financial.bean.FinancialBean;
+import com.leedane.cn.financial.bean.FinancialList;
+import com.leedane.cn.service.CalculateFinancialService;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,5 +68,38 @@ public class FinancialHandler {
         requestBean.setServerMethod("leedane/financial/delete.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_FINANCIAL, listener, requestBean);
+    }
+
+    /**
+     * 获取总数
+     * @param financialList
+     * @param model model为0表示总数，为1表示获取收入，为2表示获取支出总数
+     * @return
+     */
+    public static float getTotalData(FinancialList financialList, int model){
+        float total = 0.0f;
+        if(financialList == null || financialList.getFinancialBeans() == null || financialList.getFinancialBeans().size() == 0)
+            return total;
+
+        if(model == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME || model == IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND)
+            for(FinancialBean financialBean: financialList.getFinancialBeans()){
+                if(financialBean.getModel() == model)
+                    total += financialBean.getMoney();
+            }
+        else
+            for(FinancialBean financialBean: financialList.getFinancialBeans())
+                    total += financialBean.getMoney();
+        return total;
+    }
+
+    /**
+     * 后台调用去计算记账
+     * @param context
+     */
+    public static void calculateFinancialData(Context context) {
+        Intent it_service = new Intent();
+        it_service.setClass(context, CalculateFinancialService.class);
+        it_service.setAction("com.leedane.cn.CalculateFinancialService");
+        context.startService(it_service);
     }
 }

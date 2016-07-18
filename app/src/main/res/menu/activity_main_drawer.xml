@@ -2,7 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_find" android:icon="@mipmap/personal_center"
+        <item android:id="@+id/nav_user_info" android:icon="@android:drawable/ic_menu_directions"
+            android:title="@string/user_info" />
+        <item android:id="@+id/nav_find" android:icon="@android:drawable/ic_menu_view"
             android:title="@string/find" />
         <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
             android:title="@string/nav_gallery" />
@@ -10,7 +12,7 @@
             android:title="@string/nav_financial" />
         <item android:id="@+id/nav_message" android:icon="@android:drawable/star_off"
             android:title="@string/nav_message" />
-        <item android:id="@+id/nav_file" android:icon="@android:drawable/menu_frame"
+        <item android:id="@+id/nav_file" android:icon="@android:drawable/ic_menu_upload"
             android:title="@string/nav_file" />
 
     </group>

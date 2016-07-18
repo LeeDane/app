@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/week_pie_chart"
+                android:layout_width="match_parent"
+                android:layout_height="320dp">
+            </com.github.mikephil.charting.charts.PieChart>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/week_line_chart"
+                android:layout_width="match_parent"
+                android:layout_height="320dp" />
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

@@ -82,7 +82,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
     //model是添加收入
     public static final int FINANCIAL_MODEL_INCOME = 1;
     //model是添加支出
-    public static final int FINANCIAL_MODEL_SPEND = 1;
+    public static final int FINANCIAL_MODEL_SPEND = 2;
 
     //金钱
     private EditText mMoney;
@@ -126,6 +126,10 @@ public class IncomeOrSpendActivity extends BaseActivity {
     private FinancialDataBase financialDataBase;
     private OneLevelCategoryDataBase oneLevelCategoryDataBase;
     private TwoLevelCategoryDataBase twoLevelCategoryDataBase;
+    private FinancialBean editFinancialBean;
+
+    //是否编辑状态
+    private boolean isEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,12 +146,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
         }
         setContentView(R.layout.activity_financial_income_or_spend);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
-        //默认是添加收入
-        mModel = getIntent().getIntExtra("model", FINANCIAL_MODEL_INCOME);
-        if(mModel == FINANCIAL_MODEL_INCOME)
-            setTitleViewText(getStringResource(R.string.financila_add_income));
-        else
-            setTitleViewText(getStringResource(R.string.financila_add_spend));
+        initData();
         backLayoutVisible();
         ((TextView)findViewById(R.id.base_title_textview)).setOnClickListener(IncomeOrSpendActivity.this);
 
@@ -156,6 +155,34 @@ public class IncomeOrSpendActivity extends BaseActivity {
         twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(IncomeOrSpendActivity.this);
 
         initView();
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initData(){
+        //判断是否是编辑状态
+        if(getIntent().getSerializableExtra("financialBean") != null){
+            editFinancialBean = (FinancialBean)getIntent().getSerializableExtra("financialBean");
+            mModel = editFinancialBean.getModel();
+            isEdit = true;
+        }else{
+            //默认是添加收入
+            mModel = getIntent().getIntExtra("model", FINANCIAL_MODEL_SPEND);
+        }
+
+        if(mModel == FINANCIAL_MODEL_INCOME)
+            setTitleViewText(getStringResource(R.string.financila_add_income));
+        else
+            setTitleViewText(getStringResource(R.string.financila_add_spend));
+    }
+
+    /**
+     * 判断当前是否是可以编辑的状态
+     * @return
+     */
+    private boolean isEdit(){
+        return isEdit && editFinancialBean != null ? true: false;
     }
 
     /**
@@ -183,12 +210,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
 
         mDate = (EditText)findViewById(R.id.financial_income_or_spend_date);
         mTime = (EditText)findViewById(R.id.financial_income_or_spend_time);
-        //以系统时间初始化date和time的展示
-        Date date = new Date();
-        showTime = Calendar.getInstance();
-        showTime.setTime(date);
-        mDate.setText(DateUtil.DateToString(date, "yyyy-MM-dd"));
-        mTime.setText(DateUtil.DateToString(date, "HH:mm:ss"));
+
         mDate.setOnClickListener(IncomeOrSpendActivity.this);
         mTime.setOnClickListener(IncomeOrSpendActivity.this);
 
@@ -197,18 +219,41 @@ public class IncomeOrSpendActivity extends BaseActivity {
         mOneLevel.setOnClickListener(IncomeOrSpendActivity.this);
         mTwoLevel.setOnClickListener(IncomeOrSpendActivity.this);
 
-        List<OneLevelGategory> oneLevelGategories = oneLevelCategoryDataBase.query(" where is_default=1");
-        if(oneLevelGategories != null && oneLevelGategories.size() ==1){
-            mOneLevel.setText(oneLevelGategories.get(0).getValue());
-        }
-
-        List<TwoLevelCategory> twoLevelCategories = twoLevelCategoryDataBase.query(" where is_default=1");
-        if(twoLevelCategories != null && twoLevelCategories.size() ==1){
-            mTwoLevel.setText(twoLevelCategories.get(0).getValue());
-        }
-
         mRemark = (EditText)findViewById(R.id.financial_income_or_spend_remark);
 
+        if(isEdit()){
+            showTime = Calendar.getInstance();
+            String addTime = editFinancialBean.getAdditionTime();
+            showTime.setTime(DateUtil.stringToDate(addTime));
+            mDate.setText(addTime.substring(0, 10));
+            mTime.setText(addTime.substring(11, addTime.length()));
+            mOneLevel.setText(editFinancialBean.getOneLevel());
+            mTwoLevel.setText(editFinancialBean.getTwoLevel());
+            mMoney.setText(String.valueOf(editFinancialBean.getMoney()));
+            mRemark.setText(StringUtil.changeNotNull(editFinancialBean.getFinancialDesc()));
+            if(StringUtil.isNotNull(editFinancialBean.getPath())){
+                mPath = editFinancialBean.getPath();
+                ImageCacheManager.loadImage(mPath, mImg, 150, 150);
+            }
+
+        }else{
+            //以系统时间初始化date和time的展示
+            Date date = new Date();
+            showTime = Calendar.getInstance();
+            showTime.setTime(date);
+            mDate.setText(DateUtil.DateToString(date, "yyyy-MM-dd"));
+            mTime.setText(DateUtil.DateToString(date, "HH:mm:ss"));
+
+            List<OneLevelGategory> oneLevelGategories = oneLevelCategoryDataBase.query(" where is_default=1");
+            if(oneLevelGategories != null && oneLevelGategories.size() ==1){
+                mOneLevel.setText(oneLevelGategories.get(0).getValue());
+            }
+
+            List<TwoLevelCategory> twoLevelCategories = twoLevelCategoryDataBase.query(" where is_default=1");
+            if(twoLevelCategories != null && twoLevelCategories.size() ==1) {
+                mTwoLevel.setText(twoLevelCategories.get(0).getValue());
+            }
+        }
     }
 
     /**
@@ -271,6 +316,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
             e.printStackTrace();
             ToastUtil.failure(IncomeOrSpendActivity.this, "保存失败!" + e.toString());
         }
+
+        //后台重新计算记账数据
+        FinancialHandler.calculateFinancialData(IncomeOrSpendActivity.this);
     }
 
     /**
@@ -374,7 +422,19 @@ public class IncomeOrSpendActivity extends BaseActivity {
                 showTimePickerDialog();
                 break;
             case R.id.base_title_textview:
-                showPopwindow();
+                //编辑状态不让选择类型
+                if(isEdit()){
+                    ToastUtil.failure(IncomeOrSpendActivity.this, "编辑状态不能选择类型");
+                    return;
+                }
+                //showPopwindow();
+                if(mModel == FINANCIAL_MODEL_INCOME){
+                    mModel = FINANCIAL_MODEL_SPEND;
+                    ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_spend));
+                }else{
+                    mModel = FINANCIAL_MODEL_INCOME;
+                    ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_income));
+                }
                 break;
         }
     }
@@ -390,7 +450,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
         // 下面是两种方法得到宽度和高度 getWindow().getDecorView().getWidth()
 
         PopupWindow window = new PopupWindow(view,
-                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.WRAP_CONTENT);
 
         // 设置popWindow弹出窗体可点击，这句话必须添加，并且是true
@@ -406,7 +466,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
         window.setAnimationStyle(R.style.mypopwindow_anim_style);
         // 在底部显示
         window.showAtLocation(IncomeOrSpendActivity.this.findViewById(R.id.financial_income_or_spend_root),
-                Gravity.TOP, -270, DensityUtil.dip2px(IncomeOrSpendActivity.this, 60));
+                Gravity.TOP, 70, DensityUtil.dip2px(IncomeOrSpendActivity.this, 60));
 
         // 这里检验popWindow里的button是否可以点击
         Button first = (Button) view.findViewById(R.id.pop_btn_add_income);
@@ -536,7 +596,8 @@ public class IncomeOrSpendActivity extends BaseActivity {
             List<OneLevelGategory> oneLevelGategories = BaseApplication.oneLevelGategories;
             if(oneLevelGategories.size() > 0 ){
                 for(OneLevelGategory oneLevelGategory: oneLevelGategories){
-                    menus.add(oneLevelGategory.getValue() + "   总预算("+ oneLevelGategory.getBudget() + ")");
+                    if(oneLevelGategory.getModel() == mModel)
+                        menus.add(oneLevelGategory.getValue() + "   总预算("+ oneLevelGategory.getBudget() + ")");
                 }
             }
         }else if(type == 2 && oneLevelId > 0 ){
@@ -589,7 +650,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
     public void showDatePickerDialog(){
         DatePickerDialog dialog = new DatePickerDialog(this,new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker dp, int year,int month, int dayOfMonth) {
-                mDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth + " ");
+                String m = (month + 1) > 9 ? (month + 1) +"" : "0" +(month + 1);
+                String d = dayOfMonth > 9 ? dayOfMonth +"": "0"+dayOfMonth;
+                mDate.setText(year + "-" + m + "-" + d + " ");
                 String date = mDate.getText().toString() + mTime.getText().toString();
                 showTime.setTime(DateUtil.stringToDate(date));
                 showTimePickerDialog();
@@ -604,7 +667,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
     public void showTimePickerDialog(){
         TimePickerDialog dialog = new TimePickerDialog(this,new TimePickerDialog.OnTimeSetListener() {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                mTime.setText(hourOfDay +":" +minute +":"+"00");
+                String h = hourOfDay > 9 ? hourOfDay +"" : "0" +hourOfDay;
+                String m = minute > 9 ? minute +"" : "0" + minute;
+                mTime.setText(h +":" +m +":"+"00");
                 String date = mDate.getText().toString() + " " + mTime.getText().toString();
                 showTime.setTime(DateUtil.stringToDate(date));
             }
@@ -632,6 +697,15 @@ public class IncomeOrSpendActivity extends BaseActivity {
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
                     ToastUtil.success(IncomeOrSpendActivity.this, jsonObject);
+                    //更新本地数据为已经同步状态
+                    JSONObject object = jsonObject.getJSONObject("message");
+                    List<FinancialBean> datas = financialDataBase.query(" where local_id =" + object.getInt("local_id"));
+                    if(datas != null && datas.size() == 1){
+                        FinancialBean financialBean = datas.get(0);
+                        financialBean.setSynchronous(true);
+                        financialBean.setId(object.getInt("id"));
+                        financialDataBase.update(financialBean);
+                    }
                     finish();
                 }else{
                     ToastUtil.failure(IncomeOrSpendActivity.this, jsonObject);

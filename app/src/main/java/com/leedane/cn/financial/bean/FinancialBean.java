@@ -1,6 +1,7 @@
 package com.leedane.cn.financial.bean;
 
 
+import java.io.Serializable;
 
 /**
  * 记账实体类
@@ -9,7 +10,7 @@ package com.leedane.cn.financial.bean;
  * Version 1.0
  */
 //@Table(name="T_FINANCIAL")
-public class FinancialBean{
+public class FinancialBean implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	//记账的状态,1：正常，0:禁用，2、删除

@@ -136,7 +136,6 @@ public class HomeActivity extends BaseActivity {
             if(tabText.equalsIgnoreCase(getStringResource(R.string.financial_home))){//首页
                 Bundle bundle = new Bundle();
                 mFragments.add(MainFragment.newInstance(bundle));
-                continue;
             }else if(tabText.equalsIgnoreCase(getStringResource(R.string.financial_yesterday))) {//昨日
                 Bundle bundle = new Bundle();
                 mFragments.add(YesterDayFragment.newInstance(bundle));
@@ -152,7 +151,7 @@ public class HomeActivity extends BaseActivity {
             }
         }
 
-        //mViewPager.setOffscreenPageLimit(5);
+        mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(), getBaseContext(), mFragments));
         mViewPager.setCurrentItem(mCurrentTab);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

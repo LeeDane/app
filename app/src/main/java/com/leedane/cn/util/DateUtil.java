@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * 日期工具类
@@ -179,7 +180,6 @@ public class DateUtil {
 
 		return 0;
 	}
-	
 
 	/**
 	 * 获取系统当前时间
@@ -249,7 +249,130 @@ public class DateUtil {
 	 * @return
 	 */
 	public static String getSystemCurrentTime(String format){
-		return DateToString(new Date(getSystemCurrentTime()),format);
+		return DateToString(new Date(getSystemCurrentTime()), format);
+	}
+
+	/**
+	 * 获取今天日期的开始时间
+	 * @return
+	 */
+	public static Date getTodayStart(){
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.HOUR_OF_DAY, 0); //小时
+		c.set(Calendar.MINUTE, 0); //分钟
+		c.set(Calendar.SECOND, 0); //秒钟
+		return c.getTime();
+	}
+
+	/**
+	 * 获取今天日期的结束时间
+	 * @return
+	 */
+	public static Date getTodayEnd(){
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.HOUR_OF_DAY, 23); //小时
+		c.set(Calendar.MINUTE, 59); //分钟
+		c.set(Calendar.SECOND, 59); //秒钟
+		return c.getTime();
+	}
+
+	/**
+	 * 获取昨天日期的开始时间
+	 * @return
+	 */
+	public static Date getYesTodayStart(){
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, -1); //日
+		c.set(Calendar.HOUR_OF_DAY, 0); //小时
+		c.set(Calendar.MINUTE, 0); //分钟
+		c.set(Calendar.SECOND, 0); //秒钟
+		return c.getTime();
+	}
+
+	/**
+	 * 获取昨天日期的结束时间
+	 * @return
+	 */
+	public static Date getYesTodayEnd(){
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, -1); //日
+		c.set(Calendar.HOUR_OF_DAY, 23); //小时
+		c.set(Calendar.MINUTE, 59); //分钟
+		c.set(Calendar.SECOND, 59); //秒钟
+		return c.getTime();
+	}
+
+	/**
+	 * 获取本周日期的开始时间（周日凌晨零点开始）
+	 * @return
+	 */
+	public static Date getThisWeekStart(){
+		int sundayPlus = getSundayPlus();
+		GregorianCalendar currentDate = new GregorianCalendar();
+		currentDate.add(GregorianCalendar.DATE, sundayPlus);
+		currentDate.set(Calendar.HOUR_OF_DAY, 0); //小时
+		currentDate.set(Calendar.MINUTE, 0); //分钟
+		currentDate.set(Calendar.SECOND, 0); //秒钟
+		return currentDate.getTime();
+	}
+
+		/**
+		 * 获得当前日期与本周日的偏移量
+		 * @return
+		 */
+	public static int getSundayPlus() {
+		Calendar cd = Calendar.getInstance();
+		// 获得今天是一周的第几天，星期日是第一天，星期二是第二天......
+		int dayOfWeek = cd.get(Calendar.DAY_OF_WEEK) -1;         //因为按中国礼拜一作为第一天所以这里减1
+		if (dayOfWeek == 1) {
+			return 0;
+		} else {
+			return 1 - dayOfWeek;
+		}
+	}
+
+	/**
+	 * 获取本月日期的开始时间
+	 * @return
+	 */
+	public static Date getThisMonthStart(){
+		Calendar currentDate = Calendar.getInstance();
+		currentDate.set(Calendar.DATE,1);//设为当前月的1号
+		currentDate.set(Calendar.HOUR_OF_DAY, 0); //小时
+		currentDate.set(Calendar.MINUTE, 0); //分钟
+		currentDate.set(Calendar.SECOND, 0); //秒钟
+		return currentDate.getTime();
+	}
+
+	/**
+	 * 获取本年日期的开始时间
+	 * @return
+	 */
+	public static Date getThisYearStart(){
+		int yearPlus = getYearPlus();
+		GregorianCalendar currentDate = new GregorianCalendar();
+		currentDate.add(GregorianCalendar.DATE,yearPlus);
+		currentDate.set(Calendar.HOUR_OF_DAY, 0); //小时
+		currentDate.set(Calendar.MINUTE, 0); //分钟
+		currentDate.set(Calendar.SECOND, 0); //秒钟
+		return currentDate.getTime();
+	}
+
+	/**
+	 * 获取当前日期在本年的偏移量
+	 * @return
+	 */
+	private static int getYearPlus(){
+		Calendar cd = Calendar.getInstance();
+		int yearOfNumber = cd.get(Calendar.DAY_OF_YEAR);//获得当天是一年中的第几天
+		cd.set(Calendar.DAY_OF_YEAR,1);//把日期设为当年第一天
+		cd.roll(Calendar.DAY_OF_YEAR,-1);//把日期回滚一天。
+		int MaxYear = cd.get(Calendar.DAY_OF_YEAR);
+		if(yearOfNumber == 1){
+			return -MaxYear;
+		}else{
+			return 1-yearOfNumber;
+		}
 	}
 
 	public static void main(String[] args) {

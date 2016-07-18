@@ -67,7 +67,7 @@
     </RadioGroup>
     <ImageView
         android:id="@+id/financial_line"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="3dp"
         android:scaleType="matrix"
         android:layout_alignParentBottom="true"

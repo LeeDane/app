@@ -1,6 +1,5 @@
 package com.leedane.cn.financial.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,11 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.app.R;
+import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.adapter.FinancialRecyclerViewAdapter;
 import com.leedane.cn.financial.bean.FinancialBean;
-import com.leedane.cn.financial.database.FinancialDataBase;
-import com.leedane.cn.fragment.BaseFragment;
+import com.leedane.cn.financial.bean.FinancialList;
+import com.leedane.cn.financial.handler.FinancialHandler;
+import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ToastUtil;
 
@@ -31,10 +32,9 @@ import java.util.List;
  * 记账首页的fragment
  * Created by LeeDane on 2016/7/19.
  */
-public class MainFragment extends BaseFragment {
+public class MainFragment extends FinancialBaseFragment{
 
     public static final String TAG = "MainFragment";
-    private Context mContext;
     private RecyclerView mRecyclerView;
     private FinancialRecyclerViewAdapter mAdapter;
     private List<FinancialBean> mFinancialBeans = new ArrayList<>();
@@ -46,7 +46,10 @@ public class MainFragment extends BaseFragment {
 
     private LinearLayoutManager mLayoutManager;
 
-    private FinancialDataBase financialDataBase;
+
+
+    private FinancialList mMonthFinancialList; //本月的数据列表
+
 
     /**
      * 头部view
@@ -117,7 +120,8 @@ public class MainFragment extends BaseFragment {
         if(mContext == null)
             mContext = getActivity();
 
-        financialDataBase = new FinancialDataBase(mContext);
+        //后台计算记账数据
+        FinancialHandler.calculateFinancialData(mContext);
 
         mHeader = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_header, null);
 
@@ -134,13 +138,18 @@ public class MainFragment extends BaseFragment {
         mLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
         mAdapter = new FinancialRecyclerViewAdapter();
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.addDatas(generateData());
+        generateData();
+        mAdapter.addDatas(mFinancialBeans);
         setHeader(mRecyclerView);
         mAdapter.setOnItemClickListener(new FinancialRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, String data) {
+                Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
+                it.putExtra("financialBean", mFinancialBeans.get(position));
+                mContext.startActivity(it);
                 Toast.makeText(mContext, data, Toast.LENGTH_SHORT).show();
             }
         });
@@ -150,7 +159,20 @@ public class MainFragment extends BaseFragment {
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_green_light);
+        refreshHeaderData();
+    }
 
+    /**
+     * 刷新headerview的数据
+     */
+    private void refreshHeaderData(){
+        /*if(mHeader == null || mMonthFinancialList == null)
+            return;*/
+        //更新
+        TextView income = (TextView)mHeader.findViewById(R.id.financial_header_income);
+        TextView spend = (TextView)mHeader.findViewById(R.id.financial_header_spend);
+        income.setText(String.valueOf(FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME)));
+        spend.setText(String.valueOf(FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND)));
     }
 
     @Override
@@ -182,10 +204,8 @@ public class MainFragment extends BaseFragment {
      * 获取初始数据
      * @return
      */
-    private List<FinancialBean> generateData(){
-        List<FinancialBean> financialBeans = new ArrayList<>();
-        financialBeans = financialDataBase.query();
-        return financialBeans;
+    private void generateData(){
+        mFinancialBeans = financialDataBase.query(" where status = 1 order by datetime(addition_time) desc");
     }
     @Override
     public void onClick(View v) {
@@ -202,8 +222,14 @@ public class MainFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy() {
-        financialDataBase.destroy();
-        super.onDestroy();
+    public void calculate(FinancialList financialList, int model) {
+        super.calculate(financialList, model);
+        if(model == EnumUtil.FinancialModel.本月.value){
+            this.mMonthFinancialList = financialList;
+            refreshHeaderData();
+            //ToastUtil.success(mContext, "数量："+financialList.getFinancialBeans().size());
+        }else{
+            //ToastUtil.success(mContext, "model:"+model);
+        }
     }
 }
