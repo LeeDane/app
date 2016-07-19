@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="@dimen/nav_header_height"
+    android:background="@drawable/side_nav_bar"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark" android:orientation="vertical"
+    android:gravity="bottom">
+
+    <TextView
+        android:id="@+id/textview_welcomelogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        android:text="@string/no_login" />
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/please_login"/>
+
+    <com.leedane.cn.customview.CircularImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/imageview_head_portrait"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:paddingTop="5dp"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:src="@drawable/no_pic"
+        app:border_width="2dp"/>
+
+    <TextView
+        android:id="@+id/textview_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/dane" />
+
+    <TextView
+        android:id="@+id/textview_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/dane_email" />
+
+</LinearLayout>

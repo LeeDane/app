@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:paddingLeft="15dp">
+    <EditText
+        android:id="@+id/setting_item_edittext"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:layout_weight="10"
+        android:background="@drawable/edittext_default_seletorbg"
+        android:singleLine="true"
+        android:inputType="text"
+        android:text="@string/app_name"/>
+    <TextView
+        android:id="@+id/setting_item_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_default_seletorbg"
+        android:text="@string/save"
+        android:padding="5dp"
+        android:layout_margin="3dp"
+        android:gravity="center"
+        android:clickable="true"
+        android:layout_weight="2"
+        android:minWidth="100dp"/>
+</LinearLayout>

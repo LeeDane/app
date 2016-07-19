@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="black">#000</color>
+    <color name="gray">#999</color>
+    <color name="white">#fff</color>
+    <color name="default_font">#666</color>
+    <color name="red">#f00</color>
+
+    <color name="bluePrimaryDark">#048BFE</color>
+    <color name="bluePrimary">#2199FF</color>
+    <color name="bluePrimaryLight">#BADFFF</color>
+    <color name="blueAccountLink">#8181F7</color>
+
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+
+    <color name="side_bar_text">#4A4A4A</color>
+    <color name="shadow_bg">#66000000</color>
+    <color name="edit_bg">#EFEFF4</color>
+    <color name="darker_gray">#9b9b9b</color>
+
+    <color name="green_light">#66ff99</color>
+    <color name="unknow_color_1">#EED8AE</color>
+    <color name="unknow_color_2">#EED5D2</color>
+    <color name="unknow_color_3">#9F79EE</color>
+    <color name="unknow_color_4">#7FFF00</color>
+    <color name="unknow_color_5">#DDA0DD</color>
+</resources>

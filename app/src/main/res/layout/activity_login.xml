@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/login_linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="#5858FA">
+
+    <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="15dp"
+       android:layout_marginRight="15dp"
+       android:layout_marginTop="80dp"
+       android:layout_gravity="center"
+       android:gravity="center"
+       android:text="@string/hint_system"
+       android:textColor="#fff"
+       android:textSize="35dp" />
+    <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="5dp"
+    	android:layout_gravity="center"
+       android:gravity="center"
+       android:text="@string/hint_system_desc"
+       android:textColor="#e8f7f9"
+       android:textSize="20dp" />
+    <AutoCompleteTextView 
+        android:id="@+id/editview_username"
+        android:completionThreshold="1"
+        android:layout_width="wrap_content"
+    	android:layout_height="40dp"
+    	android:background="@drawable/bg_login_edittext"
+    	android:layout_marginLeft="15dp"
+    	android:layout_marginRight="15dp"
+    	android:layout_marginTop="20dp"
+    	android:paddingLeft="15dp"
+    	android:paddingRight="15dp"
+    	android:minWidth="250dp"
+    	android:layout_gravity="center"
+    	android:singleLine="true"
+    	android:textSize="17dp"
+    	android:textColor="#f6fafb"
+        android:hint="@string/hint_username" />
+        
+   <com.leedane.cn.customview.EyeEditText
+       	android:id="@+id/editview_password"
+        android:layout_width="wrap_content"
+    	android:layout_height="40dp"
+    	android:background="@drawable/bg_login_edittext"
+    	android:layout_marginLeft="15dp"
+    	android:layout_marginRight="15dp"
+    	android:layout_marginTop="25dp"
+    	android:paddingLeft="15dp"
+    	android:paddingRight="15dp"
+    	android:minWidth="250dp"
+    	android:layout_gravity="center"
+    	android:singleLine="true"
+    	android:textSize="17dp"
+    	android:textColor="#f6fafb"
+    	android:inputType="textPassword"
+       android:drawableRight="@drawable/eye"
+        android:hint="@string/hint_password" />
+   <TextView
+       android:id="@+id/login_btn"
+       android:layout_width="wrap_content"
+       android:layout_height="45dp"
+       android:layout_marginLeft="15dp"
+       android:layout_marginRight="15dp"
+       android:layout_marginTop="25dp"
+       android:background="@drawable/btn_login_seletorbg"
+       android:clickable="true"
+       android:minWidth="250dp"
+       android:layout_gravity="center"
+       android:gravity="center"
+       android:onClick="onDoneClick"
+       android:text="@string/hint_login"
+       android:textColor="#000"
+       android:textSize="17dp" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:minWidth="255dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:onClick="loginPhoneClick"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_login"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:onClick="registerClick"
+            android:gravity="right"
+            android:layout_height="wrap_content"
+            android:text="@string/register"/>
+    </LinearLayout>
+</LinearLayout>

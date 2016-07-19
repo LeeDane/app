@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/chat_bg_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/chat_bg_free"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/chat_bg_free"/>
+        <RadioButton
+            android:id="@+id/chat_bg_charge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chat_bg_charge"/>
+    </RadioGroup>
+    <LinearLayout
+        android:id="@+id/chat_bg_charge_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/chat_bg_score"/>
+        <EditText
+            android:id="@+id/chat_bg_charge_score"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </LinearLayout>
+    <EditText
+        android:id="@+id/chat_bg_charge_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="描述信息，可以为空"
+        android:inputType="number"/>
+    <TextView
+        android:id="@+id/chat_bg_dialog_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/btn_setting_loginoutbg"
+        android:clickable="true"
+        android:minWidth="250dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/submit"
+        android:textColor="#000"
+        android:textSize="17dp" />
+
+</LinearLayout>
