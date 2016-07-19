@@ -45,7 +45,11 @@ public class MineUtil {
         Log.e("ViChildError", "showOpenTypeDialog");
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+<<<<<<< HEAD
         intent.setAction(Intent.ACTION_VIEW);
+=======
+        intent.setAction(android.content.Intent.ACTION_VIEW);
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
         Uri uri = Uri.fromFile(new File(param));
         intent.setDataAndType(uri, "*/*");
         return intent;

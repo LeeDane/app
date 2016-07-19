@@ -65,14 +65,22 @@ public class ContactAdapter extends RecyclerviewBaseAdapter<ContactAdapter.Conta
         }
 
         @Override
+<<<<<<< HEAD
         public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+=======
+        public ContactAdapter.ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_contact, parent, false);
                 return new ContactViewHolder(view);
         }
 
         @Override
+<<<<<<< HEAD
         public void onBindViewHolder(ContactViewHolder holder, final int position) {
+=======
+        public void onBindViewHolder(ContactAdapter.ContactViewHolder holder, final int position) {
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
                 SwipeItemLayout swipeRoot = holder.mRoot;
                 holder.position = position;
                 /*if (getItem(position).getId().equals(OWNER)) {

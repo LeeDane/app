@@ -51,14 +51,22 @@ public class MyFriendsAdapter extends MyFriendsRecyclerviewBaseAdapter<MyFriends
         }
 
         @Override
+<<<<<<< HEAD
         public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+=======
+        public MyFriendsAdapter.ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_myfriends, parent, false);
                 return new ContactViewHolder(view);
         }
 
         @Override
+<<<<<<< HEAD
         public void onBindViewHolder(ContactViewHolder holder, final int position) {
+=======
+        public void onBindViewHolder(MyFriendsAdapter.ContactViewHolder holder, final int position) {
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
                 SwipeItemLayout swipeRoot = holder.mRoot;
                 holder.position = position;
                 swipeRoot.setSwipeAble(true);

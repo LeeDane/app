@@ -668,7 +668,11 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                 }
             }
         });
+<<<<<<< HEAD
         submitBtn.setOnClickListener(new OnClickListener() {
+=======
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
             @Override
             public void onClick(View v) {
                 String score = editText.getText().toString();

@@ -442,10 +442,29 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                     mTVError.setText("心情详情获取失败"+(resultObject.has("message")? ",原因是："+resultObject.getString("message"):""));
                 }
             }else if(type == TaskType.DETAIL_MOOD_IMAGE){
+<<<<<<< HEAD
                 JSONObject resultObject = new JSONObject(String.valueOf(result));
                 if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess") && resultObject.has("imgs") &&
                         StringUtil.isNotNull(resultObject.getString("imgs"))){
                     String imgs = resultObject.getString("imgs");
+=======
+                mMoodImagesBean = BeanConvertUtil.strConvertToMoodImagesBeans(String.valueOf(result));
+                List<MoodImagesBean> moodImagesBeans = mMoodImagesBean.getMessage();
+                if(mMoodImagesBean.isSuccess() && moodImagesBeans.size() > 0){
+                    //Toast.makeText(MoodDetailActivity.this, "获取图片成功", Toast.LENGTH_SHORT).show();
+                    mImgContainer.setVisibility(View.VISIBLE);
+                    StringBuffer buffer = new StringBuffer();
+                    for(MoodImagesBean imagesBean: moodImagesBeans){
+                        if((imagesBean.getSize().equalsIgnoreCase("120x120") || imagesBean.getSize().equalsIgnoreCase("source"))){
+                            //ImageCacheManager.loadImage(imagesBean.getPath(), mIVImg, 120, 120);
+                            buffer.append(imagesBean.getPath() +";");
+                        }else{
+                            continue;
+                        }
+                    }
+
+                    String imgs = buffer.toString();
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
                     if(imgs.endsWith(";")){
                         imgs = imgs.substring(0, imgs.length() -1);
                     }

@@ -25,7 +25,11 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 	/**
 	 * 当数据库不存在或者第一次执行的时候才调用 (non-Javadoc)
 	 *
+<<<<<<< HEAD
 	 * @see SQLiteOpenHelper#onCreate(SQLiteDatabase)
+=======
+	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase database) {

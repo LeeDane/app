@@ -42,6 +42,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+<<<<<<< HEAD
+=======
+import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
+
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
 /**
  * 多图像详情的frament类
  * Created by LeeDane on 2015/11/16.

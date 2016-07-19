@@ -30,7 +30,11 @@ android {
     }
     sourceSets {
         main {
+<<<<<<< HEAD
             jniLibs.srcDirs = ['src/main/jniLibs']
+=======
+            jniLibs.srcDirs = ['libs']
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
         }
     }
 }
@@ -46,6 +50,10 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.0'
     compile 'com.felipecsl:gifimageview:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+<<<<<<< HEAD
+=======
+    compile 'com.github.chrisbanes:PhotoView:1.2.6'
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
     compile files('libs/gson-1.7.1.jar')
     compile files('libs/json-lib-2.4-jdk15-sources.jar')
@@ -67,4 +75,16 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-Moments-2.6.5.jar')
     compile files('libs/zxing.jar')
     compile files('libs/togglebuttonlib.jar')
+<<<<<<< HEAD
+=======
+    compile files('libs/jpush-android-2.1.3.jar')
+    compile files('libs/locSDK_6.23.jar')
+    compile files('libs/baidumapapi_v3_5_0.jar')
+    compile files('libs/baidumapapi_search_v3_7_3.jar')
+    compile files('libs/baidumapapi_base_v3_7_3.jar')
+    compile files('libs/baidumapapi_cloud_v3_7_3.jar')
+    compile files('libs/baidumapapi_map_v3_7_3.jar')
+    compile files('libs/baidumapapi_radar_v3_7_3.jar')
+    compile files('libs/baidumapapi_util_v3_7_3.jar')
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
 }

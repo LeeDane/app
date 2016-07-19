@@ -21,11 +21,19 @@ public class HttpResponseBlogBean {
         this.isSuccess = isSuccess;
     }
 
+<<<<<<< HEAD
     public List<BlogBean> getMessage() {
         return message;
     }
 
     public void setMessage(List<BlogBean> message) {
+=======
+    public List<com.leedane.cn.bean.BlogBean> getMessage() {
+        return message;
+    }
+
+    public void setMessage(List<com.leedane.cn.bean.BlogBean> message) {
+>>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
         this.message = message;
     }
 
