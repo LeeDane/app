@@ -42,12 +42,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-<<<<<<< HEAD
-=======
-import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
-
->>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
 /**
  * 多图像详情的frament类
  * Created by LeeDane on 2015/11/16.
@@ -126,7 +120,7 @@ public class ImageDetailFragment extends Fragment{
         int width = mImageDetailBean.getWidth() == 0 ||  mImageDetailBean.getWidth() > acreenWidth ? acreenWidth: mImageDetailBean.getWidth();
         int height = mImageDetailBean.getHeight() == 0 ||  mImageDetailBean.getHeight() > screenHeight ? screenHeight: mImageDetailBean.getHeight();
         if(currentImageUrl.startsWith("http://") || currentImageUrl.startsWith("https://")){
-           //ImageCacheManager.loadImage(currentImageUrl, (ImageView) getView().findViewById(R.id.image_detail_imageview), width, height);
+            //ImageCacheManager.loadImage(currentImageUrl, (ImageView) getView().findViewById(R.id.image_detail_imageview), width, height);
             mScaleImageView = (SubsamplingScaleImageView)getView().findViewById(R.id.image_detail_imageview);
             ImageCacheManager.loadImage(currentImageUrl, mScaleImageView, width, height);
             mScaleImageView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -279,14 +273,14 @@ public class ImageDetailFragment extends Fragment{
 
     class myThread implements Runnable {
         public void run() {
-                Map<String, Object> rs = FileUtil.saveNetWorkLinkToFile(mContext, mImageDetailBean.getPath());
-                Message message = new Message();
-                message.what = LOAD_NETWORK_IMG_CODE;
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("isSuccess", StringUtil.changeObjectToBoolean(rs.get("isSuccess")));
-                bundle.putString("message", StringUtil.changeNotNull(rs.get("message")));
-                message.setData(bundle);
-                myHandler.sendMessage(message);
+            Map<String, Object> rs = FileUtil.saveNetWorkLinkToFile(mContext, mImageDetailBean.getPath());
+            Message message = new Message();
+            message.what = LOAD_NETWORK_IMG_CODE;
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isSuccess", StringUtil.changeObjectToBoolean(rs.get("isSuccess")));
+            bundle.putString("message", StringUtil.changeNotNull(rs.get("message")));
+            message.setData(bundle);
+            myHandler.sendMessage(message);
         }
     }
     /**

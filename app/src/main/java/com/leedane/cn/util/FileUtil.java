@@ -373,11 +373,7 @@ public class FileUtil {
                     InputStream inputStream = HttpConnectionUtil.getInputStream(imgUrl);
                     if(inputStream != null){
                         //载入图片到输入流
-<<<<<<< HEAD
                         BufferedInputStream bis = new BufferedInputStream(inputStream);
-=======
-                        java.io.BufferedInputStream bis = new BufferedInputStream(inputStream);
->>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
                         //实例化存储字节数组
                         byte[] bytes = new byte[1024];
                         //设置写入路径以及图片名称

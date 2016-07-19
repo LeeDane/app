@@ -54,7 +54,7 @@ public class ContactAdapter extends RecyclerviewBaseAdapter<ContactAdapter.Conta
         public ContactAdapter(Context context, List<ContactBean.MembersEntity> lists/*, int permission, String createrID*/) {
                 this.mLists = lists;
                 mContext = context;
-               // mPermission = permission;
+                // mPermission = permission;
                 this.addAll(mLists);
                 /*this.createrID = createrID;
                 if (createrID.equals(CREATER)) {
@@ -65,22 +65,14 @@ public class ContactAdapter extends RecyclerviewBaseAdapter<ContactAdapter.Conta
         }
 
         @Override
-<<<<<<< HEAD
         public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-=======
-        public ContactAdapter.ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
->>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_contact, parent, false);
                 return new ContactViewHolder(view);
         }
 
         @Override
-<<<<<<< HEAD
         public void onBindViewHolder(ContactViewHolder holder, final int position) {
-=======
-        public void onBindViewHolder(ContactAdapter.ContactViewHolder holder, final int position) {
->>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
                 SwipeItemLayout swipeRoot = holder.mRoot;
                 holder.position = position;
                 /*if (getItem(position).getId().equals(OWNER)) {
@@ -116,38 +108,38 @@ public class ContactAdapter extends RecyclerviewBaseAdapter<ContactAdapter.Conta
                                /* if (position != 0) {
                                         if (getItem(position).getProfession().equals(STUDENT)) {*/
 
-                                                swipeRoot.setSwipeAble(true);
-                                                swipeRoot.setDelegate(new SwipeItemLayout.SwipeItemLayoutDelegate() {
-                                                        @Override
-                                                        public void onSwipeItemLayoutOpened(SwipeItemLayout swipeItemLayout) {
-                                                                closeOpenedSwipeItemLayoutWithAnim();
-                                                                mOpenedSil.add(swipeItemLayout);
-                                                        }
+                swipeRoot.setSwipeAble(true);
+                swipeRoot.setDelegate(new SwipeItemLayout.SwipeItemLayoutDelegate() {
+                        @Override
+                        public void onSwipeItemLayoutOpened(SwipeItemLayout swipeItemLayout) {
+                                closeOpenedSwipeItemLayoutWithAnim();
+                                mOpenedSil.add(swipeItemLayout);
+                        }
 
-                                                        @Override
-                                                        public void onSwipeItemLayoutClosed(SwipeItemLayout swipeItemLayout) {
-                                                                mOpenedSil.remove(swipeItemLayout);
-                                                        }
+                        @Override
+                        public void onSwipeItemLayoutClosed(SwipeItemLayout swipeItemLayout) {
+                                mOpenedSil.remove(swipeItemLayout);
+                        }
 
-                                                        @Override
-                                                        public void onSwipeItemLayoutStartOpen(SwipeItemLayout swipeItemLayout) {
-                                                                closeOpenedSwipeItemLayoutWithAnim();
-                                                        }
-                                                });
-                                                holder.mDelete.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
+                        @Override
+                        public void onSwipeItemLayoutStartOpen(SwipeItemLayout swipeItemLayout) {
+                                closeOpenedSwipeItemLayoutWithAnim();
+                        }
+                });
+                holder.mDelete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                                                                ((AddressListActivity) mContext).deleteUser(position);
-                                                        }
-                                                });
-                                                holder.mTest.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
+                                ((AddressListActivity) mContext).deleteUser(position);
+                        }
+                });
+                holder.mTest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                                                                ToastUtil.success(mContext);
-                                                        }
-                                                });
+                                ToastUtil.success(mContext);
+                        }
+                });
                                        /* } else {
                                                 swipeRoot.setSwipeAble(false);
                                         }
@@ -188,7 +180,7 @@ public class ContactAdapter extends RecyclerviewBaseAdapter<ContactAdapter.Conta
                         textView.setText("系统管理员");
 
                 } else {*/
-                        textView.setText(showValue);
+                textView.setText(showValue);
                 /*}*/
 
         }

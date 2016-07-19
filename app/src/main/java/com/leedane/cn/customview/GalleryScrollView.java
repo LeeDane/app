@@ -232,7 +232,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                 imageView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       // Toast.makeText(getContext(), "点击："+v.getTag(R.string.image_url), Toast.LENGTH_LONG).show();
+                        // Toast.makeText(getContext(), "点击："+v.getTag(R.string.image_url), Toast.LENGTH_LONG).show();
                         //Toast.makeText(getContext(),"点击："+galleryBean.getPath(),Toast.LENGTH_LONG).show();
                         //StringBuffer imageBuffer = new StringBuffer();
                         int current = 0;
@@ -668,11 +668,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                 }
             }
         });
-<<<<<<< HEAD
         submitBtn.setOnClickListener(new OnClickListener() {
-=======
-        submitBtn.setOnClickListener(new View.OnClickListener() {
->>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
             @Override
             public void onClick(View v) {
                 String score = editText.getText().toString();
