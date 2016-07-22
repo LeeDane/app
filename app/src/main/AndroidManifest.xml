@@ -305,6 +305,20 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity
+            android:name="com.leedane.cn.financial.activity.HomeActivity"
+            android:label="@string/financial"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.leedane.cn.financial.activity.IncomeActivity"
+            android:label="@string/financial_income"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <!--  Jpush  -->
         <!-- Required SDK核心功能-->
         <activity

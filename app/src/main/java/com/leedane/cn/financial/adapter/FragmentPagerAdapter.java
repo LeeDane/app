@@ -1,30 +1,27 @@
-package com.leedane.cn.adapter;
+package com.leedane.cn.financial.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
-import com.leedane.cn.fragment.PersonalFragment;
+import com.leedane.cn.financial.fragment.MainFragment;
 
 import java.util.List;
 
 /**
- * 个人中心类的适配器
- * Created by leedane on 2015/11/19.
+ * fragment页面列表的适配器
+ * Created by LeeDane on 2016/7/21.
  */
-public class PersonalFragmentPagerAdapter extends FragmentPagerAdapter {
-
+public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
     private static final String TAG = "DetailPagerAdapter";
 
     private List<Fragment> mFragments;
 
     private Context mContext;
 
-    private int mBlogId;
-
-    public PersonalFragmentPagerAdapter(FragmentManager fragmentManager, Context context, List<Fragment> fragments) {
+    public FragmentPagerAdapter(FragmentManager fragmentManager, Context context, List<Fragment> fragments) {
         super(fragmentManager);
         this.mContext = context;
         this.mFragments = fragments;
@@ -33,9 +30,11 @@ public class PersonalFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if(this.mFragments.get(position) == null){
-            PersonalFragment frament = new PersonalFragment(position, mContext);
+            Bundle bundle = new Bundle();
+            bundle.putInt("position", position);
+            MainFragment frament = MainFragment.newInstance(bundle);
             this.mFragments.set(position, frament);
-            Log.i(TAG, "PersonalFragmentPagerAdapter当前frament为空，重新创建" + position);
+            Log.i(TAG, "FragmentPagerAdapter当前frament为空，重新创建" + position);
         }
         return this.mFragments.get(position);
     }

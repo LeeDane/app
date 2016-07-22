@@ -87,6 +87,7 @@
 
     <!-- 导航相关的 -->
     <string name="nav_gallery">我的图库</string>
+    <string name="nav_financial">我的记账</string>
     <string name="nav_attention">我的关注</string>
     <string name="nav_message">我的消息</string>
     <string name="qr_code_idcard">二维码名片</string>
@@ -337,4 +338,17 @@
     <string name="location">位置定位</string>
     <string name="location_hint_search">搜索当前位置1公里内的位置</string>
     <string name="location_current">当前位置:</string>
+
+    <!-- 记账 -->
+    <string name="financial">记账</string>
+    <string name="financial_home">首页</string>
+    <string name="financial_yesterday">昨日</string>
+    <string name="financial_week">本周</string>
+    <string name="financial_month">本月</string>
+    <string name="financial_year">本年</string>
+    <string name="financial_income">增加收入</string>
+    <string name="financial_month_income">本月收入</string>
+    <string name="default_money">3999.00</string>
+    <string name="financial_month_spend">本月支出</string>
+    <string name="financial_month_budget">预算结余</string>
 </resources>

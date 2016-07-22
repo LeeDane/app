@@ -23,4 +23,6 @@
     <dimen name="default_3dp">3dp</dimen>
     <dimen name="space_49">49dp</dimen>
     <dimen name="space_10">10dp</dimen>
+    <dimen name="default_image_width">135dp</dimen>
+    <dimen name="default_image_height">135dp</dimen>
 </resources>

@@ -131,7 +131,7 @@ public abstract class BaseFragment extends Fragment implements TaskListener, Vie
      *
      * ListView向下滚动事件的监听
      */
-    class ListViewOnScrollListener implements AbsListView.OnScrollListener {
+    public class ListViewOnScrollListener implements AbsListView.OnScrollListener {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
 

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.leedane.cn.app.R;
+import com.leedane.cn.financial.activity.HomeActivity;
 import com.leedane.cn.handler.AppVersionHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.TaskListener;
@@ -153,9 +154,9 @@ public class NavigationActivity extends AppCompatActivity
                 Intent it_file = new Intent(NavigationActivity.this, FileActivity.class);
                 startActivity(it_file);
                 break;
-            case R.id.nav_download: //下载
-                Intent download_in = new Intent(NavigationActivity.this, DownloadActivity.class);
-                startActivity(download_in);
+            case R.id.nav_financial: //我的记账
+                Intent financial_in = new Intent(NavigationActivity.this, HomeActivity.class);
+                startActivity(financial_in);
                 break;
             case R.id.nav_share:  //分享
                 OnekeyShare oks = new OnekeyShare();
