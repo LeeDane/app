@@ -29,7 +29,7 @@ public class MySettingDataBase {
             "create_time varchar(25)" + // 创建时间
             ");";
     public MySettingDataBase(Context context) {
-        dbHelper = new BaseSQLiteOpenHelper(context, ConstantsUtil.DB_NAME);
+        dbHelper = BaseSQLiteOpenHelper.getHelper(context, ConstantsUtil.DB_NAME);
     }
 
     /**

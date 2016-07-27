@@ -33,7 +33,7 @@ public class FileDataBase {
 
             ");";
     public FileDataBase(Context context) {
-        dbHelper = new BaseSQLiteOpenHelper(context, ConstantsUtil.DB_NAME);
+        dbHelper = BaseSQLiteOpenHelper.getHelper(context, ConstantsUtil.DB_NAME);
     }
 
     /**

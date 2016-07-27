@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.crypto.Mac;
+
 /**
  * 个人中心显示心情列表的frament类
  * Created by LeeDane on 2015/12/7.
@@ -71,6 +73,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
     public PersonalMoodFragment(){
 
     }
+
     /**
      * 构建Fragment对象
      * @param bundle

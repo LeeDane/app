@@ -225,6 +225,28 @@ public class StringUtil {
         return imgIds;
     }
 
+    /**
+     * 将true或者false对应转化成1或者0
+     * @param b
+     * @return
+     */
+    public static int changeTrueOrFalseToInt(boolean b){
+        if(b)
+            return 1;
+        return 0;
+    }
+
+    /**
+     * 将1或者0对应转化成true或者false
+     * @param i  只有i == 1才是true，其他是false
+     * @return
+     */
+    public static boolean changeIntToTrueOrFalse(int i){
+        if(i == 1)
+            return true;
+        return false;
+    }
+
     public static void main(String[] args) {
         //System.out.println(StringUtil.changeNotNullAndUtf8("赵本山代表作被指\"丑化\"农民 丢弃农村传统底蕴"));
         System.out.println(StringUtil.isNumeric("-5.00"));

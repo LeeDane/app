@@ -27,6 +27,7 @@ import com.leedane.cn.bean.HttpResponseZanUserBean;
 import com.leedane.cn.bean.search.HttpResponseSearchBlogBean;
 import com.leedane.cn.bean.search.HttpResponseSearchMoodBean;
 import com.leedane.cn.bean.search.HttpResponseSearchUserBean;
+import com.leedane.cn.financial.bean.HttpResponseFinancialBean;
 
 /**
  * Bean转化工具类
@@ -264,6 +265,22 @@ public class BeanConvertUtil {
             return gson.fromJson(str, HttpResponseAttentionBean.class);
         }catch (Exception e){
             Log.d(TAG, "响应HttpResponseAttentionBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将响应请求的字符串转化成HttpResponseAttentionBean对象
+     * @param str
+     * @return
+     */
+    public static HttpResponseFinancialBean strConvertToFinancialBeanBeans(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应HttpResponseFinancialBean对象开始转换。。。");
+            return gson.fromJson(str, HttpResponseFinancialBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应HttpResponseFinancialBean对象转换失败");
         }
         return null;
     }

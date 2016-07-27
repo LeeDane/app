@@ -19,6 +19,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.baidu.mapapi.SDKInitializer;
 import com.leedane.cn.app.R;
+import com.leedane.cn.financial.bean.OneLevelGategory;
+import com.leedane.cn.financial.bean.TwoLevelCategory;
+import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
+import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.handler.CrashUncaughtExceptionHandler;
 import com.leedane.cn.service.LocationService;
 import com.leedane.cn.task.Task;
@@ -31,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * android启动加载的上下文类(需要在AndroidManifest.xml中注册)
@@ -48,6 +53,8 @@ public class BaseApplication extends Application {
     public Vibrator mVibrator;
 
 
+    public static List<OneLevelGategory> oneLevelGategories;
+    public static List<TwoLevelCategory> twoLevelCategories;
     @Override
     public void onCreate() {
         long start = System.currentTimeMillis();
@@ -74,10 +81,26 @@ public class BaseApplication extends Application {
          */
         locationService = new LocationService(getApplicationContext());
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
-        SDKInitializer.initialize(getApplicationContext());
+        //SDKInitializer.initialize(getApplicationContext());
         queue = Volley.newRequestQueue(getApplicationContext());//使用全局上下文
 
         MySettingConfigUtil.getInstance();
+
+        //MySettingDataBase.initMySetting();
+
+        OneLevelCategoryDataBase oneLevelCategoryDataBase = new OneLevelCategoryDataBase(newInstance());
+        oneLevelGategories = oneLevelCategoryDataBase.query();
+        if(oneLevelGategories == null || oneLevelGategories.size() == 0){
+            oneLevelGategories = OneLevelCategoryDataBase.initData();
+        }
+        oneLevelCategoryDataBase.destroy();
+
+        TwoLevelCategoryDataBase twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(newInstance());
+        twoLevelCategories = twoLevelCategoryDataBase.query();
+        if(twoLevelCategories == null || twoLevelCategories.size() == 0){
+            twoLevelCategories = TwoLevelCategoryDataBase.initData();
+        }
+        twoLevelCategoryDataBase.destroy();
 
         Log.i(TAG, "创建上下文信息完成，耗时：" + (end - start));
     }

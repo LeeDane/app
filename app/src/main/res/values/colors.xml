@@ -29,4 +29,8 @@
     <color name="unknow_color_3">#9F79EE</color>
     <color name="unknow_color_4">#7FFF00</color>
     <color name="unknow_color_5">#DDA0DD</color>
+    
+    <color name="material_light">#C5CAE9</color>
+    <color name="material_default">#3F51B5</color>
+    <color name="material_deep">#303F9F</color>
 </resources>

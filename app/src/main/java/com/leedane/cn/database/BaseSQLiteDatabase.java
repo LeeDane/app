@@ -36,7 +36,7 @@ public class BaseSQLiteDatabase {
 
 	public BaseSQLiteDatabase(Context context) {
 		this.context = context;
-		this.helper = new BaseSQLiteOpenHelper(this.context, ConstantsUtil.DB_NAME);
+		this.helper = BaseSQLiteOpenHelper.getHelper(this.context, ConstantsUtil.DB_NAME);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class BaseSQLiteDatabase {
 	 */
 	public BaseSQLiteDatabase(Context context, int openType) {
 		this.context = context;
-		this.helper = new BaseSQLiteOpenHelper(context, ConstantsUtil.DB_NAME);
+		this.helper = BaseSQLiteOpenHelper.getHelper(context, ConstantsUtil.DB_NAME);
 		this.openType = openType;
 	}
 

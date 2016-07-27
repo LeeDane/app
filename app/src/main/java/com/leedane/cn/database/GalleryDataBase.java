@@ -34,7 +34,7 @@ public class GalleryDataBase {
 
             ");";
     public GalleryDataBase(Context context) {
-        dbHelper = new BaseSQLiteOpenHelper(context, ConstantsUtil.DB_NAME);
+        dbHelper = BaseSQLiteOpenHelper.getHelper(context, ConstantsUtil.DB_NAME);
     }
 
     /**

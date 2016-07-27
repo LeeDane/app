@@ -41,6 +41,7 @@ public enum TaskType {
     ADD_REPORT, //增加举报
     ADD_CHAT, //发聊天信息
     ADD_TAG, //添加标签
+    ADD_FINANCIAL, //新增记账
     PUBLISH_CHAT_BG, //发布聊天背景
     LOAD_COMMENT, //加载评论列表
     LOAD_TRANSMIT, //加载转发列表
@@ -69,6 +70,7 @@ public enum TaskType {
     LOAD_USER_FRIENS, //加载用户的好友列表
     LOAD_HEAD_PATH, //加载用户新头像
     LOAD_NO_READ_CHAT, //加载未读的聊天记录
+    LOAD_ALL_FINANCIAL, //获取全部的记账记录
     CANCEL_FAN, //不再成为TA的粉丝
     CANCEL_FRIEND, //解除好友关系
     DELETE_COMMENT, //删除评论
@@ -79,6 +81,7 @@ public enum TaskType {
     DELETE_CHAT, //删除聊天列表
     DELETE_FILE, //删除文件
     DELETE_NOTIFICATION, //删除通知
+    DELETE_FINANCIAL, //删除记账记录
     UPDATE_HANDER, //更新用户头像
     UPDATE_USER_BASE, //更新用户的基本信息
     UPDATE_LOGIN_PSW, //更新登录密码
@@ -86,6 +89,7 @@ public enum TaskType {
     UPDATE_TRANSMIT_STATUS, //更新转发状态
     UPDATE_CHAT_READ_STATUS,//更新聊天信息为已读状态
     FANYI, //翻译
+    QINIU_TOKEN, //七牛云存储token
     VERIFY_CHAT_BG, //校验聊天背景
     SEND_EMAIL, //发送电子邮件
 }

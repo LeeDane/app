@@ -257,7 +257,7 @@ public class HomeActivity extends BaseActivity {
     private void smoothScrollToTop(View view){
         switch (view.getId()){
             case R.id.financial_home:  //首页
-               // ((MainFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
+               ((MainFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
                 break;
             case R.id.financial_yesterday: //昨日
                // ((CommentOrTransmitFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
@@ -305,11 +305,6 @@ public class HomeActivity extends BaseActivity {
                 mViewPager.setCurrentItem(mCurrentTab);
             }
         }), 5);
-
-        //测试进入
-        Intent intent = new Intent(HomeActivity.this, IncomeActivity.class);
-        startActivity(intent);
-
     }
     /**
      * 获取当前点击tab的索引

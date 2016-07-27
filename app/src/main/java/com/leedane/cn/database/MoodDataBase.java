@@ -8,6 +8,7 @@ import android.util.Log;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
+import com.leedane.cn.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class MoodDataBase {
 
             ");";
     public MoodDataBase(Context context) {
-        dbHelper = new BaseSQLiteOpenHelper(context, ConstantsUtil.DB_NAME);
+        dbHelper = BaseSQLiteOpenHelper.getHelper(context, ConstantsUtil.DB_NAME);
     }
 
     /**
@@ -70,13 +71,9 @@ public class MoodDataBase {
         }
         String sql = "insert into " + MOOD_TABLE_NAME;
         sql += "(mid,content,froms,has_img,imgs,location,longitude,latitude,zan_number,comment_number,transmit_number,zan_users,create_user_id,account,user_pic_path,create_time) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        int hasImg = 0;
-        if(data.isHasImg()){
-            hasImg = 1;
-        }
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         sqlite.execSQL(sql, new String[] {
-                data.getId() + "", data.getContent(), data.getFroms(), hasImg +"",
+                data.getId() + "", data.getContent(), data.getFroms(), StringUtil.changeTrueOrFalseToInt(data.isHasImg()) +"",
                 data.getImgs(), data.getLocation(), data.getLongitude() +"", data.getLatitude()+"", data.getZanNumber() +"", data.getCommentNumber() +"", data.getTransmitNumber()+"",
                 data.getPraiseUserList(), data.getCreateUserId() +"", data.getAccount(), data.getUserPicPath(), data.getCreateTime() });
         sqlite.close();
@@ -127,19 +124,17 @@ public class MoodDataBase {
      */
     private boolean isExists(int mid){
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
-        ArrayList<MoodBean> datas = new ArrayList<>();
+        int id = 0;
         Cursor cursor = sqlite.rawQuery("select mid from "
                 + MOOD_TABLE_NAME + " where mid = ?", new String[]{mid + ""});
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            MoodBean mood = new MoodBean();
-            mood.setId(cursor.getInt(0));
-            datas.add(mood);
+            id = cursor.getInt(0);
         }
         if (!cursor.isClosed()) {
             cursor.close();
         }
         sqlite.close();
-        return datas.size() > 0 ;
+        return id > 0 ;
     }
 
     /**
@@ -221,10 +216,7 @@ public class MoodDataBase {
             moodBean.setId(cursor.getInt(0));
             moodBean.setContent(cursor.getString(1));
             moodBean.setFroms(cursor.getString(2));
-            int hasImg = cursor.getInt(3);
-            if(hasImg == 1){
-                moodBean.setHasImg(true);
-            }
+            moodBean.setHasImg(StringUtil.changeIntToTrueOrFalse(cursor.getInt(3)));
             moodBean.setImgs(cursor.getString(4));
             moodBean.setLocation(cursor.getString(5));
             moodBean.setLongitude(cursor.getDouble(6));

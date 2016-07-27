@@ -239,6 +239,20 @@ public class CommonHandler {
     }
 
     /**
+     * 获取七牛云存储token的请求
+     * @param listener
+     */
+    public static void getQiniuTokenRequest(TaskListener listener){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("leedane/tool/getQiNiuToken.action");
+        TaskLoader.getInstance().startTaskForResult(TaskType.QINIU_TOKEN, listener, requestBean);
+    }
+
+    /**
      * 发送电子邮件
      * @param listener
      * @param toUserId  接收邮件的用户的Id，必须

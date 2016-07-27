@@ -3,9 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <lecho.lib.hellocharts.view.LineChartView
-        android:id="@+id/chart"
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/spread_pie_chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="30dp"/>
+        android:layout_height="320dp">
+
+    </com.github.mikephil.charting.charts.PieChart>
 </LinearLayout>

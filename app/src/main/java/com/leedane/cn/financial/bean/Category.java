@@ -18,14 +18,14 @@ public class Category {
 	 * 所有的一级分类列表
 	 * @return
 	 */
-	private List<ParentGategory> parentGategories;
+	private List<OneLevelGategory> oneLevelGategories;
 
-	public List<ParentGategory> getParentGategories() {
-		return parentGategories;
+	public List<OneLevelGategory> getOneLevelGategories() {
+		return oneLevelGategories;
 	}
 
-	public void setParentGategories(List<ParentGategory> parentGategories) {
-		this.parentGategories = parentGategories;
+	public void setOneLevelGategories(List<OneLevelGategory> oneLevelGategories) {
+		this.oneLevelGategories = oneLevelGategories;
 	}
 
 	public float getBudget() {

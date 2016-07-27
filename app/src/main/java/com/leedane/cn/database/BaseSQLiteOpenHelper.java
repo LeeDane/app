@@ -5,6 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.leedane.cn.financial.database.FinancialDataBase;
+import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
+import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.util.ConstantsUtil;
 
 public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
@@ -18,18 +21,34 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 	 * @param context
 	 * @param name  数据库名称
 	 */
-	public BaseSQLiteOpenHelper(Context context, String name) {
+	/*public BaseSQLiteOpenHelper(Context context, String name) {
 		super(context, name, null, ConstantsUtil.DB_VERSION);
-	}
+	}*/
 
+
+	/*私有的静态对象，为整个应用程序提供一个sqlite操作的静态实例，并保证只能通过下面的静态方法getHelper(Context context)获得，
+	 * 防止使用时绕过同步方法改变它*/
+	private static BaseSQLiteOpenHelper instance;//这里主要解决死锁问题,是static就能解决死锁问题
+	/**
+	 * 私有的构造函数，只能自己使用，防止绕过同步方法生成多个实例，
+	 * @param context
+	 */
+	private BaseSQLiteOpenHelper(Context context, String databaseName) {
+		super(context, databaseName, null, ConstantsUtil.DB_VERSION);
+	}
+	/**
+	 * 为应用程序提供一个单一的入口，保证应用程序使用同一个对象操作数据库，不会因为对象不同而使同步方法失效
+	 * @param context 上下文
+	 * @return  instance
+	 */
+	public static BaseSQLiteOpenHelper getHelper(Context context, String databaseName){
+		if(instance==null)
+			instance=new BaseSQLiteOpenHelper(context, databaseName);
+		return instance;
+	}
 	/**
 	 * 当数据库不存在或者第一次执行的时候才调用 (non-Javadoc)
-	 *
-<<<<<<< HEAD
-	 * @see SQLiteOpenHelper#onCreate(SQLiteDatabase)
-=======
 	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
->>>>>>> b366facf4396f34393fb66caad51b368b58e2cc8
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase database) {
@@ -42,9 +61,11 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 		database.execSQL(GalleryDataBase.CREATE_GALLERY_TABLE);
 		database.execSQL(MySettingDataBase.CREATE_MY_SETTING_TABLE);
 		database.execSQL(FileDataBase.CREATE_FILE_TABLE);
-
+		database.execSQL(FinancialDataBase.CREATE_FINANCIAL_TABLE);
+		database.execSQL(OneLevelCategoryDataBase.CREATE_ONE_LEVEL_CATEGORY_TABLE);
+		database.execSQL(TwoLevelCategoryDataBase.CREATE_TWO_LEVEL_CATEGORY_TABLE);
 		//插入初始化设置的SQL
-		//MySettingDataBase.initMySetting();
+
 	}
 
 	/**

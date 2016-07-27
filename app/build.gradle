@@ -47,9 +47,10 @@ dependencies {
     compile 'com.felipecsl:gifimageview:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
-    compile 'com.github.lecho:hellocharts-android:v1.5.8'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     compile files('libs/gson-1.7.1.jar')
     compile files('libs/json-lib-2.4-jdk15-sources.jar')
+    compile 'com.qiniu:qiniu-android-sdk:7.2.+'
     compile files('libs/json-lib-2.2.2-jdk15.jar')
     compile files('libs/commons-collections-3.2.jar')
     compile files('libs/commons-lang3-3.1.jar')

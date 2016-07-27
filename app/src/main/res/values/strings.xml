@@ -5,6 +5,8 @@
     <string name="qr_code_filepath">qrcode</string>
     <string name="action_settings">设置</string>
     <string name="default_time">2016-06-25 10:10:10</string>
+    <string name="default_date">2016-06-25</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="hello">Hello Android, DemoAppActivity!</string>
@@ -348,7 +350,15 @@
     <string name="financial_year">本年</string>
     <string name="financial_income">增加收入</string>
     <string name="financial_month_income">本月收入</string>
-    <string name="default_money">3999.00</string>
+    <string name="default_money">$3999.00</string>
+    <string name="default_category">其他收入>>意外收入</string>
     <string name="financial_month_spend">本月支出</string>
     <string name="financial_month_budget">预算结余</string>
+    <string name="financial_refresh">与云端同步\n最近更新于3小时前</string>
+    <string name="financial_detail">最近操作列表</string>
+    <string name="financial_money">金额</string>
+    <string name="default_one_level">其他收入</string>
+    <string name="default_between_one_and_two_level"><![CDATA[>>]]></string>
+    <string name="default_two_level">未知收入</string>
+    <string name="remark">备注</string>
 </resources>

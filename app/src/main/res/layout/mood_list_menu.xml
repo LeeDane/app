@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <ListView
+        android:padding="@dimen/default_10dp"
         android:id="@+id/mood_list_menu_listview"
         android:layout_width="match_parent"
         android:scrollbars="none"
