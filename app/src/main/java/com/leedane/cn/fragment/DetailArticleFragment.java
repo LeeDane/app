@@ -3,6 +3,7 @@ package com.leedane.cn.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,12 +70,19 @@ public class DetailArticleFragment extends Fragment{
             mWebView = (WebView)mRootView.findViewById(R.id.detail_webview);
             mProgressBar = (ProgressBar)mRootView.findViewById(R.id.detail_progressbar);
             mBlogUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/blog/getContent.action?blog_id=" + mBlogId;
+            Log.i("blogDetail", "博客的地址："+mBlogUrl);
             mWebView.loadUrl(mBlogUrl);
             //启用支持javascript
             mSettings = mWebView.getSettings();
             mSettings.setJavaScriptEnabled(true);
 
             //使用缓存模式缓存加载过的数据
+//            缓存模式(5种)
+//            LOAD_CACHE_ONLY:  不使用网络，只读取本地缓存数据
+//            LOAD_DEFAULT:  根据cache-control决定是否从网络上取数据。
+//            LOAD_CACHE_NORMAL: API level 17中已经废弃, 从API level 11开始作用同LOAD_DEFAULT模式
+//            LOAD_NO_CACHE: 不使用缓存，只从网络获取数据.
+//            LOAD_CACHE_ELSE_NETWORK，只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。
             mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
             //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开

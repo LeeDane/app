@@ -128,7 +128,7 @@ public class FileUtil {
                 portUpload = new PortUpload();
                 urlBuffer = new StringBuffer();
                 //urlBuffer.append(BaseApplication.getBaseServerUrl());
-                urlBuffer.append("leedane/appUpload_execute.action?uid=");
+                urlBuffer.append("leedane/appUpload/execute.action?uid=");
                 urlBuffer.append(userInfo.getInt("id"));
                 urlBuffer.append("&uuid=");
                 urlBuffer.append(uuid);
@@ -159,7 +159,7 @@ public class FileUtil {
 
                     urlBuffer = new StringBuffer();
                     //urlBuffer.append(BaseApplication.getBaseServerUrl());
-                    urlBuffer.append("leedane/appUpload_execute.action?uid=");
+                    urlBuffer.append("leedane/appUpload/execute.action?uid=");
                     urlBuffer.append(userInfo.getInt("id"));
                     urlBuffer.append("&uuid=");
                     urlBuffer.append(uuid);

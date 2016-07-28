@@ -3,19 +3,25 @@ package com.leedane.cn.financial.activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -37,6 +43,7 @@ import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
+import com.leedane.cn.util.DensityUtil;
 import com.leedane.cn.util.MediaUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -126,6 +133,8 @@ public class IncomeOrSpendActivity extends BaseActivity {
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(getStringResource(R.string.financial));
         backLayoutVisible();
+
+        ((TextView)findViewById(R.id.base_title_textview)).setOnClickListener(IncomeOrSpendActivity.this);
 
         financialDataBase = new FinancialDataBase(IncomeOrSpendActivity.this);
         oneLevelCategoryDataBase = new OneLevelCategoryDataBase(IncomeOrSpendActivity.this);
@@ -339,9 +348,63 @@ public class IncomeOrSpendActivity extends BaseActivity {
             case R.id.financial_income_or_spend_time: //选择时间
                 showTimePickerDialog();
                 break;
+            case R.id.base_title_textview:
+                ToastUtil.success(IncomeOrSpendActivity.this, "哈哈哈");
+                showPopwindow();
+                break;
         }
     }
 
+    /**
+     * 显示popupWindow
+     */
+    private void showPopwindow() {
+        // 利用layoutInflater获得View
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.financial_income_or_spend_popwin, null);
+
+        // 下面是两种方法得到宽度和高度 getWindow().getDecorView().getWidth()
+
+        PopupWindow window = new PopupWindow(view,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+
+        // 设置popWindow弹出窗体可点击，这句话必须添加，并且是true
+        window.setFocusable(true);
+
+
+        // 实例化一个ColorDrawable颜色为半透明
+        ColorDrawable dw = new ColorDrawable(0xb0000000);
+        window.setBackgroundDrawable(dw);
+
+
+        // 设置popWindow的显示和消失动画
+        window.setAnimationStyle(R.style.mypopwindow_anim_style);
+        // 在底部显示
+        window.showAtLocation(IncomeOrSpendActivity.this.findViewById(R.id.financial_income_or_spend_root),
+                Gravity.TOP, 0, DensityUtil.dip2px(IncomeOrSpendActivity.this, 60));
+
+        // 这里检验popWindow里的button是否可以点击
+        Button first = (Button) view.findViewById(R.id.pop_btn);
+        first.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                System.out.println("第一个按钮被点击了");
+            }
+        });
+
+        //popWindow消失监听方法
+        window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+            @Override
+            public void onDismiss() {
+                System.out.println("popWindow消失");
+            }
+        });
+
+    }
     private Dialog mDialog;
     /**
      * 显示弹出自定义view

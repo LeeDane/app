@@ -61,6 +61,7 @@ public class SendMoodService extends Service implements TaskListener {
     private String tempFilePath = null;
     private BaseSQLiteDatabase sqLiteDatabase;
     private Intent currentIntent;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -82,7 +83,7 @@ public class SendMoodService extends Service implements TaskListener {
     public int onStartCommand(final Intent intent, int flags, int startId) {
         currentIntent = intent;
         //service被杀死后重启将没有intent，这里不做进一步处理即可
-        if(intent == null){
+        if (intent == null) {
             return super.onStartCommand(intent, flags, startId);
         }
         isCancel = false;
@@ -97,37 +98,37 @@ public class SendMoodService extends Service implements TaskListener {
                     e.printStackTrace();
                 }*/
                 Looper.prepare();
-                uris =  intent.getStringExtra("uris");
+                uris = intent.getStringExtra("uris");
                 int oldMoodId = intent.getIntExtra("oldMoodId", 0);
                 content = intent.getStringExtra("content");
                 JSONObject mUserInfo = SharedPreferenceUtil.getUserInfo(getApplicationContext());
-                if(!StringUtil.isNull(uris)) {
+                if (!StringUtil.isNull(uris)) {
                     String[] urisArr = uris.split(",");
-                    JSONObject userInfo =  SharedPreferenceUtil.getUserInfo(BaseApplication.newInstance());
+                    JSONObject userInfo = SharedPreferenceUtil.getUserInfo(BaseApplication.newInstance());
                     String uuid = null;
                     try {
                         uuid = userInfo.getString("account") + UUID.randomUUID().toString();
-                    }catch (JSONException e){
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     if (urisArr.length > 0) {
                         Bitmap bitmap = null;
                         String path = null;
                         File file;
-                        for (int i = 0; i <urisArr.length; i++) {
+                        for (int i = 0; i < urisArr.length; i++) {
                             path = urisArr[i];
                             file = new File(path);//源文件
-                            if(!file.isFile()){
+                            if (!file.isFile()) {
                                 Toast.makeText(getApplicationContext(), "请选择文件", Toast.LENGTH_LONG).show();
                                 return;
                             }
-                            if(!file.exists()){
-                                Toast.makeText(getApplicationContext(), "文件不存在:" +path, Toast.LENGTH_LONG).show();
+                            if (!file.exists()) {
+                                Toast.makeText(getApplicationContext(), "文件不存在:" + path, Toast.LENGTH_LONG).show();
                                 return;
                             }
 
-                            tempFilePath = getTempDir(getApplicationContext()) + File.separator+ file.getName();
-                            Toast.makeText(getApplicationContext(), "临时文件路径：" +tempFilePath, Toast.LENGTH_LONG).show();
+                            tempFilePath = getTempDir(getApplicationContext()) + File.separator + file.getName();
+                            Toast.makeText(getApplicationContext(), "临时文件路径：" + tempFilePath, Toast.LENGTH_LONG).show();
                             file = new File(tempFilePath);
                             if (file.exists()) {
                                 file.delete();
@@ -136,9 +137,9 @@ public class SendMoodService extends Service implements TaskListener {
                             try {
                                 FileOutputStream out = new FileOutputStream(file);
                                 String suffix = StringUtil.getSuffixs(tempFilePath);
-                                if(suffix.equalsIgnoreCase("png")){
+                                if (suffix.equalsIgnoreCase("png")) {
                                     bitmap.compress(Bitmap.CompressFormat.PNG, 80, out);
-                                }else{
+                                } else {
                                     bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
                                 }
                                 out.flush();
@@ -147,30 +148,30 @@ public class SendMoodService extends Service implements TaskListener {
                                 e.printStackTrace();
                             } catch (IOException e) {
                                 e.printStackTrace();
-                            }finally {
-                                if(bitmap != null && !bitmap.isRecycled()){
+                            } finally {
+                                if (bitmap != null && !bitmap.isRecycled()) {
                                     bitmap.recycle();
                                     System.gc();
                                     bitmap = null;
                                 }
                             }
-                            mItems.add(FileUtil.buildUploadItem(getApplicationContext(), tempFilePath, new Date(), i, uuid, "t_mood", 60000,60000));
+                            mItems.add(FileUtil.buildUploadItem(getApplicationContext(), tempFilePath, new Date(), i, uuid, "t_mood", 60000, 60000));
                         }
                     }
                 }
                 //有文件需要上传的时候
-                if(mItems.size() > 0){
+                if (mItems.size() > 0) {
                     //启动第一个上传
                     itemIndex = 0;
                     uploadOneFile();
-                }else {
+                } else {
                     //没有文件上传，直接发表
                     //简单的发送
                     HttpRequestBean requestBean = new HttpRequestBean();
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("content", content);
                     String location = currentIntent.getStringExtra("location");
-                    if(StringUtil.isNotNull(location)){
+                    if (StringUtil.isNotNull(location)) {
                         double longitude = currentIntent.getDoubleExtra("longitude", 0);
                         double latitude = currentIntent.getDoubleExtra("latitude", 0);
                         params.put("location", location);
@@ -198,9 +199,9 @@ public class SendMoodService extends Service implements TaskListener {
 
     @Override
     public boolean stopService(Intent name) {
-        if(StringUtil.isNotNull(tempFilePath)){
+        if (StringUtil.isNotNull(tempFilePath)) {
             File file = new File(tempFilePath);
-            if(file.exists()){
+            if (file.exists()) {
                 file.delete();
             }
         }
@@ -210,33 +211,34 @@ public class SendMoodService extends Service implements TaskListener {
 
     /**
      * 获取临时文件的文件夹
+     *
      * @param context
      * @return
      */
-    private File getTempDir(Context context){
+    private File getTempDir(Context context) {
         File sdDir = null;
-        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             sdDir = Environment.getExternalStorageDirectory();
-        }
-        else{
+        } else {
             sdDir = context.getCacheDir();
         }
-        File cacheDir = new File(sdDir, context.getResources().getString(R.string.app_dirsname) + File.separator+ getApplicationContext().getResources().getString(R.string.temp_filepath));
-        if(!cacheDir.exists()){
+        File cacheDir = new File(sdDir, context.getResources().getString(R.string.app_dirsname) + File.separator + getApplicationContext().getResources().getString(R.string.temp_filepath));
+        if (!cacheDir.exists()) {
             cacheDir.mkdirs();
         }
         return cacheDir;
     }
+
     /**
      * 找到下一个符合上传条件的文件进行上传
      */
-    private void uploadOneFile(){
+    private void uploadOneFile() {
         UploadItem item = mItems.get(itemIndex);
-        if(item != null && item.getPortUploads() != null){
-            for(int i=0; i< item.getPortUploads().size(); i++){
-                if(item.getPortUploads().get(i).isFinish())//完成的不做处理
+        if (item != null && item.getPortUploads() != null) {
+            for (int i = 0; i < item.getPortUploads().size(); i++) {
+                if (item.getPortUploads().get(i).isFinish())//完成的不做处理
                     continue;
-                if(isCancel)//取消状态就不发送
+                if (isCancel)//取消状态就不发送
                     break;
                 TaskLoader.getInstance().startTaskForResult(TaskType.UPLOAD_FILE, this, item.getPortUploads().get(i));
                 try {
@@ -247,6 +249,7 @@ public class SendMoodService extends Service implements TaskListener {
             }
         }
     }
+
     @Override
     public boolean onUnbind(Intent intent) {
         return super.onUnbind(intent);
@@ -259,27 +262,27 @@ public class SendMoodService extends Service implements TaskListener {
 
     @Override
     public void taskFinished(TaskType type, Object result) {
-        if(result instanceof Error){
+        if (result instanceof Error) {
             Toast.makeText(getBaseContext(), ((Error) result).getMessage(), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        try{
+        try {
             JSONObject jsonObject = new JSONObject(String.valueOf(result));
-            if(type == TaskType.UPLOAD_FILE && !isCancel){
+            if (type == TaskType.UPLOAD_FILE && !isCancel) {
                 String url = "";
-                if(jsonObject.has("url"))
+                if (jsonObject.has("url"))
                     url = jsonObject.getString("url");
 
                 UploadItem item = mItems.get(itemIndex);
                 //返回成功
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
-                    for(PortUpload portUpload: item.getPortUploads()){
-                        if(!portUpload.isFinish() && portUpload.getUrl().equalsIgnoreCase(url) && !StringUtil.isNull(url) && !isCancel){
+                if (jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                    for (PortUpload portUpload : item.getPortUploads()) {
+                        if (!portUpload.isFinish() && portUpload.getUrl().equalsIgnoreCase(url) && !StringUtil.isNull(url) && !isCancel) {
                             portUpload.setIsFinish(true);
                             item.setUploadSize(item.getUploadSize() + portUpload.getLength());
                             //已经完成
-                            if(item.getSize() == item.getUploadSize()){
+                            if (item.getSize() == item.getUploadSize()) {
                                 mItems.get(itemIndex).setStatus(EnumUtil.FileStatus.合并文件.value);
                                 merge();
                             }
@@ -287,18 +290,18 @@ public class SendMoodService extends Service implements TaskListener {
                         }
                     }
 
-                    if(isItemFinish){
+                    if (isItemFinish) {
                         isItemFinish = false;
                         uploadOneFile();
                     }
                     //返回失败
-                }else{
+                } else {
                     saveError("文件上传过程中");
                 }
 
-            }else if(type == TaskType.MERGE_PORT_FILE && !isCancel){//合并文件
+            } else if (type == TaskType.MERGE_PORT_FILE && !isCancel) {//合并文件
                 //合并完成
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if (jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
                     mItems.get(itemIndex).setStatus(EnumUtil.FileStatus.删除断点文件.value);
 
                     //简单的发送
@@ -306,7 +309,7 @@ public class SendMoodService extends Service implements TaskListener {
                     HashMap<String, Object> params = new HashMap<>();
                     params.put("content", content);
                     String location = currentIntent.getStringExtra("location");
-                    if(StringUtil.isNotNull(location)){
+                    if (StringUtil.isNotNull(location)) {
                         double longitude = currentIntent.getDoubleExtra("longitude", 0);
                         double latitude = currentIntent.getDoubleExtra("latitude", 0);
                         params.put("location", location);
@@ -323,48 +326,48 @@ public class SendMoodService extends Service implements TaskListener {
                     TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_NORMAL, SendMoodService.this, requestBean);
                     //删除断点文件
                     deletePortFile();
-                }else{
+                } else {
                     saveError("合并文件过程中");
                 }
-            }else if(type == TaskType.DELETE_PORT_FILE && !isCancel){//删除断点文件
+            } else if (type == TaskType.DELETE_PORT_FILE && !isCancel) {//删除断点文件
                 //合并完成
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if (jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
                     mItems.get(itemIndex).setStatus(EnumUtil.FileStatus.完成.value);
                     isItemFinish = true;
                     uploadOneFile();
-                }else{
+                } else {
                     saveError("删除断点文件过程中");
                 }
-            }else if(type == TaskType.SEND_MOOD_NORMAL && !isCancel){//发表心情
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+            } else if (type == TaskType.SEND_MOOD_NORMAL && !isCancel) {//发表心情
+                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
                     new NotificationUtil(1, SendMoodService.this).sendTipNotification("信息提示", "您的发表的心情发送成功", "测试", 1, 0);
-                }else{
+                } else {
                     saveError("发表文字过程中");
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
      * 操作失败后的操作
+     *
      * @param steps
      */
-    public void saveError(String steps){
+    public void saveError(String steps) {
         try {
             Map<String, Object> params = new HashMap<>();
-            params.put("id", 1);
             params.put("content", content);
-            params.put("uris",uris);
+            params.put("uris", uris);
             params.put("create_time", DateUtil.DateToString(new Date()));
             params.put("create_user_id", String.valueOf(BaseApplication.getLoginUserId()));
             sqLiteDatabase.insert(BaseSQLiteOpenHelper.TABLE_MOOD_DRAFT, params);
             //SharedPreferenceUtil.saveMoodDraft(getApplicationContext(), content, uris);
-            new NotificationUtil(1, SendMoodService.this).sendActionNotification("心情发表失败", "失败步骤:"+steps+"，心情已经保存为草稿", "测试", 1, 0, MoodActivity.class);
-        }catch (Exception e){
+            new NotificationUtil(1, SendMoodService.this).sendActionNotification("心情发表失败", "失败步骤:" + steps + "，心情已经保存为草稿", "测试", 1, 0, MoodActivity.class);
+        } catch (Exception e) {
             e.printStackTrace();
-            new NotificationUtil(1, SendMoodService.this).sendActionNotification("心情发表失败", "失败步骤:"+steps, "测试", 1, 0, MoodActivity.class);
+            new NotificationUtil(1, SendMoodService.this).sendActionNotification("心情发表失败", "失败步骤:" + steps, "测试", 1, 0, MoodActivity.class);
         }
     }
 
@@ -376,7 +379,7 @@ public class SendMoodService extends Service implements TaskListener {
     /**
      * 执行合并操作
      */
-    private void merge(){
+    private void merge() {
         //启动合并操作
         HttpRequestBean requestBean = new HttpRequestBean();
         requestBean.setServerMethod("leedane/filepath/mergePortFile.action");
@@ -397,7 +400,7 @@ public class SendMoodService extends Service implements TaskListener {
     /**
      * 删除断点文件
      */
-    private void deletePortFile(){
+    private void deletePortFile() {
         //启动合并操作
         HttpRequestBean requestBean = new HttpRequestBean();
         requestBean.setServerMethod("leedane/filepath/deletePortFile.action");
