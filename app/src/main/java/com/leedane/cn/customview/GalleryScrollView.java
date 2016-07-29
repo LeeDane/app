@@ -51,6 +51,7 @@ import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 import com.leedane.cn.volley.ImageCacheUtil;
+import com.readystatesoftware.viewbadger.BadgeView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -519,6 +520,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
         imageViewInfo.setWidth(widthAndHeight[0]);
         imageViewInfo.setHeight(widthAndHeight[1]);
         imageViewInfo.setImageView(imageView);
+
         imageViewList.add(imageViewInfo);
         imageView.setOnClickListener(new OnClickListener() {
             @Override
@@ -940,6 +942,21 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
      * @return
      */
     private LinearLayout findColumnToAdd(ImageView imageView, int imageHeight) {
+        /*if(getContext() != null && imageView != null){
+            //添加右上角图标
+            BadgeView badge1 = new BadgeView(getContext(), imageView);
+            badge1.setText("-");
+            badge1.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+            badge1.show();
+            badge1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ToastUtil.success(getContext(), "badge1");
+                }
+            });
+        }
+
+*/
         if(firstColumnHeight <= secondColumnHeight){
             if(firstColumnHeight <= thirdColumnHeight){
                 firstColumnHeight += imageHeight;

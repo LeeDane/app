@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -56,6 +57,7 @@ import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
+import com.readystatesoftware.viewbadger.BadgeView;
 
 import org.json.JSONObject;
 
@@ -87,6 +89,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
 
     //附加图片
     private ImageView mImg;
+
+    //图片右侧的提示图标
+    private BadgeView badge;
 
     //图片上传进度条
     private ProgressBar mProgressBar;
@@ -131,15 +136,18 @@ public class IncomeOrSpendActivity extends BaseActivity {
         }
         setContentView(R.layout.activity_financial_income_or_spend);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
-        setTitleViewText(getStringResource(R.string.financial));
+        mModel = getIntent().getIntExtra("model", 1);
+        if(mModel == 1)
+            setTitleViewText(getStringResource(R.string.financila_add_income));
+        else
+            setTitleViewText(getStringResource(R.string.financila_add_spend));
         backLayoutVisible();
-
         ((TextView)findViewById(R.id.base_title_textview)).setOnClickListener(IncomeOrSpendActivity.this);
 
         financialDataBase = new FinancialDataBase(IncomeOrSpendActivity.this);
         oneLevelCategoryDataBase = new OneLevelCategoryDataBase(IncomeOrSpendActivity.this);
         twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(IncomeOrSpendActivity.this);
-        mModel = getIntent().getIntExtra("model", 1);
+
         initView();
     }
 
@@ -150,6 +158,16 @@ public class IncomeOrSpendActivity extends BaseActivity {
 
         mImg = (ImageView)findViewById(R.id.financial_income_or_spend_img);
         mImg.setOnClickListener(IncomeOrSpendActivity.this);
+        badge = new BadgeView(this, mImg);
+        badge.setText("—");
+        badge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mImg.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.take_photo));
+                mPath = null;
+                badge.hide();
+            }
+        });
 
         mProgressBar = (ProgressBar)findViewById(R.id.financial_income_or_spend_img_progressbar);
 
@@ -349,7 +367,6 @@ public class IncomeOrSpendActivity extends BaseActivity {
                 showTimePickerDialog();
                 break;
             case R.id.base_title_textview:
-                ToastUtil.success(IncomeOrSpendActivity.this, "哈哈哈");
                 showPopwindow();
                 break;
         }
@@ -374,24 +391,32 @@ public class IncomeOrSpendActivity extends BaseActivity {
 
 
         // 实例化一个ColorDrawable颜色为半透明
-        ColorDrawable dw = new ColorDrawable(0xb0000000);
-        window.setBackgroundDrawable(dw);
+        //ColorDrawable dw = new ColorDrawable(0xb0000000);
+       // window.setBackgroundDrawable(dw);
 
 
         // 设置popWindow的显示和消失动画
         window.setAnimationStyle(R.style.mypopwindow_anim_style);
         // 在底部显示
         window.showAtLocation(IncomeOrSpendActivity.this.findViewById(R.id.financial_income_or_spend_root),
-                Gravity.TOP, 0, DensityUtil.dip2px(IncomeOrSpendActivity.this, 60));
+                Gravity.TOP, -270, DensityUtil.dip2px(IncomeOrSpendActivity.this, 60));
 
         // 这里检验popWindow里的button是否可以点击
-        Button first = (Button) view.findViewById(R.id.pop_btn);
+        Button first = (Button) view.findViewById(R.id.pop_btn_add_income);
         first.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
+                mModel = 1;
+                ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_income));
+            }
+        });
 
-                System.out.println("第一个按钮被点击了");
+        Button second = (Button) view.findViewById(R.id.pop_btn_add_spend);
+        second.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mModel = 2;
+                ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_spend));
             }
         });
 
@@ -450,6 +475,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
                             if (StringUtil.isNotNull(text)) {
                                 mPath = text;
                                 ImageCacheManager.loadImage(mPath, mImg, 150, 150);
+                                badge.show();
                             }else{
                                 ToastUtil.failure(IncomeOrSpendActivity.this, "请输入网络图片链接!");
                             }
@@ -669,6 +695,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
                     bitmap = BitmapUtil.getSmallBitmap(IncomeOrSpendActivity.this, mLocalPath, 150, 150);
                     mImg.setImageBitmap(bitmap);
                     CommonHandler.getQiniuTokenRequest(IncomeOrSpendActivity.this);
+                    badge.show();
                 }else
                     ToastUtil.failure(IncomeOrSpendActivity.this, "获取不到图片路径");
             }

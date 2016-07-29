@@ -95,5 +95,6 @@
         android:id="@+id/mood_gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:horizontalSpacing="@dimen/default_8dp"
         android:numColumns="3"></GridView>
 </LinearLayout>

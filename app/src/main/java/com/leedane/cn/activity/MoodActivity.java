@@ -400,40 +400,46 @@ public class MoodActivity extends BaseActivity {
                     builder.setNegativeButton("取消",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    ToastUtil.success(MoodActivity.this, "正在发表...");
+                                    ToastUtil.success(MoodActivity.this, "取消发表...");
                                 }
                             });
                     builder.show();
                 }else{
-
-
-                    //简单的发送
-                    HttpRequestBean requestBean = new HttpRequestBean();
-                    HashMap<String, Object> params = new HashMap<>();
-                    params.put("content", content);
-                    params.put("can_comment", mCanComment.isChecked());
-                    params.put("can_transmit", mCanTransmit.isChecked());
-                    if(locationBean != null){
-                        params.put("location", locationBean.getName());
-                        params.put("longitude", locationBean.getLongitude());
-                        params.put("latitude", locationBean.getLatitude());
-                    }
-
-                    if(mNetworkLinks.size() > 0){
-                        requestBean.setServerMethod("leedane/mood/sendWordAndLink.action");
-                        params.put("links", mMoodNetworkShow.getText().toString());
-                    }else {
-                        requestBean.setServerMethod("leedane/mood/sendWord.action");
-                    }
-                    params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-                    requestBean.setParams(params);
-
-                    requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-                    TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_NORMAL, MoodActivity.this, requestBean);
-                    showLoadingDialog("发表心情", "正在发表，请稍等...");
+                    simplePublish(content);
                 }
                 break;
         }
+    }
+
+    /**
+     * 发送简单的
+     * @param content
+     */
+    private void simplePublish(String content){
+        //简单的发送
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("content", content);
+        params.put("can_comment", mCanComment.isChecked());
+        params.put("can_transmit", mCanTransmit.isChecked());
+        if(locationBean != null){
+            params.put("location", locationBean.getName());
+            params.put("longitude", locationBean.getLongitude());
+            params.put("latitude", locationBean.getLatitude());
+        }
+
+        if(mNetworkLinks.size() > 0){
+            requestBean.setServerMethod("leedane/mood/sendWordAndLink.action");
+            params.put("links", mMoodNetworkShow.getText().toString());
+        }else {
+            requestBean.setServerMethod("leedane/mood/sendWord.action");
+        }
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_NORMAL, MoodActivity.this, requestBean);
+        showLoadingDialog("发表心情", "正在发表，请稍等...");
     }
 
     /**
@@ -448,7 +454,6 @@ public class MoodActivity extends BaseActivity {
                 buffer.append(";");
             }
         }
-
         return buffer.toString();
     }
 
@@ -562,7 +567,7 @@ public class MoodActivity extends BaseActivity {
             if (requestCode == GET_SYSTEM_IMAGE_CODE) {//图库返回
                 mLocalUris.add(MediaUtil.getImageAbsolutePath(MoodActivity.this, data.getData()));
                 mMoodGridViewAdapter.notifyDataSetChanged();
-                Toast.makeText(getBaseContext(), "获取的图片路径是：" + MediaUtil.getImageAbsolutePath(MoodActivity.this, data.getData()), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getBaseContext(), "获取的图片路径是：" + MediaUtil.getImageAbsolutePath(MoodActivity.this, data.getData()), Toast.LENGTH_LONG).show();
             }
         }
         //更新选择

@@ -7,8 +7,8 @@
     <TextView
         android:id="@+id/simple_listview_item"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="46dp"
         android:layout_marginLeft="30dp"
-        android:gravity="center_vertical"
-        android:text="@string/old_mood"/>
+        android:textSize="@dimen/default_16sp"
+        android:gravity="center_vertical"/>
 </LinearLayout>

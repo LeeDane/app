@@ -361,4 +361,6 @@
     <string name="default_between_one_and_two_level"><![CDATA[>>]]></string>
     <string name="default_two_level">未知收入</string>
     <string name="remark">备注</string>
+    <string name="financila_add_income">新增一笔收入</string>
+    <string name="financila_add_spend">新增一笔支出</string>
 </resources>

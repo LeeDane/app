@@ -14,6 +14,7 @@ import com.leedane.cn.app.R;
 import com.leedane.cn.task.LocalImageLoader;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.StringUtil;
+import com.readystatesoftware.viewbadger.BadgeView;
 
 import java.util.List;
 
@@ -63,12 +64,12 @@ public class MoodGridViewAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         MyHolder myHolder;
         if(convertView == null){
             myHolder = new MyHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_mood_gridview, null);
-            myHolder.setImageView((ImageView)convertView.findViewById(R.id.mood_item_img));
+            myHolder.setImageView((ImageView) convertView.findViewById(R.id.mood_item_img));
             convertView.setTag(myHolder);
         }else{
             myHolder = (MyHolder)convertView.getTag();
@@ -80,11 +81,25 @@ public class MoodGridViewAdapter extends BaseAdapter{
         }else{
             //String imageTag = uri.getPath();
             //myHolder.getImageView().setTag(imageTag);
-            ImageView imageView = myHolder.getImageView();
+            final ImageView imageView = myHolder.getImageView();
 
             //getBitMap(mUrls.get(position));
-            Bitmap bitmap = BitmapUtil.getSmallBitmap(mContext, uri);
+            Bitmap bitmap = BitmapUtil.getSmallBitmap(mContext, uri, 480, 800);
             imageView.setImageBitmap(bitmap);
+
+
+            final BadgeView badge = new BadgeView(mContext, imageView);
+            badge.setText("—");
+            badge.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.take_photo));
+                    mLocalUris.remove(position);
+                    notifyDataSetChanged();
+                    badge.hide();
+                }
+            });
+            badge.show();
             /*mLocalImageLoader.loadBitmap(imageTag, uri, new NetworkImageLoader.ImageCallback() {
                 @Override
                 public void imageLoaded(Bitmap imageBitmap, String imageTag) {

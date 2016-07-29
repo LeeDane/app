@@ -69,7 +69,7 @@ public class ZanUserActivity extends BaseActivity implements SwipeRefreshLayout.
             finish();
             return;
         }
-        setContentView(R.layout.activity_zan_user);
+        setContentView(R.layout.fragment_listview);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.zan_user);
         backLayoutVisible();

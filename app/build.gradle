@@ -47,6 +47,7 @@ dependencies {
     compile 'com.felipecsl:gifimageview:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
+    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     compile files('libs/gson-1.7.1.jar')
     compile files('libs/json-lib-2.4-jdk15-sources.jar')
@@ -69,4 +70,5 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-Moments-2.6.5.jar')
     compile files('libs/zxing.jar')
     compile files('libs/togglebuttonlib.jar')
+    compile files('libs/android-viewbadger.jar')
 }
