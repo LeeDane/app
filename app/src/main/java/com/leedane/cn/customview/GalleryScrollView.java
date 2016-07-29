@@ -68,6 +68,9 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
 
     public static final String TAG = "GalleryScrollView";
 
+    //初始化本地数据完成
+    private static final int INIT_DATA_SUCCESS = 124;
+
     private GalleryDataBase galleryDataBase;
 
     /**
@@ -290,20 +293,43 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
             columnWidth = firstColumn.getWidth();
             //加载本地数据库的数据
             galleryDataBase = new GalleryDataBase(getContext());
-            mBeans = galleryDataBase.queryGalleryLimit50(BaseApplication.getLoginUserId());
-            if(mBeans.size() > 0){
-                first_id = mBeans.get(0).getId();
-                last_id = mBeans.get(mBeans.size() - 1).getId();
-                mPreMethod = "lowloading";
-                for(GalleryBean galleryBean: mBeans)
-                    showImageView(galleryBean);
-                checkVisibility();
-            }else{
-                loadMoreImage("firstLoading", null);
-                loadOne = true;
-            }
+
+            //优化当前activity启动速度
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mBeans = galleryDataBase.queryGalleryLimit50(BaseApplication.getLoginUserId());
+                    Message msg = new Message();
+                    msg.what = INIT_DATA_SUCCESS;
+                    firstHandler.sendMessage(msg);
+                }
+            }).start();
         }
     }
+
+    /**
+     * 初始化数据的handler
+     */
+    Handler firstHandler = new Handler(){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case INIT_DATA_SUCCESS: //初始化本地数据完成
+                    if(mBeans.size() > 0){
+                        first_id = mBeans.get(0).getId();
+                        last_id = mBeans.get(mBeans.size() - 1).getId();
+                        mPreMethod = "lowloading";
+                        for(GalleryBean galleryBean: mBeans)
+                            showImageView(galleryBean);
+                        checkVisibility();
+                    }else{
+                        loadMoreImage("firstLoading", null);
+                        loadOne = true;
+                    }
+                    break;
+            }
+
+        }
+    };
 
     /**
      * 监听用户的触屏事件，如果用户手指离开屏幕则开始进行滚动检测
