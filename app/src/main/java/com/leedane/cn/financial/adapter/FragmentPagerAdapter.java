@@ -27,6 +27,8 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
         this.mFragments = fragments;
     }
 
+
+
     @Override
     public Fragment getItem(int position) {
         if(this.mFragments.get(position) == null){

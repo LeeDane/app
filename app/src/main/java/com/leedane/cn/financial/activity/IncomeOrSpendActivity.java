@@ -46,6 +46,7 @@ import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.DensityUtil;
 import com.leedane.cn.util.MediaUtil;
+import com.leedane.cn.util.QiniuUploadManager;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.util.http.BeanUtil;
@@ -77,6 +78,11 @@ import java.util.UUID;
 public class IncomeOrSpendActivity extends BaseActivity {
 
     public static final int GET_SYSTEM_IMAGE_CODE = 112;
+
+    //model是添加收入
+    public static final int FINANCIAL_MODEL_INCOME = 1;
+    //model是添加支出
+    public static final int FINANCIAL_MODEL_SPEND = 1;
 
     //金钱
     private EditText mMoney;
@@ -136,8 +142,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
         }
         setContentView(R.layout.activity_financial_income_or_spend);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
-        mModel = getIntent().getIntExtra("model", 1);
-        if(mModel == 1)
+        //默认是添加收入
+        mModel = getIntent().getIntExtra("model", FINANCIAL_MODEL_INCOME);
+        if(mModel == FINANCIAL_MODEL_INCOME)
             setTitleViewText(getStringResource(R.string.financila_add_income));
         else
             setTitleViewText(getStringResource(R.string.financila_add_spend));
@@ -406,7 +413,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
         first.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mModel = 1;
+                mModel = FINANCIAL_MODEL_INCOME;
                 ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_income));
             }
         });
@@ -415,7 +422,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
         second.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mModel = 2;
+                mModel = FINANCIAL_MODEL_SPEND;
                 ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_spend));
             }
         });
@@ -646,22 +653,10 @@ public class IncomeOrSpendActivity extends BaseActivity {
     }
 
     public void uploadImg(){
-        Configuration config = new Configuration.Builder()
-                .chunkSize(256 * 1024)  //分片上传时，每片的大小。 默认256K
-                .putThreshhold(512 * 1024)  // 启用分片上传阀值。默认512K
-                .connectTimeout(10) // 链接超时。默认10秒
-                .responseTimeout(60) // 服务器响应超时。默认60秒
-                .recorder(null)  // recorder分片上传时，已上传片记录器。默认null
-                //.recorder(recorder, keyGen)  // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
-                .zone(Zone.zone0) // 设置区域，指定不同区域的上传域名、备用域名、备用IP。默认 Zone.zone0
-                .build();
-        // 重用uploadManager。一般地，只需要创建一个uploadManager对象
-        UploadManager uploadManager = new UploadManager(config);
-
         File data = new File(mLocalPath);
         String filename = BaseApplication.getLoginUserName() + "_app_upload_" + UUID.randomUUID().toString() +StringUtil.getFileName(mLocalPath);
         mProgressBar.setVisibility(View.VISIBLE);
-        uploadManager.put(data, filename, token,
+        QiniuUploadManager.getInstance().getUploadManager().put(data, filename, token,
                 new UpCompletionHandler() {
                     @Override
                     public void complete(String key, ResponseInfo info, JSONObject res) {
@@ -673,10 +668,10 @@ public class IncomeOrSpendActivity extends BaseActivity {
                     public void progress(String key, double percent) {
                         int i = (int) (percent * 100);
                         mProgressBar.setProgress(i);
-                        if(i == 100){
+                        if (i == 100) {
                             mProgressBar.setVisibility(View.GONE);
                             mPath = key;
-                            ToastUtil.success(IncomeOrSpendActivity.this, "mPath--->"+mPath);
+                            ToastUtil.success(IncomeOrSpendActivity.this, "mPath--->" + mPath);
                         }
                         //Log.i("qiniu progress", "i="+i + "---->" +key + ": " + percent);
                     }

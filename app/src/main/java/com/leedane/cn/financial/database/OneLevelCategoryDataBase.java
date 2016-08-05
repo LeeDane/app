@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.database.BaseSQLiteOpenHelper;
+import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.OneLevelGategory;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
@@ -59,6 +60,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory1.setIsDefault(true);
         OneLevelGategory1.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory1.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory1.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory1);
 
         OneLevelGategory OneLevelGategory2 = new OneLevelGategory();
@@ -67,6 +69,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory2.setValue("衣服饰品");
         OneLevelGategory2.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory2.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory2.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory2);
 
         OneLevelGategory OneLevelGategory3 = new OneLevelGategory();
@@ -75,6 +78,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory3.setValue("居家物业");
         OneLevelGategory3.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory3.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory3.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory3);
 
         OneLevelGategory OneLevelGategory4 = new OneLevelGategory();
@@ -83,6 +87,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory4.setValue("行车交通");
         OneLevelGategory4.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory4.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory4.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory4);
 
         OneLevelGategory OneLevelGategory5 = new OneLevelGategory();
@@ -91,6 +96,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory5.setValue("交流通讯");
         OneLevelGategory5.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory5.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory5.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory5);
 
         OneLevelGategory OneLevelGategory6 = new OneLevelGategory();
@@ -99,6 +105,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory6.setValue("休闲娱乐");
         OneLevelGategory6.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory6.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory6.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory6);
 
         OneLevelGategory OneLevelGategory7 = new OneLevelGategory();
@@ -107,6 +114,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory7.setValue("学习进修");
         OneLevelGategory7.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory7.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory7.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory7);
 
         OneLevelGategory OneLevelGategory8 = new OneLevelGategory();
@@ -115,6 +123,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory8.setValue("人情往来");
         OneLevelGategory8.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory8.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory8.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory8);
 
         OneLevelGategory OneLevelGategory9 = new OneLevelGategory();
@@ -123,6 +132,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory9.setValue("医疗保健");
         OneLevelGategory9.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory9.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory9.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory9);
 
         OneLevelGategory OneLevelGategory10 = new OneLevelGategory();
@@ -131,6 +141,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory10.setValue("金融保险");
         OneLevelGategory10.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory10.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory10.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory10);
 
         OneLevelGategory OneLevelGategory11 = new OneLevelGategory();
@@ -139,6 +150,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory11.setValue("其他杂项");
         OneLevelGategory11.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory11.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory11.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelGategories.add(OneLevelGategory11);
 
         //收入大类
@@ -148,6 +160,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory12.setValue("职业收入");
         OneLevelGategory12.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory12.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory12.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME);
         oneLevelGategories.add(OneLevelGategory12);
 
         OneLevelGategory OneLevelGategory13 = new OneLevelGategory();
@@ -156,6 +169,7 @@ public class OneLevelCategoryDataBase {
         OneLevelGategory13.setValue("其他收入");
         OneLevelGategory13.setCreateUserId(BaseApplication.getLoginUserId());
         OneLevelGategory13.setCreateTime(DateUtil.DateToString(date));
+        OneLevelGategory13.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME);
         oneLevelGategories.add(OneLevelGategory13);
 
         OneLevelCategoryDataBase dataBase = new OneLevelCategoryDataBase(BaseApplication.newInstance());

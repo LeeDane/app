@@ -24,6 +24,7 @@ import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.NotificationUtil;
 import com.leedane.cn.util.QiniuConfig;
+import com.leedane.cn.util.QiniuUploadManager;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.qiniu.android.common.Zone;
@@ -160,14 +161,10 @@ public class SendMoodService extends Service implements TaskListener {
             new NotificationUtil(SEND_MOOD_NOTIFICATION_ID, SendMoodService.this).sendActionNotification("心情发表失败", "未获取到上传图片的凭证", "测试", 1, 0, MoodActivity.class);
             return;
         }
-
-        // 重用uploadManager。一般地，只需要创建一个uploadManager对象
-        UploadManager uploadManager = new UploadManager(QiniuConfig.getInstance().getConfig());
-
         try {
             //上传到七牛服务器的文件名称
             final String serverfilename = BaseApplication.getLoginUserName() + "_app_upload_" + UUID.randomUUID().toString() + file.getName();
-            uploadManager.put(file, serverfilename, token,
+            QiniuUploadManager.getInstance().getUploadManager().put(file, serverfilename, token,
                     new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject res) {

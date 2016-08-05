@@ -30,6 +30,7 @@ public class OneLevelGategory {
 	 */
 	private int icon;
 
+	private int model; //1表示收入, 2表示支出
 	
 	/**
 	 * 一级分类的预算
@@ -67,17 +68,18 @@ public class OneLevelGategory {
 	
 	public OneLevelGategory(){}
 	
-	public OneLevelGategory(String value, int id){
-		this.value = value;
-		this.id = id;
-		this.icon = DEFAULT_PARENT_CATEGORY_ICON;
-	}
+//	public OneLevelGategory(String value, int id){
+//		this.value = value;
+//		this.id = id;
+//		this.icon = DEFAULT_PARENT_CATEGORY_ICON;
+//	}
 	
-	public OneLevelGategory(String value, int id, int icon){
-		this.value = value;
-		this.id = id;
-		this.icon = icon;
-	}
+//	public OneLevelGategory(String value, int id, int icon){
+//		this.value = value;
+//		this.id = id;
+//		this.icon = icon;
+//		this.model = model;
+//	}
 	
 	@Override
 	public String toString() {
@@ -162,5 +164,13 @@ public class OneLevelGategory {
 
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
+	}
+
+	public int getModel() {
+		return model;
+	}
+
+	public void setModel(int model) {
+		this.model = model;
 	}
 }

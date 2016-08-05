@@ -17,12 +17,14 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.leedane.cn.activity.BaseActivity;
 import com.leedane.cn.activity.LoginActivity;
 import com.leedane.cn.app.R;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.customview.RightBorderTextView;
 import com.leedane.cn.financial.adapter.FragmentPagerAdapter;
 import com.leedane.cn.financial.fragment.MainFragment;
@@ -43,11 +45,6 @@ import java.util.List;
 public class HomeActivity extends BaseActivity {
 
     public static final String TAG = "HomeActivity";
-
-    /**
-     * 水平滑动的view
-     */
-    private HorizontalScrollView mScrollview;
 
     private int mPreTab = 0;//当上一个的Tab索引
     private int mCurrentTab;  //标记当前tab位置
@@ -106,7 +103,6 @@ public class HomeActivity extends BaseActivity {
      * 初始化试图控件
      */
     private void initView() {
-        mScrollview = (HorizontalScrollView)findViewById(R.id.financial_scrollview);
         mRadioGroup = (RadioGroup) findViewById(R.id.financial_tabs);
         mViewPager = (ViewPager)findViewById(R.id.financial_viewpager);
         mRadioGroup.setVisibility(View.VISIBLE);
@@ -134,13 +130,6 @@ public class HomeActivity extends BaseActivity {
 
         mTotalTabs = mRadioGroup.getChildCount();
 
-        new Handler().postDelayed((new Runnable() {
-            @Override
-            public void run() {
-                mScrollview.scrollTo(mTabWidth * mCurrentTab, 0);
-            }
-        }), 5);
-
         String tabText;
         for(int i = 0; i < mRadioGroup.getChildCount(); i++){
             tabText = ((RightBorderTextView)mRadioGroup.getChildAt(i)).getText().toString();
@@ -163,6 +152,7 @@ public class HomeActivity extends BaseActivity {
             }
         }
 
+        //mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(), getBaseContext(), mFragments));
         mViewPager.setCurrentItem(mCurrentTab);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -189,11 +179,10 @@ public class HomeActivity extends BaseActivity {
                 new Handler().postDelayed((new Runnable() {
                     @Override
                     public void run() {
-                        mScrollview.scrollTo(mTabWidth * mCurrentTab, 0);
                         TextView textView = (TextView)mRadioGroup.getChildAt(mCurrentTab);
                         int[] wah = new int[2];
                         textView.getLocationOnScreen(wah);
-                        ToastUtil.success(HomeActivity.this, "呵呵-->" + wah[0]);
+                        //ToastUtil.success(HomeActivity.this, "呵呵-->" + wah[0]);
 
                         Animation animation = new TranslateAnimation(mPreTab * tabWidth, mCurrentTab* tabWidth, 0, 0);
                         animation.setFillAfter(true);
@@ -207,7 +196,7 @@ public class HomeActivity extends BaseActivity {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (positionOffset == 0.00 || positionOffset == 1.00 || positionOffset == 2.00) {
+                if (positionOffset == 0.00 || positionOffset == 1.00 || positionOffset == 2.00 || positionOffset == 3.00 || positionOffset == 4.00 || positionOffset == 5.00) {
                     return;
                 }
                 Animation animation = new TranslateAnimation((position + positionOffsetOld) * tabWidth, (position + positionOffset) * tabWidth, 0, 0);
@@ -228,24 +217,19 @@ public class HomeActivity extends BaseActivity {
      * 初始化创建线的图像
      */
     private void initImageView() {
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
         //获得当前设备的屏幕宽度
-        int screenWidth = dm.widthPixels;
+        int screenWidth = BaseApplication.newInstance().getScreenWidthAndHeight()[0];
+        tabWidth = screenWidth / 5;
 
         //设置线性的图像的宽度为1/3的屏幕宽度
         ViewGroup.LayoutParams params = mImageViewLine.getLayoutParams();
-        //int w = (int)screenWidth/3;
-
-        tabWidth = DensityUtil.dip2px(HomeActivity.this, 80);
-        params.width = DensityUtil.dip2px(HomeActivity.this, 80);
+        params.width = tabWidth;
 
         //获取图片宽度
         mLineWidth = BitmapFactory.decodeResource(getResources(), R.drawable.line).getWidth();
         //Toast.makeText(DetailActivity.this, "后来线的宽度:"+ mLineWidth, Toast.LENGTH_SHORT).show();
         Matrix matrix = new Matrix();
-        //mOffset = (int) ((screenWidth/(float)3 - mLineWidth)/2);
-        mOffset = 0;
+        mOffset = (int) ((screenWidth/(float)5 - mLineWidth)/2);
         matrix.postTranslate(mOffset, 0);
         //设置初始位置
         mImageViewLine.setImageMatrix(matrix);
@@ -301,7 +285,6 @@ public class HomeActivity extends BaseActivity {
         new Handler().postDelayed((new Runnable() {
             @Override
             public void run() {
-                mScrollview.scrollTo(mTabWidth * mCurrentTab, 0);
                 mViewPager.setCurrentItem(mCurrentTab);
             }
         }), 5);
