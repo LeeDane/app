@@ -22,7 +22,9 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.leedane.cn.app.R;
 import com.leedane.cn.customview.MyMarkerView;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
@@ -55,13 +57,14 @@ import java.util.Set;
  * 图表数据的fragment
  * Created by LeeDane on 2016/8/7.
  */
-public class MonthChartDataFragment extends BaseFragment {
+public class MonthChartDataFragment extends FinancialBaseFragment implements OnChartValueSelectedListener {
 
     private FinancialList mFinancialList;
     private View mRootView;
     private Context mContext;
     private float totalIncome = 0;
     private float totalSpend = 0;
+    private BarChart barChart;
     public MonthChartDataFragment(){
     }
 
@@ -103,11 +106,12 @@ public class MonthChartDataFragment extends BaseFragment {
         LineHandler lineHandler = new LineHandler(mContext, getLineObject());
         lineHandler.showLine(lineChart);*/
 
-        BarChart barChart = (BarChart)mRootView.findViewById(R.id.month_bar_chart);
+        barChart = (BarChart)mRootView.findViewById(R.id.month_bar_chart);
         /*MultipleBarHandler multipleBarHandler = new MultipleBarHandler(mContext, getMultipleBarObject());
         multipleBarHandler.showMultipleBar(barChart);*/
-        //mChart.setOnChartValueSelectedListener(this);
+        barChart.setOnChartValueSelectedListener(this);
         MultipleBarHandler handler = new MultipleBarHandler(mContext, getMultipleBarObject());
+        handler.setmTfLight(mTfLight);
         handler.showMultipleBar(barChart);
     }
 
@@ -115,7 +119,7 @@ public class MonthChartDataFragment extends BaseFragment {
         PieObject pieObject = new PieObject();
         pieObject.setyValues(getPieYValues());
         //pieObject.setxValues(getPieXValues());
-        pieObject.setCenterDesc(EnumUtil.getFinancialModelValue(mFinancialList.getModel()) + "本月收支统计,收入:" + totalIncome + ",支出:" + totalSpend);
+        pieObject.setCenterDesc(EnumUtil.getFinancialModelValue(mFinancialList.getModel()) + "收支统计,收入:" + totalIncome + ",支出:" + totalSpend);
         pieObject.setTitle(EnumUtil.getFinancialModelValue(mFinancialList.getModel()) + "收支统计饼状图");
         pieObject.setColors(getPieColor());
         return pieObject;
@@ -257,8 +261,8 @@ public class MonthChartDataFragment extends BaseFragment {
             if(spendMoneys.get(xValues.get(i)) != null)
                 max = Math.max(max, spendMoneys.get(xValues.get(i)));
 
-            incomeBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), incomeMoneys.get(xValues.get(i)) != null ? incomeMoneys.get(xValues.get(i)): 3700.0f));
-            spendBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), spendMoneys.get(xValues.get(i)) != null ? spendMoneys.get(xValues.get(i)) :3700.0f));
+            incomeBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), incomeMoneys.get(xValues.get(i)) != null ? incomeMoneys.get(xValues.get(i)): 0.0f));
+            spendBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), spendMoneys.get(xValues.get(i)) != null ? spendMoneys.get(xValues.get(i)) :0.0f));
             /*if(i == 0){
                 incomeBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), 6));
                 spendBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), 9));
@@ -297,13 +301,26 @@ public class MonthChartDataFragment extends BaseFragment {
                 days.add(financialBean.getAdditionTime().substring(8, 10));
             }
         }
+        int max = 0;
+        int min = 0;
         if(days.size() > 0){
+            int i = 0;
             for(String s: days){
-                xValues.add(s);
+                if(i == 0){
+                    max = Integer.parseInt(s);
+                    min = Integer.parseInt(s);
+                }else{
+                    max = Math.max(max, Integer.parseInt(s));
+                    min = Math.min(min, Integer.parseInt(s));
+                }
+                i ++;
             }
         }
+        for(int i = min; i <= max; i++){
+            xValues.add(i < 10 ? "0"+i: String.valueOf(i));
+        }
        //xValues.clear();
-        sortList(xValues);
+        //sortList(xValues);
         /*for(int i = 5; i < 15; i++){
             String v = i < 10 ? "0"+i: String.valueOf(i);
             xValues.add(v);
@@ -350,5 +367,19 @@ public class MonthChartDataFragment extends BaseFragment {
     @Override
     protected void sendLoadAgain(View view) {
 
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        ToastUtil.success(mContext, "Selected: " + e.toString() + ", dataSet: " + h.getDataSetIndex());
+        if(barChart.getData() != null) {
+            barChart.getData().setHighlightEnabled(!barChart.getData().isHighlightEnabled());
+            barChart.invalidate();
+        }
+    }
+
+    @Override
+    public void onNothingSelected() {
+        ToastUtil.success(mContext, "Nothing selected.");
     }
 }

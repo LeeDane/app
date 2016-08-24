@@ -222,10 +222,10 @@ public class TwoLevelCategoryDataBase {
     public void update(TwoLevelCategory data) {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("update " + TWO_LEVEL_CATEGORY_TABLE_NAME + " set order_=?, one_level_id=?, status=?, value=?, icon=?" +
-                ", budget=?, is_default=?,create_user_id=?, create_time=?");
+                ", budget=?, is_default=?,create_user_id=?, create_time=? where id=?");
         sqlite.execSQL(sql, new String[]{
                 data.getOrder() + "", data.getOneLevelId() +"", data.getStatus() +"", data.getValue(), data.getIcon() +"", data.getBudget() + "",
-                StringUtil.changeTrueOrFalseToInt(data.isDefault()) +"", data.getCreateUserId() +"", data.getCreateTime() });
+                StringUtil.changeTrueOrFalseToInt(data.isDefault()) +"", data.getCreateUserId() +"", data.getCreateTime(), data.getId() +""});
         sqlite.close();
     }
 

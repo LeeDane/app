@@ -39,8 +39,10 @@ import com.leedane.cn.financial.database.FinancialDataBase;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.financial.handler.FinancialHandler;
+import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
@@ -61,6 +63,7 @@ import com.qiniu.android.storage.UploadOptions;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -122,6 +125,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
     public String token;
 
     private Calendar showTime;
+
+    private TextView mSave;
+    private TextView mDraft;
 
     private FinancialDataBase financialDataBase;
     private OneLevelCategoryDataBase oneLevelCategoryDataBase;
@@ -199,6 +205,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
             public void onClick(View v) {
                 mImg.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.take_photo));
                 mPath = null;
+                mProgressBar.setVisibility(View.GONE);
                 badge.hide();
             }
         });
@@ -219,9 +226,15 @@ public class IncomeOrSpendActivity extends BaseActivity {
         mOneLevel.setOnClickListener(IncomeOrSpendActivity.this);
         mTwoLevel.setOnClickListener(IncomeOrSpendActivity.this);
 
+        mSave = (TextView)findViewById(R.id.financial_income_or_spend_save);
+        mDraft = (TextView)findViewById(R.id.financial_income_or_spend_draft);
+        mSave.setOnClickListener(IncomeOrSpendActivity.this);
+        mDraft.setOnClickListener(IncomeOrSpendActivity.this);
+
         mRemark = (EditText)findViewById(R.id.financial_income_or_spend_remark);
 
         if(isEdit()){
+            mDraft.setText(R.string.delete);
             showTime = Calendar.getInstance();
             String addTime = editFinancialBean.getAdditionTime();
             showTime.setTime(DateUtil.stringToDate(addTime));
@@ -231,6 +244,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
             mTwoLevel.setText(editFinancialBean.getTwoLevel());
             mMoney.setText(String.valueOf(editFinancialBean.getMoney()));
             mRemark.setText(StringUtil.changeNotNull(editFinancialBean.getFinancialDesc()));
+
             if(StringUtil.isNotNull(editFinancialBean.getPath())){
                 mPath = editFinancialBean.getPath();
                 ImageCacheManager.loadImage(mPath, mImg, 150, 150);
@@ -258,9 +272,8 @@ public class IncomeOrSpendActivity extends BaseActivity {
 
     /**
      * 保存操作
-     * @param view
      */
-    public void save(View view){
+    public void doSave(){
         String money = mMoney.getText().toString();
         if(StringUtil.isNull(money)){
             ToastUtil.failure(IncomeOrSpendActivity.this, "请输入金额");
@@ -290,42 +303,70 @@ public class IncomeOrSpendActivity extends BaseActivity {
             return;
         }
 
-        FinancialBean financialBean = new FinancialBean();
-
-        financialBean.setSynchronous(false);
-        financialBean.setFinancialDesc(StringUtil.changeNotNull(mRemark.getText().toString()));
-        financialBean.setCreateUserId(BaseApplication.getLoginUserId());
-        financialBean.setCreateTime(DateUtil.DateToString(new Date()));
-        if(StringUtil.isNotNull(mPath)){
-            financialBean.setPath(mPath);
-            financialBean.setHasImg(true);
+        if(!isEdit()){
+            editFinancialBean = new FinancialBean();
         }
-        financialBean.setModel(mModel);
-        financialBean.setOneLevel(onLevel);
-        financialBean.setTwoLevel(twoLevel);
-        financialBean.setStatus(ConstantsUtil.STATUS_NORMAL);
-        financialBean.setMoney(Float.valueOf(money));
-        financialBean.setAdditionTime(date + " " + time);
+
+        editFinancialBean.setSynchronous(false);
+        editFinancialBean.setFinancialDesc(StringUtil.changeNotNull(mRemark.getText().toString()));
+        editFinancialBean.setCreateUserId(BaseApplication.getLoginUserId());
+        editFinancialBean.setCreateTime(DateUtil.DateToString(new Date()));
+        if(StringUtil.isNotNull(mPath)){
+            editFinancialBean.setPath(mPath);
+            editFinancialBean.setHasImg(true);
+        }
+        editFinancialBean.setModel(mModel);
+        editFinancialBean.setOneLevel(onLevel);
+        editFinancialBean.setTwoLevel(twoLevel);
+        editFinancialBean.setStatus(ConstantsUtil.STATUS_NORMAL);
+        editFinancialBean.setMoney(Float.valueOf(money));
+        editFinancialBean.setAdditionTime(date + " " + time);
         try{
-            financialDataBase.save(financialBean);
+            if(isEdit()){
+                financialDataBase.update(editFinancialBean);
+            }else{
+                financialDataBase.save(editFinancialBean);
+            }
             Map<String, Object> data = new HashMap<>();
-            BeanUtil.convertBeanToMap(financialBean, data);
+            BeanUtil.convertBeanToMap(editFinancialBean, data);
             FinancialHandler.save(IncomeOrSpendActivity.this, data);
             ToastUtil.success(IncomeOrSpendActivity.this, "数据已成功添加到本地!");
         }catch (Exception e){
             e.printStackTrace();
             ToastUtil.failure(IncomeOrSpendActivity.this, "保存失败!" + e.toString());
         }
-
         //后台重新计算记账数据
         FinancialHandler.calculateFinancialData(IncomeOrSpendActivity.this);
     }
 
     /**
      * 存为草稿操作
-     * @param view
      */
-    public void draft(View view){
+    public void doDraft(){
+        if(isEdit()){
+            AppUtil.vibrate(IncomeOrSpendActivity.this, 50);//振动
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(IncomeOrSpendActivity.this);
+            builder.setCancelable(true);
+            builder.setIcon(R.drawable.menu_feedback);
+            builder.setTitle("提示");
+            builder.setMessage("删除该记账记录?");
+            builder.setPositiveButton("删除",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            financialDataBase.delete(editFinancialBean.getLocalId());
+                            ToastUtil.success(IncomeOrSpendActivity.this, "记录删除成功!");
+                            finish();
+                        }
+                    });
+            builder.setNegativeButton("取消",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                        }
+                    });
+            builder.show();
+            return;
+        }
         String money = mMoney.getText().toString();
         if(StringUtil.isNull(money)){
             ToastUtil.failure(IncomeOrSpendActivity.this, "请输入金额");
@@ -355,24 +396,24 @@ public class IncomeOrSpendActivity extends BaseActivity {
             return;
         }
 
-        FinancialBean financialBean = new FinancialBean();
-
-        financialBean.setSynchronous(false);
-        financialBean.setFinancialDesc(StringUtil.changeNotNull(mRemark.getText().toString()));
-        financialBean.setCreateUserId(BaseApplication.getLoginUserId());
-        financialBean.setCreateTime(DateUtil.DateToString(new Date()));
+        editFinancialBean = new FinancialBean();
+        editFinancialBean.setSynchronous(false);
+        editFinancialBean.setFinancialDesc(StringUtil.changeNotNull(mRemark.getText().toString()));
+        editFinancialBean.setCreateUserId(BaseApplication.getLoginUserId());
+        editFinancialBean.setCreateTime(DateUtil.DateToString(new Date()));
         if(StringUtil.isNotNull(mPath)){
-            financialBean.setPath(mPath);
-            financialBean.setHasImg(true);
+            editFinancialBean.setPath(mPath);
+            editFinancialBean.setHasImg(true);
         }
-        financialBean.setModel(mModel);
-        financialBean.setOneLevel(onLevel);
-        financialBean.setTwoLevel(twoLevel);
-        financialBean.setStatus(ConstantsUtil.STATUS_DRAFT);
-        financialBean.setMoney(Float.valueOf(money));
-        financialBean.setAdditionTime(date + " " + time);
+        editFinancialBean.setModel(mModel);
+        editFinancialBean.setOneLevel(onLevel);
+        editFinancialBean.setTwoLevel(twoLevel);
+        editFinancialBean.setStatus(ConstantsUtil.STATUS_DRAFT);
+        editFinancialBean.setMoney(Float.valueOf(money));
+        editFinancialBean.setAdditionTime(date + " " + time);
         try{
-            financialDataBase.save(financialBean);
+            financialDataBase.save(editFinancialBean);
+
            /* Map<String, Object> data = new HashMap<>();
             BeanUtil.convertBeanToMap(financialBean, data);
             FinancialHandler.save(IncomeOrSpendActivity.this, data);*/
@@ -423,10 +464,10 @@ public class IncomeOrSpendActivity extends BaseActivity {
                 break;
             case R.id.base_title_textview:
                 //编辑状态不让选择类型
-                if(isEdit()){
+                /*if(isEdit()){
                     ToastUtil.failure(IncomeOrSpendActivity.this, "编辑状态不能选择类型");
                     return;
-                }
+                }*/
                 //showPopwindow();
                 if(mModel == FINANCIAL_MODEL_INCOME){
                     mModel = FINANCIAL_MODEL_SPEND;
@@ -435,6 +476,12 @@ public class IncomeOrSpendActivity extends BaseActivity {
                     mModel = FINANCIAL_MODEL_INCOME;
                     ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_income));
                 }
+                break;
+            case R.id.financial_income_or_spend_save: //保存操作
+                doSave();
+                break;
+            case R.id.financial_income_or_spend_draft: //草稿/删除操作
+                doDraft();
                 break;
         }
     }
@@ -736,6 +783,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
                     public void complete(String key, ResponseInfo info, JSONObject res) {
                         //res包含hash、key等信息，具体字段取决于上传策略的设置。
                         //Log.i("qiniu", key + ",\r\n " + info + ",\r\n " + res);
+                        //ToastUtil.success(IncomeOrSpendActivity.this, "qiniu progress--->" + key + ",\r\n " + info + ",\r\n " + res);
                     }
                 }, new UploadOptions(null, null, false, new UpProgressHandler() {
                     @Override
@@ -744,10 +792,10 @@ public class IncomeOrSpendActivity extends BaseActivity {
                         mProgressBar.setProgress(i);
                         if (i == 100) {
                             mProgressBar.setVisibility(View.GONE);
-                            mPath = key;
-                            ToastUtil.success(IncomeOrSpendActivity.this, "mPath--->" + mPath);
+                            mPath = ConstantsUtil.QINIU_CLOUD_SERVER +  key;
                         }
-                        //Log.i("qiniu progress", "i="+i + "---->" +key + ": " + percent);
+                       // ToastUtil.success(IncomeOrSpendActivity.this, "qiniu progress--->" + percent);
+                        Log.i("qiniu progress", "i="+i + "---->" +key + ": " + percent);
                     }
                 }, null));
     }

@@ -2,6 +2,7 @@ package com.leedane.cn.financial.fragment;
 
 import android.content.Context;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 
@@ -21,6 +22,15 @@ public class FinancialBaseFragment extends BaseFragment implements CalculateFina
     protected Context mContext;
 
     protected FinancialDataBase financialDataBase;
+
+    protected Typeface mTfRegular;
+    protected Typeface mTfLight;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Override
     public void onResume() {
@@ -47,6 +57,8 @@ public class FinancialBaseFragment extends BaseFragment implements CalculateFina
         super.onActivityCreated(savedInstanceState);
         if(mContext == null)
             mContext = getActivity();
+        mTfRegular = Typeface.createFromAsset(mContext.getAssets(), "OpenSans-Regular.ttf");
+        mTfLight = Typeface.createFromAsset(mContext.getAssets(), "OpenSans-Light.ttf");
 
         financialDataBase = new FinancialDataBase(mContext);
     }

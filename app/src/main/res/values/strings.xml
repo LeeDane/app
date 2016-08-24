@@ -342,6 +342,8 @@
     <string name="location_current">当前位置:</string>
 
     <!-- 记账 -->
+    <string name="income">收入</string>
+    <string name="spend">支出</string>
     <string name="financial">记账</string>
     <string name="financial_home">首页</string>
     <string name="financial_yesterday">昨日</string>
@@ -365,4 +367,5 @@
     <string name="financila_add_spend">新增一笔支出</string>
     <string name="list">列表</string>
     <string name="chart">图表</string>
+    <string name="one_level_edit">一级分类编辑</string>
 </resources>

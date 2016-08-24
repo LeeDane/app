@@ -64,6 +64,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import pl.droidsonroids.gif.GifImageView;
+
 /**
  * 心情详情的Fragment
  * Created by LeeDane on 2016/5/3.
@@ -606,7 +608,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             if(showImages.length > 0){
                 linearLayout.setVisibility(View.VISIBLE);
                 linearLayout.removeAllViewsInLayout();
-                ImageView imageView = null;
+                GifImageView imageView = null;
                 final List<ImageDetailBean> list = new ArrayList<>();
                 ImageDetailBean imageDetailBean = null;
                 for(int i = 0; i< showImages.length; i++){
@@ -618,7 +620,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                     final int index = i;
                     final String path = showImages[index];
                     if(StringUtil.isNotNull(showImages[i])){
-                        imageView = new ImageView(context);
+                        imageView = new GifImageView(context);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DensityUtil.dip2px(context, 80) , DensityUtil.dip2px(context, 100));
                         params.rightMargin = 16;
                         params.topMargin = 3;
@@ -626,7 +628,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                         imageView.setMaxWidth(100);
                         imageView.setMaxHeight(120);
                         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                        ImageCacheManager.loadImage(path, imageView, 80, 100);
+                        ImageCacheManager.loadGifImage(path, imageView, 80, 100);
                         imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

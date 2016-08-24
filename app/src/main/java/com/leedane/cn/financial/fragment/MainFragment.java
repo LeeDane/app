@@ -6,19 +6,23 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
+import com.leedane.cn.financial.activity.OneLevelEditActivity;
 import com.leedane.cn.financial.adapter.FinancialRecyclerViewAdapter;
 import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.bean.FinancialList;
 import com.leedane.cn.financial.handler.FinancialHandler;
+import com.leedane.cn.financial.util.CalculateUtil;
 import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ToastUtil;
@@ -67,7 +71,7 @@ public class MainFragment extends FinancialBaseFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        Log.i(TAG, "onCreateView");
         if(mRootView == null)
             mRootView = inflater.inflate(R.layout.fragment_recyclerview, container,
                     false);
@@ -114,6 +118,7 @@ public class MainFragment extends FinancialBaseFragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
+        Log.i(TAG, "onActivityCreated");
         if(bundle != null){
 
         }
@@ -173,6 +178,14 @@ public class MainFragment extends FinancialBaseFragment{
         TextView spend = (TextView)mHeader.findViewById(R.id.financial_header_spend);
         income.setText(String.valueOf(FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME)));
         spend.setText(String.valueOf(FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND)));
+        ImageView editOneLevel = (ImageView)mHeader.findViewById(R.id.financial_header_edit_one_level);
+        editOneLevel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(mContext, OneLevelEditActivity.class);
+                startActivity(it);
+            }
+        });
     }
 
     @Override
@@ -225,11 +238,44 @@ public class MainFragment extends FinancialBaseFragment{
     public void calculate(FinancialList financialList, int model) {
         super.calculate(financialList, model);
         if(model == EnumUtil.FinancialModel.本月.value){
-            this.mMonthFinancialList = financialList;
+            this.mMonthFinancialList = CalculateUtil.monthList;
             refreshHeaderData();
-            //ToastUtil.success(mContext, "数量："+financialList.getFinancialBeans().size());
-        }else{
-            //ToastUtil.success(mContext, "model:"+model);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i(TAG, "onDestroyView");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy");
     }
 }

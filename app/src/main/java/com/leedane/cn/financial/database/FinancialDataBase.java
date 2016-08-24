@@ -102,7 +102,7 @@ public class FinancialDataBase {
      */
     public void delete(int localId) {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        String sql = ("delete from " + FINANCIAL_TABLE_NAME + " where localId=?");
+        String sql = ("delete from " + FINANCIAL_TABLE_NAME + " where local_id=?");
         sqlite.execSQL(sql, new Integer[] { localId });
         sqlite.close();
     }
@@ -135,12 +135,13 @@ public class FinancialDataBase {
     public void update(FinancialBean data) {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("update " + FINANCIAL_TABLE_NAME + " set id=?, status=?, model=?, money=?, one_level=?, two_level=?, has_img=?,path=?," +
-                "location=?, longitude=?,latitude=?,financial_desc=?,synchronous=?, create_user_id=?, create_time=?, addition_time=?");
+                "location=?, longitude=?,latitude=?,financial_desc=?,synchronous=?, create_user_id=?, create_time=?, addition_time=? where local_id=?");
         sqlite.execSQL(sql, new Object[]{
                 data.getId() + "", data.getStatus() + "", data.getModel() + "", data.getMoney() + "",
                 data.getOneLevel(), data.getTwoLevel(), StringUtil.changeTrueOrFalseToInt(data.isHasImg()) + "", data.getPath()
                 , data.getLocation(), data.getLongitude() + "", data.getLatitude() + "",
-                data.getFinancialDesc(), StringUtil.changeTrueOrFalseToInt(data.isSynchronous()) + "", data.getCreateUserId() + "", data.getCreateTime(), data.getAdditionTime()});
+                data.getFinancialDesc(), StringUtil.changeTrueOrFalseToInt(data.isSynchronous()) + "",
+                data.getCreateUserId() + "", data.getCreateTime(), data.getAdditionTime(), data.getLocalId()});
         sqlite.close();
     }
 

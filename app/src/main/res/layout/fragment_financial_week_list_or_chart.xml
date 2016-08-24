@@ -4,22 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btn_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/list"/>
-            <Button
-                android:id="@+id/btn_chart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/chart"/>
-        </LinearLayout>
+    <ToggleButton
+        android:id="@+id/chart_or_list_toggle_button"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/default_24dp"
+        android:background="#00000000"
+        style="@style/chart_or_list"
+        android:layout_margin="@dimen/default_5dp"
+        android:checked="true"
+        android:textOff="图表视图"
+        android:gravity="center"
+        android:layout_gravity="right"
+        android:textSize="@dimen/default_12sp"
+        android:textOn="列表视图"/>
     <FrameLayout
         android:id="@+id/week_container"
         android:layout_width="match_parent"

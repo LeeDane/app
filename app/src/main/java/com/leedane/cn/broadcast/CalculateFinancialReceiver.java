@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.leedane.cn.financial.bean.FinancialList;
+import com.leedane.cn.financial.util.CalculateUtil;
+import com.leedane.cn.financial.util.EnumUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,8 +39,29 @@ public class CalculateFinancialReceiver extends BroadcastReceiver {
         try{
             FinancialList financialList = (FinancialList)intent.getSerializableExtra("data");
             int model = intent.getIntExtra("model", 0);
+
+            if(financialList != null)
+                switch (model){
+                    case 1://今日
+                        CalculateUtil.toDayList = financialList;
+                    case 2://昨日
+                        CalculateUtil.yesterDayList = financialList;
+                        break;
+                    case 3://本周
+                        CalculateUtil.weekList = financialList;
+                        break;
+                    case 4://本月
+                        CalculateUtil.monthList = financialList;
+                        break;
+                    case 5://本年
+                        CalculateUtil.yearList = financialList;
+                        break;
+
+                }
+
             if(null != calculateFinancialListener)
                 calculateFinancialListener.calculate(financialList, model);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

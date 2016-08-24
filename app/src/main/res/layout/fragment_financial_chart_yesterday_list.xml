@@ -13,12 +13,8 @@
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/yesterday_pie_chart"
                 android:layout_width="match_parent"
-                android:layout_height="320dp">
+                android:layout_height="200dp">
             </com.github.mikephil.charting.charts.PieChart>
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/yesterday_line_chart"
-                android:layout_width="match_parent"
-                android:layout_height="320dp" />
         </LinearLayout>
 
     </ScrollView>

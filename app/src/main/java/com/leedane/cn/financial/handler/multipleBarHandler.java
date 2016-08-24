@@ -2,6 +2,7 @@ package com.leedane.cn.financial.handler;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -34,6 +35,11 @@ import java.util.List;
 public class MultipleBarHandler {
     private MultipleBarObject multipleBarObject;
     private Context mContext;
+    private Typeface mTfLight;
+    public void setmTfLight(Typeface mTfLight) {
+        this.mTfLight = mTfLight;
+    }
+
     public MultipleBarHandler(Context context, MultipleBarObject multipleBarObject){
         this.multipleBarObject = multipleBarObject;
         this.mContext = context;
@@ -72,7 +78,7 @@ public class MultipleBarHandler {
         l.setTextSize(8f);
 
         XAxis xl = barChart.getXAxis();
-        //xl.setTypeface(mTfLight);
+        xl.setTypeface(mTfLight);
         //xl.setGranularity(1f);
         xl.setDrawGridLines(true);//去掉网格
         xl.setCenterAxisLabels(true);
@@ -90,11 +96,11 @@ public class MultipleBarHandler {
         });
 
        YAxis leftAxis = barChart.getAxisLeft();
-        //leftAxis.setTypeface(mTfLight);
+        leftAxis.setTypeface(mTfLight);
         //leftAxis.setValueFormatter(new LargeValueFormatter());
         leftAxis.setDrawGridLines(false); //保留y轴网格
         //leftAxis.setSpaceTop(30f);
-        //leftAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)*/
+        leftAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)*/
         barChart.getAxisRight().setEnabled(false);
     }
 
@@ -102,8 +108,9 @@ public class MultipleBarHandler {
 
         float groupSpace = 0.0f;
         float barSpace = 0.1f; // x3 dataset
-        float barWidth = 0.5f; // x3 dataset
+        float barWidth = 0.4f; // x3 dataset
         BarData data = new BarData(multipleBarObject.getBarDataSets());
+        data.setValueTypeface(mTfLight);
         barChart.setData(data);
 
         List<String> multipleBarXValues = multipleBarObject.getxValues();

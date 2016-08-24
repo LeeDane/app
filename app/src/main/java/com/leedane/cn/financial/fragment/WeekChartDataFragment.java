@@ -83,9 +83,9 @@ public class WeekChartDataFragment extends BaseFragment {
         PieHandler pieHandler = new PieHandler(mContext, getPieObject());
         pieHandler.showPie(pieChart);
 
-        LineChart lineChart = (LineChart)mRootView.findViewById(R.id.week_line_chart);
+       /* LineChart lineChart = (LineChart)mRootView.findViewById(R.id.week_line_chart);
         LineHandler lineHandler = new LineHandler(mContext, getLineObject());
-        lineHandler.showLine(lineChart);
+        lineHandler.showLine(lineChart);*/
     }
 
     private PieObject getPieObject(){

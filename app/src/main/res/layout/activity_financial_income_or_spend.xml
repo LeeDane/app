@@ -123,6 +123,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
+            android:id="@+id/financial_income_or_spend_save"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginLeft="15dp"
@@ -133,10 +134,10 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/save"
-            android:onClick="save"
             android:textColor="#000"
             android:textSize="@dimen/default_16sp" />
         <TextView
+            android:id="@+id/financial_income_or_spend_draft"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
             android:layout_marginLeft="15dp"
@@ -147,7 +148,6 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/draft"
-            android:onClick="draft"
             android:textColor="#000"
             android:textSize="@dimen/default_16sp" />
     </LinearLayout>

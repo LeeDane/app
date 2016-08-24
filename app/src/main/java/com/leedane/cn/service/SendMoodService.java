@@ -97,6 +97,8 @@ public class SendMoodService extends Service implements TaskListener {
         if (intent == null) {
             return super.onStartCommand(intent, flags, startId);
         }
+
+        mNetworkLinks.clear();
         //获取上传凭证
         CommonHandler.getQiniuTokenRequest(SendMoodService.this);
         return super.onStartCommand(intent, flags, startId);

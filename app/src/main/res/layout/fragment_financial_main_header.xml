@@ -11,10 +11,11 @@
         android:padding="@dimen/default_10dp"
         android:gravity="right">
         <ImageView
+            android:id="@+id/financial_header_edit_one_level"
             android:layout_width="@dimen/default_30dp"
             android:layout_height="@dimen/default_30dp"
             android:scaleType="fitXY"
-            android:src="@drawable/menu_setting"/>
+            android:src="@drawable/ic_category_edit"/>
         <ImageView
             android:layout_width="@dimen/default_30dp"
             android:layout_height="@dimen/default_30dp"
@@ -132,7 +133,7 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="@color/blueAccountLink"
+            android:background="@drawable/bg_login_edittext"
             android:textSize="30sp"
             android:layout_marginRight="@dimen/default_3dp"
             android:text="记\n一\n笔"/>

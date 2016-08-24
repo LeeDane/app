@@ -281,10 +281,10 @@ public class OneLevelCategoryDataBase {
     public void update(OneLevelGategory data) {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("update " + ONE_LEVEL_CATEGORY_TABLE_NAME + " set order_=?, status=?, value=?, icon=?, model=?" +
-                            ", budget=?, is_default=?, create_user_id=?, create_time=?");
+                            ", budget=?, is_default=?, create_user_id=?, create_time=? where id=?");
         sqlite.execSQL(sql, new String[]{
                 data.getOrder() + "", data.getStatus() +"", data.getValue(), data.getIcon() +"", data.getModel() +"", data.getBudget() + "",
-                StringUtil.changeTrueOrFalseToInt(data.isDefault()) +"", data.getCreateUserId() +"", data.getCreateTime() });
+                StringUtil.changeTrueOrFalseToInt(data.isDefault()) +"", data.getCreateUserId() +"", data.getCreateTime() , data.getId() +""});
         sqlite.close();
     }
 

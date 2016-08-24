@@ -42,6 +42,9 @@
     <style name="dialog_animation" parent="@android:style/Animation.Dialog">
     </style>
 
+    <style name="Widget_GifView">
+    </style>
+
     <!--  这个是加入的代码 -->
     <style name="mypopwindow_anim_style">
         <item name="android:windowEnterAnimation">@anim/popshow_anim</item>
@@ -49,5 +52,9 @@
 
         <item name="android:windowExitAnimation">@anim/pophidden_anim</item>
         <!-- 指定消失的动画xml -->
+    </style>
+    <!--   切换列表和图表的按钮  -->
+    <style name="chart_or_list" parent="@android:style/Widget.CompoundButton">
+        <item name="android:button">@drawable/chart_or_list_checkbox_button</item>
     </style>
 </resources>

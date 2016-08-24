@@ -26,6 +26,7 @@
     <dimen name="default_60dp">60dp</dimen>
     <dimen name="default_40dp">40dp</dimen>
     <dimen name="default_30dp">30dp</dimen>
+    <dimen name="default_24dp">24dp</dimen>
     <dimen name="default_22dp">22dp</dimen>
     <dimen name="default_20dp">20dp</dimen>
     <dimen name="default_18dp">18dp</dimen>

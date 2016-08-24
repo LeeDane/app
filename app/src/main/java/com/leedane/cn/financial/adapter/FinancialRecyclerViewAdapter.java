@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.leedane.cn.app.R;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.FinancialBean;
+import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
@@ -25,6 +26,7 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     private List<FinancialBean> mFinancialBeans = new ArrayList<>();
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_NORMAL = 1;
+    public static final int TYPE_EMPTY = 2;//数据为空的展示
     private View mHeaderView;
     private OnItemClickListener mListener;
     public void setOnItemClickListener(OnItemClickListener li) {
@@ -37,34 +39,66 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     public View getHeaderView() {
         return mHeaderView;
     }
+
+    public FinancialRecyclerViewAdapter(){
+
+    }
+    public FinancialRecyclerViewAdapter(List<FinancialBean> financialBeans){
+        this.mFinancialBeans = financialBeans;
+        //notifyDataSetChanged();
+    }
     public void addDatas(List<FinancialBean> datas) {
         mFinancialBeans.addAll(datas);
         notifyDataSetChanged();
     }
     @Override
     public int getItemViewType(int position) {
-        if(mHeaderView == null) return TYPE_NORMAL;
-        if(position == 0) return TYPE_HEADER;
-        return TYPE_NORMAL;
+        if(mHeaderView == null) {
+            if(CommonUtil.isEmpty(mFinancialBeans)){
+                return TYPE_EMPTY;
+            }
+            return TYPE_NORMAL;
+        }else{
+            if(position == 0)
+                return TYPE_HEADER;
+
+            //返回空数据类型
+            if(CommonUtil.isEmpty(mFinancialBeans))
+                return TYPE_EMPTY;
+
+            return TYPE_NORMAL;
+        }
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(mHeaderView != null && viewType == TYPE_HEADER) return new Holder(mHeaderView);
-        View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_financila_list_recyclerview, parent, false);
-        return new Holder(layout);
+        if(mHeaderView != null && viewType == TYPE_HEADER)
+            return new Holder(mHeaderView);
+        else if(CommonUtil.isEmpty(mFinancialBeans)){
+            View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_financila_list_recyclerview_empty, parent, false);
+            return new EmptyHodler(layout);
+        }else{
+            View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_financila_list_recyclerview, parent, false);
+            return new Holder(layout);
+        }
     }
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if(getItemViewType(position) == TYPE_HEADER) return;
+        if(getItemViewType(position) == TYPE_HEADER)
+            return;
+        if(getItemViewType(position) == TYPE_EMPTY){
+            EmptyHodler holder = ((EmptyHodler) viewHolder);
+            holder.empty.setText("暂无数据");
+            return;
+        }
         final int pos = getRealPosition(viewHolder);
         final FinancialBean data = mFinancialBeans.get(pos);
         if(viewHolder instanceof Holder) {
             Holder holder = ((Holder) viewHolder);
             //收入
             if(data.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME){
-                holder.model.setImageResource(R.mipmap.income_increase_32px);
+                holder.model.setImageResource(R.drawable.ic_trending_up_blue_a200_18dp);
             }else{
-                holder.model.setImageResource(R.mipmap.income_decrease_32px);
+                holder.model.setImageResource(R.drawable.ic_trending_down_pink_a200_18dp);
             }
             String category = "";
             if(StringUtil.isNotNull(data.getOneLevel())){
@@ -75,7 +109,9 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             }
             holder.category.setText(category);
             holder.money.setText(String.valueOf(data.getMoney()));
-            holder.addTime.setText(RelativeDateFormat.format(DateUtil.stringToDate(data.getAdditionTime())));
+            if(StringUtil.isNotNull(data.getAdditionTime())){
+                holder.addTime.setText(data.getAdditionTime().substring(0, 10));
+            }
             if(mListener == null) return;
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -91,7 +127,19 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     }
     @Override
     public int getItemCount() {
-        return mHeaderView == null ? mFinancialBeans.size() : mFinancialBeans.size() + 1;
+        int count = 0;
+        if(mHeaderView == null){
+            if(CommonUtil.isEmpty(mFinancialBeans)){
+                count = 1;
+            }else
+                count = mFinancialBeans.size();
+        }else{
+            if(CommonUtil.isEmpty(mFinancialBeans)){
+                count = 2; //2是因为加上头部和空的提示
+            }else
+                count = mFinancialBeans.size() + 1;
+        }
+        return count;
     }
     class Holder extends RecyclerView.ViewHolder {
         ImageView model;
@@ -106,6 +154,16 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             category = (TextView) itemView.findViewById(R.id.financial_list_category);
             money = (TextView) itemView.findViewById(R.id.financial_list_money);
             addTime = (TextView) itemView.findViewById(R.id.financial_list_time);
+        }
+    }
+
+    class EmptyHodler extends RecyclerView.ViewHolder{
+        TextView empty;
+        public EmptyHodler(View itemView){
+            super(itemView);
+            if(itemView == mHeaderView)
+                return;
+            empty = (TextView)itemView.findViewById(R.id.financial_list_empty);
         }
     }
     public interface OnItemClickListener {

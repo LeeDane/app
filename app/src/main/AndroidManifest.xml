@@ -320,6 +320,13 @@
         </activity>
 
         <activity
+            android:name="com.leedane.cn.financial.activity.OneLevelEditActivity"
+            android:label="@string/one_level_edit"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
             android:name="com.leedane.cn.financial.activity.IncomeTestActivity"
             android:label="@string/financial_income"
             android:screenOrientation="portrait"
