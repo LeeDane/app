@@ -70,6 +70,17 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     /**
+     * 局部刷新单个数据
+     * @param oneLevelGategoryEdit
+     * @param position
+     */
+    public void refresh(OneLevelCategoryEdit oneLevelGategoryEdit, int position){
+        mOneLevelGategoryEdits.remove(position);// 先移除后添加
+        mOneLevelGategoryEdits.add(position, oneLevelGategoryEdit);
+        notifyItemChanged(position);
+    }
+
+    /**
      * 添加数据
      * @param oneLevelGategoryEdit
      * @param position

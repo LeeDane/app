@@ -30,6 +30,7 @@ import com.leedane.cn.financial.bean.OneLevelCategoryEdit;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
+import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -262,24 +263,27 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
     private List<OneLevelCategoryEdit> convertToEditBean(List<OneLevelCategory> oneLevelGategories){
         List<OneLevelCategoryEdit> oneLevelGategoryEdits = new ArrayList<>();
         if(!CommonUtil.isEmpty(oneLevelGategories)){
-            OneLevelCategoryEdit oneLevelGategoryEdit = null;
             for(OneLevelCategory oneLevelCategory : oneLevelGategories){
-                oneLevelGategoryEdit = new OneLevelCategoryEdit();
-                oneLevelGategoryEdit.setBudget(oneLevelCategory.getBudget());
-                oneLevelGategoryEdit.setModel(oneLevelCategory.getModel());
-                oneLevelGategoryEdit.setCreateTime(oneLevelCategory.getCreateTime());
-                oneLevelGategoryEdit.setCreateUserId(oneLevelCategory.getCreateUserId());
-                oneLevelGategoryEdit.setIcon(oneLevelCategory.getIcon());
-                oneLevelGategoryEdit.setId(oneLevelCategory.getId());
-                oneLevelGategoryEdit.setOrder(oneLevelCategory.getOrder());
-                oneLevelGategoryEdit.setIsDefault(oneLevelCategory.isDefault());
-                oneLevelGategoryEdit.setStatus(oneLevelCategory.getStatus());
-                oneLevelGategoryEdit.setTwoLevelCategories(oneLevelCategory.getTwoLevelCategories());
-                oneLevelGategoryEdit.setValue(oneLevelCategory.getValue());
-                oneLevelGategoryEdits.add(oneLevelGategoryEdit);
+                oneLevelGategoryEdits.add(convertToEditBean(oneLevelCategory));
             }
         }
         return oneLevelGategoryEdits;
+    }
+
+    private OneLevelCategoryEdit convertToEditBean(OneLevelCategory oneLevelCategory){
+        OneLevelCategoryEdit oneLevelGategoryEdit = new OneLevelCategoryEdit();
+        oneLevelGategoryEdit.setBudget(oneLevelCategory.getBudget());
+        oneLevelGategoryEdit.setModel(oneLevelCategory.getModel());
+        oneLevelGategoryEdit.setCreateTime(oneLevelCategory.getCreateTime());
+        oneLevelGategoryEdit.setCreateUserId(oneLevelCategory.getCreateUserId());
+        oneLevelGategoryEdit.setIcon(oneLevelCategory.getIcon());
+        oneLevelGategoryEdit.setId(oneLevelCategory.getId());
+        oneLevelGategoryEdit.setOrder(oneLevelCategory.getOrder());
+        oneLevelGategoryEdit.setIsDefault(oneLevelCategory.isDefault());
+        oneLevelGategoryEdit.setStatus(oneLevelCategory.getStatus());
+        oneLevelGategoryEdit.setTwoLevelCategories(oneLevelCategory.getTwoLevelCategories());
+        oneLevelGategoryEdit.setValue(oneLevelCategory.getValue());
+        return oneLevelGategoryEdit;
     }
 
     /**
@@ -291,27 +295,30 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
     private List<OneLevelCategory> convertEditBeanToBean(List<OneLevelCategoryEdit> oneLevelGategoryEdits, boolean resetOrder){
         List<OneLevelCategory> oneLevelGategories = new ArrayList<>();
         if(!CommonUtil.isEmpty(oneLevelGategoryEdits)){
-            OneLevelCategory oneLevelCategory;
             for(int i = 0; i < oneLevelGategoryEdits.size(); i++){
-                oneLevelCategory = new OneLevelCategoryEdit();
-                oneLevelCategory.setBudget(oneLevelGategoryEdits.get(i).getBudget());
-                oneLevelCategory.setModel(oneLevelGategoryEdits.get(i).getModel());
-                oneLevelCategory.setCreateTime(oneLevelGategoryEdits.get(i).getCreateTime());
-                oneLevelCategory.setCreateUserId(oneLevelGategoryEdits.get(i).getCreateUserId());
-                oneLevelCategory.setIcon(oneLevelGategoryEdits.get(i).getIcon());
-                oneLevelCategory.setId(oneLevelGategoryEdits.get(i).getId());
-                if(resetOrder)
-                    oneLevelCategory.setOrder(i + 1);
-                else
-                    oneLevelCategory.setOrder(oneLevelGategoryEdits.get(i).getOrder());
-                oneLevelCategory.setIsDefault(oneLevelGategoryEdits.get(i).isDefault());
-                oneLevelCategory.setStatus(oneLevelGategoryEdits.get(i).getStatus());
-                oneLevelCategory.setTwoLevelCategories(oneLevelGategoryEdits.get(i).getTwoLevelCategories());
-                oneLevelCategory.setValue(oneLevelGategoryEdits.get(i).getValue());
-                oneLevelGategories.add(oneLevelCategory);
+                oneLevelGategories.add(convertEditBeanToBean(oneLevelGategoryEdits.get(i), resetOrder, (i + 1)));
             }
         }
         return oneLevelGategories;
+    }
+
+    private OneLevelCategory convertEditBeanToBean(OneLevelCategoryEdit oneLevelCategoryEdit, boolean resetOrder, int order){
+        OneLevelCategory oneLevelCategory = new OneLevelCategoryEdit();
+        oneLevelCategory.setBudget(oneLevelCategoryEdit.getBudget());
+        oneLevelCategory.setModel(oneLevelCategoryEdit.getModel());
+        oneLevelCategory.setCreateTime(oneLevelCategoryEdit.getCreateTime());
+        oneLevelCategory.setCreateUserId(oneLevelCategoryEdit.getCreateUserId());
+        oneLevelCategory.setIcon(oneLevelCategoryEdit.getIcon());
+        oneLevelCategory.setId(oneLevelCategoryEdit.getId());
+        if(resetOrder)
+            oneLevelCategory.setOrder(order);
+        else
+            oneLevelCategory.setOrder(oneLevelCategoryEdit.getOrder());
+        oneLevelCategory.setIsDefault(oneLevelCategoryEdit.isDefault());
+        oneLevelCategory.setStatus(oneLevelCategoryEdit.getStatus());
+        oneLevelCategory.setTwoLevelCategories(oneLevelCategoryEdit.getTwoLevelCategories());
+        oneLevelCategory.setValue(oneLevelCategoryEdit.getValue());
+        return oneLevelCategory;
     }
 
     /**
@@ -322,6 +329,7 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
     public void onItemClick(int position) {
         Intent it = new Intent(OneLevelOperationActivity.this, OneLevelEditActivity.class);
         it.putExtra("oneLevelCategoryId", mOneLevelGategoryEdits.get(position).getId());
+        it.putExtra("clickPosition", position);//方便回传定位
         startActivityForResult(it, ONE_LEVEL_CATEGORY_EDIT_CODE);
     }
 
@@ -333,6 +341,27 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ToastUtil.success(this, "activity返回resultCode="+resultCode+", requestCode="+requestCode);
+        switch (resultCode){
+            case ONE_LEVEL_CATEGORY_EDIT_CODE:
+                if(data == null)
+                    return;
+
+                String type = data.getStringExtra("type");
+                if(StringUtil.isNull(type))
+                    return;
+
+                int clickPosition = data.getIntExtra("clickPosition", 0);
+                if(type.equals("save")){
+                    OneLevelCategory oneLevelCategory = (OneLevelCategory)data.getSerializableExtra("oneLevelCategory");
+                    mAdapter.add(convertToEditBean(oneLevelCategory), clickPosition);
+                }else if(type.equals("edit")){
+                    OneLevelCategory oneLevelCategory = (OneLevelCategory)data.getSerializableExtra("oneLevelCategory");
+                    mAdapter.refresh(convertToEditBean(oneLevelCategory), clickPosition);
+                }else if(type.equals("delete")){
+                    mAdapter.remove(clickPosition);
+                }
+                ToastUtil.success(this, "activity返回resultCode=" + resultCode + ", requestCode=" + requestCode+",type="+type);
+                break;
+        }
     }
 }

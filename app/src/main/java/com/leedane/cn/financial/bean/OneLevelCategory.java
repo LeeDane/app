@@ -1,12 +1,13 @@
 package com.leedane.cn.financial.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 一级类bean实体类
  * Created by LeeDane on 2016/7/21.
  */
-public class OneLevelCategory {
+public class OneLevelCategory implements Serializable{
 	public static int DEFAULT_PARENT_CATEGORY_ICON = 0;
 
 	/**

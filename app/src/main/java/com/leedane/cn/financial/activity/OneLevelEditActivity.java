@@ -62,6 +62,8 @@ public class OneLevelEditActivity extends BaseActivity {
     private boolean isDefault = false;
     private int iconId;
 
+    private int clickPosition;//方便回传定位
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +108,8 @@ public class OneLevelEditActivity extends BaseActivity {
      * 对编辑状态的状态进行初始化
      */
     private void initEditView(){
+        clickPosition = getIntent().getIntExtra("clickPosition", 0);//方便回传定位
+
         mName.setText(mOneLevelCategory.getValue());
         mBudget.setText(String.valueOf(mOneLevelCategory.getBudget()));
         mSort.setText(String.valueOf(StringUtil.changeObjectToInt(mOneLevelCategory.getOrder())));
@@ -270,8 +274,17 @@ public class OneLevelEditActivity extends BaseActivity {
                     }else{
                         oneLevelCategoryDataBase.insert(mOneLevelCategory);
                         ToastUtil.success(OneLevelEditActivity.this, "新增一级分类成功");
+                        //新增的保存成功后把该条数据查出来
+                        List<OneLevelCategory> oneLevelCategories =  oneLevelCategoryDataBase.query(" where value= '" +mOneLevelCategory.getValue()+ "' and order_ ="+mOneLevelCategory.getOrder()
+                                    +" and model="+mOneLevelCategory.getModel());
                         it.putExtra("type", "save");
+                        mOneLevelCategory = oneLevelCategories.get(0);
                     }
+                    //缓存改变数据
+                    BaseApplication.oneLevelCategories = oneLevelCategoryDataBase.query(" order by order_ ");
+
+                    it.putExtra("oneLevelCategory", mOneLevelCategory);
+                    it.putExtra("clickPosition", clickPosition);//方便回传定位
                     setResult(OneLevelOperationActivity.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
                     finish();
                 } catch (Exception e) {
@@ -298,6 +311,7 @@ public class OneLevelEditActivity extends BaseActivity {
                                         oneLevelCategoryDataBase.delete(mOneLevelCategoryId);
                                         Intent it = new Intent(OneLevelEditActivity.this, OneLevelOperationActivity.class);
                                         it.putExtra("type", "delete");
+                                        it.putExtra("clickPosition", clickPosition);//方便回传定位
                                         setResult(OneLevelOperationActivity.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
                                         finish();
                                         ToastUtil.success(OneLevelEditActivity.this, "删除一级分类《" + mOneLevelCategory.getValue() + "》成功。");

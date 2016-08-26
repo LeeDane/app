@@ -5,13 +5,14 @@ import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.StringUtil;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 二级类bean实体类
  * Created by LeeDane on 2016/7/21.
  */
-public class TwoLevelCategory {
+public class TwoLevelCategory implements Serializable{
 	
 	public static int DEFAULT_SUB_CATEGORY_ICON = 0;//默认显示的图标
 

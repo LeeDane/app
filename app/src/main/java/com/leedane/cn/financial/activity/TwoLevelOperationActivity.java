@@ -25,11 +25,13 @@ import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.financial.Helper.OnStartDragListener;
 import com.leedane.cn.financial.Helper.SimpleItemTouchHelperCallback;
 import com.leedane.cn.financial.adapter.TwoLevelEditAdapter;
+import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategoryEdit;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
+import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -280,23 +282,26 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
     private List<TwoLevelCategoryEdit> convertToEditBean(List<TwoLevelCategory> twoLevelCategories){
         List<TwoLevelCategoryEdit> twoLevelCategoryEdits = new ArrayList<>();
         if(!CommonUtil.isEmpty(twoLevelCategories)){
-            TwoLevelCategoryEdit twoLevelCategoryEdit = null;
             for(TwoLevelCategory twoLevelCategory : twoLevelCategories){
-                twoLevelCategoryEdit = new TwoLevelCategoryEdit();
-                twoLevelCategoryEdit.setBudget(twoLevelCategory.getBudget());
-                twoLevelCategoryEdit.setCreateTime(twoLevelCategory.getCreateTime());
-                twoLevelCategoryEdit.setCreateUserId(twoLevelCategory.getCreateUserId());
-                twoLevelCategoryEdit.setIcon(twoLevelCategory.getIcon());
-                twoLevelCategoryEdit.setId(twoLevelCategory.getId());
-                twoLevelCategoryEdit.setOrder(twoLevelCategory.getOrder());
-                twoLevelCategoryEdit.setIsDefault(twoLevelCategory.isDefault());
-                twoLevelCategoryEdit.setStatus(twoLevelCategory.getStatus());
-                twoLevelCategoryEdit.setValue(twoLevelCategory.getValue());
-                twoLevelCategoryEdit.setOneLevelId(twoLevelCategory.getOneLevelId());
-                twoLevelCategoryEdits.add(twoLevelCategoryEdit);
+                twoLevelCategoryEdits.add(convertToEditBean(twoLevelCategory));
             }
         }
         return twoLevelCategoryEdits;
+    }
+
+    private TwoLevelCategoryEdit convertToEditBean(TwoLevelCategory twoLevelCategory){
+        TwoLevelCategoryEdit twoLevelCategoryEdit = new TwoLevelCategoryEdit();
+        twoLevelCategoryEdit.setBudget(twoLevelCategory.getBudget());
+        twoLevelCategoryEdit.setCreateTime(twoLevelCategory.getCreateTime());
+        twoLevelCategoryEdit.setCreateUserId(twoLevelCategory.getCreateUserId());
+        twoLevelCategoryEdit.setIcon(twoLevelCategory.getIcon());
+        twoLevelCategoryEdit.setId(twoLevelCategory.getId());
+        twoLevelCategoryEdit.setOrder(twoLevelCategory.getOrder());
+        twoLevelCategoryEdit.setIsDefault(twoLevelCategory.isDefault());
+        twoLevelCategoryEdit.setStatus(twoLevelCategory.getStatus());
+        twoLevelCategoryEdit.setValue(twoLevelCategory.getValue());
+        twoLevelCategoryEdit.setOneLevelId(twoLevelCategory.getOneLevelId());
+        return twoLevelCategoryEdit;
     }
 
     /**
@@ -308,32 +313,35 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
     private List<TwoLevelCategory> convertEditBeanToBean(List<TwoLevelCategoryEdit> twoLevelCategoryEdits, boolean resetOrder){
         List<TwoLevelCategory> twoLevelCategories = new ArrayList<>();
         if(!CommonUtil.isEmpty(twoLevelCategoryEdits)){
-            TwoLevelCategory twoLevelCategory;
             for(int i = 0; i < twoLevelCategoryEdits.size(); i++){
-                twoLevelCategory = new TwoLevelCategoryEdit();
-                twoLevelCategory.setBudget(twoLevelCategoryEdits.get(i).getBudget());
-                twoLevelCategory.setCreateTime(twoLevelCategoryEdits.get(i).getCreateTime());
-                twoLevelCategory.setCreateUserId(twoLevelCategoryEdits.get(i).getCreateUserId());
-                twoLevelCategory.setIcon(twoLevelCategoryEdits.get(i).getIcon());
-                twoLevelCategory.setId(twoLevelCategoryEdits.get(i).getId());
-                if(resetOrder)
-                    twoLevelCategory.setOrder(i + 1);
-                else
-                    twoLevelCategory.setOrder(twoLevelCategoryEdits.get(i).getOrder());
-                twoLevelCategory.setIsDefault(twoLevelCategoryEdits.get(i).isDefault());
-                twoLevelCategory.setStatus(twoLevelCategoryEdits.get(i).getStatus());
-                twoLevelCategory.setValue(twoLevelCategoryEdits.get(i).getValue());
-                twoLevelCategory.setOneLevelId(twoLevelCategoryEdits.get(i).getOneLevelId());
-                twoLevelCategories.add(twoLevelCategory);
+                twoLevelCategories.add(convertEditBeanToBean(twoLevelCategoryEdits.get(i), resetOrder, (i + 1)));
             }
         }
         return twoLevelCategories;
     }
 
+    private TwoLevelCategory convertEditBeanToBean(TwoLevelCategoryEdit twoLevelCategoryEdit, boolean resetOrder, int order){
+        TwoLevelCategory twoLevelCategory = new TwoLevelCategoryEdit();
+        twoLevelCategory.setBudget(twoLevelCategoryEdit.getBudget());
+        twoLevelCategory.setCreateTime(twoLevelCategoryEdit.getCreateTime());
+        twoLevelCategory.setCreateUserId(twoLevelCategoryEdit.getCreateUserId());
+        twoLevelCategory.setIcon(twoLevelCategoryEdit.getIcon());
+        twoLevelCategory.setId(twoLevelCategoryEdit.getId());
+        if(resetOrder)
+            twoLevelCategory.setOrder(order);
+        else
+            twoLevelCategory.setOrder(twoLevelCategoryEdit.getOrder());
+        twoLevelCategory.setIsDefault(twoLevelCategoryEdit.isDefault());
+        twoLevelCategory.setStatus(twoLevelCategoryEdit.getStatus());
+        twoLevelCategory.setValue(twoLevelCategoryEdit.getValue());
+        twoLevelCategory.setOneLevelId(twoLevelCategoryEdit.getOneLevelId());
+        return twoLevelCategory;
+    }
     @Override
     public void onItemClick(int position) {
         Intent it = new Intent(TwoLevelOperationActivity.this, TwoLevelEditActivity.class);
         it.putExtra("twoLevelCategoryId", mTwoLevelGategoryEdits.get(position).getId());
+        it.putExtra("clickPosition", position);//方便回传定位
         startActivityForResult(it, TWO_LEVEL_CATEGORY_EDIT_CODE);
     }
 
@@ -346,6 +354,28 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ToastUtil.success(this, "activity返回resultCode=" + resultCode + ", requestCode=" + requestCode);
+        switch (resultCode){
+            case TWO_LEVEL_CATEGORY_EDIT_CODE:
+                if(data == null)
+                    return;
+
+                String type = data.getStringExtra("type");
+                if(StringUtil.isNull(type))
+                    return;
+
+                int clickPosition = data.getIntExtra("clickPosition", 0);
+                if(type.equals("save")){
+                    TwoLevelCategory twoLevelCategory = (TwoLevelCategory)data.getSerializableExtra("twoLevelCategory");
+                    mAdapter.add(convertToEditBean(twoLevelCategory), clickPosition);
+                }else if(type.equals("edit")){
+                    TwoLevelCategory twoLevelCategory = (TwoLevelCategory)data.getSerializableExtra("twoLevelCategory");
+                    mAdapter.refresh(convertToEditBean(twoLevelCategory), clickPosition);
+                }else if(type.equals("delete")){
+                    mAdapter.remove(clickPosition);
+                }
+                ToastUtil.success(this, "activity返回resultCode=" + resultCode + ", requestCode=" + requestCode+",type="+type);
+                break;
+        }
+
     }
 }

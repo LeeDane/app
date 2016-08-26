@@ -70,6 +70,16 @@ public class TwoLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     /**
+     * 局部刷新单个数据
+     * @param position
+     */
+    public void refresh(TwoLevelCategoryEdit twoLevelCategoryEdit, int position){
+        mTwoLevelCategoryEdits.remove(position); //先移除后添加
+        mTwoLevelCategoryEdits.add(position, twoLevelCategoryEdit);
+        notifyItemChanged(position);
+    }
+
+    /**
      * 添加数据
      * @param twoLevelCategoryEdit
      * @param position

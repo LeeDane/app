@@ -63,6 +63,7 @@ public class TwoLevelEditActivity extends BaseActivity {
     private int oneLeveId;
     private boolean isDefault = false;
     private int iconId;
+    private int clickPosition;//方便回传定位
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +111,7 @@ public class TwoLevelEditActivity extends BaseActivity {
      * 对编辑状态的状态进行初始化
      */
     private void initEditView(){
+        clickPosition = getIntent().getIntExtra("clickPosition", 0);
         mName.setText(mTwoLevelCategory.getValue());
         mBudget.setText(String.valueOf(mTwoLevelCategory.getBudget()));
         mSort.setText(String.valueOf(StringUtil.changeObjectToInt(mTwoLevelCategory.getOrder())));
@@ -154,11 +156,13 @@ public class TwoLevelEditActivity extends BaseActivity {
         int p = 0;
         if(oneLeveId == 0)
             return p;
+        int k = 0;
         for(OneLevelCategory o: BaseApplication.oneLevelCategories ){
             if(o.getId() == oneLeveId){
-                p = o.getId();
+                p = k;
                 break;
             }
+            k++;
         }
         return p;
     }
@@ -306,8 +310,17 @@ public class TwoLevelEditActivity extends BaseActivity {
                         it.putExtra("type", "edit");
                     }else{
                         ToastUtil.success(TwoLevelEditActivity.this, "新增一级分类成功");
+                        //新增的保存成功后把该条数据查出来
+                        List<TwoLevelCategory> twoLevelCategories =  twoLevelCategoryDataBase.query(" where value= '" +mTwoLevelCategory.getValue()+ "' and order_ ="+ mTwoLevelCategory.getOrder()
+                                                                                    +" and one_level_id=" +mTwoLevelCategory.getOneLevelId());
+                        mTwoLevelCategory = twoLevelCategories.get(0);
                         it.putExtra("type", "save");
                     }
+                    //缓存改变数据
+                    BaseApplication.twoLevelCategories = twoLevelCategoryDataBase.query(" order by order_ ");
+
+                    it.putExtra("twoLevelCategory", mTwoLevelCategory);
+                    it.putExtra("clickPosition", clickPosition);//方便回传定位
                     setResult(TwoLevelOperationActivity.TWO_LEVEL_CATEGORY_EDIT_CODE, it);
                     finish();
                 } catch (Exception e) {
@@ -334,6 +347,7 @@ public class TwoLevelEditActivity extends BaseActivity {
                                         twoLevelCategoryDataBase.delete(mTwoLevelCategoryId);
                                         Intent it = new Intent(TwoLevelEditActivity.this, TwoLevelOperationActivity.class);
                                         it.putExtra("type", "delete");
+                                        it.putExtra("clickPosition", clickPosition);//方便回传定位
                                         setResult(TwoLevelOperationActivity.TWO_LEVEL_CATEGORY_EDIT_CODE, it);
                                         finish();
                                         ToastUtil.success(TwoLevelEditActivity.this, "删除一级分类《" + mTwoLevelCategory.getValue() + "》成功。");
