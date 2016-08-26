@@ -17,9 +17,8 @@ import android.view.WindowManager;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.baidu.mapapi.SDKInitializer;
 import com.leedane.cn.app.R;
-import com.leedane.cn.financial.bean.OneLevelGategory;
+import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
@@ -53,7 +52,7 @@ public class BaseApplication extends Application {
     public Vibrator mVibrator;
 
 
-    public static List<OneLevelGategory> oneLevelGategories;
+    public static List<OneLevelCategory> oneLevelCategories;
     public static List<TwoLevelCategory> twoLevelCategories;
     @Override
     public void onCreate() {
@@ -89,16 +88,20 @@ public class BaseApplication extends Application {
         //MySettingDataBase.initMySetting();
 
         OneLevelCategoryDataBase oneLevelCategoryDataBase = new OneLevelCategoryDataBase(newInstance());
-        oneLevelGategories = oneLevelCategoryDataBase.query();
-        if(oneLevelGategories == null || oneLevelGategories.size() == 0){
-            oneLevelGategories = OneLevelCategoryDataBase.initData();
+        oneLevelCategories = oneLevelCategoryDataBase.query(" order by order_ ");
+        if(oneLevelCategories == null || oneLevelCategories.size() == 0){
+            oneLevelCategoryDataBase.deleteAll();
+            oneLevelCategories = OneLevelCategoryDataBase.initData();
+            oneLevelCategories = oneLevelCategoryDataBase.query(" order by order_ ");//通过再次查找才能有ID
         }
         oneLevelCategoryDataBase.destroy();
 
         TwoLevelCategoryDataBase twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(newInstance());
-        twoLevelCategories = twoLevelCategoryDataBase.query();
+        twoLevelCategories = twoLevelCategoryDataBase.query(" order by order_ ");
         if(twoLevelCategories == null || twoLevelCategories.size() == 0){
+            twoLevelCategoryDataBase.deleteAll();
             twoLevelCategories = TwoLevelCategoryDataBase.initData();
+            twoLevelCategories = twoLevelCategoryDataBase.query(" order by order_ "); ////通过再次查找才能有ID
         }
         twoLevelCategoryDataBase.destroy();
 

@@ -25,6 +25,7 @@
     <string name="custom_title">自定义标题</string>
     <string name="save">保存</string>
     <string name="draft">草稿</string>
+    <string name="reset">重置</string>
     <string name="article">正文</string>
     <string name="comment">评论</string>
     <string name="transmit">转发</string>
@@ -45,10 +46,15 @@
     <string name="comlpete">完成</string>
     <string name="oparate">操作</string>
     <string name="edit">编辑</string>
+    <string name="sort">排序</string>
     <string name="clear_history">清除全部搜索历史</string>
     <string name="add_top">置顶</string>
     <string name="fanyi">翻译</string>
     <string name="send">发送</string>
+    <string name="status">状态</string>
+    <string name="normal">正常</string>
+    <string name="disable">禁用</string>
+    <string name="type">类型</string>
     <string name="img_link">图片链接</string>
     <string name="save_imgage">保存图片</string>
     <string name="tip_double_click_exit">再按一次退出程序</string>
@@ -368,4 +374,9 @@
     <string name="list">列表</string>
     <string name="chart">图表</string>
     <string name="one_level_edit">一级分类编辑</string>
+    <string name="two_level_edit">二级分类编辑</string>
+    <string name="one_level_opetation">一级分类处理</string>
+    <string name="two_level_opetation">二级分类处理</string>
+    <string name="select_icon">请选择图标</string>
+    <string name="view_two_level">查看二级分类</string>
 </resources>

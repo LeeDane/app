@@ -18,13 +18,13 @@ public class Category {
 	 * 所有的一级分类列表
 	 * @return
 	 */
-	private List<OneLevelGategory> oneLevelGategories;
+	private List<OneLevelCategory> oneLevelGategories;
 
-	public List<OneLevelGategory> getOneLevelGategories() {
+	public List<OneLevelCategory> getOneLevelGategories() {
 		return oneLevelGategories;
 	}
 
-	public void setOneLevelGategories(List<OneLevelGategory> oneLevelGategories) {
+	public void setOneLevelGategories(List<OneLevelCategory> oneLevelGategories) {
 		this.oneLevelGategories = oneLevelGategories;
 	}
 

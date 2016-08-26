@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -33,17 +32,17 @@ import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.financial.bean.FinancialBean;
-import com.leedane.cn.financial.bean.OneLevelGategory;
+import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.database.FinancialDataBase;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.financial.handler.FinancialHandler;
-import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.BitmapUtil;
+import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.DensityUtil;
@@ -53,17 +52,13 @@ import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.util.http.BeanUtil;
 import com.leedane.cn.volley.ImageCacheManager;
-import com.qiniu.android.common.Zone;
 import com.qiniu.android.http.ResponseInfo;
-import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
-import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -258,7 +253,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
             mDate.setText(DateUtil.DateToString(date, "yyyy-MM-dd"));
             mTime.setText(DateUtil.DateToString(date, "HH:mm:ss"));
 
-            List<OneLevelGategory> oneLevelGategories = oneLevelCategoryDataBase.query(" where is_default=1");
+            List<OneLevelCategory> oneLevelGategories = oneLevelCategoryDataBase.query(" where is_default=1");
             if(oneLevelGategories != null && oneLevelGategories.size() ==1){
                 mOneLevel.setText(oneLevelGategories.get(0).getValue());
             }
@@ -640,19 +635,19 @@ public class IncomeOrSpendActivity extends BaseActivity {
         List<String> menus = new ArrayList<>();
 
         if(type == 1){
-            List<OneLevelGategory> oneLevelGategories = BaseApplication.oneLevelGategories;
+            List<OneLevelCategory> oneLevelGategories = BaseApplication.oneLevelCategories;
             if(oneLevelGategories.size() > 0 ){
-                for(OneLevelGategory oneLevelGategory: oneLevelGategories){
-                    if(oneLevelGategory.getModel() == mModel)
-                        menus.add(oneLevelGategory.getValue() + "   总预算("+ oneLevelGategory.getBudget() + ")");
+                for(OneLevelCategory oneLevelCategory : oneLevelGategories){
+                    if(oneLevelCategory.getModel() == mModel)
+                        menus.add(oneLevelCategory.getValue() + "   总预算("+ oneLevelCategory.getBudget() + ")" +(oneLevelCategory.isDefault() ? "   <font color='red'>默认</font>": ""));
                 }
             }
         }else if(type == 2 && oneLevelId > 0 ){
             List<TwoLevelCategory> twoLevelCategories = BaseApplication.twoLevelCategories;
-            if(twoLevelCategories.size() > 0 ){
+            if(!CommonUtil.isEmpty(twoLevelCategories)){
                 for(TwoLevelCategory twoLevelCategory: twoLevelCategories){
                     if(twoLevelCategory.getOneLevelId() == oneLevelId){
-                        menus.add(twoLevelCategory.getValue() + "   预算("+ twoLevelCategory.getBudget() + ")");
+                        menus.add(twoLevelCategory.getValue() + "   预算("+ twoLevelCategory.getBudget() + ") " +(twoLevelCategory.isDefault() ? "    <font color='red'>默认</font>": ""));
                         continue;
                     }
                 }

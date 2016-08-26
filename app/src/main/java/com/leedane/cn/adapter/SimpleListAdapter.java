@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class SimpleListAdapter extends BaseAdapter{
         }
         //myHolder.getTextview().setBackgroundColor(mContext.getResources().getColor(R.color.white));
         myHolder.getTextview().setTextColor(mContext.getResources().getColor(R.color.black));
-        myHolder.getTextview().setText(StringUtil.changeNotNull(mDatas.get(position)));
+        myHolder.getTextview().setText(Html.fromHtml(StringUtil.changeNotNull(mDatas.get(position))));
         myHolder.getTextview().setTag("leedane");
         return convertView;
     }

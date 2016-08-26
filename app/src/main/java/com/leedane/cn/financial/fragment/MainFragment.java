@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.leedane.cn.app.R;
 import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
-import com.leedane.cn.financial.activity.OneLevelEditActivity;
+import com.leedane.cn.financial.activity.OneLevelOperationActivity;
 import com.leedane.cn.financial.adapter.FinancialRecyclerViewAdapter;
 import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.bean.FinancialList;
@@ -182,7 +182,7 @@ public class MainFragment extends FinancialBaseFragment{
         editOneLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(mContext, OneLevelEditActivity.class);
+                Intent it = new Intent(mContext, OneLevelOperationActivity.class);
                 startActivity(it);
             }
         });

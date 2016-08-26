@@ -1,10 +1,10 @@
 package com.leedane.cn.financial.bean;
 
 /**
- * 一级类编辑bean实体类
+ * 二级类编辑bean实体类
  * Created by LeeDane on 2016/8/24.
  */
-public class OneLevelGategoryEdit extends OneLevelGategory{
+public class TwoLevelCategoryEdit extends TwoLevelCategory{
 
 	private boolean edit;
 

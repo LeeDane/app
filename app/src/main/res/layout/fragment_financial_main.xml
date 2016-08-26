@@ -11,19 +11,22 @@
         android:padding="@dimen/default_10dp"
         android:gravity="right">
         <ImageView
-            android:layout_width="@dimen/default_30dp"
-            android:layout_height="@dimen/default_30dp"
+            android:layout_width="@dimen/default_18dp"
+            android:layout_height="@dimen/default_18dp"
             android:scaleType="fitXY"
+            android:layout_marginRight="@dimen/default_5dp"
             android:src="@drawable/menu_setting"/>
         <ImageView
-            android:layout_width="@dimen/default_30dp"
-            android:layout_height="@dimen/default_30dp"
+            android:layout_width="@dimen/default_18dp"
+            android:layout_height="@dimen/default_18dp"
             android:scaleType="fitXY"
+            android:layout_marginRight="@dimen/default_5dp"
             android:src="@drawable/menu_setting"/>
         <ImageView
-            android:layout_width="@dimen/default_30dp"
-            android:layout_height="@dimen/default_30dp"
+            android:layout_width="@dimen/default_18dp"
+            android:layout_height="@dimen/default_18dp"
             android:scaleType="fitXY"
+            android:layout_marginRight="@dimen/default_5dp"
             android:src="@drawable/menu_setting"/>
     </LinearLayout>
     <LinearLayout

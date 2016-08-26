@@ -46,14 +46,6 @@
         android:text="状态"/>
 
     <ImageView
-        android:id="@+id/financila_list_order"
-        android:layout_width="@dimen/default_30dp"
-        android:layout_height="@dimen/default_30dp"
-        android:scaleType="fitXY"
-        android:visibility="gone"
-        android:src="@mipmap/up"/>
-
-    <ImageView
         android:id="@+id/financila_list_right"
         android:layout_width="@dimen/default_30dp"
         android:layout_height="@dimen/default_30dp"

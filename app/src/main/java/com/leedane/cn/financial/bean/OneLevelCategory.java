@@ -6,7 +6,7 @@ import java.util.List;
  * 一级类bean实体类
  * Created by LeeDane on 2016/7/21.
  */
-public class OneLevelGategory {
+public class OneLevelCategory {
 	public static int DEFAULT_PARENT_CATEGORY_ICON = 0;
 
 	/**
@@ -66,24 +66,11 @@ public class OneLevelGategory {
 	 */
 	private List<TwoLevelCategory> twoLevelCategories;
 	
-	public OneLevelGategory(){}
-	
-//	public OneLevelGategory(String value, int id){
-//		this.value = value;
-//		this.id = id;
-//		this.icon = DEFAULT_PARENT_CATEGORY_ICON;
-//	}
-	
-//	public OneLevelGategory(String value, int id, int icon){
-//		this.value = value;
-//		this.id = id;
-//		this.icon = icon;
-//		this.model = model;
-//	}
+	public OneLevelCategory(){}
 	
 	@Override
 	public String toString() {
-		return "OneLevelGategory [value=" + value + ", id=" + id + "]";
+		return "OneLevelCategory [value=" + value + ", id=" + id + "]";
 	}
 
 	public String getValue() {

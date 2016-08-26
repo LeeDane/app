@@ -320,8 +320,29 @@
         </activity>
 
         <activity
+            android:name="com.leedane.cn.financial.activity.OneLevelOperationActivity"
+            android:label="@string/one_level_opetation"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.leedane.cn.financial.activity.TwoLevelOperationActivity"
+            android:label="@string/two_level_opetation"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
             android:name="com.leedane.cn.financial.activity.OneLevelEditActivity"
             android:label="@string/one_level_edit"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.leedane.cn.financial.activity.TwoLevelEditActivity"
+            android:label="@string/two_level_edit"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

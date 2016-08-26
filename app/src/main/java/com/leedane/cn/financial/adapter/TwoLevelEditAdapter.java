@@ -15,20 +15,20 @@ import com.leedane.cn.app.R;
 import com.leedane.cn.financial.Helper.ItemTouchHelperAdapter;
 import com.leedane.cn.financial.Helper.ItemTouchHelperViewHolder;
 import com.leedane.cn.financial.Helper.OnStartDragListener;
-import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
-import com.leedane.cn.financial.bean.OneLevelCategoryEdit;
+import com.leedane.cn.financial.bean.TwoLevelCategoryEdit;
 import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * 一级分类编辑列表数据展示的adapter对象
- * Created by LeeDane on 2016/8/23.
+ * 二级分类编辑列表数据展示的adapter对象
+ * Created by LeeDane on 2016/8/24.
  */
-public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter {
-    private List<OneLevelCategoryEdit> mOneLevelGategoryEdits = new ArrayList<>();
+public class TwoLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter {
+    private List<TwoLevelCategoryEdit> mTwoLevelCategoryEdits = new ArrayList<>();
     private OnItemClickListener mOnItemClickListener;
     private OnItemLongClickListener mOnItemLongClickListener;
     private Context mContext;
@@ -43,17 +43,17 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.mOnItemLongClickListener = onItemLongClickListener;
     }
 
-    public OneLevelEditAdapter(){
+    public TwoLevelEditAdapter(){
 
     }
-    public OneLevelEditAdapter(Context context, List<OneLevelCategoryEdit> oneLevelGategoryEdit, OnStartDragListener dragStartListener){
-        this.mOneLevelGategoryEdits = oneLevelGategoryEdit;
+    public TwoLevelEditAdapter(Context context, List<TwoLevelCategoryEdit> twoLevelCategoryEdit, OnStartDragListener dragStartListener){
+        this.mTwoLevelCategoryEdits = twoLevelCategoryEdit;
         this.mContext = context;
         mDragStartListener = dragStartListener;
         //notifyDataSetChanged();
     }
-    public void addDatas(List<OneLevelCategoryEdit> datas) {
-        mOneLevelGategoryEdits.addAll(datas);
+    public void addDatas(List<TwoLevelCategoryEdit> datas) {
+        mTwoLevelCategoryEdits.addAll(datas);
         notifyDataSetChanged();
     }
 
@@ -62,22 +62,22 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * @param position
      */
     public void remove(int position) {
-        mOneLevelGategoryEdits.remove(position);
+        mTwoLevelCategoryEdits.remove(position);
         notifyItemRemoved(position);
-        if(position != mOneLevelGategoryEdits.size()){
+        if(position != mTwoLevelCategoryEdits.size()){
             notifyItemRangeChanged(position, getItemCount() - position);
         }
     }
 
     /**
      * 添加数据
-     * @param oneLevelGategoryEdit
+     * @param twoLevelCategoryEdit
      * @param position
      */
-    public void add(OneLevelCategoryEdit oneLevelGategoryEdit, int position) {
-        mOneLevelGategoryEdits.add(position, oneLevelGategoryEdit);
+    public void add(TwoLevelCategoryEdit twoLevelCategoryEdit, int position) {
+        mTwoLevelCategoryEdits.add(position, twoLevelCategoryEdit);
         notifyItemInserted(position);
-        if(position != mOneLevelGategoryEdits.size()){
+        if(position != mTwoLevelCategoryEdits.size()){
             notifyItemRangeChanged(position, getItemCount() - position);
         }
     }
@@ -88,22 +88,14 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_financila_one_level_operation, parent, false);
+        View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_financila_two_level_operation, parent, false);
         return new Holder(layout);
     }
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-        final OneLevelCategoryEdit data = mOneLevelGategoryEdits.get(position);
+        final TwoLevelCategoryEdit data = mTwoLevelCategoryEdits.get(position);
         if(viewHolder instanceof Holder) {
             final Holder holder = ((Holder) viewHolder);
-            //收入
-            if(data.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME){
-                holder.model.setText(mContext.getString(R.string.income));
-                holder.icon.setImageResource(R.drawable.ic_trending_up_blue_a200_18dp);
-            }else{
-                holder.model.setText(mContext.getString(R.string.spend));
-                holder.icon.setImageResource(R.drawable.ic_trending_down_pink_a200_18dp);
-            }
 
             if(data.getIcon() > 0){
                 holder.icon.setImageResource(data.getIcon());
@@ -116,7 +108,6 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }else{
                 holder.status.setText("禁用");
             }
-
             // Start a drag whenever the handle view it touched
             if(data.isEdit()){
                 holder.right.setImageResource(R.drawable.ic_list_white_18dp);
@@ -128,6 +119,13 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             mDragStartListener.onStartDrag(holder);
                         }
                         return true;
+                    }
+                });
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtil.success(mContext, "点击1：" + holder.name.getText().toString());
                     }
                 });
             }else{
@@ -142,40 +140,40 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mOnItemClickListener != null)
+                        if (mOnItemClickListener != null)
                             mOnItemClickListener.onItemClick(position);
                     }
                 });
                 holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        if(mOnItemLongClickListener != null)
+                        if (mOnItemLongClickListener != null)
                             mOnItemLongClickListener.onItemLongClick(position);
                         return true;
                     }
-                });
+                });;
             }
         }
     }
 
     @Override
     public int getItemCount() {
-        return mOneLevelGategoryEdits.size();
+        return mTwoLevelCategoryEdits.size();
     }
 
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        //ToastUtil.success(mContext, "onItemMove:fromPosition->"+fromPosition+",toPosition->"+toPosition);
-        Collections.swap(mOneLevelGategoryEdits, fromPosition, toPosition);
+        ToastUtil.success(mContext, "onItemMove:fromPosition->"+fromPosition+",toPosition->"+toPosition);
+        Collections.swap(mTwoLevelCategoryEdits, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
 
     @Override
     public void onItemDismiss(int position) {
-        //ToastUtil.success(mContext, "onItemDismiss:position->"+position);
-        mOneLevelGategoryEdits.remove(position);
+        ToastUtil.success(mContext, "onItemDismiss:position->"+position);
+        mTwoLevelCategoryEdits.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -189,17 +187,17 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView right; //右侧的点击图标
         public Holder(View itemView) {
             super(itemView);
-            icon = (ImageView)itemView.findViewById(R.id.financial_one_level_icon);
-            model = (TextView) itemView.findViewById(R.id.financial_one_level_model);
-            name = (TextView) itemView.findViewById(R.id.financial_one_level_name);
-            budget = (TextView) itemView.findViewById(R.id.financial_one_level_budget);
-            status = (TextView)itemView.findViewById(R.id.financial_one_level_status);
+            icon = (ImageView)itemView.findViewById(R.id.financial_two_level_icon);
+            model = (TextView) itemView.findViewById(R.id.financial_two_level_model);
+            name = (TextView) itemView.findViewById(R.id.financial_two_level_name);
+            budget = (TextView) itemView.findViewById(R.id.financial_two_level_budget);
+            status = (TextView)itemView.findViewById(R.id.financial_two_level_status);
             right = (ImageView)itemView.findViewById(R.id.financila_list_right);
         }
 
         @Override
         public void onItemSelected(int position) {
-            //ToastUtil.success(mContext, "select:"+position);
+            ToastUtil.success(mContext, "select:"+position);
             //right.setImageResource(R.drawable.ic_list_white_18dp);
             //itemView.setBackgroundColor(Color.LTGRAY);
         }
