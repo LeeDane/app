@@ -5,12 +5,18 @@ import android.os.AsyncTask;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
+import com.google.gson.JsonObject;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.DownloadBean;
 import com.leedane.cn.bean.HttpRequestBean;
@@ -26,7 +32,16 @@ import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.http.AppUploadAndDownloadUtil;
 import com.leedane.cn.util.http.HttpConnectionUtil;
 
+import org.jivesoftware.smack.util.Base64;
 import org.json.JSONObject;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * 具体任务的执行类
@@ -125,7 +140,7 @@ public class Task extends AsyncTask{
 
     @Override
     protected Object doInBackground(Object[] params) {
-        String resultStr;
+        //final String resultStr;
         Log.i(TAG, "任务类型:" +taskType);
         try {
 
@@ -138,7 +153,7 @@ public class Task extends AsyncTask{
                         return null;
                     }
                     try{
-                        resultStr = HttpConnectionUtil.sendGetRequest(mDownloadBean);
+                        mTaskResult = HttpConnectionUtil.sendGetRequest(mDownloadBean);
                     }catch (Exception e){
                         e.printStackTrace();
                         Log.i(TAG, "下载任务执行出现异常");
@@ -166,7 +181,7 @@ public class Task extends AsyncTask{
                 return null;
             }
 
-            String serverPath = "";
+            final String serverPath;
             String serverMethod = mRequestBean.getServerMethod();
 
             if(serverMethod.startsWith("/")){
@@ -190,20 +205,84 @@ public class Task extends AsyncTask{
 
             Log.i(TAG, "Task请求的路径:" +serverPath);
 
+            OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                    .connectTimeout(mRequestBean.getRequestTimeOut()  > 0 ? mRequestBean.getRequestTimeOut() : ConstantsUtil.DEFAULT_REQUEST_TIME_OUT, TimeUnit.MILLISECONDS)
+                    .readTimeout(mRequestBean.getResponseTimeOut()  > 0 ? mRequestBean.getResponseTimeOut() : ConstantsUtil.DEFAULT_RESPONSE_TIME_OUT, TimeUnit.MILLISECONDS)
+                    .build();
+
+            //由于okhttp是异步操作，在这里封装的时候不适合，加锁改成同步
+            final CountDownLatch latch = new CountDownLatch(1);
             //执行get请求
             if(mRequestBean.getRequestMethod().equalsIgnoreCase(ConstantsUtil.REQUEST_METHOD_GET)){
-                resultStr = HttpConnectionUtil.sendGetRequest(serverPath, mRequestBean.getRequestTimeOut(), mRequestBean.getResponseTimeOut());
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                            .url(serverPath)
+                            .build();
+                Call call = okHttpClient.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        mTaskResult = "{\"isSuccess\": false, \"message\":\"GET网络请求响应异常\"}";
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        mTaskResult = response.body().toString();
+                        latch.countDown();
+                        //mTaskResult = HttpConnectionUtil.sendGetRequest(serverPath, mRequestBean.getRequestTimeOut(), mRequestBean.getResponseTimeOut());
+                    }
+                });
                 //执行post请求
             } else {
-                resultStr = HttpConnectionUtil.sendPostRequest(serverPath, mRequestBean.getParams(), mRequestBean.getRequestTimeOut(), mRequestBean.getResponseTimeOut());
+                okhttp3.Request request = new okhttp3.Request.Builder()
+                        .url(serverPath)
+                        .post(MapToRequestBody(mRequestBean.getParams()))
+                        .build();
+                okHttpClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        mTaskResult = "{\"isSuccess\": false, \"message\":\"POST网络请求响应异常\"}";
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            try {
+                                InputStream is = response.body().byteStream();
+                                if (is != null) {
+                                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                                    //存储单行文本的数据
+                                    String line;
+                                    //保存请求返回的所有文本数据
+                                    StringBuffer buffer = new StringBuffer();
+                                    while ((line = reader.readLine()) != null) {
+                                        buffer.append(line);
+                                    }
+                                    //关闭相关的流
+                                    if (is != null) is.close();
+                                    if (reader != null) reader.close();
+                                    mTaskResult = buffer.toString();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        latch.countDown();
+                        //mTaskResult = response.body().toString();
+                        //mTaskResult = HttpConnectionUtil.sendPostRequest(serverPath, mRequestBean.getParams(), mRequestBean.getRequestTimeOut(), mRequestBean.getResponseTimeOut());
+                    }
+                });
+            }
+
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
             }
 
             switch (taskType){
                 case HOME_LOADBLOGS:   //加载博客的列表信息
-                    mTaskResult = BeanConvertUtil.strConvertToBlogBeans(resultStr);
-                    break;
-                default:
-                    mTaskResult = resultStr;
+                    mTaskResult = BeanConvertUtil.strConvertToBlogBeans(StringUtil.changeNotNull(mTaskResult));
                     break;
             }
 
@@ -218,6 +297,18 @@ public class Task extends AsyncTask{
             return null;
         }
         return null;
+    }
+
+    /**
+     * 将map集合转成RequestBody
+     * @param params
+     */
+    private RequestBody MapToRequestBody(Map<String, Object> params){
+        FormBody.Builder builder = new FormBody.Builder();
+        for(Map.Entry<String, Object> entry: params.entrySet()){
+            builder.add(entry.getKey(), String.valueOf(entry.getValue()));
+        }
+        return builder.build();
     }
 
     @Override
