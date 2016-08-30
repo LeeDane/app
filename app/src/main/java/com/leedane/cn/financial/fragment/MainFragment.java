@@ -2,6 +2,8 @@ package com.leedane.cn.financial.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,9 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.app.R;
+import com.leedane.cn.bean.GalleryBean;
 import com.leedane.cn.customview.RecycleViewDivider;
+import com.leedane.cn.financial.activity.CloudActivity;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.activity.OneLevelOperationActivity;
+import com.leedane.cn.financial.activity.SettingActivity;
 import com.leedane.cn.financial.adapter.FinancialRecyclerViewAdapter;
 import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.bean.FinancialList;
@@ -25,6 +30,7 @@ import com.leedane.cn.financial.handler.FinancialHandler;
 import com.leedane.cn.financial.util.CalculateUtil;
 import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONObject;
@@ -38,6 +44,8 @@ import java.util.List;
  */
 public class MainFragment extends FinancialBaseFragment{
 
+    public static final int SYNCHRONIZED_CLOUD_CODE = 25;
+    private static final int INIT_DATA_SUCCESS = 19;
     public static final String TAG = "MainFragment";
     private RecyclerView mRecyclerView;
     private FinancialRecyclerViewAdapter mAdapter;
@@ -50,6 +58,7 @@ public class MainFragment extends FinancialBaseFragment{
 
     private LinearLayoutManager mLayoutManager;
 
+    private TextView mClould; //同步云
 
 
     private FinancialList mMonthFinancialList; //本月的数据列表
@@ -125,9 +134,6 @@ public class MainFragment extends FinancialBaseFragment{
         if(mContext == null)
             mContext = getActivity();
 
-        //后台计算记账数据
-        FinancialHandler.calculateFinancialData(mContext);
-
         mHeader = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_header, null);
 
         //必须，在把headview添加到recycleview中时告诉recycleview期望的布局方式，
@@ -138,6 +144,8 @@ public class MainFragment extends FinancialBaseFragment{
         mAddFinancial = (TextView)mHeader.findViewById(R.id.add_financial);
         mAddFinancial.setOnClickListener(MainFragment.this);
 
+        mClould = (TextView)mHeader.findViewById(R.id.financial_refresh);
+        mClould.setOnClickListener(this);
 
         this.mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.id_recyclerview);
         mLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
@@ -147,7 +155,6 @@ public class MainFragment extends FinancialBaseFragment{
         mAdapter = new FinancialRecyclerViewAdapter();
         mRecyclerView.setAdapter(mAdapter);
         generateData();
-        mAdapter.addDatas(mFinancialBeans);
         setHeader(mRecyclerView);
         mAdapter.setOnItemClickListener(new FinancialRecyclerViewAdapter.OnItemClickListener() {
             @Override
@@ -168,6 +175,21 @@ public class MainFragment extends FinancialBaseFragment{
     }
 
     /**
+     * 初始化数据的handler
+     */
+    Handler firstHandler = new Handler(){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case INIT_DATA_SUCCESS:
+                    //更新数据
+                    mAdapter.addDatas(mFinancialBeans);
+                    break;
+            }
+
+        }
+    };
+
+    /**
      * 刷新headerview的数据
      */
     private void refreshHeaderData(){
@@ -178,11 +200,17 @@ public class MainFragment extends FinancialBaseFragment{
         TextView spend = (TextView)mHeader.findViewById(R.id.financial_header_spend);
         income.setText(String.valueOf(FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME)));
         spend.setText(String.valueOf(FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND)));
-        ImageView editOneLevel = (ImageView)mHeader.findViewById(R.id.financial_header_edit_one_level);
-        editOneLevel.setOnClickListener(new View.OnClickListener() {
+        mHeader.findViewById(R.id.financial_header_edit_one_level).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(mContext, OneLevelOperationActivity.class);
+                startActivity(it);
+            }
+        });
+        mHeader.findViewById(R.id.financial_header_setting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(mContext, SettingActivity.class);
                 startActivity(it);
             }
         });
@@ -218,7 +246,20 @@ public class MainFragment extends FinancialBaseFragment{
      * @return
      */
     private void generateData(){
-        mFinancialBeans = financialDataBase.query(" where status = 1 order by datetime(addition_time) desc");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //后台计算记账数据
+                FinancialHandler.calculateFinancialData(mContext);
+                mFinancialBeans = financialDataBase.query(" where status = "+ ConstantsUtil.STATUS_NORMAL+" order by datetime(addition_time) desc");
+                Message message = new Message();
+                message.what = INIT_DATA_SUCCESS;
+                //5秒后进行
+                firstHandler.sendMessageDelayed(message, 55);
+
+            }
+        }).start();
+
     }
     @Override
     public void onClick(View v) {
@@ -230,7 +271,11 @@ public class MainFragment extends FinancialBaseFragment{
             case R.id.add_financial:
                 Intent intent = new Intent(mContext, IncomeOrSpendActivity.class);
                 startActivity(intent);
-            break;
+                break;
+            case R.id.financial_refresh:
+                Intent it = new Intent(mContext, CloudActivity.class);
+                startActivityForResult(it, SYNCHRONIZED_CLOUD_CODE);
+                break;
         }
     }
 

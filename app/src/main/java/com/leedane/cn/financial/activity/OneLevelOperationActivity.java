@@ -205,7 +205,7 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
                     builder.setCancelable(true);
                     builder.setIcon(R.drawable.menu_feedback);
                     builder.setTitle("重要提示");
-                    builder.setMessage("要删除一级分类《" + value +"》吗？这是不可逆行为，删掉将不能恢复！");
+                    builder.setMessage("要删除一级分类《" + value +"》吗？这是不可逆行为，删掉将不能恢复！同时也会将其下面的二级分类进行删除。");
                     builder.setPositiveButton("删除",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {

@@ -3,6 +3,7 @@ package com.leedane.cn.financial.handler;
 import android.content.Context;
 import android.content.Intent;
 
+import com.google.gson.JsonObject;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
@@ -13,6 +14,8 @@ import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +71,22 @@ public class FinancialHandler {
         requestBean.setServerMethod("leedane/financial/delete.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_FINANCIAL, listener, requestBean);
+    }
+
+    /**
+     * 批量同步记账记录
+     * @param listener
+     * @param financialBeans
+     */
+    public static void synchronous(TaskListener listener, List<Map<String, Object>> financialBeans){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datas", financialBeans);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/financial/synchronous.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.SYNCHRONOUS_FINANCIAL, listener, requestBean);
     }
 
     /**

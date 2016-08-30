@@ -129,6 +129,20 @@ public class StringUtil {
     }
 
     /**
+     * 将对象转化成float类型
+     * @param obj  float的对象
+     * @return
+     */
+    public static float changeObjectToFloat(Object obj) {
+        try {
+            return Float.parseFloat(String.valueOf(obj));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
      * 将对象转化成long类型
      * @param obj  长整形的对象
      * @return

@@ -315,7 +315,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
         editFinancialBean.setTwoLevel(twoLevel);
         editFinancialBean.setStatus(ConstantsUtil.STATUS_NORMAL);
         editFinancialBean.setMoney(Float.valueOf(money));
-        editFinancialBean.setAdditionTime(date + " " + time);
+        editFinancialBean.setAdditionTime(date.trim() + " " + time.trim());
         try{
             if(isEdit()){
                 financialDataBase.update(editFinancialBean);
@@ -348,7 +348,8 @@ public class IncomeOrSpendActivity extends BaseActivity {
             builder.setPositiveButton("删除",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            financialDataBase.delete(editFinancialBean.getLocalId());
+                            editFinancialBean.setStatus(ConstantsUtil.STATUS_DELETE);
+                            financialDataBase.update(editFinancialBean);
                             ToastUtil.success(IncomeOrSpendActivity.this, "记录删除成功!");
                             finish();
                         }
@@ -405,7 +406,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
         editFinancialBean.setTwoLevel(twoLevel);
         editFinancialBean.setStatus(ConstantsUtil.STATUS_DRAFT);
         editFinancialBean.setMoney(Float.valueOf(money));
-        editFinancialBean.setAdditionTime(date + " " + time);
+        editFinancialBean.setAdditionTime(date.trim() + " " + time.trim());
         try{
             financialDataBase.save(editFinancialBean);
 
@@ -413,6 +414,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
             BeanUtil.convertBeanToMap(financialBean, data);
             FinancialHandler.save(IncomeOrSpendActivity.this, data);*/
             ToastUtil.success(IncomeOrSpendActivity.this, "草稿数据已成功添加到本地!" );
+            finish();
         }catch (Exception e){
             e.printStackTrace();
             ToastUtil.failure(IncomeOrSpendActivity.this, "保存失败!" + e.toString());

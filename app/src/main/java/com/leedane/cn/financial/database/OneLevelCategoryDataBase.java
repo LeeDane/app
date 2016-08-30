@@ -252,6 +252,12 @@ public class OneLevelCategoryDataBase {
         String sql = ("delete from " + ONE_LEVEL_CATEGORY_TABLE_NAME + " where id=?");
         sqlite.execSQL(sql, new Integer[]{id});
         sqlite.close();
+
+        //同时删除二级分类
+        SQLiteDatabase sqlite1 = dbHelper.getWritableDatabase();
+        String sql1 = ("delete from " + TwoLevelCategoryDataBase.TWO_LEVEL_CATEGORY_TABLE_NAME + " where one_level_id=?");
+        sqlite1.execSQL(sql1, new Integer[]{id});
+        sqlite1.close();
     }
 
     /**

@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="@dimen/default_100dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="center"
             android:layout_marginRight="@dimen/default_30dp"
             android:text="分类名称"/>
 
@@ -33,9 +33,9 @@
         <TextView
             android:layout_width="@dimen/default_100dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="center"
             android:layout_marginRight="@dimen/default_30dp"
-            android:text="@string/status"/>
+            android:text="是否启用"/>
         <RadioGroup
             android:id="@+id/two_level_edit_status_group"
             android:layout_width="0dp"
@@ -64,9 +64,9 @@
         <TextView
             android:layout_width="@dimen/default_100dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="center"
             android:layout_marginRight="@dimen/default_30dp"
-            android:text="预算"/>
+            android:text="每月预算"/>
         <EditText
             android:id="@+id/two_level_edit_budget"
             android:layout_width="0dp"
@@ -85,9 +85,9 @@
         <TextView
             android:layout_width="@dimen/default_100dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="center"
             android:layout_marginRight="@dimen/default_30dp"
-            android:text="所属一级分类"/>
+            android:text="一级分类"/>
         <Spinner
             android:id="@+id/two_level_edit_one_level"
             android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
         <TextView
             android:layout_width="@dimen/default_100dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="center"
             android:layout_marginRight="@dimen/default_30dp"
             android:text="排序编号"/>
         <EditText
@@ -127,7 +127,7 @@
         <TextView
             android:layout_width="@dimen/default_100dp"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="center"
             android:layout_marginRight="@dimen/default_30dp"
             android:text="设为默认"/>
         <RadioGroup

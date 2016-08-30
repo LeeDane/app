@@ -42,6 +42,33 @@ public class JsonUtil {
     }
 
     /**
+     * 从返回信息在获取信息
+     * @param result
+     * @return
+     */
+    public static String getTipMessage(Object result){
+        String tip = null;
+        try{
+            JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
+            if(jsonObject.has("success")){
+                if(jsonObject.getBoolean("success")){
+                    tip = jsonObject.getString("message");
+                }else{
+                    tip = EnumUtil.getResponseValue(jsonObject.getInt("responseCode"));
+                    if(StringUtil.isNull(tip))
+                        tip = jsonObject.getString("message");
+                }
+            }else{
+                tip = jsonObject.toString();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            tip = null;
+        }
+        return StringUtil.isNull(tip) ? "服务器返回异常" : tip;
+    }
+
+    /**
      * 从异常在获取信息
      * @param result
      * @return
@@ -55,7 +82,4 @@ public class JsonUtil {
         }
         return StringUtil.isNull(error) ? "网络异常" : error;
     }
-
-
-
 }

@@ -317,7 +317,7 @@ public class TwoLevelEditActivity extends BaseActivity {
                         it.putExtra("type", "save");
                     }
                     //缓存改变数据
-                    BaseApplication.twoLevelCategories = twoLevelCategoryDataBase.query(" order by order_ ");
+                    refreshTwoLevelCache();
 
                     it.putExtra("twoLevelCategory", mTwoLevelCategory);
                     it.putExtra("clickPosition", clickPosition);//方便回传定位
@@ -348,6 +348,7 @@ public class TwoLevelEditActivity extends BaseActivity {
                                         Intent it = new Intent(TwoLevelEditActivity.this, TwoLevelOperationActivity.class);
                                         it.putExtra("type", "delete");
                                         it.putExtra("clickPosition", clickPosition);//方便回传定位
+                                        refreshTwoLevelCache();
                                         setResult(TwoLevelOperationActivity.TWO_LEVEL_CATEGORY_EDIT_CODE, it);
                                         finish();
                                         ToastUtil.success(TwoLevelEditActivity.this, "删除一级分类《" + mTwoLevelCategory.getValue() + "》成功。");
@@ -372,14 +373,48 @@ public class TwoLevelEditActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 重新获取二级分类的缓存
+     */
+    private void refreshTwoLevelCache(){
+        //缓存改变数据
+        BaseApplication.twoLevelCategories = twoLevelCategoryDataBase.query(" order by order_ ");
+    }
+
+    /**
+     * 判断分类名称是否合法
+     * @param value
+     * @return
+     */
+    private boolean isExistsValue(String value){
+        for(TwoLevelCategory twoLevelCategory: BaseApplication.twoLevelCategories){
+            if(twoLevelCategory.getOneLevelId() == oneLeveId && value.equals(twoLevelCategory.getValue())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     //构建二级分类对象
     private void buildTwoLevelCategory(){
+
+        String name = mName.getText().toString();
+        if(StringUtil.isNull(name)){
+            ToastUtil.failure(this, "请输入分类名称");
+            return;
+        }
+
+        if(!edit)
+            if(isExistsValue(name)){
+                ToastUtil.failure(this, name +"已经被占用");
+                return;
+            }
 
         if(mTwoLevelCategory == null)
             mTwoLevelCategory = new TwoLevelCategory();
 
-        mTwoLevelCategory.setValue(mName.getText().toString());
-        mTwoLevelCategory.setBudget(Float.parseFloat(mBudget.getText().toString()));
+        mTwoLevelCategory.setValue(name);
+        mTwoLevelCategory.setBudget(StringUtil.changeObjectToFloat(mBudget.getText().toString()));
         mTwoLevelCategory.setOrder(StringUtil.changeObjectToInt(mSort.getText().toString()));
 
         mTwoLevelCategory.setStatus(status);

@@ -10,6 +10,7 @@ import com.leedane.cn.financial.bean.FinancialList;
 import com.leedane.cn.financial.database.FinancialDataBase;
 import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
@@ -69,7 +70,7 @@ public class CalculateFinancialService extends Service {
         String startTime = DateUtil.DateToString(DateUtil.getYesTodayStart());
         String endTime = DateUtil.DateToString(DateUtil.getYesTodayEnd());
         FinancialList financialList = new FinancialList();
-        financialList.setFinancialBeans(financialDataBase.query(" where datetime(addition_time) between datetime('"+startTime+"') and datetime('"+ endTime+"')  and status = 1 order by datetime(addition_time) desc"));
+        financialList.setFinancialBeans(financialDataBase.query(" where status="+ConstantsUtil.STATUS_NORMAL+" and datetime(addition_time) between datetime('"+startTime+"') and datetime('"+ endTime+"') order by datetime(addition_time) desc"));
         financialList.setModel(EnumUtil.FinancialModel.昨日.value);
         //使用静态的方式注册广播，可以使用显示意图进行发送广播
         Intent broadcast = new Intent("com.leedane.cn.broadcast.CalculateFinancialReceiver");
@@ -86,7 +87,7 @@ public class CalculateFinancialService extends Service {
         String startTime = DateUtil.DateToString(DateUtil.getThisWeekStart());
         String endTime = DateUtil.DateToString(new Date());
         FinancialList financialList = new FinancialList();
-        financialList.setFinancialBeans(financialDataBase.query(" where datetime(addition_time) between datetime('"+startTime+"') and datetime('"+ endTime+"')  and status = 1 order by datetime(addition_time) desc"));
+        financialList.setFinancialBeans(financialDataBase.query(" where status="+ConstantsUtil.STATUS_NORMAL+" and datetime(addition_time) between datetime('"+startTime+"') and datetime('"+ endTime+"') order by datetime(addition_time) desc"));
         financialList.setModel(EnumUtil.FinancialModel.本周.value);
         //使用静态的方式注册广播，可以使用显示意图进行发送广播
         Intent broadcast = new Intent("com.leedane.cn.broadcast.CalculateFinancialReceiver");
@@ -102,7 +103,7 @@ public class CalculateFinancialService extends Service {
         String startTime = DateUtil.DateToString(DateUtil.getThisMonthStart());
         String endTime = DateUtil.DateToString(new Date());
         FinancialList financialList = new FinancialList();
-        financialList.setFinancialBeans(financialDataBase.query(" where datetime(addition_time) between datetime('" + startTime + "') and datetime('" + endTime + "') and status = 1 order by datetime(addition_time) desc"));
+        financialList.setFinancialBeans(financialDataBase.query(" where status="+ ConstantsUtil.STATUS_NORMAL+" and datetime(addition_time) between datetime('" + startTime + "') and datetime('" + endTime + "') order by datetime(addition_time) desc"));
         financialList.setModel(EnumUtil.FinancialModel.本月.value);
         //使用静态的方式注册广播，可以使用显示意图进行发送广播
         Intent broadcast = new Intent("com.leedane.cn.broadcast.CalculateFinancialReceiver");
@@ -119,7 +120,7 @@ public class CalculateFinancialService extends Service {
         String startTime = DateUtil.DateToString(DateUtil.getThisYearStart());
         String endTime = DateUtil.DateToString(new Date());
         FinancialList financialList = new FinancialList();
-        financialList.setFinancialBeans(financialDataBase.query(" where datetime(addition_time) between datetime('" + startTime + "') and datetime('" + endTime + "')  and status = 1 order by datetime(addition_time) desc"));
+        financialList.setFinancialBeans(financialDataBase.query(" where status="+ConstantsUtil.STATUS_NORMAL+" and datetime(addition_time) between datetime('" + startTime + "') and datetime('" + endTime + "') order by datetime(addition_time) desc"));
         financialList.setModel(EnumUtil.FinancialModel.本年.value);
         //使用静态的方式注册广播，可以使用显示意图进行发送广播
         Intent broadcast = new Intent("com.leedane.cn.broadcast.CalculateFinancialReceiver");

@@ -379,4 +379,9 @@
     <string name="two_level_opetation">二级分类处理</string>
     <string name="select_icon">请选择图标</string>
     <string name="view_two_level">查看二级分类</string>
+    <string name="cloud">云端同步</string>
+    <string name="financial_setting">记账设置</string>
+    <string name="auto_refresh">自动同步</string>
+    <string name="receive_notification">接收推送</string>
+    <string name="category_manager">分类管理</string>
 </resources>

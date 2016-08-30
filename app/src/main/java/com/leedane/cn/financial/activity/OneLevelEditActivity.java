@@ -18,6 +18,7 @@ import com.leedane.cn.activity.LoginActivity;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.financial.bean.OneLevelCategory;
+import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
@@ -147,7 +148,7 @@ public class OneLevelEditActivity extends BaseActivity {
             mIcon.setImageResource(mOneLevelCategory.getIcon());
 
         mDelete.setText(getStringResource(R.string.delete));
-        setTitleViewText(mOneLevelCategory.getValue() +"编辑");
+        setTitleViewText(mOneLevelCategory.getValue() + "编辑");
     }
 
     /**
@@ -280,9 +281,8 @@ public class OneLevelEditActivity extends BaseActivity {
                         it.putExtra("type", "save");
                         mOneLevelCategory = oneLevelCategories.get(0);
                     }
-                    //缓存改变数据
-                    BaseApplication.oneLevelCategories = oneLevelCategoryDataBase.query(" order by order_ ");
-
+                    ///缓存改变数据
+                    refreshOneLevelCache();
                     it.putExtra("oneLevelCategory", mOneLevelCategory);
                     it.putExtra("clickPosition", clickPosition);//方便回传定位
                     setResult(OneLevelOperationActivity.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
@@ -303,7 +303,7 @@ public class OneLevelEditActivity extends BaseActivity {
                     builder.setCancelable(true);
                     builder.setIcon(R.drawable.menu_feedback);
                     builder.setTitle("重要提示");
-                    builder.setMessage("要删除一级分类《" + mOneLevelCategory.getValue() +"》吗？这是不可逆行为，删掉将不能恢复！");
+                    builder.setMessage("要删除一级分类《" + mOneLevelCategory.getValue() +"》吗？这是不可逆行为，删掉将不能恢复！同时也会将其下面的二级分类进行删除。");
                     builder.setPositiveButton("删除",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -312,6 +312,8 @@ public class OneLevelEditActivity extends BaseActivity {
                                         Intent it = new Intent(OneLevelEditActivity.this, OneLevelOperationActivity.class);
                                         it.putExtra("type", "delete");
                                         it.putExtra("clickPosition", clickPosition);//方便回传定位
+                                        //缓存改变数据
+                                        refreshOneLevelCache();
                                         setResult(OneLevelOperationActivity.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
                                         finish();
                                         ToastUtil.success(OneLevelEditActivity.this, "删除一级分类《" + mOneLevelCategory.getValue() + "》成功。");
@@ -336,14 +338,48 @@ public class OneLevelEditActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 重新获取一级分类的缓存
+     */
+    private void refreshOneLevelCache(){
+        //缓存改变数据
+        BaseApplication.oneLevelCategories = oneLevelCategoryDataBase.query(" order by order_ ");
+    }
+
+    /**
+     * 判断分类名称是否合法
+     * @param value
+     * @return
+     */
+    private boolean isExistsValue(String value){
+        for(OneLevelCategory oneLevelCategory: BaseApplication.oneLevelCategories){
+            if(value.equals(oneLevelCategory.getValue())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     //构建一级分类对象
     private void buildOneLevelCategory(){
+
+        String name = mName.getText().toString();
+        if(StringUtil.isNull(name)){
+            ToastUtil.failure(this, "请输入分类名称");
+            return;
+        }
+
+        if(!edit)
+            if(isExistsValue(name)){
+                ToastUtil.failure(this, name +"已经被占用");
+                return;
+            }
 
         if(mOneLevelCategory == null)
             mOneLevelCategory = new OneLevelCategory();
 
-        mOneLevelCategory.setValue(mName.getText().toString());
-        mOneLevelCategory.setBudget(Float.parseFloat(mBudget.getText().toString()));
+        mOneLevelCategory.setValue(name);
+        mOneLevelCategory.setBudget(StringUtil.changeObjectToFloat(mBudget.getText().toString()));
         mOneLevelCategory.setOrder(StringUtil.changeObjectToInt(mSort.getText().toString()));
 
         mOneLevelCategory.setStatus(status);

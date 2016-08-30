@@ -92,4 +92,5 @@ public enum TaskType {
     QINIU_TOKEN, //七牛云存储token
     VERIFY_CHAT_BG, //校验聊天背景
     SEND_EMAIL, //发送电子邮件
+    SYNCHRONOUS_FINANCIAL, //同步记账记录
 }

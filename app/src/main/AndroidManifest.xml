@@ -354,6 +354,20 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity
+            android:name="com.leedane.cn.financial.activity.CloudActivity"
+            android:label="@string/cloud"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name="com.leedane.cn.financial.activity.SettingActivity"
+            android:label="@string/financial_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <!--  Jpush  -->
         <!-- Required SDK核心功能-->
         <activity

@@ -12,20 +12,16 @@
         android:gravity="right">
         <ImageView
             android:id="@+id/financial_header_edit_one_level"
-            android:layout_width="@dimen/default_30dp"
-            android:layout_height="@dimen/default_30dp"
+            android:layout_width="@dimen/default_20dp"
+            android:layout_height="@dimen/default_20dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_category_edit"/>
         <ImageView
-            android:layout_width="@dimen/default_30dp"
-            android:layout_height="@dimen/default_30dp"
+            android:id="@+id/financial_header_setting"
+            android:layout_width="@dimen/default_20dp"
+            android:layout_height="@dimen/default_20dp"
             android:scaleType="fitXY"
-            android:src="@drawable/menu_setting"/>
-        <ImageView
-            android:layout_width="@dimen/default_30dp"
-            android:layout_height="@dimen/default_30dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/menu_setting"/>
+            android:src="@drawable/ic_settings_purple_400_18dp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

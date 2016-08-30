@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.leedane.cn.financial.Helper.ItemTouchHelperAdapter;
 import com.leedane.cn.financial.Helper.ItemTouchHelperViewHolder;
 import com.leedane.cn.financial.Helper.OnStartDragListener;
 import com.leedane.cn.financial.bean.TwoLevelCategoryEdit;
+import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -111,12 +113,18 @@ public class TwoLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.icon.setImageResource(data.getIcon());
             }
 
-            holder.name.setText(StringUtil.changeNotNull(data.getValue()));
+            holder.name.setText(Html.fromHtml(data.getValue() + (data.isDefault() ? "   <font color='red'>默认</font>" : "")));
             holder.budget.setText(String.valueOf(data.getBudget()));
-            if(data.getStatus() == 1){
-                holder.status.setText("正常");
-            }else{
-                holder.status.setText("禁用");
+            if(data.getStatus() == ConstantsUtil.STATUS_NORMAL){
+                holder.status.setText(mContext.getString(R.string.normal));
+            }else if(data.getStatus() == ConstantsUtil.STATUS_DRAFT){
+                holder.status.setText(mContext.getString(R.string.draft));
+            }else if(data.getStatus() == ConstantsUtil.STATUS_DELETE){
+                holder.status.setText(mContext.getString(R.string.delete));
+            }else if(data.getStatus() == ConstantsUtil.STATUS_DISABLE){
+                holder.status.setText(mContext.getString(R.string.disable));
+            }else {
+                holder.status.setText("未知");
             }
             // Start a drag whenever the handle view it touched
             if(data.isEdit()){
