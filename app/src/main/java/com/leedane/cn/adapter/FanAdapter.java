@@ -5,15 +5,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.FanBean;
-import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
@@ -32,34 +31,16 @@ import java.util.List;
  * 粉丝列表数据展示的adapter对象
  * Created by LeeDane on 2016/3/11.
  */
-public class FanAdapter extends BaseAdapter implements TaskListener{
-    private Context mContext;
-    private List<FanBean> mFanBeans;
-
+public class FanAdapter extends BaseListAdapter<FanBean> implements TaskListener{
     int userId = 0;
     public FanAdapter(Context context, List<FanBean> fanBeans) {
-        this.mContext = context;
-        this.mFanBeans = fanBeans;
+        super(context, fanBeans);
         userId = BaseApplication.getLoginUserId();
-    }
-    @Override
-    public int getCount() {
-        return mFanBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mFanBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
     }
 
     @Override
     public View getView(int position, View view, ViewGroup group) {
-        final FanBean fanBean = mFanBeans.get(position);
+        final FanBean fanBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_fan_listview, null);
@@ -117,14 +98,9 @@ public class FanAdapter extends BaseAdapter implements TaskListener{
                 }
             });
         }
-
+        //设置动画效果
+        setAnimation(view, position);
         return view;
-    }
-
-    public void refreshData(List<FanBean> fanBeans){
-        this.mFanBeans.clear();
-        this.mFanBeans.addAll(fanBeans);
-        this.notifyDataSetChanged();
     }
 
     @Override

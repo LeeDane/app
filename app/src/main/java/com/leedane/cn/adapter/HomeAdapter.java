@@ -10,6 +10,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.leedane.cn.activity.MainActivity;
 import com.leedane.cn.activity.PersonalActivity;
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.BlogBean;
@@ -37,67 +40,42 @@ import java.util.List;
  * 首页显示文章列表的适配器类
  * Created by LeeDane on 2015/10/6.
  */
-public class HomeAdapter extends BaseAdapter{
+public class HomeAdapter extends BaseListAdapter<BlogBean>{
 
     public static final String TAG = "HomeAdapter";
     private NetworkImageLoader mNetworkImageLoader = null;
     private ListView mListView ;
 
-    public List<BlogBean> mList;  //所获取的博客的结果集列表
-    private Context mContext; //上下文对象
     private SpannableString mSpanTitle;
+    private int lastPosition = -1;
 
-    public  HomeAdapter(){
-        super();
-    }
 
     public  HomeAdapter(List<BlogBean> list, Context context, ListView listView){
-        super();
-        this.mList = list;
-        this.mContext = context;
+        super(context, list);
         this.mListView = listView;
         mNetworkImageLoader = new NetworkImageLoader();
     }
 
     @Override
-    public int getCount() {
-        return mList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void refreshData(List<BlogBean> blogs){
-        this.mList.clear();
-        this.mList.addAll(blogs);
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         MyHolder myHolder;
-        if(convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_home_listview, null);
+        if(view == null){
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_home_listview, null);
             myHolder = new MyHolder();
-            myHolder.setmTitle((TextView) convertView.findViewById(R.id.home_item_title));
-            myHolder.setmImg((ImageView) convertView.findViewById(R.id.home_item_img));
-            myHolder.setmAccount((TextView) convertView.findViewById(R.id.home_item_account));
-            myHolder.setmTime((TextView) convertView.findViewById(R.id.home_item_time));
-            myHolder.setmFrom((TextView) convertView.findViewById(R.id.home_item_from));
-            myHolder.setmDigest((TextView) convertView.findViewById(R.id.home_item_digest));
-            myHolder.setmTags((LinearLayout)convertView.findViewById(R.id.home_item_tags));
-            convertView.setTag(myHolder);
+            myHolder.setmTitle((TextView) view.findViewById(R.id.home_item_title));
+            myHolder.setmImg((ImageView) view.findViewById(R.id.home_item_img));
+            myHolder.setmAccount((TextView) view.findViewById(R.id.home_item_account));
+            myHolder.setmTime((TextView) view.findViewById(R.id.home_item_time));
+            myHolder.setmFrom((TextView) view.findViewById(R.id.home_item_from));
+            myHolder.setmDigest((TextView) view.findViewById(R.id.home_item_digest));
+            myHolder.setmTags((LinearLayout)view.findViewById(R.id.home_item_tags));
+            view.setTag(myHolder);
         }else{
-            myHolder = (MyHolder)convertView.getTag();
+            myHolder = (MyHolder)view.getTag();
         }
-        final BlogBean blogBean = mList.get(position);
+
+        //setAnimation(convertView, position);
+        final BlogBean blogBean = mDatas.get(position);
         Log.i(TAG, "执行了getView()方法");
         String title = blogBean.getTitle();
        //mSpanTitle = new SpannableString(title);
@@ -185,7 +163,7 @@ public class HomeAdapter extends BaseAdapter{
                 myHolder.getmTags().addView(buildTagTextView(tagArray[i]), i);
             }
         }
-        return convertView;
+        return view;
     }
 
     private TextView buildTagTextView(String tag){

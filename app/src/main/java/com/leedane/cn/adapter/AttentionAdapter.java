@@ -4,17 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.AttentionBean;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
-import com.leedane.cn.volley.ImageCacheManager;
 
 import java.util.List;
 
@@ -22,33 +20,14 @@ import java.util.List;
  * 关注列表数据展示的adapter对象
  * Created by LeeDane on 2016/4/6.
  */
-public class AttentionAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<AttentionBean> mAttentionBeans;
-
+public class AttentionAdapter extends BaseListAdapter<AttentionBean>{
     public AttentionAdapter(Context context, List<AttentionBean> attentionBeans) {
-        this.mContext = context;
-        this.mAttentionBeans = attentionBeans;
-    }
-
-    @Override
-    public int getCount() {
-        return mAttentionBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mAttentionBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        super(context, attentionBeans);
     }
 
     @Override
     public View getView(int position, View view, ViewGroup group) {
-        AttentionBean attentionBean = mAttentionBeans.get(position);
+        AttentionBean attentionBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_attention_listview, null);
@@ -72,14 +51,11 @@ public class AttentionAdapter extends BaseAdapter{
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }
+        //设置动画效果
+        setAnimation(view, position);
         return view;
     }
 
-    public void refreshData(List<AttentionBean> attentionBeans){
-        this.mAttentionBeans.clear();
-        this.mAttentionBeans.addAll(attentionBeans);
-        this.notifyDataSetChanged();
-    }
 
     private class ViewHolder{
         /*private ImageView mUserPic;

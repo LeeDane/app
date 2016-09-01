@@ -5,9 +5,9 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.util.StringUtil;
 
@@ -17,13 +17,9 @@ import java.util.List;
  * 简单的List<String>数据的适配器
  * Created by LeeDane on 2016/1/12.
  */
-public class SimpleListAdapter extends BaseAdapter{
-
-    private List<String> mDatas;
-    private Context mContext;
+public class SimpleListAdapter extends BaseListAdapter<String>{
     public SimpleListAdapter(Context context, List<String> datas){
-        mDatas = datas;
-        mContext = context;
+        super(context, datas);
     }
 
     @Override

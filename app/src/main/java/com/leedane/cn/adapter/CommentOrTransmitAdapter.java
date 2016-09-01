@@ -4,14 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CommentOrTransmitBean;
-import com.leedane.cn.emoji.EmojiUtil;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
@@ -25,40 +24,21 @@ import java.util.List;
  * 评论和转发列表数据展示的adapter对象
  * Created by LeeDane on 2015/11/14.
  */
-public class CommentOrTransmitAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<CommentOrTransmitBean> mCommentOrTransmitBeans;
+public class CommentOrTransmitAdapter extends BaseListAdapter<CommentOrTransmitBean>{
     private boolean showUserInfo;
 
     public CommentOrTransmitAdapter(Context context, List<CommentOrTransmitBean> commentOrTransmitBeans) {
-        this.mContext = context;
-        this.mCommentOrTransmitBeans = commentOrTransmitBeans;
+        super(context, commentOrTransmitBeans);
     }
 
     public CommentOrTransmitAdapter(Context context, List<CommentOrTransmitBean> commentOrTransmitBeans, boolean showUserInfo) {
-        this.mContext = context;
-        this.mCommentOrTransmitBeans = commentOrTransmitBeans;
+        super(context, commentOrTransmitBeans);
         this.showUserInfo = showUserInfo;
     }
 
     @Override
-    public int getCount() {
-        return mCommentOrTransmitBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mCommentOrTransmitBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public View getView(int position, View view, ViewGroup group) {
-        final CommentOrTransmitBean commentOrTransmitBean = mCommentOrTransmitBeans.get(position);
+        final CommentOrTransmitBean commentOrTransmitBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_comment_listview, null);
@@ -102,13 +82,9 @@ public class CommentOrTransmitAdapter extends BaseAdapter{
             else
                 viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
         }
+        //设置动画效果
+        setAnimation(view, position);
         return view;
-    }
-
-    public void refreshData(List<CommentOrTransmitBean> commentOrTransmitBeans){
-        this.mCommentOrTransmitBeans.clear();
-        this.mCommentOrTransmitBeans.addAll(commentOrTransmitBeans);
-        this.notifyDataSetChanged();
     }
 
     private class ViewHolder{

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ScoreBean;
 import com.leedane.cn.util.DateUtil;
@@ -18,33 +18,15 @@ import java.util.List;
  * 积分历史列表数据展示的adapter对象
  * Created by LeeDane on 2016/5/5.
  */
-public class ScoreAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<ScoreBean> mScoreBeans;
+public class ScoreAdapter extends BaseListAdapter<ScoreBean>{
 
     public ScoreAdapter(Context context, List<ScoreBean> scoreBeans) {
-        this.mContext = context;
-        this.mScoreBeans = scoreBeans;
-    }
-
-    @Override
-    public int getCount() {
-        return mScoreBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mScoreBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        super(context, scoreBeans);
     }
 
     @Override
     public View getView(int position, View view, ViewGroup group) {
-        ScoreBean scoreBean = mScoreBeans.get(position);
+        ScoreBean scoreBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_score_listview, null);
@@ -62,6 +44,9 @@ public class ScoreAdapter extends BaseAdapter{
         viewHolder.getmDesc().setText("描述:" +scoreBean.getDesc());
         viewHolder.getmNumber().setText("当/总:" +scoreBean.getScore() +"/" +scoreBean.getTotalScore());
         viewHolder.getmStatus().setText("状态:" +getStatusText(scoreBean.getStatus()));
+
+        //设置动画效果
+        setAnimation(view, position);
         return view;
     }
 
@@ -85,12 +70,6 @@ public class ScoreAdapter extends BaseAdapter{
                 return "审核不通过";
         }
         return "未知异常";
-    }
-
-    public void refreshData(List<ScoreBean> scoreBeans){
-        this.mScoreBeans.clear();
-        this.mScoreBeans.addAll(scoreBeans);
-        this.notifyDataSetChanged();
     }
 
     private class ViewHolder{

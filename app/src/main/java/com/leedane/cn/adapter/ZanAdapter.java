@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ZanBean;
 import com.leedane.cn.util.AppUtil;
@@ -20,33 +20,14 @@ import java.util.List;
  * 赞列表数据展示的adapter对象
  * Created by LeeDane on 2016/4/5.
  */
-public class ZanAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<ZanBean> mZanBeans;
-
+public class ZanAdapter extends BaseListAdapter<ZanBean>{
     public ZanAdapter(Context context, List<ZanBean> zanBeans) {
-        this.mContext = context;
-        this.mZanBeans = zanBeans;
-    }
-
-    @Override
-    public int getCount() {
-        return mZanBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mZanBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        super(context, zanBeans);
     }
 
     @Override
     public View getView(int position, View view, ViewGroup group) {
-        ZanBean zanBean = mZanBeans.get(position);
+        ZanBean zanBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_zan_listview, null);
@@ -74,13 +55,9 @@ public class ZanAdapter extends BaseAdapter{
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }
+        //设置动画效果
+        setAnimation(view, position);
         return view;
-    }
-
-    public void refreshData(List<ZanBean> zanBeans){
-        this.mZanBeans.clear();
-        this.mZanBeans.addAll(zanBeans);
-        this.notifyDataSetChanged();
     }
 
     private class ViewHolder{

@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.TimeLineBean;
@@ -25,37 +25,19 @@ import java.util.List;
  * 朋友圈列表数据展示的adapter对象
  * Created by LeeDane on 2016/4/15.
  */
-public class CircleOfFriendAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<TimeLineBean> mTimeLineBeans;
+public class CircleOfFriendAdapter extends BaseListAdapter<TimeLineBean>{
     private int loginUserId;
     private String loginUserPicPath;
 
     public CircleOfFriendAdapter(Context context, List<TimeLineBean> timeLineBeans) {
-        this.mContext = context;
-        this.mTimeLineBeans = timeLineBeans;
+        super(context, timeLineBeans);
         loginUserId = BaseApplication.getLoginUserId();
         loginUserPicPath = BaseApplication.getLoginUserPicPath();
     }
 
     @Override
-    public int getCount() {
-        return mTimeLineBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mTimeLineBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public View getView(int position, View view, ViewGroup group) {
-        final TimeLineBean timeLineBean = mTimeLineBeans.get(position);
+        final TimeLineBean timeLineBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_circle_of_friend_listview, null);
@@ -107,12 +89,6 @@ public class CircleOfFriendAdapter extends BaseAdapter{
         viewHolder.getmContent().setText(timeLineBean.getContent());
         AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
         return view;
-    }
-
-    public void refreshData(List<TimeLineBean> timeLineBeans){
-        this.mTimeLineBeans.clear();
-        this.mTimeLineBeans.addAll(timeLineBeans);
-        this.notifyDataSetChanged();
     }
 
     private class ViewHolder{

@@ -6,10 +6,10 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.task.LocalImageLoader;
 import com.leedane.cn.util.BitmapUtil;
@@ -22,59 +22,29 @@ import java.util.List;
  *显示心情列表的适配器
  * Created by LeeDane on 2015/12/3.
  */
-public class MoodGridViewAdapter extends BaseAdapter{
-    /**
-     * 图像在本地存储的url地址
-     */
-    private List<String> mLocalUris;
-
+public class MoodGridViewAdapter extends BaseListAdapter<String>{
     /**
      * SD卡图片读取
      */
     private LocalImageLoader mLocalImageLoader;
 
-    /**
-     * 上下文
-     */
-    private Context mContext;
     public MoodGridViewAdapter(Context context, List<String> localUris){
-        mLocalUris = localUris;
-        mContext = context;
+        super(context, localUris);
         mLocalImageLoader = new LocalImageLoader(mContext);
     }
-    @Override
-    public int getCount() {
-        return mLocalUris.size();
-    }
 
     @Override
-    public Object getItem(int position) {
-        return mLocalUris.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void refreshData(List<String> localUris){
-        this.mLocalUris.clear();
-        this.mLocalUris.addAll(localUris);
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         MyHolder myHolder;
-        if(convertView == null){
+        if(view == null){
             myHolder = new MyHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_mood_gridview, null);
-            myHolder.setImageView((ImageView) convertView.findViewById(R.id.mood_item_img));
-            convertView.setTag(myHolder);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_mood_gridview, null);
+            myHolder.setImageView((ImageView) view.findViewById(R.id.mood_item_img));
+            view.setTag(myHolder);
         }else{
-            myHolder = (MyHolder)convertView.getTag();
+            myHolder = (MyHolder)view.getTag();
         }
-        String uri = mLocalUris.get(position);
+        String uri = mDatas.get(position);
 
         if(StringUtil.isNull(uri)){
             Toast.makeText(mContext, "图片路径为空", Toast.LENGTH_SHORT).show();
@@ -94,7 +64,7 @@ public class MoodGridViewAdapter extends BaseAdapter{
                 @Override
                 public void onClick(View v) {
                     imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.take_photo));
-                    mLocalUris.remove(position);
+                    mDatas.remove(position);
                     notifyDataSetChanged();
                     badge.hide();
                 }
@@ -110,7 +80,7 @@ public class MoodGridViewAdapter extends BaseAdapter{
                 }
             });*/
         }
-        return convertView;
+        return view;
     }
 
     /**

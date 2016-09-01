@@ -5,11 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.download.DownloadItem;
 import com.leedane.cn.download.PortDownload;
@@ -22,62 +21,33 @@ import java.util.List;
  * 下载列表的适配器
  * Created by LeeDane on 2016/1/24.
  */
-public class DownloadAdapter extends BaseAdapter{
+public class DownloadAdapter extends BaseListAdapter<DownloadItem> {
 
     public static final String TAG = "DownloadAdapter";
-    private ListView mListView ;
-
-    public List<DownloadItem> mList;  //所有下载列表
-    private Context mContext; //上下文对象
-
-    public DownloadAdapter(List<DownloadItem> list, Context context, ListView listView){
-        super();
-        this.mList = list;
-        this.mContext = context;
-        this.mListView = listView;
-    }
-
-    @Override
-    public int getCount() {
-        return mList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void refreshData(List<DownloadItem> downloadItems){
-        this.mList.clear();
-        this.mList.addAll(downloadItems);
-        this.notifyDataSetChanged();
+    public DownloadAdapter(List<DownloadItem> list, Context context){
+        super(context, list);
     }
 
     private int downloadCount = 0;
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         MyHolder myHolder;
-        if(convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_download_listview, null);
+        if(view == null){
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_download_listview, null);
             myHolder = new MyHolder();
-            myHolder.setCreateTime((TextView) convertView.findViewById(R.id.download_create_time));
-            myHolder.setDesc((TextView) convertView.findViewById(R.id.download_desc));
-            myHolder.setFileName((TextView) convertView.findViewById(R.id.download_filename));
-            myHolder.setProgress((ProgressBar) convertView.findViewById(R.id.download_progress));
-            myHolder.setPer((TextView) convertView.findViewById(R.id.download_per));
-            convertView.setTag(myHolder);
+            myHolder.setCreateTime((TextView) view.findViewById(R.id.download_create_time));
+            myHolder.setDesc((TextView) view.findViewById(R.id.download_desc));
+            myHolder.setFileName((TextView) view.findViewById(R.id.download_filename));
+            myHolder.setProgress((ProgressBar) view.findViewById(R.id.download_progress));
+            myHolder.setPer((TextView) view.findViewById(R.id.download_per));
+            view.setTag(myHolder);
         }else{
-            myHolder = (MyHolder)convertView.getTag();
+            myHolder = (MyHolder)view.getTag();
         }
 
         Log.i(TAG, "执行了getView()方法");
 
-        DownloadItem downloadItem = mList.get(position);
+        DownloadItem downloadItem = mDatas.get(position);
         if(downloadItem.getStatus() == 4){
             downloadCount ++;
         }
@@ -113,7 +83,7 @@ public class DownloadAdapter extends BaseAdapter{
         }
         else
             myHolder.getDesc().setText(mContext.getResources().getString(R.string.download_stop));
-        return convertView;
+        return view;
     }
 
     private class MyHolder{

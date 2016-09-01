@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.FileBean;
 import com.leedane.cn.util.DateUtil;
@@ -20,56 +21,30 @@ import java.util.List;
  * 我的文件列表的适配器
  * Created by LeeDane on 2016/1/24.
  */
-public class FileAdapter extends BaseAdapter{
-
+public class FileAdapter extends BaseListAdapter<FileBean>{
     public static final String TAG = "FileAdapter";
-    public List<FileBean> mList;  //所有下载列表
-    private Context mContext; //上下文对象
 
     public FileAdapter(Context context, List<FileBean> list){
-        super();
-        this.mList = list;
-        this.mContext = context;
+        super(context, list);
     }
 
     @Override
-    public int getCount() {
-        return mList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void refreshData(List<FileBean> fileBeans){
-        this.mList.clear();
-        this.mList.addAll(fileBeans);
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         MyHolder myHolder;
-        if(convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_file_listview, null);
+        if(view == null){
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_file_listview, null);
             myHolder = new MyHolder();
-            myHolder.setCreateTime((TextView) convertView.findViewById(R.id.file_item_createTime));
-            myHolder.setDesc((TextView) convertView.findViewById(R.id.file_item_desc));
-            myHolder.setFileName((TextView) convertView.findViewById(R.id.file_item_fileName));
-            convertView.setTag(myHolder);
+            myHolder.setCreateTime((TextView) view.findViewById(R.id.file_item_createTime));
+            myHolder.setDesc((TextView) view.findViewById(R.id.file_item_desc));
+            myHolder.setFileName((TextView) view.findViewById(R.id.file_item_fileName));
+            view.setTag(myHolder);
         }else{
-            myHolder = (MyHolder)convertView.getTag();
+            myHolder = (MyHolder)view.getTag();
         }
 
         Log.i(TAG, "执行了getView()方法");
 
-        FileBean fileBean = mList.get(position);
+        FileBean fileBean = mDatas.get(position);
 
         myHolder.getDesc().setText("正常");
         String createTime = fileBean.getCreateTime();
@@ -79,7 +54,7 @@ public class FileAdapter extends BaseAdapter{
             myHolder.getCreateTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
         myHolder.getFileName().setText(fileBean.getPath());
-        return convertView;
+        return view;
     }
 
     private class MyHolder{

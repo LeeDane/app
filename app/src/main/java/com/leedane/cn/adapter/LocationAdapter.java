@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.LocationBean;
 import com.leedane.cn.util.StringUtil;
@@ -17,33 +18,15 @@ import java.util.List;
  * 位置列表列表数据展示的adapter对象
  * Created by LeeDane on 2016/6/15.
  */
-public class LocationAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<LocationBean> mLocationBeans;
+public class LocationAdapter extends BaseListAdapter<LocationBean>{
 
     public LocationAdapter(Context context, List<LocationBean> locationBeans) {
-        this.mContext = context;
-        this.mLocationBeans = locationBeans;
-    }
-
-    @Override
-    public int getCount() {
-        return mLocationBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mLocationBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        super(context, locationBeans);
     }
 
     @Override
     public View getView(int position, View view, ViewGroup group) {
-        LocationBean locationBean = mLocationBeans.get(position);
+        LocationBean locationBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_location_listview, null);
@@ -64,12 +47,6 @@ public class LocationAdapter extends BaseAdapter{
 
         viewHolder.getmAddr().setText(locationBean.getAddrStr());
         return view;
-    }
-
-    public void refreshData(List<LocationBean> locationBeans){
-        this.mLocationBeans.clear();
-        this.mLocationBeans.addAll(locationBeans);
-        this.notifyDataSetChanged();
     }
 
     private class ViewHolder{

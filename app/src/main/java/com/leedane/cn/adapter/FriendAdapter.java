@@ -4,11 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.FriendBean;
 import com.leedane.cn.util.DateUtil;
@@ -23,32 +22,13 @@ import java.util.List;
  * 好友列表数据展示的adapter对象
  * Created by LeeDane on 2016/4/19.
  */
-public class FriendAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<FriendBean> mFriendBeans;
+public class FriendAdapter extends BaseListAdapter<FriendBean>{
     public FriendAdapter(Context context, List<FriendBean> friendBeans) {
-        this.mContext = context;
-        this.mFriendBeans = friendBeans;
+        super(context, friendBeans);
     }
-
-    @Override
-    public int getCount() {
-        return mFriendBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mFriendBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
     @Override
     public View getView(int position, View view, ViewGroup group) {
-        final FriendBean friendBean = mFriendBeans.get(position);
+        final FriendBean friendBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_friend_listview, null);
@@ -80,16 +60,13 @@ public class FriendAdapter extends BaseAdapter{
         viewHolder.getmOperate().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.success(mContext, "点击啦:"+friendBean.getStatus());
+                ToastUtil.success(mContext, "点击啦:" + friendBean.getStatus());
             }
         });
-        return view;
-    }
 
-    public void refreshData(List<FriendBean> friendBeans){
-        this.mFriendBeans.clear();
-        this.mFriendBeans.addAll(friendBeans);
-        this.notifyDataSetChanged();
+        //设置动画效果
+        setAnimation(view, position);
+        return view;
     }
 
     private class ViewHolder{

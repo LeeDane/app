@@ -5,32 +5,26 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.leedane.cn.activity.MoodActivity;
 import com.leedane.cn.activity.PersonalActivity;
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.customview.AutoLinkTextView;
 import com.leedane.cn.customview.RightBorderTextView;
 import com.leedane.cn.fragment.PersonalMoodFragment;
-import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.helper.PraiseUserHelper;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
-import com.leedane.cn.util.DensityUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
-import com.leedane.cn.util.ToastUtil;
-import com.leedane.cn.volley.ImageCacheManager;
 
 import java.util.List;
 
@@ -38,40 +32,14 @@ import java.util.List;
  * 个人中心Tab为心情的数据展示的adapter对象
  * Created by LeeDane on 2015/12/8.
  */
-public class PersonalMoodListViewAdapter extends BaseAdapter{
+public class PersonalMoodListViewAdapter extends BaseListAdapter<MoodBean>{
     public static final String TAG = "PersonalMoodListViewAdapter";
-    private Context mContext;
-    private List<MoodBean> mData;
-    //private FragmentActivity mActivity;
     private PopupMenu popupMenu;
 
     private PersonalMoodFragment fragment;
     public PersonalMoodListViewAdapter(Context context, List<MoodBean> data, PersonalMoodFragment fragment) {
-        this.mContext = context;
-        this.mData = data;
+        super(context, data);
         this.fragment = fragment;
-        //this.mActivity = activity;
-    }
-
-    @Override
-    public int getCount() {
-        return mData.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mData.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void refreshData(List<MoodBean> moods){
-        this.mData.clear();
-        this.mData.addAll(moods);
-        this.notifyDataSetChanged();
     }
 
     @Override
@@ -132,7 +100,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
             view.setTag(viewHolder);
         }
 
-        final MoodBean moodBean = mData.get(position);
+        final MoodBean moodBean = mDatas.get(position);
         viewHolder = (ViewHolder)view.getTag();
 
         String content = moodBean.getContent();
@@ -173,7 +141,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
         viewHolder.getmMore().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.showMoodListItemMenuDialog(index, mData.get(index));
+                fragment.showMoodListItemMenuDialog(index, mDatas.get(index));
             }
         });
 
@@ -257,7 +225,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
                 PersonalActivity activity =  (PersonalActivity)mContext;
                 it_transmit.setClass(activity, MoodActivity.class);
                 it_transmit.putExtra("operateType", EnumUtil.MoodOperateType.转发.value);
-                it_transmit.putExtra("moodObj",mData.get(index));
+                it_transmit.putExtra("moodObj",mDatas.get(index));
                 it_transmit.putExtra("width","30");//展示的图像的宽度
                 it_transmit.putExtra("height","30"); //展示的图像的高度
                 activity.startActivity(it_transmit);
@@ -271,7 +239,7 @@ public class PersonalMoodListViewAdapter extends BaseAdapter{
                 PersonalActivity activity =  (PersonalActivity)mContext;
                 it_transmit.setClass(activity, MoodActivity.class);
                 it_transmit.putExtra("operateType", EnumUtil.MoodOperateType.评论.value);
-                it_transmit.putExtra("moodObj",mData.get(index));
+                it_transmit.putExtra("moodObj",mDatas.get(index));
                 it_transmit.putExtra("width","30");//展示的图像的宽度
                 it_transmit.putExtra("height", "30"); //展示的图像的高度
                 activity.startActivityForResult(it_transmit, PersonalActivity.MOOD_COMMENT_REQUEST_CODE);

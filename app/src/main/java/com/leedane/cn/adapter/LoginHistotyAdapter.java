@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.LoginHistoryBean;
 import com.leedane.cn.util.DateUtil;
@@ -18,33 +18,15 @@ import java.util.List;
  * 登录历史列表数据展示的adapter对象
  * Created by LeeDane on 2016/5/5.
  */
-public class LoginHistotyAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<LoginHistoryBean> mLoginHistoryBeans;
+public class LoginHistotyAdapter extends BaseListAdapter<LoginHistoryBean>{
 
     public LoginHistotyAdapter(Context context, List<LoginHistoryBean> loginHistoryBeans) {
-        this.mContext = context;
-        this.mLoginHistoryBeans = loginHistoryBeans;
-    }
-
-    @Override
-    public int getCount() {
-        return mLoginHistoryBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mLoginHistoryBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        super(context, loginHistoryBeans);
     }
 
     @Override
     public View getView(int position, View view, ViewGroup group) {
-        LoginHistoryBean loginHistoryBean = mLoginHistoryBeans.get(position);
+        LoginHistoryBean loginHistoryBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_login_history_listview, null);
@@ -64,6 +46,8 @@ public class LoginHistotyAdapter extends BaseAdapter{
         viewHolder.getmIp().setText(loginHistoryBean.getIp());
         viewHolder.getmBrowser().setText(loginHistoryBean.getBrowser());
         viewHolder.getmStatus().setText("状态:" +getStatusText(loginHistoryBean.getStatus()));
+        //设置动画效果
+        setAnimation(view, position);
         return view;
     }
 
@@ -81,12 +65,6 @@ public class LoginHistotyAdapter extends BaseAdapter{
                 return "正常";
         }
         return "未知异常";
-    }
-
-    public void refreshData(List<LoginHistoryBean> loginHistoryBeans){
-        this.mLoginHistoryBeans.clear();
-        this.mLoginHistoryBeans.addAll(loginHistoryBeans);
-        this.notifyDataSetChanged();
     }
 
     private class ViewHolder{

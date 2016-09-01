@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ChatBean;
 import com.leedane.cn.customview.CircularImageView;
@@ -22,56 +23,29 @@ import java.util.List;
  * 聊天首页列表的适配器
  * Created by LeeDane on 2016/5/4.
  */
-public class ChatAdapter extends BaseAdapter{
+public class ChatAdapter extends BaseListAdapter<ChatBean>{
 
     public static final String TAG = "ChatAdapter";
-
-    public List<ChatBean> mList;  //所有聊天列表
-    private Context mContext; //上下文对象
-
     public ChatAdapter(List<ChatBean> list, Context context){
-        super();
-        this.mList = list;
-        this.mContext = context;
+        super(context, list);
     }
 
     @Override
-    public int getCount() {
-        return mList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void refreshData(List<ChatBean> chatBeans){
-        this.mList.clear();
-        this.mList.addAll(chatBeans);
-        this.notifyDataSetChanged();
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         MyHolder viewHolder;
-        if(convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_chat_listview, null);
+        if(view == null){
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_listview, null);
             viewHolder = new MyHolder();
-            viewHolder.setmCreateTime((TextView) convertView.findViewById(R.id.chat_time));
-            viewHolder.setmAccount((TextView) convertView.findViewById(R.id.chat_account));
-            viewHolder.setmUserPicPath((CircularImageView) convertView.findViewById(R.id.chat_user_pic));
-            viewHolder.setmContent((TextView) convertView.findViewById(R.id.chat_content));
-            viewHolder.setmNoReadNumber((TextView)convertView.findViewById(R.id.chat_no_read));
-            convertView.setTag(viewHolder);
+            viewHolder.setmCreateTime((TextView) view.findViewById(R.id.chat_time));
+            viewHolder.setmAccount((TextView) view.findViewById(R.id.chat_account));
+            viewHolder.setmUserPicPath((CircularImageView) view.findViewById(R.id.chat_user_pic));
+            viewHolder.setmContent((TextView) view.findViewById(R.id.chat_content));
+            viewHolder.setmNoReadNumber((TextView)view.findViewById(R.id.chat_no_read));
+            view.setTag(viewHolder);
         }else{
-            viewHolder = (MyHolder)convertView.getTag();
+            viewHolder = (MyHolder)view.getTag();
         }
-        ChatBean chatBean = mList.get(position);
+        ChatBean chatBean = mDatas.get(position);
 
         String createTime = chatBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
@@ -95,7 +69,9 @@ public class ChatAdapter extends BaseAdapter{
             viewHolder.getmNoReadNumber().setBackgroundResource(R.drawable.chat_no_number_tip_bg);
         }
         viewHolder.getmNoReadNumber().setText(StringUtil.changeObjectToInt(chatBean.getNoReadNumber()) +"");
-        return convertView;
+        //设置动画效果
+        //setAnimation(view, position);
+        return view;
     }
 
     private class MyHolder{

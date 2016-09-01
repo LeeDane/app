@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CollectionBean;
 import com.leedane.cn.util.AppUtil;
@@ -20,33 +21,15 @@ import java.util.List;
  * 收藏列表数据展示的adapter对象
  * Created by LeeDane on 2016/4/6.
  */
-public class CollectionAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<CollectionBean> mCollectionBeans;
+public class CollectionAdapter extends BaseListAdapter<CollectionBean>{
 
     public CollectionAdapter(Context context, List<CollectionBean> collectionBeans) {
-        this.mContext = context;
-        this.mCollectionBeans = collectionBeans;
-    }
-
-    @Override
-    public int getCount() {
-        return mCollectionBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mCollectionBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        super(context, collectionBeans);
     }
 
     @Override
     public View getView(int position, View view, ViewGroup group) {
-        CollectionBean collectionBean = mCollectionBeans.get(position);
+        CollectionBean collectionBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_collection_listview, null);
@@ -70,13 +53,9 @@ public class CollectionAdapter extends BaseAdapter{
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }
+        //设置动画效果
+        setAnimation(view, position);
         return view;
-    }
-
-    public void refreshData(List<CollectionBean> collectionBeans){
-        this.mCollectionBeans.clear();
-        this.mCollectionBeans.addAll(collectionBeans);
-        this.notifyDataSetChanged();
     }
 
     private class ViewHolder{

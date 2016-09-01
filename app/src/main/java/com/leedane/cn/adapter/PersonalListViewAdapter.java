@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 
 import java.util.List;
@@ -15,28 +15,9 @@ import java.util.List;
  * 个人中心Tab数据展示的adapter对象
  * Created by LeeDane on 2015/11/19.
  */
-public class PersonalListViewAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<String> mData;
-
+public class PersonalListViewAdapter extends BaseListAdapter<String>{
     public PersonalListViewAdapter(Context context, List<String> data) {
-        this.mContext = context;
-        mData = data;
-    }
-
-    @Override
-    public int getCount() {
-        return mData.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mData.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        super(context, data);
     }
 
     @Override
@@ -49,7 +30,7 @@ public class PersonalListViewAdapter extends BaseAdapter{
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getmCommentItem().setText(mData.get(position));
+        viewHolder.getmCommentItem().setText(mDatas.get(position));
         return view;
     }
 

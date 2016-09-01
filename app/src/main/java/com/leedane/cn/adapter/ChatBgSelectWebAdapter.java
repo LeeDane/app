@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatBgSelectWebBean;
@@ -22,33 +22,14 @@ import java.util.List;
  * 聊天背景网络图片的数据展示的adapter对象
  * Created by LeeDane on 2016/6/10.
  */
-public class ChatBgSelectWebAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<ChatBgSelectWebBean> mChatBgSelectWebBeans;
-
+public class ChatBgSelectWebAdapter extends BaseListAdapter<ChatBgSelectWebBean>{
     public ChatBgSelectWebAdapter(Context context, List<ChatBgSelectWebBean> chatBgSelectWebBeans) {
-        this.mContext = context;
-        this.mChatBgSelectWebBeans = chatBgSelectWebBeans;
-    }
-
-    @Override
-    public int getCount() {
-        return mChatBgSelectWebBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mChatBgSelectWebBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+       super(context, chatBgSelectWebBeans);
     }
 
     @Override
     public View getView(int position, View view, ViewGroup group) {
-        final ChatBgSelectWebBean chatBgSelectWebBean = mChatBgSelectWebBeans.get(position);
+        final ChatBgSelectWebBean chatBgSelectWebBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_base_gridview, null);
@@ -72,7 +53,7 @@ public class ChatBgSelectWebAdapter extends BaseAdapter{
             viewHolder.getmPath().setVisibility(View.GONE);
         }
 
-        viewHolder.getmShow().setText(StringUtil.changeNotNull(chatBgSelectWebBean.getAccount()) +"  "+ RelativeDateFormat.format(DateUtil.stringToDate(chatBgSelectWebBean.getCreateTime())));
+        viewHolder.getmShow().setText(StringUtil.changeNotNull(chatBgSelectWebBean.getAccount()) + "  " + RelativeDateFormat.format(DateUtil.stringToDate(chatBgSelectWebBean.getCreateTime())));
 
         if(chatBgSelectWebBean.getType() == 0){
             viewHolder.getmIcon().setImageResource(R.drawable.free);
@@ -90,12 +71,6 @@ public class ChatBgSelectWebAdapter extends BaseAdapter{
             }
         }
         return view;
-    }
-
-    public void refreshData(List<ChatBgSelectWebBean> chatBgSelectWebBeans){
-        this.mChatBgSelectWebBeans.clear();
-        this.mChatBgSelectWebBeans.addAll(chatBgSelectWebBeans);
-        this.notifyDataSetChanged();
     }
 
     private class ViewHolder{

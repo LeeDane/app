@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatDetailBean;
@@ -25,37 +26,19 @@ import java.util.List;
  * 聊天详情列表数据展示的adapter对象
  * Created by LeeDane on 2016/5/5.
  */
-public class ChatDetailAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<ChatDetailBean> mChatDetailBeans;
+public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
     private String userPicPath;
     private String toUserPicPath;
 
     public ChatDetailAdapter(Context context, List<ChatDetailBean> chatDetailBeans, String userPicPath, String toUserPicPath) {
-        this.mContext = context;
-        this.mChatDetailBeans = chatDetailBeans;
+        super(context, chatDetailBeans);
         this.userPicPath = userPicPath;
         this.toUserPicPath = toUserPicPath;
     }
 
     @Override
-    public int getCount() {
-        return mChatDetailBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mChatDetailBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public View getView(int position, View view, ViewGroup group) {
-        final ChatDetailBean chatDetailBean = mChatDetailBeans.get(position);
+        final ChatDetailBean chatDetailBean = mDatas.get(position);
         ViewHolder viewHolder;
 
         //对方使用left
@@ -136,12 +119,6 @@ public class ChatDetailAdapter extends BaseAdapter{
             }
         }
         return view;
-    }
-
-    public void refreshData(List<ChatDetailBean> chatDetailBeans){
-        this.mChatDetailBeans.clear();
-        this.mChatDetailBeans.addAll(chatDetailBeans);
-        this.notifyDataSetChanged();
     }
 
     private class ViewHolder{

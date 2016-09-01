@@ -1,27 +1,19 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.FriendBean;
-import com.leedane.cn.handler.FriendHandler;
-import com.leedane.cn.task.TaskListener;
-import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
-import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -29,32 +21,14 @@ import java.util.List;
  * 暂时还未是好友列表数据展示的adapter对象
  * Created by LeeDane on 2016/6/23.
  */
-public class FriendNotYetAdapter extends BaseAdapter{
-    private Context mContext;
-    private List<FriendBean> mFriendBeans;
+public class FriendNotYetAdapter extends BaseListAdapter<FriendBean>{
     public FriendNotYetAdapter(Context context, List<FriendBean> friendBeans) {
-        this.mContext = context;
-        this.mFriendBeans = friendBeans;
-    }
-
-    @Override
-    public int getCount() {
-        return mFriendBeans.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mFriendBeans.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        super(context, friendBeans);
     }
 
     @Override
     public View getView(int position, View view, ViewGroup group) {
-        final FriendBean friendBean = mFriendBeans.get(position);
+        final FriendBean friendBean = mDatas.get(position);
         ViewHolder viewHolder;
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_friend_no_yet_listview, null);
@@ -87,14 +61,9 @@ public class FriendNotYetAdapter extends BaseAdapter{
         }else{
             viewHolder.getmOperate().setText("发送邮件提醒TA");
         }
-
+        //设置动画效果
+        setAnimation(view, position);
         return view;
-    }
-
-    public void refreshData(List<FriendBean> friendBeans){
-        this.mFriendBeans.clear();
-        this.mFriendBeans.addAll(friendBeans);
-        this.notifyDataSetChanged();
     }
 
     private class ViewHolder{

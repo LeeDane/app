@@ -5,50 +5,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.SettingBean;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 设置ListView选项的adapter
  * Created by Leedane on 2015/11/6.
  */
-public class SettingAdapter extends BaseAdapter{
+public class SettingAdapter extends BaseListAdapter<SettingBean>{
 
     public static final String TAG = "SettingAdapter";
-    private List<SettingBean> mListData = new ArrayList<>();
-    private Context mContext;
     private ListView mListView;
 
     public SettingAdapter(List<SettingBean> listData, ListView listview, Context context){
-        this.mListData = listData;
-        this.mContext = context;
+        super(context, listData);
         this.mListView = listview;
-    }
-    @Override
-    public int getCount() {
-        return mListData.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mListData.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
     }
 
     @Override
@@ -64,15 +46,15 @@ public class SettingAdapter extends BaseAdapter{
             myHodler = (MyHodler)convertView.getTag();
         }
 
-        String text = mListData.get(position).getContent();
+        String text = mDatas.get(position).getContent();
 
         if(StringUtil.isNull(text)){
-            myHodler.getSetting_item_edittext().setHint(mListData.get(position).getHint());
+            myHodler.getSetting_item_edittext().setHint(mDatas.get(position).getHint());
         }else{
             myHodler.getSetting_item_edittext().setText(text);
         }
 
-        final String uuid = mListData.get(position).getUuid();
+        final String uuid = mDatas.get(position).getUuid();
         myHodler.getSetting_item_edittext().setTag(uuid);
         myHodler.getSetting_item_textview().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,10 +70,10 @@ public class SettingAdapter extends BaseAdapter{
                         edt.setFocusable(true);
                         return;
                     }
-                    mListData.get(position).setContent(textvalue);
+                    mDatas.get(position).setContent(textvalue);
                     switch (position){
                         case 0:
-                            SharedPreferenceUtil.saveSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER, mListData.get(position));
+                            SharedPreferenceUtil.saveSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER, mDatas.get(position));
                             break;
                     }
 
