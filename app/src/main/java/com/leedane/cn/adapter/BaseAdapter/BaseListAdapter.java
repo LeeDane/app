@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter.BaseAdapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -8,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 
 import com.leedane.cn.app.R;
+import com.leedane.cn.application.BaseApplication;
 
 import java.util.List;
 
@@ -19,10 +21,15 @@ public class BaseListAdapter<T> extends BaseAdapter {
     protected List<T> mDatas;
     protected Context mContext;
     private int lastPosition = -1;
+    protected Typeface typeface;
+    public BaseListAdapter(){
+        typeface = BaseApplication.getDefaultTypeface();
+    }
 
     public BaseListAdapter(Context context, List<T> datas) {
         this.mDatas = datas;
         this.mContext = context;
+        typeface = BaseApplication.getDefaultTypeface();
     }
 
     @Override

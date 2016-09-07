@@ -71,6 +71,7 @@ public enum TaskType {
     LOAD_HEAD_PATH, //加载用户新头像
     LOAD_NO_READ_CHAT, //加载未读的聊天记录
     LOAD_ALL_FINANCIAL, //获取全部的记账记录
+    LOAD_USER_INFO, //个人中心获取用户的基本信息
     CANCEL_FAN, //不再成为TA的粉丝
     CANCEL_FRIEND, //解除好友关系
     DELETE_COMMENT, //删除评论

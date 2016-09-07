@@ -308,8 +308,8 @@ public class OneLevelCategoryDataBase {
     public List<OneLevelCategory> query(String where) {
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
         ArrayList<OneLevelCategory> data = new ArrayList<>();
-        Cursor cursor = sqlite.rawQuery("select id, order_, status, value, icon, model, budget, is_default, create_user_id, create_time  from "
-                        + ONE_LEVEL_CATEGORY_TABLE_NAME + where, null);
+        Cursor cursor = sqlite.rawQuery("select id, order_, status, value, icon, model, (select sum(t.budget) from "+ TwoLevelCategoryDataBase.TWO_LEVEL_CATEGORY_TABLE_NAME+" t where t.one_level_id = o.id) budget, is_default, create_user_id, create_time  from "
+                        + ONE_LEVEL_CATEGORY_TABLE_NAME  +  " o " + where, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             OneLevelCategory oneLevelCategory = new OneLevelCategory();
             oneLevelCategory.setId(cursor.getInt(0));
@@ -389,5 +389,42 @@ public class OneLevelCategoryDataBase {
             }
         }
         return id;
+    }
+
+    /**
+     * 执行sql语句
+     * @param sql
+     */
+    public void excuteSql(String sql){
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        sqlite.execSQL(sql);
+        sqlite.close();
+    }
+
+    /**
+     * 将所有该分类的数据设置为非默认后并设置默认
+     * @param model
+     */
+    public void resetAllNoDefault(int model){
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        String sql = ("update " + ONE_LEVEL_CATEGORY_TABLE_NAME + " set is_default=? where model = ?");
+        sqlite.execSQL(sql, new Object[]{0, model});
+        sqlite.close();
+    }
+
+    /**
+     * 判断一级分类是否是收入类型
+     * @param oneLevelId
+     * @return
+     */
+    public static boolean isIncome(int oneLevelId){
+        for(OneLevelCategory oneLevelCategory: BaseApplication.oneLevelCategories){
+            if(oneLevelCategory.getId() == oneLevelId)
+                if(oneLevelCategory.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME)
+                    return true;
+                else
+                    return false;
+        }
+        return false;
     }
 }

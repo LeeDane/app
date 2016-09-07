@@ -288,6 +288,14 @@ public class HomeActivity extends BaseActivity {
             }
         }), 5);
     }
+
+    /**
+     * Tab的点击事件
+     * @param childIndex
+     */
+    public void tabClick(int childIndex){
+        tabClick(mRadioGroup.getChildAt(childIndex));
+    }
     /**
      * 获取当前点击tab的索引
      * @param view

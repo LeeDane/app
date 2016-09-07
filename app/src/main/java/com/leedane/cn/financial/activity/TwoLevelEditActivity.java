@@ -19,6 +19,7 @@ import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
+import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
@@ -41,6 +42,7 @@ public class TwoLevelEditActivity extends BaseActivity {
     private static final String[] mIconKeys = {"请选择", "分类", "收入", "列表", "向左", "支出"}; //定义数组
 
     private TwoLevelCategoryDataBase twoLevelCategoryDataBase;
+    private OneLevelCategoryDataBase oneLevelCategoryDataBase;
     private TwoLevelCategory mTwoLevelCategory;
     private int mTwoLevelCategoryId;
     private boolean edit; //是否可以编辑
@@ -64,6 +66,8 @@ public class TwoLevelEditActivity extends BaseActivity {
     private boolean isDefault = false;
     private int iconId;
     private int clickPosition;//方便回传定位
+    private List<OneLevelCategory> oneLevelCategories = new ArrayList<>();
+    private List<String> oneLevelList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +84,18 @@ public class TwoLevelEditActivity extends BaseActivity {
         }
 
         twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(this);
+        oneLevelCategoryDataBase = new OneLevelCategoryDataBase(this);
         mTwoLevelCategoryId = getIntent().getIntExtra("twoLevelCategoryId", 0);
 
+        initData();
+
+        //编辑状态
         if(mTwoLevelCategoryId > 0){
             edit = true;
+            oneLeveId = mTwoLevelCategory.getOneLevelId();
+        }else{//新增状态
+            oneLeveId = getIntent().getIntExtra("oneLevelId", 0);
         }
-        initData();
 
         if(edit && mTwoLevelCategory == null){
             ToastUtil.failure(TwoLevelEditActivity.this, "一级分类不存在");
@@ -97,11 +107,13 @@ public class TwoLevelEditActivity extends BaseActivity {
         backLayoutVisible();
         setTitleViewText(getStringResource(R.string.two_level_edit));
 
+        getOneLevelList();
         initView();
 
         if(mTwoLevelCategory != null){
             initEditView();
         }else{
+            mOneLevel.setSelection(getOneLevelSelection(oneLeveId));
             setTitleViewText("新增二级分类");
             mDelete.setText(getStringResource(R.string.reset));
         }
@@ -139,9 +151,7 @@ public class TwoLevelEditActivity extends BaseActivity {
         if(mTwoLevelCategory.getIcon() > 0)
             mIcon.setImageResource(mTwoLevelCategory.getIcon());
 
-        oneLeveId = mTwoLevelCategory.getOneLevelId();
         mOneLevel.setSelection(getOneLevelSelection(oneLeveId));
-        mOneLevel.setEnabled(false);
 
         mDelete.setText(getStringResource(R.string.delete));
         setTitleViewText(mTwoLevelCategory.getValue() + "编辑");
@@ -157,7 +167,7 @@ public class TwoLevelEditActivity extends BaseActivity {
         if(oneLeveId == 0)
             return p;
         int k = 0;
-        for(OneLevelCategory o: BaseApplication.oneLevelCategories ){
+        for(OneLevelCategory o: oneLevelCategories ){
             if(o.getId() == oneLeveId){
                 p = k;
                 break;
@@ -191,7 +201,7 @@ public class TwoLevelEditActivity extends BaseActivity {
         List<TwoLevelCategory> twoLevelCategories = BaseApplication.twoLevelCategories;
         if(!CommonUtil.isEmpty(twoLevelCategories)){
             for(TwoLevelCategory category: twoLevelCategories){
-                if(category.getId() == mTwoLevelCategoryId){
+                if(category.getStatus() == ConstantsUtil.STATUS_NORMAL && category.getId() == mTwoLevelCategoryId){
                     mTwoLevelCategory = category;
                     break;
                 }
@@ -262,12 +272,12 @@ public class TwoLevelEditActivity extends BaseActivity {
 
 
         mOneLevel = (Spinner)findViewById(R.id.two_level_edit_one_level);
-        ArrayAdapter oneLevelAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, getOneLevelList());
+        ArrayAdapter oneLevelAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, oneLevelList);
         mOneLevel.setAdapter(oneLevelAdapter);
         mOneLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                oneLeveId = BaseApplication.oneLevelCategories.get(position).getId();
+                oneLeveId = oneLevelCategories.get(position).getId();
             }
 
             @Override
@@ -287,10 +297,14 @@ public class TwoLevelEditActivity extends BaseActivity {
      * @return
      */
     private List<String> getOneLevelList(){
-        List<String> oneLevelList = new ArrayList<>();
+
+        int model = TwoLevelCategoryDataBase.getModel(oneLeveId);
         if(!CommonUtil.isEmpty(BaseApplication.oneLevelCategories)){
             for(OneLevelCategory category: BaseApplication.oneLevelCategories){
-                oneLevelList.add(category.getValue() + (category.isDefault()? "（默认)" : ""));
+                if(category.getStatus() == ConstantsUtil.STATUS_NORMAL && model == category.getModel()){
+                    oneLevelCategories.add(category);
+                    oneLevelList.add(category.getValue() + (category.isDefault()? "（默认)" : ""));
+                }
             }
         }
         return oneLevelList;
@@ -303,19 +317,34 @@ public class TwoLevelEditActivity extends BaseActivity {
             case R.id.two_level_edit_save: //保存
                 try {
                     buildTwoLevelCategory();
+
+                    //当前设置为默认的话，重置默认
+                    if(mTwoLevelCategory.isDefault()){
+                        int model = TwoLevelCategoryDataBase.getModel(oneLeveId);
+                        //清空model下的一级分类默认
+                        twoLevelCategoryDataBase.excuteSql("update " + OneLevelCategoryDataBase.ONE_LEVEL_CATEGORY_TABLE_NAME + " set is_default = 0 where model =" + model);
+                        //设置当前的一级分类为默认
+                        twoLevelCategoryDataBase.excuteSql("update " + OneLevelCategoryDataBase.ONE_LEVEL_CATEGORY_TABLE_NAME + " set is_default = 1 where id = " + oneLeveId);
+
+                        //清空所有的二级分类的默认
+                        twoLevelCategoryDataBase.resetAllNoDefault(model);
+                    }
+
                     Intent it = new Intent(this, TwoLevelOperationActivity.class);
                     twoLevelCategoryDataBase.save(mTwoLevelCategory);
                     if(edit){
-                        ToastUtil.success(TwoLevelEditActivity.this, "编辑一级分类成功");
+                        ToastUtil.success(TwoLevelEditActivity.this, "编辑二级分类成功");
                         it.putExtra("type", "edit");
                     }else{
-                        ToastUtil.success(TwoLevelEditActivity.this, "新增一级分类成功");
+                        ToastUtil.success(TwoLevelEditActivity.this, "新增二级分类成功");
                         //新增的保存成功后把该条数据查出来
                         List<TwoLevelCategory> twoLevelCategories =  twoLevelCategoryDataBase.query(" where value= '" +mTwoLevelCategory.getValue()+ "' and order_ ="+ mTwoLevelCategory.getOrder()
                                                                                     +" and one_level_id=" +mTwoLevelCategory.getOneLevelId());
                         mTwoLevelCategory = twoLevelCategories.get(0);
                         it.putExtra("type", "save");
                     }
+
+                    refreshOneLevelCache();
                     //缓存改变数据
                     refreshTwoLevelCache();
 
@@ -326,9 +355,9 @@ public class TwoLevelEditActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                     if(edit)
-                        ToastUtil.success(TwoLevelEditActivity.this, "编辑一级分类失败");
+                        ToastUtil.success(TwoLevelEditActivity.this, "编辑二级分类失败");
                     else
-                        ToastUtil.success(TwoLevelEditActivity.this, "新增一级分类失败");
+                        ToastUtil.success(TwoLevelEditActivity.this, "新增二级分类失败");
                 }
                 break;
             case R.id.two_level_edit_delete: //删除或者重置
@@ -339,7 +368,7 @@ public class TwoLevelEditActivity extends BaseActivity {
                     builder.setCancelable(true);
                     builder.setIcon(R.drawable.menu_feedback);
                     builder.setTitle("重要提示");
-                    builder.setMessage("要删除一级分类《" + mTwoLevelCategory.getValue() +"》吗？这是不可逆行为，删掉将不能恢复！");
+                    builder.setMessage("要删除二级分类《" + mTwoLevelCategory.getValue() +"》吗？这是不可逆行为，删掉将不能恢复！");
                     builder.setPositiveButton("删除",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -351,10 +380,10 @@ public class TwoLevelEditActivity extends BaseActivity {
                                         refreshTwoLevelCache();
                                         setResult(TwoLevelOperationActivity.TWO_LEVEL_CATEGORY_EDIT_CODE, it);
                                         finish();
-                                        ToastUtil.success(TwoLevelEditActivity.this, "删除一级分类《" + mTwoLevelCategory.getValue() + "》成功。");
+                                        ToastUtil.success(TwoLevelEditActivity.this, "删除二级分类《" + mTwoLevelCategory.getValue() + "》成功。");
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                        ToastUtil.success(TwoLevelEditActivity.this, "删除一级分类《" + mTwoLevelCategory.getValue() + "》失败。");
+                                        ToastUtil.success(TwoLevelEditActivity.this, "删除二级分类《" + mTwoLevelCategory.getValue() + "》失败。");
                                     }
 
                                 }
@@ -371,6 +400,14 @@ public class TwoLevelEditActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    /**
+     * 重新获取一级分类的缓存
+     */
+    private void refreshOneLevelCache(){
+        //缓存改变数据
+        BaseApplication.oneLevelCategories = oneLevelCategoryDataBase.query(" order by order_ ");
     }
 
     /**
@@ -429,6 +466,7 @@ public class TwoLevelEditActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         twoLevelCategoryDataBase.destroy();
+        oneLevelCategoryDataBase.destroy();
         super.onDestroy();
     }
 }

@@ -162,11 +162,11 @@
             <EditText
                 android:id="@+id/user_base_introduction"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:minLines="5"
                 android:maxLines="10"
                 android:gravity="left"
-                android:inputType="text"
+                android:inputType="textMultiLine"
                 android:hint="介绍点什么吧"/>
         </LinearLayout>
     </LinearLayout>

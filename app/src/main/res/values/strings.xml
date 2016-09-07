@@ -358,7 +358,7 @@
     <string name="financial_year">本年</string>
     <string name="financial_income">增加收入</string>
     <string name="financial_month_income">本月收入</string>
-    <string name="default_money">$3999.00</string>
+    <string name="default_money">￥0.0</string>
     <string name="default_category">其他收入>>意外收入</string>
     <string name="financial_month_spend">本月支出</string>
     <string name="financial_month_budget">预算结余</string>
@@ -384,4 +384,6 @@
     <string name="auto_refresh">自动同步</string>
     <string name="receive_notification">接收推送</string>
     <string name="category_manager">分类管理</string>
+    <string name="one_level_default_tip">(修改默认值请通过其二级分类设置)</string>
+    <string name="one_level_budget_tip">(修改预算请通过其二级分类设置)</string>
 </resources>

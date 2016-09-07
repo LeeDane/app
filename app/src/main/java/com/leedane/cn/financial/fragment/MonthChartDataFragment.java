@@ -9,55 +9,40 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.AxisValueFormatter;
-import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.leedane.cn.app.R;
-import com.leedane.cn.customview.MyMarkerView;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.bean.FinancialList;
 import com.leedane.cn.financial.charts.bar.MultipleBarObject;
 import com.leedane.cn.financial.charts.line.LineObject;
 import com.leedane.cn.financial.charts.pie.PieObject;
-import com.leedane.cn.financial.handler.LineHandler;
 import com.leedane.cn.financial.handler.MultipleBarHandler;
 import com.leedane.cn.financial.handler.PieHandler;
 import com.leedane.cn.financial.util.EnumUtil;
-import com.leedane.cn.fragment.BaseFragment;
+import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.StringUtil;
-import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 /**
  * 图表数据的fragment
  * Created by LeeDane on 2016/8/7.
  */
-public class MonthChartDataFragment extends FinancialBaseFragment implements OnChartValueSelectedListener {
+public class MonthChartDataFragment extends FinancialBaseFragment {
 
     private FinancialList mFinancialList;
     private View mRootView;
@@ -93,16 +78,48 @@ public class MonthChartDataFragment extends FinancialBaseFragment implements OnC
             mFinancialList = (FinancialList) bundle.getSerializable("financialMonthList");
         }else{
             Log.i("MonthChartData", "bundle为空");
+
         }
         if(mContext == null)
             mContext = getActivity();
-        Log.i("MonthChartData", "展示本月的");
+        Log.i("MonthChartData", "展示本周的");
 
         PieChart pieChart = (PieChart)mRootView.findViewById(R.id.month_pie_chart);
         PieHandler pieHandler = new PieHandler(mContext, getPieObject());
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                if (e == null || barChart == null)
+                    return;
+                FinancialList list = new FinancialList();
+                List<FinancialBean> financialBeans = new ArrayList<>();
+                list.setFinancialBeans(financialBeans);
+                if(h.getX() == 0.0){//点击的是收入
+                    for(FinancialBean financialBean: mFinancialList.getFinancialBeans()){
+                        if(financialBean.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME){
+                            financialBeans.add(financialBean);
+                        }
+                    }
+                }else if(h.getX() == 1.0){//点击的是支出
+                    for(FinancialBean financialBean: mFinancialList.getFinancialBeans()){
+                        if(financialBean.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND){
+                            financialBeans.add(financialBean);
+                        }
+                    }
+                }
+                MultipleBarHandler handler = new MultipleBarHandler(mContext, getMultipleBarObject(list));
+                handler.setmTfLight(mTfLight);
+                handler.showMultipleBar(barChart);
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
         pieHandler.showPie(pieChart);
 
-        /*LineChart lineChart = (LineChart)mRootView.findViewById(R.id.month_line_chart);
+       /* LineChart lineChart = (LineChart)mRootView.findViewById(R.id.month_line_chart);
         LineHandler lineHandler = new LineHandler(mContext, getLineObject());
         lineHandler.showLine(lineChart);*/
 
@@ -110,7 +127,7 @@ public class MonthChartDataFragment extends FinancialBaseFragment implements OnC
         /*MultipleBarHandler multipleBarHandler = new MultipleBarHandler(mContext, getMultipleBarObject());
         multipleBarHandler.showMultipleBar(barChart);*/
         barChart.setOnChartValueSelectedListener(this);
-        MultipleBarHandler handler = new MultipleBarHandler(mContext, getMultipleBarObject());
+        MultipleBarHandler handler = new MultipleBarHandler(mContext, getMultipleBarObject(mFinancialList));
         handler.setmTfLight(mTfLight);
         handler.showMultipleBar(barChart);
     }
@@ -145,6 +162,8 @@ public class MonthChartDataFragment extends FinancialBaseFragment implements OnC
          */
         //float quarterlyIncome = 0;
         //float quarterlySpend = 0;
+
+
         List<FinancialBean> financialBeans = mFinancialList.getFinancialBeans();
         for(FinancialBean bean: financialBeans){
             if(bean.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME){//收入
@@ -167,74 +186,22 @@ public class MonthChartDataFragment extends FinancialBaseFragment implements OnC
     private ArrayList<Integer> getPieColor(){
         ArrayList<Integer> colors = new ArrayList<Integer>();
 
-        // 饼图颜色
-        colors.add(R.color.bluePrimary);
-        colors.add(R.color.red);
+        // 饼图颜色(一定要使用rgb格式的颜色)
+        colors.add(IncomeOrSpendActivity.FINANCIAL_INCOME_COLOR);
+        colors.add(IncomeOrSpendActivity.FINANCIAL_SPEND_COLOR);
         return colors;
     }
 
-    /**
-     * 获取折线图的对象
-     * @return
-     */
-    private LineObject getLineObject(){
-        LineObject lineObject = new LineObject();
-        lineObject.setxValues(getLineXValues());
-        lineObject.setyValues(getLineYValues());
-        lineObject.setColor(Color.rgb(104, 241, 175));
-        lineObject.setHighLightColor(Color.rgb(244, 117, 117));
-        lineObject.setLineDesc(DateUtil.DateToString(DateUtil.getThisMonthStart(), "yyyy-MM-dd") + "至" + DateUtil.DateToString(new Date(), "yyyy-MM-dd") + "收支统计");
-        return lineObject;
-    }
-
-    private ArrayList<String> getLineXValues(){
-        ArrayList<String> xValues = new ArrayList<String>();  //xVals用来表示每个饼块上的内容
-        Set<String> days = new HashSet<>();
-        for(FinancialBean financialBean: mFinancialList.getFinancialBeans()){
-            if(StringUtil.isNotNull(financialBean.getAdditionTime())){
-                days.add(financialBean.getAdditionTime().substring(8, 10));
-            }
-        }
-        if(days.size() > 0){
-            for(String s: days){
-                xValues.add(s +"日");
-            }
-        }
-        return xValues;
-    }
-
-    private ArrayList<Entry> getLineYValues(){
-        ArrayList<Entry> yValues = new ArrayList<>();
-        ArrayList<String> xValues = getLineXValues();
-        Map<String, Float> moneys = new HashMap<>(); //年跟钱的关系
-        for(int i = 0; i < xValues.size(); i++){
-            for(FinancialBean financialBean: mFinancialList.getFinancialBeans()){
-                if(StringUtil.isNotNull(financialBean.getAdditionTime()) && xValues.get(i).equals(financialBean.getAdditionTime().substring(8, 10) +"日")){
-                    Float money = financialBean.getMoney();
-                    if(moneys.containsKey(xValues.get(i))){//已经存在
-                        money = moneys.get(xValues.get(i)) + money;
-                    }
-                    moneys.put(xValues.get(i), money);
-                }
-            }
-        }
-        for(int i = 0; i < xValues.size(); i++){
-            yValues.add(new Entry(moneys.containsKey(xValues.get(i)) ? moneys.get(xValues.get(i)) : 0f, i));
-        }
-        return  yValues;
-    }
-
-
-    private MultipleBarObject getMultipleBarObject(){
+    private MultipleBarObject getMultipleBarObject(FinancialList financialList){
         MultipleBarObject barObject = new MultipleBarObject();
         ArrayList<IBarDataSet> barDataSets = new ArrayList<>();
         BarDataSet incomeBarDataSet = null;//收入列表
         BarDataSet spendBarDataSet = null;//支出列表
-        ArrayList<String> xValues = getMultipleBarXValues();
+        ArrayList<String> xValues = getMultipleBarXValues(financialList);
         Map<String, Float> incomeMoneys = new HashMap<>(); //年跟钱的关系
         Map<String, Float> spendMoneys = new HashMap<>(); //年跟钱的关系
         for(int i = 0; i < xValues.size(); i++){
-            for(FinancialBean financialBean: mFinancialList.getFinancialBeans()){
+            for(FinancialBean financialBean: financialList.getFinancialBeans()){
                 if(StringUtil.isNotNull(financialBean.getAdditionTime()) && xValues.get(i).equals(financialBean.getAdditionTime().substring(8, 10))){
                     Float money = financialBean.getMoney();
                     if(financialBean.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME){//收入
@@ -263,25 +230,13 @@ public class MonthChartDataFragment extends FinancialBaseFragment implements OnC
 
             incomeBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), incomeMoneys.get(xValues.get(i)) != null ? incomeMoneys.get(xValues.get(i)): 0.0f));
             spendBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), spendMoneys.get(xValues.get(i)) != null ? spendMoneys.get(xValues.get(i)) :0.0f));
-            /*if(i == 0){
-                incomeBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), 6));
-                spendBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), 9));
-            }else if(i == 1){
-                incomeBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), 4));
-                spendBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), 7));
-            }else{
-                incomeBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), 2));
-                spendBarEntrys.add(new BarEntry(Float.parseFloat(xValues.get(i)), 8));
-            }*/
-
-
         }
         incomeBarDataSet = new BarDataSet(incomeBarEntrys, "收入统计");
-        incomeBarDataSet.setColor(Color.rgb(104, 241, 175));
+        incomeBarDataSet.setColor(IncomeOrSpendActivity.FINANCIAL_INCOME_COLOR);
         incomeBarDataSet.setValues(incomeBarEntrys);
         incomeBarDataSet.setDrawValues(true);
         spendBarDataSet = new BarDataSet(spendBarEntrys, "支出统计");
-        spendBarDataSet.setColor(Color.rgb(164, 228, 251));
+        spendBarDataSet.setColor(IncomeOrSpendActivity.FINANCIAL_SPEND_COLOR);
         spendBarDataSet.setValues(spendBarEntrys);
         spendBarDataSet.setDrawValues(true);
         //spendBarDataSet.setValues(spendBarEntrys);
@@ -290,13 +245,15 @@ public class MonthChartDataFragment extends FinancialBaseFragment implements OnC
         barObject.setBarDataSets(barDataSets);
         barObject.setMinValue(0.0f);
         barObject.setMaxValue(max);
-        barObject.setxValues(getMultipleBarXValues());
+        barObject.setxValues(getMultipleBarXValues(financialList));
+        barObject.setxLabels(getMultipleBarXLabels(financialList));
         return barObject;
     }
-    private ArrayList<String> getMultipleBarXValues(){
-        ArrayList<String> xValues = new ArrayList<String>();  //xVals用来表示每个饼块上的内容
+
+    private ArrayList<String> getMultipleBarXValues(FinancialList financialList){
+        ArrayList<String> xValues = new ArrayList<>();  //xVals用来表示每个饼块上的内容
         Set<String> days = new HashSet<>();
-        for(FinancialBean financialBean: mFinancialList.getFinancialBeans()){
+        for(FinancialBean financialBean: financialList.getFinancialBeans()){
             if(StringUtil.isNotNull(financialBean.getAdditionTime())){
                 days.add(financialBean.getAdditionTime().substring(8, 10));
             }
@@ -319,36 +276,42 @@ public class MonthChartDataFragment extends FinancialBaseFragment implements OnC
         for(int i = min; i <= max; i++){
             xValues.add(i < 10 ? "0"+i: String.valueOf(i));
         }
-       //xValues.clear();
-        //sortList(xValues);
-        /*for(int i = 5; i < 15; i++){
-            String v = i < 10 ? "0"+i: String.valueOf(i);
-            xValues.add(v);
-        }*/
-        //sortList(xValues);
         return xValues;
     }
 
-    /**
-     * 从小到大排序
-     * @param list
-     */
-    private void sortList(ArrayList<String> list){
-        // 按排查时间倒序models
-        Collections.sort(list, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                if (StringUtil.isNull(s1))
-                    return 0;
-                if (StringUtil.isNull(s2))
-                    return 0;
-                int st1 = Integer.parseInt(s1);
-                long st2 = Integer.parseInt(s2);
-                return st1 == st2 ? 0 :
-                        (st1 > st1 ? 1 : -1);
+    private ArrayList<String> getMultipleBarXLabels(FinancialList financialList){
+        ArrayList<String> xValues = new ArrayList<>();  //xVals用来表示每个饼块上的内容
+        Set<String> days = new HashSet<>();
+        for(FinancialBean financialBean: financialList.getFinancialBeans()){
+            if(StringUtil.isNotNull(financialBean.getAdditionTime())){
+                days.add(financialBean.getAdditionTime().substring(8, 10));
             }
-        });
+        }
+        int max = 0;
+        int min = 0;
+        if(days.size() > 0){
+            int i = 0;
+            for(String s: days){
+                if(i == 0){
+                    max = Integer.parseInt(s);
+                    min = Integer.parseInt(s);
+                }else{
+                    max = Math.max(max, Integer.parseInt(s));
+                    min = Math.min(min, Integer.parseInt(s));
+                }
+                i ++;
+            }
+        }
+        int size = max - min;
+        for(int i = min; i <= max; i++){
+            if(size > 9)
+                xValues.add(i +"");
+            else
+                xValues.add(i + "日");
+        }
+        return xValues;
     }
+
     @Override
     protected void sendFirstLoading() {
 
@@ -367,19 +330,5 @@ public class MonthChartDataFragment extends FinancialBaseFragment implements OnC
     @Override
     protected void sendLoadAgain(View view) {
 
-    }
-
-    @Override
-    public void onValueSelected(Entry e, Highlight h) {
-        ToastUtil.success(mContext, "Selected: " + e.toString() + ", dataSet: " + h.getDataSetIndex());
-        if(barChart.getData() != null) {
-            barChart.getData().setHighlightEnabled(!barChart.getData().isHighlightEnabled());
-            barChart.invalidate();
-        }
-    }
-
-    @Override
-    public void onNothingSelected() {
-        ToastUtil.success(mContext, "Nothing selected.");
     }
 }

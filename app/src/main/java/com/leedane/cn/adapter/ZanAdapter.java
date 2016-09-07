@@ -41,7 +41,11 @@ public class ZanAdapter extends BaseListAdapter<ZanBean>{
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
+
+        viewHolder.getmFrom().setTypeface(typeface);
         viewHolder.getmFrom().setText(StringUtil.changeNotNull(zanBean.getFroms()));
+
+        viewHolder.getmTime().setTypeface(typeface);
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(zanBean.getCreateTime())));
         /*viewHolder.getmUserName().setText(zanBean.getAccount());
         if(zanBean.getUserPicPath() != null)

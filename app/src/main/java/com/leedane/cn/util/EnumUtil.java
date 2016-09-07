@@ -32,6 +32,19 @@ public class EnumUtil {
 	}
 
 	/**
+	 * 字体
+	 */
+	public enum ZiTi{
+		pop字体("popzt.ttf"), 方正粗圆("fzcy.ttf"),华文新宋("fzxs.ttf") ;
+		ZiTi(String value) {
+			this.value = value;
+		}
+
+		public final String value;
+	}
+
+
+	/**
 	 * x心情操作的状态(0:发表，1：转发,2:评论)
 	 */
 	public enum MoodOperateType{

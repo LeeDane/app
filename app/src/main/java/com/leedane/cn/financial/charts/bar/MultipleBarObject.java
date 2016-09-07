@@ -17,6 +17,7 @@ public class MultipleBarObject {
 
     private List<IBarDataSet> barDataSets;//多个柱子的数据
     private List<String> xValues; //x轴
+    private List<String> xLabels; //x轴的显示文字
     private float minValue; //最小值
     private float maxValue; //最大值
 
@@ -50,5 +51,13 @@ public class MultipleBarObject {
 
     public void setxValues(List<String> xValues) {
         this.xValues = xValues;
+    }
+
+    public List<String> getxLabels() {
+        return xLabels;
+    }
+
+    public void setxLabels(List<String> xLabels) {
+        this.xLabels = xLabels;
     }
 }

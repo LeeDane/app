@@ -36,6 +36,7 @@ import com.leedane.cn.fragment.ZanFragment;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.handler.SignInHandler;
+import com.leedane.cn.handler.UserHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SerializableMap;
@@ -191,53 +192,7 @@ public class PersonalActivity extends BaseActivity {
      * 异步加载mUserId对应的用户信息
      */
     private void asnyLoadUserInfo() {
-        final Handler handler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                if(msg != null && msg.what == 1){
-                    try{
-                        JSONObject resultObject = new JSONObject(String.valueOf(msg.obj));
-                        if(resultObject.has("isSuccess")){
-                            Log.i(TAG, "服务器返回的信息：" + resultObject.getString("userinfo"));
-                            mUserInfo = new JSONObject(resultObject.getString("userinfo"));
-
-                            initView();
-                            return;
-                        }else {
-                            ToastUtil.failure(PersonalActivity.this, resultObject);
-                        }
-
-                    }catch(Exception e){
-                        e.printStackTrace();
-                        dismissLoadingDialog();
-                        Log.i(TAG, "获取用户信息失败");
-                    }
-                }
-                //其他情况关闭当前的activity
-                //finish();
-            }
-        };
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String searchUserInfoUrl = SharedPreferenceUtil.getSettingBean(getBaseContext(), ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/user/searchUserByUserId.action";
-                HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("searchUserId", mUserId);
-                params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-                String responseStr = "{\"isSuccess\": false, \"message\": \"获取服务器信息失败\"}";
-                try {
-                    responseStr = HttpConnectionUtil.sendPostRequest(searchUserInfoUrl, params, 0, 0);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                Message message = new Message();
-                message.obj = responseStr;
-                message.what=1;
-                handler.sendMessage(message);
-            }
-        }).start();
+        UserHandler.asnyLoadUserInfo(this, mUserId);
     }
     
 
@@ -631,6 +586,17 @@ public class PersonalActivity extends BaseActivity {
                     //设置不可点击
                     mPersonalFan.setClickable(false);
                     mPersonalFan.setText(getStringResource(R.string.personal_is_fan));
+                }else{
+                    ToastUtil.failure(PersonalActivity.this, jsonObject);
+                }
+                return;
+            }
+            //获取非登录用户的基本信息
+            if(type == TaskType.LOAD_USER_INFO){
+                dismissLoadingDialog();
+                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                    mUserInfo = new JSONObject(jsonObject.getString("userinfo"));
+                    initView();
                 }else{
                     ToastUtil.failure(PersonalActivity.this, jsonObject);
                 }

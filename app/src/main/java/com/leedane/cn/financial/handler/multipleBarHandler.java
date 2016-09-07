@@ -83,10 +83,22 @@ public class MultipleBarHandler {
         xl.setDrawGridLines(true);//去掉网格
         xl.setCenterAxisLabels(true);
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);//让x轴显示在下方
+        final float startValue;
+        if(multipleBarObject.getxValues().size() > 0){
+            startValue = Float.parseFloat(multipleBarObject.getxValues().get(0));
+        }else{
+            startValue = 10000f;
+        }
         xl.setValueFormatter(new AxisValueFormatter() {
+            int i = -1;
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return String.valueOf((int) value);
+                if(value >= startValue && value < startValue + multipleBarObject.getxValues().size() && multipleBarObject.getxLabels().size() > 0){
+                    float a = value - startValue;
+                    int index = (int)a;
+                    return multipleBarObject.getxLabels().get(index);
+                }
+               return "";
             }
 
             @Override
@@ -101,6 +113,17 @@ public class MultipleBarHandler {
         leftAxis.setDrawGridLines(false); //保留y轴网格
         //leftAxis.setSpaceTop(30f);
         leftAxis.setAxisMinValue(0f); // this replaces setStartAtZero(true)*/
+        leftAxis.setValueFormatter(new AxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return String.valueOf(value);
+            }
+
+            @Override
+            public int getDecimalDigits() {
+                return 0;
+            }
+        });
         barChart.getAxisRight().setEnabled(false);
     }
 
@@ -114,7 +137,12 @@ public class MultipleBarHandler {
         barChart.setData(data);
 
         List<String> multipleBarXValues = multipleBarObject.getxValues();
-        float start = Float.parseFloat(multipleBarXValues.get(0));
+        float start;
+        if(multipleBarXValues.size() > 0){
+            start = Float.parseFloat(multipleBarXValues.get(0));
+        }else{
+            start = 0.0f;
+        }
         barChart.getBarData().setBarWidth(barWidth);
         barChart.getXAxis().setAxisMinValue(start);
         barChart.getXAxis().setDrawLabels(true);

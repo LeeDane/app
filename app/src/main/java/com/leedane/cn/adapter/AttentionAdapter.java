@@ -39,6 +39,8 @@ public class AttentionAdapter extends BaseListAdapter<AttentionBean>{
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
+
+        viewHolder.getmTime().setTypeface(typeface);
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(attentionBean.getCreateTime())));
         /*viewHolder.getmUserName().setText(attentionBean.getAccount());
         if(attentionBean.getUserPicPath() != null)

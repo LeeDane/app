@@ -74,6 +74,7 @@
             android:lines="1"
             android:inputType="numberDecimal"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="预算金额"/>
     </LinearLayout>
     <LinearLayout
@@ -140,25 +141,15 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginRight="@dimen/default_30dp"
-            android:text="设为默认"/>
-        <RadioGroup
-            android:id="@+id/one_level_edit_default_group"
+            android:text="是否默认"/>
+        <TextView
+            android:id="@+id/one_level_edit_default"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RadioButton
-                android:id="@+id/one_level_edit_default"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="默认"/>
-            <RadioButton
-                android:id="@+id/one_level_edit_no_default"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="非默认"/>
-        </RadioGroup>
+            android:enabled="false"
+            android:text="@string/no_text">
+        </TextView>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

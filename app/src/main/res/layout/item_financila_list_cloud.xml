@@ -20,20 +20,19 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/default_10dp"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/financial_cloud_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textSize="@dimen/default_16sp"
-            android:text="@string/no_text"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_5dp"
             android:orientation="horizontal">
+            <TextView
+                android:id="@+id/financial_cloud_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/default_16sp"
+                android:text="@string/no_text"/>
             <TextView
                 android:id="@+id/financial_cloud_money"
                 android:layout_width="0dp"
@@ -41,8 +40,16 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:textSize="@dimen/default_16sp"
+                android:gravity="right"
+                android:layout_marginRight="@dimen/default_10dp"
                 android:text="@string/no_text"/>
-
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_5dp"
+            android:orientation="horizontal">
             <TextView
                 android:id="@+id/financial_cloud_status"
                 android:layout_width="0dp"
@@ -51,7 +58,22 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/status"/>
-
+            <TextView
+                android:id="@+id/financial_cloud_time"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:gravity="right"
+                android:layout_marginRight="@dimen/default_10dp"
+                android:text="@string/default_time"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_5dp"
+            android:orientation="horizontal">
             <TextView
                 android:id="@+id/financial_cloud_synchronous"
                 android:layout_width="0dp"
@@ -60,15 +82,15 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="是否同步"/>
-
             <TextView
-                android:id="@+id/financial_cloud_time"
+                android:id="@+id/financial_cloud_synchronous_tip"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:singleLine="true"
-                android:text="@string/default_time"/>
+                android:gravity="right"
+                android:layout_marginRight="@dimen/default_10dp"
+                android:singleLine="true"/>
         </LinearLayout>
     </LinearLayout>
     <ImageView

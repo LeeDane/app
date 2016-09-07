@@ -41,6 +41,8 @@ public class CollectionAdapter extends BaseListAdapter<CollectionBean>{
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
+
+        viewHolder.getmTime().setTypeface(typeface);
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(collectionBean.getCreateTime())));
         /*viewHolder.getmUserName().setText(collectionBean.getAccount());
         if(collectionBean.getUserPicPath() != null)

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Vibrator;
 import android.telephony.TelephonyManager;
@@ -146,6 +147,14 @@ public class BaseApplication extends Application {
     public static Bitmap getNotPicImage(){
         return getBitmapFromRes(R.drawable.no_pic);
 
+    }
+
+    /**
+     * 获取默认的字体
+     * @return
+     */
+    public static Typeface getDefaultTypeface(){
+        return Typeface.createFromAsset(BaseApplication.newInstance().getAssets(), "fangzhengliuxingti.ttf");
     }
 
     /**

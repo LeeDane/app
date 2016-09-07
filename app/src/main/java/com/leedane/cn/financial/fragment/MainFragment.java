@@ -17,19 +17,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.app.R;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.GalleryBean;
 import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.financial.activity.CloudActivity;
+import com.leedane.cn.financial.activity.HomeActivity;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.activity.OneLevelOperationActivity;
 import com.leedane.cn.financial.activity.SettingActivity;
 import com.leedane.cn.financial.adapter.FinancialRecyclerViewAdapter;
 import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.bean.FinancialList;
+import com.leedane.cn.financial.bean.OneLevelCategory;
+import com.leedane.cn.financial.bean.TwoLevelCategory;
+import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.handler.FinancialHandler;
 import com.leedane.cn.financial.util.CalculateUtil;
 import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -58,7 +64,7 @@ public class MainFragment extends FinancialBaseFragment{
 
     private LinearLayoutManager mLayoutManager;
 
-    private TextView mClould; //同步云
+    //private TextView mClould; //同步云
 
 
     private FinancialList mMonthFinancialList; //本月的数据列表
@@ -115,7 +121,7 @@ public class MainFragment extends FinancialBaseFragment{
      * 将列表移动到最顶部
      */
     public void smoothScrollToTop(){
-        if(mFinancialBeans != null && mFinancialBeans.size() > 0 && mRecyclerView != null /*&& !isLoading*/){
+        if(!CommonUtil.isEmpty(mFinancialBeans) && mRecyclerView != null /*&& !isLoading*/){
             mRecyclerView.smoothScrollToPosition(0);
         }
     }
@@ -144,8 +150,8 @@ public class MainFragment extends FinancialBaseFragment{
         mAddFinancial = (TextView)mHeader.findViewById(R.id.add_financial);
         mAddFinancial.setOnClickListener(MainFragment.this);
 
-        mClould = (TextView)mHeader.findViewById(R.id.financial_refresh);
-        mClould.setOnClickListener(this);
+        //mClould = (TextView)mHeader.findViewById(R.id.financial_refresh);
+        //mClould.setOnClickListener(this);
 
         this.mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.id_recyclerview);
         mLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
@@ -171,7 +177,7 @@ public class MainFragment extends FinancialBaseFragment{
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_green_light);
-        refreshHeaderData();
+        //refreshHeaderData();
     }
 
     /**
@@ -195,11 +201,30 @@ public class MainFragment extends FinancialBaseFragment{
     private void refreshHeaderData(){
         /*if(mHeader == null || mMonthFinancialList == null)
             return;*/
+
+
+        //计算预算
+        List<TwoLevelCategory> twoLevelCategories = BaseApplication.twoLevelCategories;
+        //总预算(每个自然月算起)
+        float totalBudget = 0.0f;
+        for(TwoLevelCategory twoLevelCategory: twoLevelCategories){
+            if(!OneLevelCategoryDataBase.isIncome(twoLevelCategory.getOneLevelId()))
+                totalBudget += twoLevelCategory.getBudget();
+        }
+
+        float incomeTotal = FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME);
+        float spendTotal = FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         //更新
         TextView income = (TextView)mHeader.findViewById(R.id.financial_header_income);
         TextView spend = (TextView)mHeader.findViewById(R.id.financial_header_spend);
-        income.setText(String.valueOf(FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME)));
-        spend.setText(String.valueOf(FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND)));
+        TextView budget = (TextView)mHeader.findViewById(R.id.financial_header_budget);
+        income.setText("￥" + incomeTotal);
+        spend.setText("￥"+ spendTotal);
+        budget.setText("￥" + (totalBudget - spendTotal));
+
+        mHeader.findViewById(R.id.financial_header_income_linearlayout).setOnClickListener(this);
+        mHeader.findViewById(R.id.financial_header_spend_linearlayout).setOnClickListener(this);
+        mHeader.findViewById(R.id.financial_header_budget_linearlayout).setOnClickListener(this);
         mHeader.findViewById(R.id.financial_header_edit_one_level).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,6 +237,13 @@ public class MainFragment extends FinancialBaseFragment{
             public void onClick(View v) {
                 Intent it = new Intent(mContext, SettingActivity.class);
                 startActivity(it);
+            }
+        });
+        mHeader.findViewById(R.id.financial_header_cloud).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(mContext, CloudActivity.class);
+                startActivityForResult(it, SYNCHRONIZED_CLOUD_CODE);
             }
         });
     }
@@ -272,16 +304,36 @@ public class MainFragment extends FinancialBaseFragment{
                 Intent intent = new Intent(mContext, IncomeOrSpendActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.financial_refresh:
+            /*case R.id.financial_refresh:
                 Intent it = new Intent(mContext, CloudActivity.class);
                 startActivityForResult(it, SYNCHRONIZED_CLOUD_CODE);
+                break;*/
+            case R.id.financial_header_income_linearlayout://本月收入的点击
+                ((HomeActivity)getActivity()).tabClick(3);
+                break;
+
+            case R.id.financial_header_spend_linearlayout://本月支出的点击
+                ((HomeActivity)getActivity()).tabClick(3);
+                break;
+
+            case R.id.financial_header_budget_linearlayout://预算结余的点击
+                Intent itOneLevel = new Intent(mContext, OneLevelOperationActivity.class);
+                startActivity(itOneLevel);
                 break;
         }
     }
 
     @Override
+    public void onRefresh() {
+        generateData();
+    }
+
+    @Override
     public void calculate(FinancialList financialList, int model) {
         super.calculate(financialList, model);
+        if(mSwipeLayout !=null && mSwipeLayout.isRefreshing())
+            mSwipeLayout.setRefreshing(false);//下拉刷新组件停止刷新
+
         if(model == EnumUtil.FinancialModel.本月.value){
             this.mMonthFinancialList = CalculateUtil.monthList;
             refreshHeaderData();

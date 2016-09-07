@@ -20,6 +20,7 @@ import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
+import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
@@ -40,6 +41,7 @@ public class OneLevelEditActivity extends BaseActivity {
     private static final String[] mIconKeys = {"请选择", "分类", "收入", "列表", "向左", "支出"}; //定义数组
 
     private OneLevelCategoryDataBase oneLevelCategoryDataBase;
+    private TwoLevelCategoryDataBase twoLevelCategoryDataBase;
     private OneLevelCategory mOneLevelCategory;
     private int mOneLevelCategoryId;
     private boolean edit; //是否可以编辑
@@ -50,7 +52,7 @@ public class OneLevelEditActivity extends BaseActivity {
     private RadioGroup mStatusGroup;
     private RadioGroup mModelGroup;
 
-    private RadioGroup mDefaultGroup;
+    private TextView mDefaultTV;
 
     private Spinner mSpinner;
     private ImageView mIcon;
@@ -80,6 +82,7 @@ public class OneLevelEditActivity extends BaseActivity {
         }
 
         oneLevelCategoryDataBase = new OneLevelCategoryDataBase(this);
+        twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(this);
         mOneLevelCategoryId = getIntent().getIntExtra("oneLevelCategoryId", 0);
 
         if(mOneLevelCategoryId > 0){
@@ -112,7 +115,7 @@ public class OneLevelEditActivity extends BaseActivity {
         clickPosition = getIntent().getIntExtra("clickPosition", 0);//方便回传定位
 
         mName.setText(mOneLevelCategory.getValue());
-        mBudget.setText(String.valueOf(mOneLevelCategory.getBudget()));
+        mBudget.setText(String.valueOf(mOneLevelCategory.getBudget()) + getStringResource(R.string.one_level_budget_tip));
         mSort.setText(String.valueOf(StringUtil.changeObjectToInt(mOneLevelCategory.getOrder())));
 
         status = mOneLevelCategory.getStatus();
@@ -135,11 +138,9 @@ public class OneLevelEditActivity extends BaseActivity {
 
         isDefault = mOneLevelCategory.isDefault();
         if(isDefault){
-            ((RadioButton)findViewById(R.id.one_level_edit_default)).setChecked(true);
-            ((RadioButton)findViewById(R.id.one_level_edit_no_default)).setChecked(false);
+            mDefaultTV.setText("默认" + getStringResource(R.string.one_level_default_tip));
         }else{
-            ((RadioButton)findViewById(R.id.one_level_edit_default)).setChecked(false);
-            ((RadioButton)findViewById(R.id.one_level_edit_no_default)).setChecked(true);
+            mDefaultTV.setText("非默认" + getStringResource(R.string.one_level_default_tip));
         }
 
         iconId = mOneLevelCategory.getIcon();//设置默认值
@@ -215,16 +216,8 @@ public class OneLevelEditActivity extends BaseActivity {
             }
         });
 
-        mDefaultGroup = (RadioGroup)findViewById(R.id.one_level_edit_default_group);
-        mDefaultGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == R.id.one_level_edit_default){
-                    isDefault = true;
-                }else
-                    isDefault = false;
-            }
-        });
+        mDefaultTV = (TextView)findViewById(R.id.one_level_edit_default);
+        mDefaultTV.setText("非默认" + getStringResource(R.string.one_level_default_tip));
 
         mSpinner = (Spinner)findViewById(R.id.one_level_edit_spinner);
         mIcon = (ImageView)findViewById(R.id.one_level_edit_icon);
@@ -268,6 +261,7 @@ public class OneLevelEditActivity extends BaseActivity {
                 try {
                     buildOneLevelCategory();
                     Intent it = new Intent(OneLevelEditActivity.this, OneLevelOperationActivity.class);
+
                     if(edit){
                         oneLevelCategoryDataBase.update(mOneLevelCategory);
                         ToastUtil.success(OneLevelEditActivity.this, "编辑一级分类成功");
@@ -379,7 +373,12 @@ public class OneLevelEditActivity extends BaseActivity {
             mOneLevelCategory = new OneLevelCategory();
 
         mOneLevelCategory.setValue(name);
-        mOneLevelCategory.setBudget(StringUtil.changeObjectToFloat(mBudget.getText().toString()));
+        if(edit){
+            mOneLevelCategory.setBudget(mOneLevelCategory.getBudget());
+        }else{
+            mOneLevelCategory.setBudget(0.0f);
+        }
+
         mOneLevelCategory.setOrder(StringUtil.changeObjectToInt(mSort.getText().toString()));
 
         mOneLevelCategory.setStatus(status);
@@ -394,6 +393,7 @@ public class OneLevelEditActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         oneLevelCategoryDataBase.destroy();
+        twoLevelCategoryDataBase.destroy();
         super.onDestroy();
     }
 }

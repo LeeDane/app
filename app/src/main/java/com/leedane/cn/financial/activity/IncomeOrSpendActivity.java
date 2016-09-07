@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -82,6 +83,12 @@ public class IncomeOrSpendActivity extends BaseActivity {
     //model是添加支出
     public static final int FINANCIAL_MODEL_SPEND = 2;
 
+    //收入的颜色
+    public static final int FINANCIAL_INCOME_COLOR = Color.rgb(129, 129, 247);
+
+    //支出的颜色
+    public static final int FINANCIAL_SPEND_COLOR = Color.rgb(255,0,0);
+
     //金钱
     private EditText mMoney;
 
@@ -149,11 +156,11 @@ public class IncomeOrSpendActivity extends BaseActivity {
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         initData();
         backLayoutVisible();
-        ((TextView)findViewById(R.id.base_title_textview)).setOnClickListener(IncomeOrSpendActivity.this);
+        ((TextView)findViewById(R.id.base_title_textview)).setOnClickListener(this);
 
         financialDataBase = new FinancialDataBase(IncomeOrSpendActivity.this);
-        oneLevelCategoryDataBase = new OneLevelCategoryDataBase(IncomeOrSpendActivity.this);
-        twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(IncomeOrSpendActivity.this);
+        oneLevelCategoryDataBase = new OneLevelCategoryDataBase(this);
+        twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(this);
 
         initView();
     }
@@ -253,14 +260,37 @@ public class IncomeOrSpendActivity extends BaseActivity {
             mDate.setText(DateUtil.DateToString(date, "yyyy-MM-dd"));
             mTime.setText(DateUtil.DateToString(date, "HH:mm:ss"));
 
-            List<OneLevelCategory> oneLevelGategories = oneLevelCategoryDataBase.query(" where is_default=1");
-            if(oneLevelGategories != null && oneLevelGategories.size() ==1){
-                mOneLevel.setText(oneLevelGategories.get(0).getValue());
-            }
+            resetOneLevel();
+            resetTwoLevel();
+        }
+    }
 
-            List<TwoLevelCategory> twoLevelCategories = twoLevelCategoryDataBase.query(" where is_default=1");
-            if(twoLevelCategories != null && twoLevelCategories.size() ==1) {
-                mTwoLevel.setText(twoLevelCategories.get(0).getValue());
+    /**
+     * 重置一级分类
+     */
+    private void resetOneLevel(){
+        List<OneLevelCategory> oneLevelGategories = BaseApplication.oneLevelCategories;
+        if(!CommonUtil.isEmpty(oneLevelGategories)){
+            for(OneLevelCategory oneLevelCategory: oneLevelGategories){
+                if(oneLevelCategory.getStatus() == ConstantsUtil.STATUS_NORMAL && oneLevelCategory.isDefault() && mModel == oneLevelCategory.getModel()){
+                    mOneLevel.setText(oneLevelCategory.getValue());
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * 重置二级分类
+     */
+    private void resetTwoLevel(){
+        List<TwoLevelCategory> twoLevelCategories = BaseApplication.twoLevelCategories;
+        if(!CommonUtil.isEmpty(twoLevelCategories)) {
+            for(TwoLevelCategory twoLevelCategory: twoLevelCategories){
+                if(twoLevelCategory.getStatus() == ConstantsUtil.STATUS_NORMAL && twoLevelCategory.isDefault() && mModel == TwoLevelCategoryDataBase.getModel(twoLevelCategory.getOneLevelId())){
+                    mTwoLevel.setText(twoLevelCategory.getValue());
+                    break;
+                }
             }
         }
     }
@@ -271,30 +301,30 @@ public class IncomeOrSpendActivity extends BaseActivity {
     public void doSave(){
         String money = mMoney.getText().toString();
         if(StringUtil.isNull(money)){
-            ToastUtil.failure(IncomeOrSpendActivity.this, "请输入金额");
+            ToastUtil.failure(this, "请输入金额");
             return;
         }
 
         String onLevel = mOneLevel.getText().toString();
         if(StringUtil.isNull(onLevel)){
-            ToastUtil.failure(IncomeOrSpendActivity.this, "请先选择一级分类");
+            ToastUtil.failure(this, "请先选择一级分类");
             return;
         }
 
         String twoLevel = mTwoLevel.getText().toString();
         if(StringUtil.isNull(twoLevel)){
-            ToastUtil.failure(IncomeOrSpendActivity.this, "请先选择二级分类");
+            ToastUtil.failure(this, "请先选择二级分类");
             return;
         }
 
         String date = mDate.getText().toString();
         if(StringUtil.isNull(date)){
-            ToastUtil.failure(IncomeOrSpendActivity.this, "请先选择日期");
+            ToastUtil.failure(this, "请先选择日期");
             return;
         }
         String time = mTime.getText().toString();
         if(StringUtil.isNull(time)){
-            ToastUtil.failure(IncomeOrSpendActivity.this, "请先选择日期");
+            ToastUtil.failure(this, "请先选择日期");
             return;
         }
 
@@ -473,6 +503,10 @@ public class IncomeOrSpendActivity extends BaseActivity {
                     mModel = FINANCIAL_MODEL_INCOME;
                     ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_income));
                 }
+
+                //重置一级和二级分类
+                resetOneLevel();
+                resetTwoLevel();
                 break;
             case R.id.financial_income_or_spend_save: //保存操作
                 doSave();

@@ -3,6 +3,7 @@ package com.leedane.cn.financial.handler;
 import android.content.Context;
 import android.content.Intent;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
@@ -36,7 +37,8 @@ public class FinancialHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         Map<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        params.put("data", data);
+        Gson gson = new Gson();
+        params.put("data", gson.toJson(data).toString());
         requestBean.setParams(params);
         requestBean.setServerMethod("leedane/financial/save.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
@@ -81,7 +83,8 @@ public class FinancialHandler {
     public static void synchronous(TaskListener listener, List<Map<String, Object>> financialBeans){
         HttpRequestBean requestBean = new HttpRequestBean();
         HashMap<String, Object> params = new HashMap<>();
-        params.put("datas", financialBeans);
+        Gson gson = new Gson();
+        params.put("datas", gson.toJson(financialBeans).toString());
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
         requestBean.setServerMethod("leedane/financial/synchronous.action");

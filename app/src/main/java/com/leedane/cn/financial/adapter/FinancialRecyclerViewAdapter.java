@@ -4,15 +4,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.util.CommonUtil;
-import com.leedane.cn.util.DateUtil;
-import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     public static final int TYPE_EMPTY = 2;//数据为空的展示
     private View mHeaderView;
     private OnItemClickListener mListener;
+    private int lastPosition = -1;
     public void setOnItemClickListener(OnItemClickListener li) {
         mListener = li;
     }
@@ -48,6 +50,7 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         //notifyDataSetChanged();
     }
     public void addDatas(List<FinancialBean> datas) {
+        mFinancialBeans.clear();
         mFinancialBeans.addAll(datas);
         notifyDataSetChanged();
     }
@@ -108,7 +111,7 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                 category = category + " >> " +data.getTwoLevel();
             }
             holder.category.setText(category);
-            holder.money.setText(String.valueOf(data.getMoney()));
+            holder.money.setText("￥" +String.valueOf(data.getMoney()));
             if(StringUtil.isNotNull(data.getAdditionTime())){
                 holder.addTime.setText(data.getAdditionTime().substring(0, 10));
             }
@@ -119,8 +122,33 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                     mListener.onItemClick(pos, String.valueOf(data.getMoney()));
                 }
             });
+
+            setAnimation(((Holder) viewHolder).root, position);
         }
     }
+
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            Animation animation;
+            if(position % 2 == 0){
+                animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R
+                        .anim.item_anim_in_from_left);
+            }else
+                animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R
+                        .anim.item_anim_in_from_right);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        //if(holder instanceof Holder) {
+          //  ((Holder) holder).root.clearAnimation();
+        //}
+    }
+
     public int getRealPosition(RecyclerView.ViewHolder holder) {
         int position = holder.getLayoutPosition();
         return mHeaderView == null ? position : position - 1;
@@ -146,6 +174,7 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         TextView category;
         TextView money;
         TextView addTime;
+        LinearLayout root;
         public Holder(View itemView) {
             super(itemView);
             if(itemView == mHeaderView)
@@ -154,6 +183,7 @@ public class FinancialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
             category = (TextView) itemView.findViewById(R.id.financial_list_category);
             money = (TextView) itemView.findViewById(R.id.financial_list_money);
             addTime = (TextView) itemView.findViewById(R.id.financial_list_time);
+            root = (LinearLayout)itemView.findViewById(R.id.financial_list_root);
         }
     }
 

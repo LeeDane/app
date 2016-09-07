@@ -21,9 +21,12 @@ import com.leedane.cn.financial.handler.FinancialHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.JsonUtil;
+import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.util.http.BeanUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -100,7 +103,7 @@ public class CloudActivity extends BaseActivity{
 
     private void loadInitData(){
         //获取非同步却状态不是草稿的数据列表
-        mFinancialBeans = financialDataBase.query(" where synchronous = "+ ConstantsUtil.STATUS_DISABLE +" and status !="+ ConstantsUtil.STATUS_DRAFT);
+        mFinancialBeans = financialDataBase.query(" where synchronous = "+ ConstantsUtil.STATUS_DISABLE +" and status !="+ ConstantsUtil.STATUS_DRAFT +" order by datetime(addition_time) desc");
         mAdapter.addDatas(mFinancialBeans);
     }
 
@@ -135,6 +138,11 @@ public class CloudActivity extends BaseActivity{
             ToastUtil.success(this, "没有要同步的任务");
             return;
         }
+
+        if(mFinancialBeans.get(endIndex).isSynchronous()){
+            endIndex = endIndex + 1;
+            startSynchronous();
+        }
         Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> financialBeans = new ArrayList<>();
         BeanUtil.convertBeanToMap(mFinancialBeans.get(endIndex), map);
@@ -150,12 +158,89 @@ public class CloudActivity extends BaseActivity{
         try{
             if(type == TaskType.SYNCHRONOUS_FINANCIAL){
                 dismissLoadingDialog();
+                JSONObject jsonObject = new JSONObject(String.valueOf(result));
+                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                    dealResult(jsonObject.getJSONObject("message"));
+                }else{
+                    ToastUtil.success(this, JsonUtil.getTipMessage(result));
+                }
+
                 isEnd = true;
                 endIndex += endIndex;
                 //startSynchronous();
-                ToastUtil.success(this, JsonUtil.getTipMessage(result));
+
             }
         }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 同步成功后的处理结果
+     * @param message
+     */
+    private void dealResult(JSONObject message) {
+        try {
+            if(message.has("inserts")){
+                JSONArray list = message.getJSONArray("inserts");
+                for(int l = 0; l < list.length(); l++){
+                    int localId = list.getJSONObject(l).getInt("localId");
+                    int id = list.getJSONObject(l).getInt("id");
+                    financialDataBase.updateSynchronousInfo(localId, id, ConstantsUtil.STATUS_NORMAL);
+                    int i = 0;
+                    for(FinancialBean financialBean: mFinancialBeans){
+                                if(financialBean.getLocalId() == localId){
+                                    financialBean.setSynchronous(true);
+                                    financialBean.setId(id);
+                                    financialBean.setSynchronousTip("同步新增成功");
+                                    mAdapter.refresh(financialBean, i+1);
+                                    break;
+                        }
+                        i++;
+                    }
+                }
+            }
+
+            if(message.has("updates")){
+                JSONArray list = message.getJSONArray("updates");
+                for(int l = 0; l < list.length(); l++){
+                    int localId = list.getJSONObject(l).getInt("localId");
+                    int id = list.getJSONObject(l).getInt("id");
+                    financialDataBase.updateSynchronousInfo(localId, id, ConstantsUtil.STATUS_NORMAL);
+                    int i = 0;
+                    for(FinancialBean financialBean: mFinancialBeans){
+                        if(financialBean.getLocalId() == localId){
+                            financialBean.setSynchronous(true);
+                            financialBean.setId(id);
+                            financialBean.setSynchronousTip("同步修改成功");
+                            mAdapter.notifyItemChanged(i+1);
+                            break;
+                        }
+                        i++;
+                    }
+                }
+            }
+
+            if(message.has("deletes")){
+                JSONArray list = message.getJSONArray("deletes");
+                for(int l = 0; l < list.length(); l++){
+                    int localId = list.getJSONObject(l).getInt("localId");
+                    int id = list.getJSONObject(l).getInt("id");
+                    financialDataBase.delete(localId);
+                    int i = 0;
+                    for(FinancialBean financialBean: mFinancialBeans){
+                        if(financialBean.getLocalId() == localId){
+                            financialBean.setSynchronous(true);
+                            financialBean.setId(id);
+                            financialBean.setSynchronousTip("同步删除成功");
+                            mAdapter.notifyItemChanged(i+1);
+                            break;
+                        }
+                        i++;
+                    }
+                }
+            }
+        }catch (JSONException e){
             e.printStackTrace();
         }
     }

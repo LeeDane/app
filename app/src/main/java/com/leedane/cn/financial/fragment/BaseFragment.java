@@ -58,9 +58,9 @@ public abstract class BaseFragment extends FinancialBaseFragment {
         if(mContext == null)
             mContext = getActivity();
 
-        //generateData();
-        ListDataFragment listDataFragment = ListDataFragment.newInstance(new Bundle());
-        getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), listDataFragment).commit();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(getFinancialListKey(), financialList);
+        getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
 
         chartOrListButton = (ToggleButton)mRootView.findViewById(R.id.chart_or_list_toggle_button);
         chartOrListButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -73,6 +73,7 @@ public abstract class BaseFragment extends FinancialBaseFragment {
                 transaction.commit();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(getFinancialListKey(), financialList);
+
                 if(isChecked){
                     getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
                 }else{

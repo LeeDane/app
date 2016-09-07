@@ -103,7 +103,7 @@ public class FinancialDataBase {
     public void delete(int localId) {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("delete from " + FINANCIAL_TABLE_NAME + " where local_id=?");
-        sqlite.execSQL(sql, new Integer[] { localId });
+        sqlite.execSQL(sql, new Integer[]{localId});
         sqlite.close();
     }
 
@@ -142,6 +142,19 @@ public class FinancialDataBase {
                 , data.getLocation(), data.getLongitude() + "", data.getLatitude() + "",
                 data.getFinancialDesc(), StringUtil.changeTrueOrFalseToInt(data.isSynchronous()) + "",
                 data.getCreateUserId() + "", data.getCreateTime(), data.getAdditionTime(), data.getLocalId()});
+        sqlite.close();
+    }
+
+    /**
+     * 更新同步状态信息
+     * @param localId  本地ID
+     * @param id  服务器ID
+     * @param status 状态
+     */
+    public void updateSynchronousInfo(int localId, int id, int status){
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        String sql = ("update " + FINANCIAL_TABLE_NAME + " set synchronous=?, id=? where local_id=?");
+        sqlite.execSQL(sql, new Object[]{status , id, localId});
         sqlite.close();
     }
 

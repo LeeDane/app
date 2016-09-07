@@ -58,7 +58,11 @@ public class CommentOrTransmitAdapter extends BaseListAdapter<CommentOrTransmitB
         viewHolder = (ViewHolder)view.getTag();
         viewHolder.getmContent().setText(commentOrTransmitBean.getContent());
         AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
-        viewHolder.getmFrom().setText("来自：" +StringUtil.changeNotNull(commentOrTransmitBean.getFroms()));
+
+        viewHolder.getmFrom().setTypeface(typeface);
+        viewHolder.getmFrom().setText("来自：" + StringUtil.changeNotNull(commentOrTransmitBean.getFroms()));
+
+        viewHolder.getmTime().setTypeface(typeface);
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(commentOrTransmitBean.getCreateTime())));
         if(StringUtil.isNotNull(commentOrTransmitBean.getSource())){
             viewHolder.getmSource().setText(commentOrTransmitBean.getSource());

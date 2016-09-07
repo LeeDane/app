@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.database.BaseSQLiteOpenHelper;
+import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.util.CommonUtil;
@@ -317,8 +318,42 @@ public class TwoLevelCategoryDataBase {
         }
     }
 
+    /**
+     * 将所有该分类的数据设置为非默认后并设置默认
+     * @param model
+     */
+    public void resetAllNoDefault(int model){
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        String sql = ("update " + TWO_LEVEL_CATEGORY_TABLE_NAME + " set is_default=0 where one_level_id not in (select id from "+OneLevelCategoryDataBase.ONE_LEVEL_CATEGORY_TABLE_NAME+" where model !="+model+")");
+        sqlite.execSQL(sql);
+        sqlite.close();
+    }
+
     public void destroy() {
         if(dbHelper != null)
             dbHelper.close();
+    }
+
+    /**
+     * 执行sql语句
+     * @param sql
+     */
+    public void excuteSql(String sql){
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        sqlite.execSQL(sql);
+        sqlite.close();
+    }
+
+    /**
+     * 获取二级分类对应一级分类的model
+     * @param oneLevelId
+     * @return
+     */
+    public static int getModel(int oneLevelId){
+        for(OneLevelCategory oneLevelCategory: BaseApplication.oneLevelCategories){
+            if(oneLevelCategory.getId() == oneLevelId)
+                return oneLevelCategory.getModel();
+        }
+        return 0;
     }
 }

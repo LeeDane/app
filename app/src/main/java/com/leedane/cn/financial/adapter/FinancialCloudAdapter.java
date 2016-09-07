@@ -1,6 +1,7 @@
 package com.leedane.cn.financial.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.leedane.cn.app.R;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.FinancialBean;
+import com.leedane.cn.financial.bean.OneLevelCategoryEdit;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.StringUtil;
@@ -33,6 +35,7 @@ public class FinancialCloudAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public void setOnItemClickListener(OnItemClickListener li) {
         mListener = li;
     }
+
     public void setHeaderView(View headerView) {
         mHeaderView = headerView;
         notifyItemInserted(0);
@@ -50,6 +53,7 @@ public class FinancialCloudAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
     }
     public void addDatas(List<FinancialBean> datas) {
+        mFinancialBeans.clear();
         mFinancialBeans.addAll(datas);
         notifyDataSetChanged();
     }
@@ -71,6 +75,18 @@ public class FinancialCloudAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             return TYPE_NORMAL;
         }
     }
+
+    /**
+     * 局部刷新单个数据
+     * @param financialBean
+     * @param position
+     */
+    public void refresh(FinancialBean financialBean, int position){
+        mFinancialBeans.remove(position);// 先移除后添加
+        mFinancialBeans.add(position, financialBean);
+        notifyItemChanged(position);
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(mHeaderView != null && viewType == TYPE_HEADER)
@@ -127,10 +143,15 @@ public class FinancialCloudAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }else{
                 holder.synchronous.setText("未同步");
             }
+
             holder.category.setText(category);
-            holder.money.setText(String.valueOf(data.getMoney()));
+            holder.money.setText("￥" +String.valueOf(data.getMoney()));
             if(StringUtil.isNotNull(data.getAdditionTime())){
                 holder.addTime.setText(data.getAdditionTime().substring(0, 10));
+            }
+
+            if(StringUtil.isNotNull(data.getSynchronousTip())){
+                holder.tip.setText(data.getSynchronousTip());
             }
             if(mListener == null) return;
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +189,7 @@ public class FinancialCloudAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         TextView addTime;
         TextView status;
         TextView synchronous; //是否同步
+        TextView tip;
         public Holder(View itemView) {
             super(itemView);
             if(itemView == mHeaderView)
@@ -178,6 +200,7 @@ public class FinancialCloudAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             addTime = (TextView) itemView.findViewById(R.id.financial_cloud_time);
             status = (TextView)itemView.findViewById(R.id.financial_cloud_status);
             synchronous = (TextView)itemView.findViewById(R.id.financial_cloud_synchronous);
+            tip = (TextView)itemView.findViewById(R.id.financial_cloud_synchronous_tip);
         }
     }
 

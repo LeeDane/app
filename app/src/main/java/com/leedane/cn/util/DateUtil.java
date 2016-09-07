@@ -3,9 +3,11 @@ package com.leedane.cn.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * 日期工具类
@@ -351,7 +353,7 @@ public class DateUtil {
 	public static Date getThisYearStart(){
 		int yearPlus = getYearPlus();
 		GregorianCalendar currentDate = new GregorianCalendar();
-		currentDate.add(GregorianCalendar.DATE,yearPlus);
+		currentDate.add(GregorianCalendar.DATE, yearPlus);
 		currentDate.set(Calendar.HOUR_OF_DAY, 0); //小时
 		currentDate.set(Calendar.MINUTE, 0); //分钟
 		currentDate.set(Calendar.SECOND, 0); //秒钟
@@ -365,8 +367,8 @@ public class DateUtil {
 	private static int getYearPlus(){
 		Calendar cd = Calendar.getInstance();
 		int yearOfNumber = cd.get(Calendar.DAY_OF_YEAR);//获得当天是一年中的第几天
-		cd.set(Calendar.DAY_OF_YEAR,1);//把日期设为当年第一天
-		cd.roll(Calendar.DAY_OF_YEAR,-1);//把日期回滚一天。
+		cd.set(Calendar.DAY_OF_YEAR, 1);//把日期设为当年第一天
+		cd.roll(Calendar.DAY_OF_YEAR, -1);//把日期回滚一天。
 		int MaxYear = cd.get(Calendar.DAY_OF_YEAR);
 		if(yearOfNumber == 1){
 			return -MaxYear;
@@ -375,6 +377,29 @@ public class DateUtil {
 		}
 	}
 
+	/**
+	 * 寻找时间范围内的时间
+	 * @param dBegin
+	 * @param dEnd
+	 * @return
+	 */
+	public static List<Date> findDates(Date dBegin, Date dEnd) {
+		List<Date> lDate = new ArrayList<Date>();
+		lDate.add(dBegin);
+		Calendar calBegin = Calendar.getInstance();
+		// 使用给定的 Date 设置此 Calendar 的时间
+		calBegin.setTime(dBegin);
+		Calendar calEnd = Calendar.getInstance();
+		// 使用给定的 Date 设置此 Calendar 的时间
+		calEnd.setTime(dEnd);
+		// 测试此日期是否在指定日期之后
+		while (dEnd.after(calBegin.getTime())) {
+			// 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+			calBegin.add(Calendar.DAY_OF_MONTH, 1);
+			lDate.add(calBegin.getTime());
+		}
+		return lDate;
+	}
 	public static void main(String[] args) {
 		System.out.println(DateUtil.DateToString(getYestoday(DateUtil.stringToDate("2015-11-12 00:00:00"))));
 	}

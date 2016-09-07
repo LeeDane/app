@@ -84,6 +84,11 @@ public class FinancialBean implements Serializable{
 	private boolean synchronous;
 
 	/**
+	 * 同步结果提示信息
+	 */
+	private String synchronousTip;
+
+	/**
 	 * 图像路径
 	 */
 	private String path;
@@ -222,5 +227,13 @@ public class FinancialBean implements Serializable{
 
 	public void setAdditionTime(String additionTime) {
 		this.additionTime = additionTime;
+	}
+
+	public String getSynchronousTip() {
+		return synchronousTip;
+	}
+
+	public void setSynchronousTip(String synchronousTip) {
+		this.synchronousTip = synchronousTip;
 	}
 }

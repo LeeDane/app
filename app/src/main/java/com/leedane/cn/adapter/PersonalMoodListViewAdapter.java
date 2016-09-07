@@ -2,6 +2,7 @@ package com.leedane.cn.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.leedane.cn.activity.MoodActivity;
 import com.leedane.cn.activity.PersonalActivity;
 import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.customview.AutoLinkTextView;
 import com.leedane.cn.customview.RightBorderTextView;
@@ -112,12 +114,15 @@ public class PersonalMoodListViewAdapter extends BaseListAdapter<MoodBean>{
         //mSpanTitle.setSpan(new TypefaceSpan("monospace"), 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         viewHolder.getmContent().setText(content, TextView.BufferType.SPANNABLE);
+
+        viewHolder.getmFroms().setTypeface(typeface);
         viewHolder.getmFroms().setText("来自："+moodBean.getFroms());
         AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
         String createTime = moodBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
             viewHolder.getmTime().setText("");
         }else{
+            viewHolder.getmTime().setTypeface(typeface);
             viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 

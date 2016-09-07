@@ -50,8 +50,8 @@ public class JsonUtil {
         String tip = null;
         try{
             JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
-            if(jsonObject.has("success")){
-                if(jsonObject.getBoolean("success")){
+            if(jsonObject.has("isSuccess")){
+                if(jsonObject.getBoolean("isSuccess")){
                     tip = jsonObject.getString("message");
                 }else{
                     tip = EnumUtil.getResponseValue(jsonObject.getInt("responseCode"));

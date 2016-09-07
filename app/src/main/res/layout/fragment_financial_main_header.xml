@@ -8,21 +8,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/default_10dp"
+        android:paddingTop="@dimen/default_10dp"
+        android:paddingBottom="@dimen/default_10dp"
         android:gravity="right">
         <ImageView
             android:id="@+id/financial_header_edit_one_level"
             android:layout_width="@dimen/default_20dp"
             android:layout_height="@dimen/default_20dp"
             android:scaleType="fitXY"
+            android:layout_marginRight="@dimen/default_10dp"
             android:src="@drawable/ic_category_edit"/>
         <ImageView
             android:id="@+id/financial_header_setting"
             android:layout_width="@dimen/default_20dp"
             android:layout_height="@dimen/default_20dp"
             android:scaleType="fitXY"
+            android:layout_marginRight="@dimen/default_10dp"
             android:src="@drawable/ic_settings_purple_400_18dp"/>
+        <ImageView
+            android:id="@+id/financial_header_cloud"
+            android:layout_width="@dimen/default_20dp"
+            android:layout_height="@dimen/default_20dp"
+            android:scaleType="fitXY"
+            android:layout_marginRight="@dimen/default_10dp"
+            android:src="@drawable/ic_backup_deep_purple_300_18dp"/>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,14 +42,16 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:padding="@dimen/default_10dp"
+            android:paddingLeft="@dimen/default_10dp"
+            android:paddingRight="@dimen/default_10dp"
             android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/financial_header_income_linearlayout"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@color/white">
+                android:background="?android:attr/selectableItemBackground">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -58,17 +71,17 @@
                     android:src="@mipmap/right_sign"
                     android:scaleType="fitXY"/>
             </LinearLayout>
-            <ImageView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/line"/>
+                android:background="@color/viewfinder_mask"/>
             <LinearLayout
+                android:id="@+id/financial_header_spend_linearlayout"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@color/white">
+                android:background="?android:attr/selectableItemBackground">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -88,18 +101,18 @@
                     android:src="@mipmap/right_sign"
                     android:scaleType="fitXY"/>
             </LinearLayout>
-            <ImageView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/line"/>
+                android:background="@color/viewfinder_mask"/>
 
             <LinearLayout
+                android:id="@+id/financial_header_budget_linearlayout"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@color/white">
+                android:background="?android:attr/selectableItemBackground">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -108,6 +121,7 @@
                     android:text="@string/financial_month_budget"/>
 
                 <TextView
+                    android:id="@+id/financial_header_budget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/default_money"/>
@@ -118,11 +132,10 @@
                     android:src="@mipmap/right_sign"
                     android:scaleType="fitXY"/>
             </LinearLayout>
-            <ImageView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/line"/>
+                android:background="@color/viewfinder_mask"/>
         </LinearLayout>
         <TextView
             android:id="@+id/add_financial"
@@ -134,7 +147,7 @@
             android:layout_marginRight="@dimen/default_3dp"
             android:text="记\n一\n笔"/>
     </LinearLayout>
-    <TextView
+    <!--<TextView
         android:id="@+id/financial_refresh"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
@@ -149,7 +162,7 @@
         android:drawableLeft="@drawable/refresh01"
         android:text="@string/financial_refresh"
         android:textColor="#000"
-        android:textSize="@dimen/default_16sp" />
+        android:textSize="@dimen/default_16sp" />-->
     <TextView
         android:id="@+id/financial_detail"
         android:layout_width="match_parent"

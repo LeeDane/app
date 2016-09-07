@@ -170,6 +170,7 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
                 break;
             case R.id.view_right_img://添加二级分类
                 Intent it = new Intent(this, TwoLevelEditActivity.class);
+                it.putExtra("oneLevelId", oneLevelId);
                 startActivityForResult(it, TWO_LEVEL_CATEGORY_EDIT_CODE);
                 break;
         }
@@ -373,6 +374,8 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
                 }else if(type.equals("delete")){
                     mAdapter.remove(clickPosition);
                 }
+                initData();
+                mAdapter.addDatas(mTwoLevelGategoryEdits);
                 ToastUtil.success(this, "activity返回resultCode=" + resultCode + ", requestCode=" + requestCode+",type="+type);
                 break;
         }

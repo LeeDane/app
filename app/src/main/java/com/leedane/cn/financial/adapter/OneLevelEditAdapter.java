@@ -9,7 +9,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leedane.cn.app.R;
@@ -19,7 +22,6 @@ import com.leedane.cn.financial.Helper.OnStartDragListener;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.OneLevelCategoryEdit;
 import com.leedane.cn.util.ConstantsUtil;
-import com.leedane.cn.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +38,7 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context mContext;
     public static final int TYPE_NORMAL = 1;
     private  OnStartDragListener mDragStartListener;
+    private int lastPosition = -1;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;
@@ -55,6 +58,7 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         //notifyDataSetChanged();
     }
     public void addDatas(List<OneLevelCategoryEdit> datas) {
+        mOneLevelGategoryEdits.clear();
         mOneLevelGategoryEdits.addAll(datas);
         notifyDataSetChanged();
     }
@@ -123,7 +127,7 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
 
             holder.name.setText(Html.fromHtml(data.getValue() + (data.isDefault()? "   <font color='red'>默认</font>": "")));
-            holder.budget.setText(String.valueOf(data.getBudget()));
+            holder.budget.setText("￥" +String.valueOf(data.getBudget()));
             if(data.getStatus() == ConstantsUtil.STATUS_NORMAL){
                 holder.status.setText(mContext.getString(R.string.normal));
             }else if(data.getStatus() == ConstantsUtil.STATUS_DRAFT){
@@ -161,20 +165,43 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mOnItemClickListener != null)
+                        if (mOnItemClickListener != null)
                             mOnItemClickListener.onItemClick(position);
                     }
                 });
                 holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        if(mOnItemLongClickListener != null)
+                        if (mOnItemLongClickListener != null)
                             mOnItemLongClickListener.onItemLongClick(position);
                         return true;
                     }
                 });
+                setAnimation(holder.root, position);
             }
         }
+    }
+
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            Animation animation = null;
+            if(position % 2 == 0){
+                animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R
+                        .anim.item_anim_in_from_left);
+            }else
+                animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R
+                    .anim.item_anim_in_from_right);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        //if(holder instanceof Holder) {
+        //  ((Holder) holder).root.clearAnimation();
+        //}
     }
 
     @Override
@@ -206,6 +233,7 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView budget; //预算
         TextView status; //状态
         ImageView right; //右侧的点击图标
+        LinearLayout root;
         public Holder(View itemView) {
             super(itemView);
             icon = (ImageView)itemView.findViewById(R.id.financial_one_level_icon);
@@ -214,6 +242,7 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             budget = (TextView) itemView.findViewById(R.id.financial_one_level_budget);
             status = (TextView)itemView.findViewById(R.id.financial_one_level_status);
             right = (ImageView)itemView.findViewById(R.id.financila_list_right);
+            root = (LinearLayout)itemView.findViewById(R.id.financial_one_level_root);
         }
 
         @Override

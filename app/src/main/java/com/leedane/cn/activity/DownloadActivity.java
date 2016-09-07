@@ -50,9 +50,8 @@ public class DownloadActivity extends BaseActivity {
      */
     private void initView() {
         mListView = (ListView)findViewById(R.id.download_listview);
-
         initData();
-        mAdapter = new DownloadAdapter(items, DownloadActivity.this, mListView);
+        mAdapter = new DownloadAdapter(items, DownloadActivity.this);
         mListView.setAdapter(mAdapter);
     }
 
