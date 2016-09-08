@@ -158,6 +158,16 @@ public class FinancialDataBase {
         sqlite.close();
     }
 
+    /**
+     * 更新所有的数据同步状态为非同步
+     */
+    public void updateAllNoSynchronous(){
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        String sql = ("update " + FINANCIAL_TABLE_NAME + " set synchronous=0, id=0");
+        sqlite.execSQL(sql);
+        sqlite.close();
+    }
+
     public List<FinancialBean> query() {
         return query(" ");
     }

@@ -46,7 +46,7 @@ public class OneLevelEditActivity extends BaseActivity {
     private int mOneLevelCategoryId;
     private boolean edit; //是否可以编辑
     private EditText mName;
-    private EditText mBudget;
+    private TextView mBudget;
     private EditText mSort;
 
     private RadioGroup mStatusGroup;
@@ -191,7 +191,7 @@ public class OneLevelEditActivity extends BaseActivity {
         setResult(OneLevelOperationActivity.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
 
         mName = (EditText)findViewById(R.id.one_level_edit_name);
-        mBudget = (EditText)findViewById(R.id.one_level_edit_budget);
+        mBudget = (TextView)findViewById(R.id.one_level_edit_budget);
         mSort = (EditText)findViewById(R.id.one_level_edit_sort);
 
         mStatusGroup = (RadioGroup)findViewById(R.id.one_level_edit_status_group);

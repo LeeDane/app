@@ -56,6 +56,7 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
     private boolean sort;
     private SimpleItemTouchHelperCallback callback;
     private Dialog mDialog;
+    private TextView mShowTotalBudget;//展示总预算
 
     /**
      * 添加分类的imageview
@@ -110,6 +111,9 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new RecycleViewDivider(OneLevelOperationActivity.this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
+
+        mShowTotalBudget = (TextView)findViewById(R.id.show_total_budget);
+        mShowTotalBudget.setText("当月支出总预算：" +String.valueOf(BaseApplication.getTotalBudget().floatValue()));
 
         callback = new SimpleItemTouchHelperCallback(mAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
@@ -360,6 +364,7 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
                 }else if(type.equals("delete")){
                     mAdapter.remove(clickPosition);
                 }
+                mShowTotalBudget.setText("当月支出总预算：" +String.valueOf(BaseApplication.getTotalBudget().floatValue()));
                 ToastUtil.success(this, "activity返回resultCode=" + resultCode + ", requestCode=" + requestCode+",type="+type);
                 break;
         }

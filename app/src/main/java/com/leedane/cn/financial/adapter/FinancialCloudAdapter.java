@@ -3,6 +3,7 @@ package com.leedane.cn.financial.adapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,9 +83,10 @@ public class FinancialCloudAdapter extends RecyclerView.Adapter<RecyclerView.Vie
      * @param position
      */
     public void refresh(FinancialBean financialBean, int position){
-        mFinancialBeans.remove(position);// 先移除后添加
-        mFinancialBeans.add(position, financialBean);
-        notifyItemChanged(position);
+        //mFinancialBeans.remove(position);// 先移除后添加
+        //mFinancialBeans.add(position, financialBean);
+        //notifyItemChanged(position);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -151,7 +153,7 @@ public class FinancialCloudAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
 
             if(StringUtil.isNotNull(data.getSynchronousTip())){
-                holder.tip.setText(data.getSynchronousTip());
+                holder.tip.setText(Html.fromHtml(data.getSynchronousTip()));
             }
             if(mListener == null) return;
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.leedane.cn.activity.BaseActivity;
 import com.leedane.cn.activity.LoginActivity;
@@ -47,6 +48,7 @@ public class CloudActivity extends BaseActivity{
     private FinancialDataBase financialDataBase;
     private View mHeaderView;
     private boolean isEnd = true;//是否单个任务结束
+    private boolean isCancel; //是否取消任务
     private int endIndex; //标记同步结束的位置
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +105,7 @@ public class CloudActivity extends BaseActivity{
 
     private void loadInitData(){
         //获取非同步却状态不是草稿的数据列表
-        mFinancialBeans = financialDataBase.query(" where synchronous = "+ ConstantsUtil.STATUS_DISABLE +" and status !="+ ConstantsUtil.STATUS_DRAFT +" order by datetime(addition_time) desc");
+        mFinancialBeans = financialDataBase.query(" where synchronous = "+ ConstantsUtil.STATUS_DISABLE +" and status !="+ ConstantsUtil.STATUS_DRAFT +" order by datetime(addition_time) asc");
         mAdapter.addDatas(mFinancialBeans);
     }
 
@@ -112,26 +114,22 @@ public class CloudActivity extends BaseActivity{
         super.onClick(v);
         switch (v.getId()){
             case R.id.financial_cloud_header_start:
-                startSynchronous();
-                /*isStart = true;
-                while (isStart){
-                    if(!isStart){
-                        break;
-                    }
-                    int maxIndex = mFinancialBeans.size() - endIndex > 5 ? endIndex + 5: mFinancialBeans.size();
-                    //每次提交5个
-                    List<FinancialBean> financialBeans = null;
-                    for(int i = endIndex; i < maxIndex; i++){
-                        financialBeans.add(mFinancialBeans.get(i));
-                    }
-                    FinancialHandler.synchronous(this, financialBeans);
+                if(!isEnd){
+                    isCancel = true;
+                    ToastUtil.success(this, "还有任务正在同步中，稍等");
+                    return;
                 }
-                break;*/
+                isCancel = false;
+                endIndex = 0;
+                startSynchronous();
         }
     }
 
+    /**
+     * 开始数据同步
+     */
     private void startSynchronous(){
-        if(!isEnd)
+        if(!isEnd && isCancel)
             return;
 
         if(endIndex > mFinancialBeans.size() -1){
@@ -142,36 +140,73 @@ public class CloudActivity extends BaseActivity{
         if(mFinancialBeans.get(endIndex).isSynchronous()){
             endIndex = endIndex + 1;
             startSynchronous();
+            return;
         }
         Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> financialBeans = new ArrayList<>();
         BeanUtil.convertBeanToMap(mFinancialBeans.get(endIndex), map);
         financialBeans.add(map);
         isEnd = false;
+
+        mFinancialBeans.get(endIndex).setSynchronousTip("<font color='red'>与云端同步中</font>");
+        mAdapter.refresh(mFinancialBeans.get(endIndex), endIndex);
+
         FinancialHandler.synchronous(this, financialBeans);
-        showLoadingDialog("synchronous", "数据同步中。。。请稍等。");
+        //showLoadingDialog("synchronous", "数据同步中。。。请稍等。");
     }
 
     @Override
     public void taskFinished(TaskType type, Object result) {
-        super.taskFinished(type, result);
+        dismissLoadingDialog();
+        if(result instanceof Error) {
+            ToastUtil.failure(getBaseContext(), ((Error) result).getMessage(), Toast.LENGTH_SHORT);
+            isEnd = true;
+            try {
+                mFinancialBeans.get(endIndex).setSynchronousTip("<font color='red'>超时同步失败</font>");
+                mAdapter.refresh(mFinancialBeans.get(endIndex), endIndex);
+                endIndex = endIndex + 1;
+                Thread.sleep(100);
+                startSynchronous();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
         try{
             if(type == TaskType.SYNCHRONOUS_FINANCIAL){
-                dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
                     dealResult(jsonObject.getJSONObject("message"));
                 }else{
                     ToastUtil.success(this, JsonUtil.getTipMessage(result));
+                    mFinancialBeans.get(endIndex).setSynchronousTip("<font color='red'>" + JsonUtil.getTipMessage(result) + "</font>");
+                    mAdapter.refresh(mFinancialBeans.get(endIndex), endIndex);
+                    financialDataBase.updateSynchronousInfo(mFinancialBeans.get(endIndex).getLocalId(), mFinancialBeans.get(endIndex).getId(), ConstantsUtil.STATUS_NORMAL);
                 }
 
                 isEnd = true;
-                endIndex += endIndex;
-                //startSynchronous();
+                endIndex = endIndex + 1;
+                try {
+                    Thread.sleep(100);
+                    startSynchronous();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             }
         }catch (Exception e){
             e.printStackTrace();
+            isEnd = true;
+            try {
+                mFinancialBeans.get(endIndex).setSynchronousTip("<font color='red'>同步失败</font>");
+                mAdapter.refresh(mFinancialBeans.get(endIndex), endIndex);
+                endIndex = endIndex + 1;
+                Thread.sleep(100);
+                startSynchronous();
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            return;
         }
     }
 
@@ -193,7 +228,7 @@ public class CloudActivity extends BaseActivity{
                                     financialBean.setSynchronous(true);
                                     financialBean.setId(id);
                                     financialBean.setSynchronousTip("同步新增成功");
-                                    mAdapter.refresh(financialBean, i+1);
+                                    mAdapter.refresh(financialBean, i);
                                     break;
                         }
                         i++;

@@ -67,15 +67,13 @@
             android:gravity="center"
             android:layout_marginRight="@dimen/default_30dp"
             android:text="每月预算"/>
-        <EditText
+        <TextView
             android:id="@+id/one_level_edit_budget"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:lines="1"
-            android:inputType="numberDecimal"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:hint="预算金额"/>
+            android:text="预算金额"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

@@ -65,8 +65,17 @@ public class OneLevelCategoryDataBase {
         oneLevelCategory1.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelCategories.add(oneLevelCategory1);
 
+        OneLevelCategory oneLevelCategory14 = new OneLevelCategory();
+        oneLevelCategory14.setOrder(102);
+        oneLevelCategory14.setStatus(ConstantsUtil.STATUS_NORMAL);
+        oneLevelCategory14.setValue("日常购物");
+        oneLevelCategory14.setCreateUserId(BaseApplication.getLoginUserId());
+        oneLevelCategory14.setCreateTime(DateUtil.DateToString(date));
+        oneLevelCategory14.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
+        oneLevelCategories.add(oneLevelCategory14);
+
         OneLevelCategory oneLevelCategory2 = new OneLevelCategory();
-        oneLevelCategory2.setOrder(102);
+        oneLevelCategory2.setOrder(103);
         oneLevelCategory2.setStatus(ConstantsUtil.STATUS_NORMAL);
         oneLevelCategory2.setValue("衣服饰品");
         oneLevelCategory2.setCreateUserId(BaseApplication.getLoginUserId());
@@ -75,7 +84,7 @@ public class OneLevelCategoryDataBase {
         oneLevelCategories.add(oneLevelCategory2);
 
         OneLevelCategory oneLevelCategory3 = new OneLevelCategory();
-        oneLevelCategory3.setOrder(103);
+        oneLevelCategory3.setOrder(104);
         oneLevelCategory3.setStatus(ConstantsUtil.STATUS_NORMAL);
         oneLevelCategory3.setValue("居家物业");
         oneLevelCategory3.setCreateUserId(BaseApplication.getLoginUserId());
@@ -84,7 +93,7 @@ public class OneLevelCategoryDataBase {
         oneLevelCategories.add(oneLevelCategory3);
 
         OneLevelCategory oneLevelCategory4 = new OneLevelCategory();
-        oneLevelCategory4.setOrder(104);
+        oneLevelCategory4.setOrder(105);
         oneLevelCategory4.setStatus(ConstantsUtil.STATUS_NORMAL);
         oneLevelCategory4.setValue("行车交通");
         oneLevelCategory4.setCreateUserId(BaseApplication.getLoginUserId());
@@ -93,7 +102,7 @@ public class OneLevelCategoryDataBase {
         oneLevelCategories.add(oneLevelCategory4);
 
         OneLevelCategory oneLevelCategory5 = new OneLevelCategory();
-        oneLevelCategory5.setOrder(105);
+        oneLevelCategory5.setOrder(106);
         oneLevelCategory5.setStatus(ConstantsUtil.STATUS_NORMAL);
         oneLevelCategory5.setValue("交流通讯");
         oneLevelCategory5.setCreateUserId(BaseApplication.getLoginUserId());
@@ -102,7 +111,7 @@ public class OneLevelCategoryDataBase {
         oneLevelCategories.add(oneLevelCategory5);
 
         OneLevelCategory oneLevelCategory6 = new OneLevelCategory();
-        oneLevelCategory6.setOrder(106);
+        oneLevelCategory6.setOrder(107);
         oneLevelCategory6.setStatus(ConstantsUtil.STATUS_NORMAL);
         oneLevelCategory6.setValue("休闲娱乐");
         oneLevelCategory6.setCreateUserId(BaseApplication.getLoginUserId());
@@ -111,7 +120,7 @@ public class OneLevelCategoryDataBase {
         oneLevelCategories.add(oneLevelCategory6);
 
         OneLevelCategory oneLevelCategory7 = new OneLevelCategory();
-        oneLevelCategory7.setOrder(107);
+        oneLevelCategory7.setOrder(108);
         oneLevelCategory7.setStatus(ConstantsUtil.STATUS_NORMAL);
         oneLevelCategory7.setValue("学习进修");
         oneLevelCategory7.setCreateUserId(BaseApplication.getLoginUserId());
@@ -120,7 +129,7 @@ public class OneLevelCategoryDataBase {
         oneLevelCategories.add(oneLevelCategory7);
 
         OneLevelCategory oneLevelCategory8 = new OneLevelCategory();
-        oneLevelCategory8.setOrder(108);
+        oneLevelCategory8.setOrder(109);
         oneLevelCategory8.setStatus(ConstantsUtil.STATUS_NORMAL);
         oneLevelCategory8.setValue("人情往来");
         oneLevelCategory8.setCreateUserId(BaseApplication.getLoginUserId());
@@ -128,26 +137,26 @@ public class OneLevelCategoryDataBase {
         oneLevelCategory8.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelCategories.add(oneLevelCategory8);
 
-        OneLevelCategory oneLevelCategory9 = new OneLevelCategory();
-        oneLevelCategory9.setOrder(109);
-        oneLevelCategory9.setStatus(ConstantsUtil.STATUS_NORMAL);
-        oneLevelCategory9.setValue("医疗保健");
-        oneLevelCategory9.setCreateUserId(BaseApplication.getLoginUserId());
-        oneLevelCategory9.setCreateTime(DateUtil.DateToString(date));
-        oneLevelCategory9.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
-        oneLevelCategories.add(oneLevelCategory9);
-
         OneLevelCategory oneLevelCategory10 = new OneLevelCategory();
         oneLevelCategory10.setOrder(110);
         oneLevelCategory10.setStatus(ConstantsUtil.STATUS_NORMAL);
-        oneLevelCategory10.setValue("金融保险");
+        oneLevelCategory10.setValue("金融银行");
         oneLevelCategory10.setCreateUserId(BaseApplication.getLoginUserId());
         oneLevelCategory10.setCreateTime(DateUtil.DateToString(date));
         oneLevelCategory10.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         oneLevelCategories.add(oneLevelCategory10);
 
+        OneLevelCategory oneLevelCategory9 = new OneLevelCategory();
+        oneLevelCategory9.setOrder(111);
+        oneLevelCategory9.setStatus(ConstantsUtil.STATUS_NORMAL);
+        oneLevelCategory9.setValue("生活保健");
+        oneLevelCategory9.setCreateUserId(BaseApplication.getLoginUserId());
+        oneLevelCategory9.setCreateTime(DateUtil.DateToString(date));
+        oneLevelCategory9.setModel(IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
+        oneLevelCategories.add(oneLevelCategory9);
+
         OneLevelCategory oneLevelCategory11 = new OneLevelCategory();
-        oneLevelCategory11.setOrder(111);
+        oneLevelCategory11.setOrder(112);
         oneLevelCategory11.setStatus(ConstantsUtil.STATUS_NORMAL);
         oneLevelCategory11.setValue("其他杂项");
         oneLevelCategory11.setCreateUserId(BaseApplication.getLoginUserId());
@@ -157,7 +166,7 @@ public class OneLevelCategoryDataBase {
 
         //收入大类
         OneLevelCategory oneLevelCategory12 = new OneLevelCategory();
-        oneLevelCategory12.setOrder(112);
+        oneLevelCategory12.setOrder(113);
         oneLevelCategory12.setStatus(ConstantsUtil.STATUS_NORMAL);
         oneLevelCategory12.setValue("职业收入");
         oneLevelCategory12.setCreateUserId(BaseApplication.getLoginUserId());
@@ -166,7 +175,7 @@ public class OneLevelCategoryDataBase {
         oneLevelCategories.add(oneLevelCategory12);
 
         OneLevelCategory oneLevelCategory13 = new OneLevelCategory();
-        oneLevelCategory13.setOrder(113);
+        oneLevelCategory13.setOrder(114);
         oneLevelCategory13.setStatus(ConstantsUtil.STATUS_NORMAL);
         oneLevelCategory13.setValue("其他收入");
         oneLevelCategory13.setCreateUserId(BaseApplication.getLoginUserId());

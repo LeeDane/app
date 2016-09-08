@@ -26,6 +26,7 @@ import com.leedane.cn.financial.handler.PieHandler;
 import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.util.StringUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,12 +38,12 @@ import java.util.Map;
  */
 public abstract class BaseChartDataFragment extends FinancialBaseFragment {
 
-    private FinancialList mFinancialList;
-    private View mRootView;
-    private Context mContext;
-    private float totalIncome = 0;
-    private float totalSpend = 0;
-    private BarChart barChart;
+    protected FinancialList mFinancialList;
+    protected View mRootView;
+    protected Context mContext;
+    protected float showTotalIncome;
+    protected float showTotalSpend;
+    protected BarChart barChart;
 
     /**
      * 所在容器的ID
@@ -150,7 +151,7 @@ public abstract class BaseChartDataFragment extends FinancialBaseFragment {
     private PieObject getPieObject(){
         PieObject pieObject = new PieObject();
         pieObject.setyValues(getPieYValues());
-        pieObject.setCenterDesc(EnumUtil.getFinancialModelValue(mFinancialList.getModel()) + "收支统计,收入:" + totalIncome + ",支出:" + totalSpend);
+        pieObject.setCenterDesc(EnumUtil.getFinancialModelValue(mFinancialList.getModel()) + "收支统计,收入:" + showTotalIncome + ",支出:" + showTotalSpend);
         pieObject.setTitle(EnumUtil.getFinancialModelValue(mFinancialList.getModel()) + "收支统计饼状图");
         pieObject.setColors(getPieColor());
         return pieObject;
@@ -170,16 +171,21 @@ public abstract class BaseChartDataFragment extends FinancialBaseFragment {
     private ArrayList<PieEntry> getPieYValues(){
         ArrayList<PieEntry> yValues = new ArrayList<>();  //yVals用来表示封装每个饼块的实际数据
         List<FinancialBean> financialBeans = mFinancialList.getFinancialBeans();
+        BigDecimal totalIncome = new BigDecimal(0.0f);
+        BigDecimal totalSpend = new BigDecimal(0.0f);
         for(FinancialBean bean: financialBeans){
             if(bean.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME){//收入
-                totalIncome += bean.getMoney();
+                totalIncome = totalIncome.add(BigDecimal.valueOf(bean.getMoney()));
             }else{//支出
-                totalSpend += bean.getMoney();
+                float f = bean.getMoney();
+                totalSpend = totalSpend.add(BigDecimal.valueOf(f));
             }
         }
 
-        yValues.add(new PieEntry(totalIncome, getPieXValues().get(0)));
-        yValues.add(new PieEntry(totalSpend, getPieXValues().get(1)));
+        showTotalIncome = totalIncome.setScale(2,   BigDecimal.ROUND_HALF_UP).floatValue();
+        showTotalSpend = totalSpend.setScale(2,   BigDecimal.ROUND_HALF_UP).floatValue();
+        yValues.add(new PieEntry(showTotalIncome, getPieXValues().get(0)));
+        yValues.add(new PieEntry(showTotalSpend, getPieXValues().get(1)));
         return yValues;
     }
 
@@ -195,25 +201,24 @@ public abstract class BaseChartDataFragment extends FinancialBaseFragment {
     private MultipleBarObject getMultipleBarObject(FinancialList financialList){
         MultipleBarObject barObject = new MultipleBarObject();
         ArrayList<IBarDataSet> barDataSets = new ArrayList<>();
-        BarDataSet incomeBarDataSet = null;//收入列表
-        BarDataSet spendBarDataSet = null;//支出列表
+        BarDataSet incomeBarDataSet, spendBarDataSet;//收入列表 //支出列表
         ArrayList<String> xValues = getMultipleBarXValues(financialList);
         Map<String, Float> incomeMoneys = new HashMap<>(); //年跟钱的关系
         Map<String, Float> spendMoneys = new HashMap<>(); //年跟钱的关系
         for(int i = 0; i < xValues.size(); i++){
             for(FinancialBean financialBean: financialList.getFinancialBeans()){
                 if(StringUtil.isNotNull(financialBean.getAdditionTime()) && xValues.get(i).equals(financialBean.getAdditionTime().substring(additionTimeSubstringStart(), additionTimeSubstringEnd()))){
-                    Float money = financialBean.getMoney();
+                    BigDecimal money = new BigDecimal(financialBean.getMoney());
                     if(financialBean.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME){//收入
                         if(incomeMoneys.containsKey(xValues.get(i))){//已经存在
-                            money = incomeMoneys.get(xValues.get(i)) + money;
+                            money = money.add(new BigDecimal(incomeMoneys.get(xValues.get(i))));
                         }
-                        incomeMoneys.put(xValues.get(i), money);
+                        incomeMoneys.put(xValues.get(i), money.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue());
                     }else{//支出
                         if(spendMoneys.containsKey(xValues.get(i))){//已经存在
-                            money = spendMoneys.get(xValues.get(i)) + money;
+                            money = money.add(new BigDecimal(spendMoneys.get(xValues.get(i))));
                         }
-                        spendMoneys.put(xValues.get(i), money);
+                        spendMoneys.put(xValues.get(i), money.setScale(2,   BigDecimal.ROUND_HALF_UP).floatValue());
                     }
                 }
             }
@@ -263,24 +268,4 @@ public abstract class BaseChartDataFragment extends FinancialBaseFragment {
      * @return
      */
     protected abstract ArrayList<String> getMultipleBarXLabels(FinancialList financialList);
-
-    @Override
-    protected void sendFirstLoading() {
-
-    }
-
-    @Override
-    protected void sendUpLoading() {
-
-    }
-
-    @Override
-    protected void sendLowLoading() {
-
-    }
-
-    @Override
-    protected void sendLoadAgain(View view) {
-
-    }
 }

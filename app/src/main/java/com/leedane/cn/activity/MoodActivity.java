@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.leedane.cn.adapter.MoodGridViewAdapter;
 import com.leedane.cn.adapter.SimpleListAdapter;
@@ -394,6 +393,10 @@ public class MoodActivity extends BaseActivity {
                                     }
                                     it_service.putExtra("uris", uris);
                                     getApplicationContext().startService(it_service);
+                                    Intent intent = new Intent(MoodActivity.this, PersonalActivity.class);
+                                    intent.putExtra("type", mOperateType);
+                                    intent.putExtra("isService", true);
+                                    setResult(PersonalActivity.MOOD_UPDATE_REQUEST_CODE, intent);
                                     finish();
                                 }
                             });
@@ -529,10 +532,9 @@ public class MoodActivity extends BaseActivity {
             if(type == TaskType.SEND_MOOD_NORMAL || type == TaskType.ADD_COMMENT || type == TaskType.ADD_TRANSMIT){
                 if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
                     ToastUtil.success(MoodActivity.this, "您的心情" + getNameByType()+ "成功");
-                    if(mOperateType == 2){
-                        Intent intent = new Intent();
-                        setResult(PersonalActivity.MOOD_COMMENT_REQUEST_CODE, intent);
-                    }
+                    Intent intent = new Intent(MoodActivity.this, PersonalActivity.class);
+                    intent.putExtra("type", mOperateType);
+                    setResult(PersonalActivity.MOOD_UPDATE_REQUEST_CODE, intent);
                     finish();//关闭当前activity
                 }else{
                     ToastUtil.failure(MoodActivity.this, "心情" + getNameByType()+ "失败" + ":" + (jsonObject.has("message") ? jsonObject.getString("message") : ""));

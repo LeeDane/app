@@ -543,6 +543,13 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         params.put("method", mPreLoadMethod);
         MoodHandler.sendMood(this, params);
     }
+
+    /**
+     * 显示下拉刷新
+     */
+    public void showRefresh() {
+        mSwipeLayout.setRefreshing(true);
+    }
     /**
      * 发送向上刷新的任务
      */

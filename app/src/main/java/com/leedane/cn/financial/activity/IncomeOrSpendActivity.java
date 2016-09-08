@@ -183,6 +183,31 @@ public class IncomeOrSpendActivity extends BaseActivity {
             setTitleViewText(getStringResource(R.string.financila_add_income));
         else
             setTitleViewText(getStringResource(R.string.financila_add_spend));
+
+        if(getIntent().getType() != null){
+            if(getIntent().getType().startsWith("image/")){
+                List<String> images = AppUtil.getListPicPaths(IncomeOrSpendActivity.this);
+                if(images.size() > 0){
+                    if(images.size() > 1){
+                        ToastUtil.success(IncomeOrSpendActivity.this, "抱歉，目前系统只接受一张图片，已自动为您选择一张图片展示。");
+                    }
+                    mLocalPath = images.get(0);
+                    Bitmap bitmap = null;
+                    if(StringUtil.isNotNull(mLocalPath)){
+                        bitmap = BitmapUtil.getSmallBitmap(IncomeOrSpendActivity.this, mLocalPath, 150, 150);
+                        mImg.setImageBitmap(bitmap);
+                        CommonHandler.getQiniuTokenRequest(IncomeOrSpendActivity.this);
+                        badge.show();
+                    }else
+                        ToastUtil.failure(IncomeOrSpendActivity.this, "获取不到图片路径");
+                }
+            }else if(getIntent().getType().startsWith("text/")){
+                String v =  getIntent().getStringExtra(Intent.EXTRA_TEXT);
+                if(StringUtil.isNotNull(v)){
+                    mRemark.setText(v);
+                }
+            }
+        }
     }
 
     /**
@@ -350,12 +375,18 @@ public class IncomeOrSpendActivity extends BaseActivity {
             if(isEdit()){
                 financialDataBase.update(editFinancialBean);
             }else{
+                //新增情况下先保存后查询，保证有local_id
                 financialDataBase.save(editFinancialBean);
+                editFinancialBean = financialDataBase.query(" order by local_id desc limit 1").get(0);
+                isEdit = true;
             }
             Map<String, Object> data = new HashMap<>();
             BeanUtil.convertBeanToMap(editFinancialBean, data);
             FinancialHandler.save(IncomeOrSpendActivity.this, data);
             ToastUtil.success(IncomeOrSpendActivity.this, "数据已成功添加到本地!");
+            Intent it = new Intent(this, HomeActivity.class);
+            it.putExtra("hasUpdate", true);
+            setResult(HomeActivity.IS_EDIT_OR_SAVE_FINANCIAL_CODE, it);
         }catch (Exception e){
             e.printStackTrace();
             ToastUtil.failure(IncomeOrSpendActivity.this, "保存失败!" + e.toString());
@@ -381,6 +412,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
                             editFinancialBean.setStatus(ConstantsUtil.STATUS_DELETE);
                             financialDataBase.update(editFinancialBean);
                             ToastUtil.success(IncomeOrSpendActivity.this, "记录删除成功!");
+                            Intent it = new Intent(IncomeOrSpendActivity.this, HomeActivity.class);
+                            it.putExtra("hasUpdate", true);
+                            setResult(HomeActivity.IS_EDIT_OR_SAVE_FINANCIAL_CODE, it);
                             finish();
                         }
                     });

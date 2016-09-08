@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,7 @@ import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,8 +169,11 @@ public class MainFragment extends FinancialBaseFragment{
             public void onItemClick(int position, String data) {
                 Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
                 it.putExtra("financialBean", mFinancialBeans.get(position));
+                getActivity().startActivityForResult(it, HomeActivity.IS_EDIT_OR_SAVE_FINANCIAL_CODE);
+                /*Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
+                it.putExtra("financialBean", mFinancialBeans.get(position));
                 mContext.startActivity(it);
-                Toast.makeText(mContext, data, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, data, Toast.LENGTH_SHORT).show();*/
             }
         });
 
@@ -202,25 +207,18 @@ public class MainFragment extends FinancialBaseFragment{
         /*if(mHeader == null || mMonthFinancialList == null)
             return;*/
 
-
-        //计算预算
-        List<TwoLevelCategory> twoLevelCategories = BaseApplication.twoLevelCategories;
-        //总预算(每个自然月算起)
-        float totalBudget = 0.0f;
-        for(TwoLevelCategory twoLevelCategory: twoLevelCategories){
-            if(!OneLevelCategoryDataBase.isIncome(twoLevelCategory.getOneLevelId()))
-                totalBudget += twoLevelCategory.getBudget();
-        }
-
-        float incomeTotal = FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME);
-        float spendTotal = FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
+        BigDecimal incomeTotal = FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME);
+        BigDecimal spendTotal = FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         //更新
         TextView income = (TextView)mHeader.findViewById(R.id.financial_header_income);
         TextView spend = (TextView)mHeader.findViewById(R.id.financial_header_spend);
         TextView budget = (TextView)mHeader.findViewById(R.id.financial_header_budget);
-        income.setText("￥" + incomeTotal);
-        spend.setText("￥"+ spendTotal);
-        budget.setText("￥" + (totalBudget - spendTotal));
+        income.setText("￥" + incomeTotal.floatValue());
+        spend.setText("￥" + spendTotal.floatValue());
+
+        //公式：支出总预算+收入-支出
+        BigDecimal surplus = BaseApplication.getTotalBudget().add(incomeTotal).subtract(spendTotal);
+        budget.setText( Html.fromHtml(surplus.floatValue() > 0.0f ? "￥" + surplus.floatValue() : "￥" +"<font color='red'>"+String.valueOf(surplus.floatValue())+"</font>"));
 
         mHeader.findViewById(R.id.financial_header_income_linearlayout).setOnClickListener(this);
         mHeader.findViewById(R.id.financial_header_spend_linearlayout).setOnClickListener(this);
@@ -277,13 +275,13 @@ public class MainFragment extends FinancialBaseFragment{
      * 获取初始数据
      * @return
      */
-    private void generateData(){
+    public void generateData(){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 //后台计算记账数据
                 FinancialHandler.calculateFinancialData(mContext);
-                mFinancialBeans = financialDataBase.query(" where status = "+ ConstantsUtil.STATUS_NORMAL+" order by datetime(addition_time) desc");
+                mFinancialBeans = financialDataBase.query(" where status = "+ ConstantsUtil.STATUS_NORMAL+" order by datetime(addition_time) desc limit 15");
                 Message message = new Message();
                 message.what = INIT_DATA_SUCCESS;
                 //5秒后进行
@@ -302,7 +300,7 @@ public class MainFragment extends FinancialBaseFragment{
                 break;
             case R.id.add_financial:
                 Intent intent = new Intent(mContext, IncomeOrSpendActivity.class);
-                startActivity(intent);
+                getActivity().startActivityForResult(intent, HomeActivity.IS_EDIT_OR_SAVE_FINANCIAL_CODE);
                 break;
             /*case R.id.financial_refresh:
                 Intent it = new Intent(mContext, CloudActivity.class);

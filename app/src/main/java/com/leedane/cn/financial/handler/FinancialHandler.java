@@ -18,6 +18,7 @@ import com.leedane.cn.util.ConstantsUtil;
 
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,19 +99,24 @@ public class FinancialHandler {
      * @param model model为0表示总数，为1表示获取收入，为2表示获取支出总数
      * @return
      */
-    public static float getTotalData(FinancialList financialList, int model){
-        float total = 0.0f;
+    public static BigDecimal getTotalData(FinancialList financialList, int model){
+        BigDecimal total = new BigDecimal(0.0f);
         if(financialList == null || financialList.getFinancialBeans() == null || financialList.getFinancialBeans().size() == 0)
             return total;
 
-        if(model == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME || model == IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND)
-            for(FinancialBean financialBean: financialList.getFinancialBeans()){
-                if(financialBean.getModel() == model)
-                    total += financialBean.getMoney();
+        if(model == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME || model == IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND) {
+            for (FinancialBean financialBean : financialList.getFinancialBeans()) {
+                if (financialBean.getModel() == model){
+                    total = total.add(BigDecimal.valueOf(financialBean.getMoney()));
+                }
             }
-        else
+        }
+
+       if(model != IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME && model != IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND){
             for(FinancialBean financialBean: financialList.getFinancialBeans())
-                    total += financialBean.getMoney();
+                total = total.add(BigDecimal.valueOf(financialBean.getMoney()));
+        }
+
         return total;
     }
 

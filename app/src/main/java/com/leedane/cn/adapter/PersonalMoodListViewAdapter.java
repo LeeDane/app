@@ -247,7 +247,7 @@ public class PersonalMoodListViewAdapter extends BaseListAdapter<MoodBean>{
                 it_transmit.putExtra("moodObj",mDatas.get(index));
                 it_transmit.putExtra("width","30");//展示的图像的宽度
                 it_transmit.putExtra("height", "30"); //展示的图像的高度
-                activity.startActivityForResult(it_transmit, PersonalActivity.MOOD_COMMENT_REQUEST_CODE);
+                activity.startActivityForResult(it_transmit, PersonalActivity.MOOD_UPDATE_REQUEST_CODE);
             }
         });
         return view;

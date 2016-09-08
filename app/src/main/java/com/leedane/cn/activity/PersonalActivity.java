@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -38,18 +37,15 @@ import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.handler.SignInHandler;
 import com.leedane.cn.handler.UserHandler;
 import com.leedane.cn.task.TaskType;
-import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SerializableMap;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
-import com.leedane.cn.util.http.HttpConnectionUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +56,8 @@ import java.util.List;
  */
 public class PersonalActivity extends BaseActivity {
     public static final String TAG = "PersonalActivity";
-    public static final int MOOD_COMMENT_REQUEST_CODE = 102;
+    //标记对心情是否有修改(增加、评论、转发)
+    public static final int MOOD_UPDATE_REQUEST_CODE = 180;
 
     /**
      * 水平滑动的view
@@ -640,7 +637,7 @@ public class PersonalActivity extends BaseActivity {
                 Intent it_mood = new Intent();
                 it_mood.setClass(PersonalActivity.this, MoodActivity.class);
                 //it_mood.putExtra("publish", true);
-                startActivity(it_mood);
+                startActivityForResult(it_mood, MOOD_UPDATE_REQUEST_CODE);
                 break;
         }
     }
@@ -713,16 +710,34 @@ public class PersonalActivity extends BaseActivity {
     }
 
     @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        /*if (data == null) { 
+            data = new Intent();
+        } */
+        //super.startActivityForResult(data, requestCode);
         switch (requestCode){
-            case MOOD_COMMENT_REQUEST_CODE:
-                //ToastUtil.success(PersonalActivity.this, "comment update");
+            case MOOD_UPDATE_REQUEST_CODE: //是否有添加、评论和转发心情
+                if (data != null) {
+                    boolean isService = data.getBooleanExtra("isService", false);
+                    int type = data.getIntExtra("type", -1);
+                    if (isService) {
+                        ToastUtil.success(PersonalActivity.this, "后台运行" + type);
+                    } else {
+                        ToastUtil.success(PersonalActivity.this, "非后台运行" + type);
+                        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+                        for (Fragment fragment : fragments) {
+                            if (fragment instanceof PersonalMoodFragment) {
+                                ((PersonalMoodFragment) fragment).showRefresh();
+                                ((PersonalMoodFragment) fragment).sendFirstLoading();
+                                break;
+                            }
+                        }
+                    }
+                }
                 break;
             default:
                 //ToastUtil.failure(PersonalActivity.this, "other update");
                 break;
         }
-
     }
 }

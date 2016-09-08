@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.leedane.cn.activity.BaseActivity;
 import com.leedane.cn.activity.LoginActivity;
@@ -27,6 +28,7 @@ import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.customview.RightBorderTextView;
 import com.leedane.cn.financial.adapter.FragmentPagerAdapter;
+import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.fragment.MainFragment;
 import com.leedane.cn.financial.fragment.MonthFragment;
 import com.leedane.cn.financial.fragment.WeekFragment;
@@ -44,6 +46,8 @@ import java.util.List;
  */
 public class HomeActivity extends BaseActivity {
 
+    //标记是否对记账对象进行编辑或者新增
+    public static final int IS_EDIT_OR_SAVE_FINANCIAL_CODE = 117;
     public static final String TAG = "HomeActivity";
 
     private int mPreTab = 0;//当上一个的Tab索引
@@ -331,5 +335,27 @@ public class HomeActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         super.onClick(v);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case IS_EDIT_OR_SAVE_FINANCIAL_CODE:
+                if(data == null)
+                    return;
+
+                boolean hasUpdate = data.getBooleanExtra("hasUpdate", false);
+                    if(hasUpdate){
+                        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+                        for(Fragment fragment: fragments){
+                            if(fragment instanceof MainFragment){
+                                ((MainFragment)fragment).generateData();
+                                break;
+                            }
+                        }
+                }
+                break;
+        }
     }
 }

@@ -21,6 +21,7 @@ import com.android.volley.toolbox.Volley;
 import com.leedane.cn.app.R;
 import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
+import com.leedane.cn.financial.database.FinancialDataBase;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.handler.CrashUncaughtExceptionHandler;
@@ -34,6 +35,7 @@ import com.leedane.cn.util.http.HttpConnectionUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,6 +57,7 @@ public class BaseApplication extends Application {
 
     public static List<OneLevelCategory> oneLevelCategories;
     public static List<TwoLevelCategory> twoLevelCategories;
+    private FinancialDataBase financialDataBase;
     @Override
     public void onCreate() {
         long start = System.currentTimeMillis();
@@ -106,7 +109,25 @@ public class BaseApplication extends Application {
         }
         twoLevelCategoryDataBase.destroy();
 
+        //financialDataBase = new FinancialDataBase(this);
+        //financialDataBase.updateAllNoSynchronous();
         Log.i(TAG, "创建上下文信息完成，耗时：" + (end - start));
+    }
+
+    /**
+     * 获取支出总预算
+     * @return
+     */
+    public static BigDecimal getTotalBudget(){
+        //计算预算
+        List<TwoLevelCategory> twoLevelCategories = BaseApplication.twoLevelCategories;
+        //总预算(每个自然月算起)
+        BigDecimal totalBudget = new BigDecimal(0.0f);
+        for(TwoLevelCategory twoLevelCategory: twoLevelCategories){
+            if(!OneLevelCategoryDataBase.isIncome(twoLevelCategory.getOneLevelId()))
+                totalBudget = totalBudget.add(BigDecimal.valueOf(twoLevelCategory.getBudget()));
+        }
+        return totalBudget;
     }
 
     /**

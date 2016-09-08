@@ -34,6 +34,7 @@ import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +59,8 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
     private SimpleItemTouchHelperCallback callback;
     private int oneLevelId; //一级分类的ID
     private Dialog mDialog;
+    private TextView mShowTotalBudget;//展示所在一级分类总预算
+    private int model = IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME;
 
     /**
      * 添加分类的imageview
@@ -107,6 +110,8 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
             }
         }
         mTwoLevelGategoryEdits = convertToEditBean(twoLevels);
+        model = TwoLevelCategoryDataBase.getModel(oneLevelId);
+
     }
 
     /**
@@ -133,11 +138,29 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
         mRecyclerView.addItemDecoration(new RecycleViewDivider(TwoLevelOperationActivity.this, LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
 
+        if(model == IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND){
+            mShowTotalBudget = (TextView)findViewById(R.id.show_total_budget);
+            mShowTotalBudget.setVisibility(View.VISIBLE);
+            mShowTotalBudget.setText("当月该一级分类总预算：" + String.valueOf(getTotalBudget().floatValue()));
+        }
+
         callback = new SimpleItemTouchHelperCallback(mAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
         mAdapter.setOnItemClickListener(this);
         mAdapter.setOnItemLongClickListener(this);
+    }
+
+    /**
+     * 获取一级分类的总预算
+     * @return
+     */
+    private BigDecimal getTotalBudget(){
+        BigDecimal total = new BigDecimal(0.0f);
+        for(TwoLevelCategoryEdit twoLevelCategoryEdit: mTwoLevelGategoryEdits){
+            total = total.add(new BigDecimal(twoLevelCategoryEdit.getBudget()));
+        }
+        return total;
     }
 
     @Override
@@ -376,6 +399,10 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
                 }
                 initData();
                 mAdapter.addDatas(mTwoLevelGategoryEdits);
+
+                if(model == IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND){
+                    mShowTotalBudget.setText("当月该一级分类总预算：" + String.valueOf(getTotalBudget().floatValue()));
+                }
                 ToastUtil.success(this, "activity返回resultCode=" + resultCode + ", requestCode=" + requestCode+",type="+type);
                 break;
         }
