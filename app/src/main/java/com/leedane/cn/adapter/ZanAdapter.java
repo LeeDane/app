@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,9 +54,9 @@ public class ZanAdapter extends BaseListAdapter<ZanBean>{
 
         viewHolder.getmContent().setText(StringUtil.changeNotNull(zanBean.getContent()));
         if(StringUtil.isNotNull(zanBean.getSource())){
-            viewHolder.getmSource().setText(zanBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
-            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
+            Spannable spannable= AppUtil.textviewShowImg(mContext, zanBean.getSource());
+            viewHolder.getmSource().setText(spannable);
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }

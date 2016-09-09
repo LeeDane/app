@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,13 +87,15 @@ public class NotificationAdapter extends BaseAdapter{
         }else{
             viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
         }
-        viewHolder.getmContent().setText(StringUtil.changeNotNull(notificationBean.getContent()));
-        AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
+
+        Spannable spannable= AppUtil.textviewShowImg(mContext, StringUtil.changeNotNull(notificationBean.getContent()));
+        viewHolder.getmContent().setText(spannable);
+
         String source = notificationBean.getSource();
         if(StringUtil.isNotNull(source)){
             viewHolder.getmSource().setVisibility(View.VISIBLE);
-            viewHolder.getmSource().setText(source);
-            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
+            Spannable spannable1 = AppUtil.textviewShowImg(mContext, source);
+            viewHolder.getmSource().setText(spannable1);
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }

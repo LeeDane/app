@@ -14,9 +14,12 @@ import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -184,25 +187,34 @@ public class AppUtil {
         }
         editText.setText(spannable);
     }
+    public interface ClickTextAction{
+        void call(String str);
+    }
 
-    public static void textviewShowImg(final Context context, TextView textView){
-        String text = textView.getText().toString();
+
+    /**
+     * 展示文本中的表情
+     * @param context
+     * @param text
+     * @return
+     */
+    public static Spannable textviewShowImg(final Context context, CharSequence text){
         //Pattern pattern = Pattern.compile("\[(\S+?)\]");  //这里是过滤出[XX]这种形式的字符串，下面是把这种形式的字符串替换成对应的表情
         Pattern p=Pattern.compile("\\[([^\\[\\]]+)\\]");
-        Matcher m=p.matcher(text);
         String group = null;
         //SpannableString spannableString = new SpannableString(text);
         int drawableSrc = 0;
         //要让图片替代指定的文字就要用ImageSpan
-        SpannableString spannable = new SpannableString(text);
+        SpannableStringBuilder builder = new SpannableStringBuilder(text);
+        Matcher m=p.matcher(builder.toString());
         while(m.find()){
             group = m.group().trim();
             if(StringUtil.isNotNull(group) && group.startsWith("[") && group.endsWith("]")){
 
                 int start = m.start();
                 int end = m.end();
-                group = group.substring(1, group.length() -1);
-                drawableSrc = EmojiUtil.getImgId(group);
+                final String g = group.substring(1, group.length() -1);
+                drawableSrc = EmojiUtil.getImgId(g);
                 if(drawableSrc > 0){
                     Drawable drawable = context.getResources().getDrawable(drawableSrc);
                     //需要处理的文本，[ha]是需要被替代的文本
@@ -211,13 +223,46 @@ public class AppUtil {
                     //开始替换，注意第2和第3个参数表示从哪里开始替换到哪里替换结束（start和end）
                     //最后一个参数类似数学中的集合,[5,12)表示从5到12，包括5但不包括12
                     ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
-                    spannable.setSpan(span, start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                    builder.setSpan(span, start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
                     /*spannableString.setSpan(new ImageSpan(context, drawableSrc), start, end,
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
                 }
             }
         }
-        textView.setText(spannable);
+        return builder;
+    }
+
+    /**
+     * 展示文本中的话题
+     * @param context
+     * @param text
+     * @param action
+     * @return
+     */
+    public static Spannable textviewShowTopic(final Context context, CharSequence text, final ClickTextAction action){
+        Pattern p = Pattern.compile("\\#([^\\[\\]]+)\\#");
+        String group;
+        //SpannableString spannableString = new SpannableString(text);
+        //要让图片替代指定的文字就要用ImageSpan
+        SpannableStringBuilder builder = new SpannableStringBuilder(text);
+        Matcher m=p.matcher(builder.toString());
+        while(m.find()){
+            group = m.group().trim();
+            if(StringUtil.isNotNull(group) && group.startsWith("#") && group.endsWith("#")){
+
+                int start = m.start();
+                int end = m.end();
+                final String g = group.substring(1, group.length() -1);
+                ClickableSpan clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        action.call(g);
+                    }
+                };
+                builder.setSpan(clickableSpan, start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return builder;
     }
 }

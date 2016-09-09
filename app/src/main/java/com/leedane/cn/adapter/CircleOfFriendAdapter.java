@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,15 +80,17 @@ public class CircleOfFriendAdapter extends BaseListAdapter<TimeLineBean>{
         }
 
         if(StringUtil.isNotNull(timeLineBean.getSource())){
-            viewHolder.getmSource().setText(timeLineBean.getSource());
-            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
+
+            Spannable spannable= AppUtil.textviewShowImg(mContext, timeLineBean.getSource());
+            viewHolder.getmSource().setText(spannable);
+
             viewHolder.getmSource().setVisibility(View.VISIBLE);
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }
 
-        viewHolder.getmContent().setText(timeLineBean.getContent());
-        AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
+        Spannable spannable= AppUtil.textviewShowImg(mContext, timeLineBean.getContent());
+        viewHolder.getmContent().setText(spannable);
         return view;
     }
 

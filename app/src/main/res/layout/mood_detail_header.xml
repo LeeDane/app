@@ -45,7 +45,7 @@
                     android:text="@string/no_text"/>
             </LinearLayout>
         </LinearLayout>
-        <TextView
+        <com.leedane.cn.customview.MoodTextView
             android:id="@+id/mood_detail_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

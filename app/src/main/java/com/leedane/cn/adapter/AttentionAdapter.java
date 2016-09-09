@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +48,9 @@ public class AttentionAdapter extends BaseListAdapter<AttentionBean>{
             ImageCacheManager.loadImage(attentionBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);*/
 
         if(StringUtil.isNotNull(attentionBean.getSource())){
-            viewHolder.getmSource().setText(attentionBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
-            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
+            Spannable spannable= AppUtil.textviewShowImg(mContext, attentionBean.getSource());
+            viewHolder.getmSource().setText(spannable);
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }

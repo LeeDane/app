@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -33,6 +34,7 @@ import com.leedane.cn.bean.HttpResponseMoodImagesBean;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.bean.MoodImagesBean;
 import com.leedane.cn.customview.CircularImageView;
+import com.leedane.cn.customview.MoodTextView;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.MoodHandler;
@@ -134,7 +136,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     private CircularImageView mIVUserPic;
     private TextView mTVUser;
     private TextView mTVTime;
-    private TextView mTVContent;
+    private MoodTextView mTVContent;
     private TextView mPraiseUser;
     private TextView mTVComment;
     private TextView mTVTransmit;
@@ -249,7 +251,13 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         mTVUser = (TextView)viewHeader.findViewById(R.id.mood_detail_user);
         mIVUserPic = (CircularImageView)viewHeader.findViewById(R.id.mood_detail_user_pic);
         mTVTime = (TextView)viewHeader.findViewById(R.id.mood_detail_time);
-        mTVContent = (TextView)viewHeader.findViewById(R.id.mood_detail_content);
+
+        mTVContent = (MoodTextView)viewHeader.findViewById(R.id.mood_detail_content);
+        mTVContent.setMovementMethod(LinkMovementMethod.getInstance());
+        mTVContent.setFocusable(false);
+        mTVContent.setDispatchToParent(true);
+        mTVContent.setLongClickable(false);
+
         mTVComment = (TextView)viewHeader.findViewById(R.id.mood_detail_comment_show);
         mTVTransmit = (TextView)viewHeader.findViewById(R.id.mood_detail_transmit_show);
         mTVError = (TextView)viewHeader.findViewById(R.id.mood_detail_error);
@@ -293,7 +301,15 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                 mTVUser.setOnClickListener(MoodDetailFragment.this);
             mTVTime.setText(detail.getString("create_time"));
             mTVContent.setText(detail.getString("content"));
-            AppUtil.textviewShowImg(mContext, mTVContent);
+            Spannable spannable= AppUtil.textviewShowImg(mContext, mTVContent.getText().toString());
+            spannable = AppUtil.textviewShowTopic(mContext, spannable, new AppUtil.ClickTextAction() {
+                @Override
+                public void call(String str) {
+                    ToastUtil.success(mContext, "点击："+str);
+                }
+            });
+            mTVContent.setText(spannable);
+
             mTVPraise.setText(getStringResource(mContext, R.string.personal_praise) +"("+ detail.getInt("zan_number")+")");
             mTVComment.setText("评论("+detail.getInt("comment_number")+")");
             mTVTransmit.setText("转发(" + detail.getInt("transmit_number") + ")");

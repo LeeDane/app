@@ -3,6 +3,8 @@ package com.leedane.cn.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +20,18 @@ import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.customview.AutoLinkTextView;
+import com.leedane.cn.customview.MoodTextView;
 import com.leedane.cn.customview.RightBorderTextView;
 import com.leedane.cn.fragment.PersonalMoodFragment;
 import com.leedane.cn.helper.PraiseUserHelper;
 import com.leedane.cn.util.AppUtil;
+import com.leedane.cn.util.AssimilateUtils;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.util.ToastUtil;
 
 import java.util.List;
 
@@ -50,7 +55,7 @@ public class PersonalMoodListViewAdapter extends BaseListAdapter<MoodBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_personal_mood_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmContent((AutoLinkTextView) view.findViewById(R.id.personal_mood_content));
+            viewHolder.setmContent((MoodTextView) view.findViewById(R.id.personal_mood_content));
             viewHolder.setmFroms((TextView) view.findViewById(R.id.personal_mood_froms));
             viewHolder.setmTime((TextView) view.findViewById(R.id.personal_mood_time));
             viewHolder.setmMore((ImageView) view.findViewById(R.id.personal_mood_more));
@@ -112,12 +117,28 @@ public class PersonalMoodListViewAdapter extends BaseListAdapter<MoodBean>{
         //mSpanTitle.setSpan(new AbsoluteSizeSpan(70), 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //设置字体
         //mSpanTitle.setSpan(new TypefaceSpan("monospace"), 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        viewHolder.getmContent().setMovementMethod(LinkMovementMethod.getInstance());
+        viewHolder.getmContent().setFocusable(false);
+        viewHolder.getmContent().setDispatchToParent(true);
+        viewHolder.getmContent().setLongClickable(false);
+        //Spannable spannable = AssimilateUtils.assimilateOnlyLink(mContext, content);
+        //spannable = AssimilateUtils.assimilateOnlyAtUser(mContext, spannable);
+        //spannable = AssimilateUtils.assimilateOnlyTag(mContext, spannable);
+        //spannable = InputHelper.displayEmoji(mContext.getResources(), spannable);
 
-        viewHolder.getmContent().setText(content, TextView.BufferType.SPANNABLE);
+        Spannable spannable= AppUtil.textviewShowImg(mContext, content);
+        spannable= AppUtil.textviewShowTopic(mContext, spannable, new AppUtil.ClickTextAction() {
+            @Override
+            public void call(String str) {
+                ToastUtil.success(mContext, "哈哈+"+str);
+            }
+        });
+        viewHolder.getmContent().setText(spannable);
+
+        //viewHolder.getmContent().setText(content, TextView.BufferType.SPANNABLE);
 
         viewHolder.getmFroms().setTypeface(typeface);
-        viewHolder.getmFroms().setText("来自："+moodBean.getFroms());
-        AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
+        viewHolder.getmFroms().setText("来自：" + moodBean.getFroms());
         String createTime = moodBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
             viewHolder.getmTime().setText("");
@@ -257,7 +278,7 @@ public class PersonalMoodListViewAdapter extends BaseListAdapter<MoodBean>{
         private TextView mFroms;
         private TextView mTime;
         private ImageView mMore;
-        private AutoLinkTextView mContent;
+        private MoodTextView mContent;
        private LinearLayout mImgContainer;
         private TextView mPraiseList;
         private RightBorderTextView mComment;
@@ -281,11 +302,11 @@ public class PersonalMoodListViewAdapter extends BaseListAdapter<MoodBean>{
             this.mComment = mComment;
         }
 
-        public AutoLinkTextView getmContent() {
+        public MoodTextView getmContent() {
             return mContent;
         }
 
-        public void setmContent(AutoLinkTextView mContent) {
+        public void setmContent(MoodTextView mContent) {
             this.mContent = mContent;
         }
 

@@ -33,7 +33,7 @@
             android:src="@mipmap/pop_more_down"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
-    <com.leedane.cn.customview.AutoLinkTextView
+    <com.leedane.cn.customview.MoodTextView
         android:id="@+id/personal_mood_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

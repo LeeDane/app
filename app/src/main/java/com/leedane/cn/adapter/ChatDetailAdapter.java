@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,8 +67,10 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
             }
 
             viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(chatDetailBean.getCreateTime())));
-            viewHolder.getmContent().setText(chatDetailBean.getContent());
-            AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
+
+            Spannable spannable= AppUtil.textviewShowImg(mContext, chatDetailBean.getContent());
+            viewHolder.getmContent().setText(spannable);
+
             viewHolder.getmUserPicPath().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -103,8 +106,10 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
             }
 
             viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(chatDetailBean.getCreateTime())));
-            viewHolder.getmContent().setText(chatDetailBean.getContent());
-            AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
+
+            Spannable spannable= AppUtil.textviewShowImg(mContext, chatDetailBean.getContent());
+            viewHolder.getmContent().setText(spannable);
+
             viewHolder.getmUserPicPath().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

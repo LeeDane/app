@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,9 +50,9 @@ public class CollectionAdapter extends BaseListAdapter<CollectionBean>{
             ImageCacheManager.loadImage(collectionBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);*/
 
         if(StringUtil.isNotNull(collectionBean.getSource())){
-            viewHolder.getmSource().setText(collectionBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
-            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
+            Spannable spannable= AppUtil.textviewShowImg(mContext, collectionBean.getSource());
+            viewHolder.getmSource().setText(spannable);
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }

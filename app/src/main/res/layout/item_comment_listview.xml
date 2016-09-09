@@ -52,7 +52,7 @@
                 android:ellipsize="end"
                 android:layout_marginRight="10dp"/>
         </LinearLayout>
-        <TextView
+        <com.leedane.cn.customview.MoodTextView
             android:id="@+id/comment_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

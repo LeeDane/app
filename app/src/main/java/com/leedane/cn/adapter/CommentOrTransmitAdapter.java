@@ -1,6 +1,8 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +13,13 @@ import android.widget.TextView;
 import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CommentOrTransmitBean;
+import com.leedane.cn.customview.MoodTextView;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
 import java.util.List;
@@ -43,7 +47,7 @@ public class CommentOrTransmitAdapter extends BaseListAdapter<CommentOrTransmitB
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_comment_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmContent((TextView) view.findViewById(R.id.comment_content));
+            viewHolder.setmContent((MoodTextView) view.findViewById(R.id.comment_content));
             viewHolder.setmFrom((TextView) view.findViewById(R.id.comment_from));
             viewHolder.setmTime((TextView) view.findViewById(R.id.comment_time));
             if(showUserInfo){
@@ -56,8 +60,19 @@ public class CommentOrTransmitAdapter extends BaseListAdapter<CommentOrTransmitB
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getmContent().setText(commentOrTransmitBean.getContent());
-        AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
+
+        Spannable spannable= AppUtil.textviewShowImg(mContext, commentOrTransmitBean.getContent());
+        spannable = AppUtil.textviewShowTopic(mContext, spannable, new AppUtil.ClickTextAction() {
+            @Override
+            public void call(String str) {
+                ToastUtil.success(mContext, "点击："+str);
+            }
+        });
+        viewHolder.getmContent().setMovementMethod(LinkMovementMethod.getInstance());
+        viewHolder.getmContent().setFocusable(false);
+        viewHolder.getmContent().setDispatchToParent(true);
+        viewHolder.getmContent().setLongClickable(false);
+        viewHolder.getmContent().setText(spannable);
 
         viewHolder.getmFrom().setTypeface(typeface);
         viewHolder.getmFrom().setText("来自：" + StringUtil.changeNotNull(commentOrTransmitBean.getFroms()));
@@ -65,9 +80,9 @@ public class CommentOrTransmitAdapter extends BaseListAdapter<CommentOrTransmitB
         viewHolder.getmTime().setTypeface(typeface);
         viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(commentOrTransmitBean.getCreateTime())));
         if(StringUtil.isNotNull(commentOrTransmitBean.getSource())){
-            viewHolder.getmSource().setText(commentOrTransmitBean.getSource());
             viewHolder.getmSource().setVisibility(View.VISIBLE);
-            AppUtil.textviewShowImg(mContext, viewHolder.getmSource());
+            Spannable spannable1= AppUtil.textviewShowImg(mContext, commentOrTransmitBean.getSource());
+            viewHolder.getmSource().setText(spannable1);
         }else{
             viewHolder.getmSource().setVisibility(View.GONE);
         }
@@ -92,7 +107,7 @@ public class CommentOrTransmitAdapter extends BaseListAdapter<CommentOrTransmitB
     }
 
     private class ViewHolder{
-        private TextView mContent;
+        private MoodTextView mContent;
         private ImageView mUserPic;
         private TextView mUserName;
         private TextView mFrom;
@@ -100,11 +115,11 @@ public class CommentOrTransmitAdapter extends BaseListAdapter<CommentOrTransmitB
         private TextView mSource;
         private LinearLayout mUserInfo;
 
-        public TextView getmContent() {
+        public MoodTextView getmContent() {
             return mContent;
         }
 
-        public void setmContent(TextView mContent) {
+        public void setmContent(MoodTextView mContent) {
             this.mContent = mContent;
         }
 

@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,10 @@ public class ChatAdapter extends BaseListAdapter<ChatBean>{
         }
         viewHolder.getmAccount().setText(chatBean.getAccount());
         viewHolder.getmContent().setText(chatBean.getContent());
-        AppUtil.textviewShowImg(mContext, viewHolder.getmContent());
+
+        Spannable spannable= AppUtil.textviewShowImg(mContext, chatBean.getContent());
+        viewHolder.getmContent().setText(spannable);
+
         if(StringUtil.changeObjectToInt(chatBean.getNoReadNumber()) > 0){
             viewHolder.getmNoReadNumber().setBackgroundResource(R.drawable.chat_has_number_tip_bg);
         }else{
