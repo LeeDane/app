@@ -26,23 +26,15 @@ public class PersonalListViewAdapter extends BaseListAdapter<String>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_personal_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmCommentItem((TextView)view.findViewById(R.id.personal_listview_item));
+            viewHolder.commentItem = (TextView)view.findViewById(R.id.personal_listview_item);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getmCommentItem().setText(mDatas.get(position));
+        viewHolder.commentItem.setText(mDatas.get(position));
         return view;
     }
 
-    private class ViewHolder{
-        private TextView mCommentItem;
-
-        public TextView getmCommentItem() {
-            return mCommentItem;
-        }
-
-        public void setmCommentItem(TextView mCommentItem) {
-            this.mCommentItem = mCommentItem;
-        }
+    static class ViewHolder{
+        TextView commentItem;
     }
 }

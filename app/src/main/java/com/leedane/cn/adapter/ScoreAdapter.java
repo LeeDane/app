@@ -31,19 +31,19 @@ public class ScoreAdapter extends BaseListAdapter<ScoreBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_score_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmTime((TextView) view.findViewById(R.id.score_time));
+            viewHolder.time = (TextView) view.findViewById(R.id.score_time);
             TextView tvDesc = (TextView) view.findViewById(R.id.score_desc);
             tvDesc.setSelected(true);
-            viewHolder.setmDesc(tvDesc);
-            viewHolder.setmNumber((TextView) view.findViewById(R.id.score_number));
-            viewHolder.setmStatus((TextView)view.findViewById(R.id.score_status));
+            viewHolder.desc = tvDesc;
+            viewHolder.number = (TextView) view.findViewById(R.id.score_number);
+            viewHolder.status = (TextView)view.findViewById(R.id.score_status);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(scoreBean.getCreateTime())));
-        viewHolder.getmDesc().setText("描述:" +scoreBean.getDesc());
-        viewHolder.getmNumber().setText("当/总:" +scoreBean.getScore() +"/" +scoreBean.getTotalScore());
-        viewHolder.getmStatus().setText("状态:" +getStatusText(scoreBean.getStatus()));
+        viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(scoreBean.getCreateTime())));
+        viewHolder.desc.setText("描述:" + scoreBean.getDesc());
+        viewHolder.number.setText("当/总:" + scoreBean.getScore() + "/" + scoreBean.getTotalScore());
+        viewHolder.status.setText("状态:" + getStatusText(scoreBean.getStatus()));
 
         //设置动画效果
         setAnimation(view, position);
@@ -72,43 +72,10 @@ public class ScoreAdapter extends BaseListAdapter<ScoreBean>{
         return "未知异常";
     }
 
-    private class ViewHolder{
-        private TextView mTime;
-        private TextView mDesc;
-        private TextView mNumber;
-        //private TextView mTotalNumber;
-        private TextView mStatus;
-
-        public TextView getmDesc() {
-            return mDesc;
-        }
-
-        public void setmDesc(TextView mDesc) {
-            this.mDesc = mDesc;
-        }
-
-        public TextView getmNumber() {
-            return mNumber;
-        }
-
-        public void setmNumber(TextView mNumber) {
-            this.mNumber = mNumber;
-        }
-
-        public TextView getmStatus() {
-            return mStatus;
-        }
-
-        public void setmStatus(TextView mStatus) {
-            this.mStatus = mStatus;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
+    static class ViewHolder{
+        TextView time;
+        TextView desc;
+        TextView number;
+        TextView status;
     }
 }

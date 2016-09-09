@@ -39,7 +39,7 @@ public class MoodGridViewAdapter extends BaseListAdapter<String>{
         if(view == null){
             myHolder = new MyHolder();
             view = LayoutInflater.from(mContext).inflate(R.layout.item_mood_gridview, null);
-            myHolder.setImageView((ImageView) view.findViewById(R.id.mood_item_img));
+            myHolder.imageView = (ImageView) view.findViewById(R.id.mood_item_img);
             view.setTag(myHolder);
         }else{
             myHolder = (MyHolder)view.getTag();
@@ -51,7 +51,7 @@ public class MoodGridViewAdapter extends BaseListAdapter<String>{
         }else{
             //String imageTag = uri.getPath();
             //myHolder.getImageView().setTag(imageTag);
-            final ImageView imageView = myHolder.getImageView();
+            final ImageView imageView = myHolder.imageView;
 
             //getBitMap(mUrls.get(position));
             Bitmap bitmap = BitmapUtil.getSmallBitmap(mContext, uri, 480, 800);
@@ -140,15 +140,7 @@ public class MoodGridViewAdapter extends BaseListAdapter<String>{
         return bitmap;
     }
 
-    class MyHolder{
-        private ImageView imageView;
-
-        public ImageView getImageView() {
-            return imageView;
-        }
-
-        public void setImageView(ImageView imageView) {
-            this.imageView = imageView;
-        }
+    static class MyHolder{
+        ImageView imageView;
     }
 }

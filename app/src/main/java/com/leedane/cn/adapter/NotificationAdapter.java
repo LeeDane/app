@@ -58,49 +58,49 @@ public class NotificationAdapter extends BaseAdapter{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_notification_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmUserName((TextView) view.findViewById(R.id.notification_user_name));
-            viewHolder.setmUserPic((ImageView) view.findViewById(R.id.notification_user_pic));
-            viewHolder.setmTime((TextView) view.findViewById(R.id.notification_time));
-            viewHolder.setmUserInfo((LinearLayout) view.findViewById(R.id.notification_user_info));
-            viewHolder.setmContent((TextView) view.findViewById(R.id.notification_content));
-            viewHolder.setmSource((TextView)view.findViewById(R.id.notification_source));
+            viewHolder.userName = (TextView) view.findViewById(R.id.notification_user_name);
+            viewHolder.userPic = (ImageView) view.findViewById(R.id.notification_user_pic);
+            viewHolder.time = (TextView) view.findViewById(R.id.notification_time);
+            viewHolder.userInfo = (LinearLayout) view.findViewById(R.id.notification_user_info);
+            viewHolder.content = (TextView) view.findViewById(R.id.notification_content);
+            viewHolder.source = (TextView)view.findViewById(R.id.notification_source);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getmUserName().setText(notificationBean.getToUserAccount());
+        viewHolder.userName.setText(notificationBean.getToUserAccount());
 
-        viewHolder.getmUserInfo().setVisibility(View.VISIBLE);
-        viewHolder.getmUserInfo().setOnClickListener(new View.OnClickListener() {
+        viewHolder.userInfo.setVisibility(View.VISIBLE);
+        viewHolder.userInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommonHandler.startPersonalActivity(mContext, notificationBean.getFromUserId());
             }
         });
         if(StringUtil.isNotNull(notificationBean.getToUserPicPath())){
-            ImageCacheManager.loadImage(notificationBean.getToUserPicPath(), viewHolder.getmUserPic());
-            viewHolder.getmUserPic().setOnClickListener(new View.OnClickListener() {
+            ImageCacheManager.loadImage(notificationBean.getToUserPicPath(), viewHolder.userPic);
+            viewHolder.userPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     CommonHandler.startPersonalActivity(mContext, notificationBean.getFromUserId());
                 }
             });
         }else{
-            viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
+            viewHolder.userPic.setImageResource(R.drawable.no_pic);
         }
 
         Spannable spannable= AppUtil.textviewShowImg(mContext, StringUtil.changeNotNull(notificationBean.getContent()));
-        viewHolder.getmContent().setText(spannable);
+        viewHolder.content.setText(spannable);
 
         String source = notificationBean.getSource();
         if(StringUtil.isNotNull(source)){
-            viewHolder.getmSource().setVisibility(View.VISIBLE);
+            viewHolder.source.setVisibility(View.VISIBLE);
             Spannable spannable1 = AppUtil.textviewShowImg(mContext, source);
-            viewHolder.getmSource().setText(spannable1);
+            viewHolder.source.setText(spannable1);
         }else{
-            viewHolder.getmSource().setVisibility(View.GONE);
+            viewHolder.source.setVisibility(View.GONE);
         }
 
-        viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(notificationBean.getCreateTime())));
+        viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(notificationBean.getCreateTime())));
         return view;
     }
 
@@ -110,60 +110,12 @@ public class NotificationAdapter extends BaseAdapter{
         this.notifyDataSetChanged();
     }
 
-    private class ViewHolder{
-        private TextView mContent;
-        private TextView mSource;
-        private ImageView mUserPic;
-        private TextView mUserName;
-        private TextView mTime;
-        private LinearLayout mUserInfo;
-
-        public TextView getmContent() {
-            return mContent;
-        }
-
-        public void setmContent(TextView mContent) {
-            this.mContent = mContent;
-        }
-
-        public TextView getmSource() {
-            return mSource;
-        }
-
-        public void setmSource(TextView mSource) {
-            this.mSource = mSource;
-        }
-
-        public ImageView getmUserPic() {
-            return mUserPic;
-        }
-
-        public void setmUserPic(ImageView mUserPic) {
-            this.mUserPic = mUserPic;
-        }
-
-        public TextView getmUserName() {
-            return mUserName;
-        }
-
-        public void setmUserName(TextView mUserName) {
-            this.mUserName = mUserName;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
-
-        public LinearLayout getmUserInfo() {
-            return mUserInfo;
-        }
-
-        public void setmUserInfo(LinearLayout mUserInfo) {
-            this.mUserInfo = mUserInfo;
-        }
+    static class ViewHolder{
+        TextView content;
+        TextView source;
+        ImageView userPic;
+        TextView userName;
+        TextView time;
+        LinearLayout userInfo;
     }
 }

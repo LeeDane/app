@@ -45,28 +45,19 @@ public class SimpleListAdapter extends BaseListAdapter<String>{
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_simple_listview, null);
 
             myHolder = new MyHolder();
-            myHolder.setTextview((TextView)convertView.findViewById(R.id.simple_listview_item));
+            myHolder.tv = (TextView)convertView.findViewById(R.id.simple_listview_item);
             convertView.setTag(myHolder);
         }else{
             myHolder = (MyHolder)convertView.getTag();
         }
         //myHolder.getTextview().setBackgroundColor(mContext.getResources().getColor(R.color.white));
-        myHolder.getTextview().setTextColor(mContext.getResources().getColor(R.color.black));
-        myHolder.getTextview().setText(Html.fromHtml(StringUtil.changeNotNull(mDatas.get(position))));
-        myHolder.getTextview().setTag("leedane");
+        myHolder.tv.setTextColor(mContext.getResources().getColor(R.color.black));
+        myHolder.tv.setText(Html.fromHtml(StringUtil.changeNotNull(mDatas.get(position))));
+        myHolder.tv.setTag("leedane");
         return convertView;
     }
 
-
     static class MyHolder {
-        private TextView textview;
-
-        public TextView getTextview() {
-            return textview;
-        }
-
-        public void setTextview(TextView textview) {
-            this.textview = textview;
-        }
+        TextView tv;
     }
 }

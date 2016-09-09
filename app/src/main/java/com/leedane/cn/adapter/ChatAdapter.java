@@ -5,7 +5,6 @@ import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
@@ -37,11 +36,11 @@ public class ChatAdapter extends BaseListAdapter<ChatBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_listview, null);
             viewHolder = new MyHolder();
-            viewHolder.setmCreateTime((TextView) view.findViewById(R.id.chat_time));
-            viewHolder.setmAccount((TextView) view.findViewById(R.id.chat_account));
-            viewHolder.setmUserPicPath((CircularImageView) view.findViewById(R.id.chat_user_pic));
-            viewHolder.setmContent((TextView) view.findViewById(R.id.chat_content));
-            viewHolder.setmNoReadNumber((TextView)view.findViewById(R.id.chat_no_read));
+            viewHolder.createTime = (TextView) view.findViewById(R.id.chat_time);
+            viewHolder.account = (TextView) view.findViewById(R.id.chat_account);
+            viewHolder.userPicPath = (CircularImageView) view.findViewById(R.id.chat_user_pic);
+            viewHolder.content = (TextView) view.findViewById(R.id.chat_content);
+            viewHolder.noReadNumber = (TextView)view.findViewById(R.id.chat_no_read);
             view.setTag(viewHolder);
         }else{
             viewHolder = (MyHolder)view.getTag();
@@ -50,98 +49,59 @@ public class ChatAdapter extends BaseListAdapter<ChatBean>{
 
         String createTime = chatBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
-            viewHolder.getmCreateTime().setText("");
+            viewHolder.createTime.setText("");
         }else{
-            viewHolder.getmCreateTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
+            viewHolder.createTime.setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 
         String userPicPath = chatBean.getUserPicPath();
         if(StringUtil.isNotNull(userPicPath)){
-            ImageCacheManager.loadImage(userPicPath, viewHolder.getmUserPicPath());
+            ImageCacheManager.loadImage(userPicPath, viewHolder.userPicPath);
         }else{
-            viewHolder.getmUserPicPath().setImageResource(R.drawable.no_pic);
+            viewHolder.userPicPath.setImageResource(R.drawable.no_pic);
         }
-        viewHolder.getmAccount().setText(chatBean.getAccount());
-        viewHolder.getmContent().setText(chatBean.getContent());
+        viewHolder.account.setText(chatBean.getAccount());
+        viewHolder.content.setText(chatBean.getContent());
 
         Spannable spannable= AppUtil.textviewShowImg(mContext, chatBean.getContent());
-        viewHolder.getmContent().setText(spannable);
+        viewHolder.content.setText(spannable);
 
         if(StringUtil.changeObjectToInt(chatBean.getNoReadNumber()) > 0){
-            viewHolder.getmNoReadNumber().setBackgroundResource(R.drawable.chat_has_number_tip_bg);
+            viewHolder.noReadNumber.setBackgroundResource(R.drawable.chat_has_number_tip_bg);
         }else{
-            viewHolder.getmNoReadNumber().setBackgroundResource(R.drawable.chat_no_number_tip_bg);
+            viewHolder.noReadNumber.setBackgroundResource(R.drawable.chat_no_number_tip_bg);
         }
-        viewHolder.getmNoReadNumber().setText(StringUtil.changeObjectToInt(chatBean.getNoReadNumber()) +"");
+        viewHolder.noReadNumber.setText(StringUtil.changeObjectToInt(chatBean.getNoReadNumber()) + "");
         //设置动画效果
         //setAnimation(view, position);
         return view;
     }
 
-    private class MyHolder{
+    static class MyHolder{
         /**
          * 聊天的内容
          */
-        private TextView mContent;
+        TextView content;
 
         /**
          * 用户的头像
          */
-        private CircularImageView mUserPicPath;
+        CircularImageView userPicPath;
 
         /**
          * 用户的账号名称
          */
-        private TextView mAccount;
+        TextView account;
 
         /**
          * 创建时间
          */
-        private TextView mCreateTime;
+        TextView createTime;
 
         /**
          * 未读取数量
          */
-        private TextView mNoReadNumber;
+        TextView noReadNumber;
 
-        public TextView getmAccount() {
-            return mAccount;
-        }
-
-        public void setmAccount(TextView mAccount) {
-            this.mAccount = mAccount;
-        }
-
-        public TextView getmContent() {
-            return mContent;
-        }
-
-        public void setmContent(TextView mContent) {
-            this.mContent = mContent;
-        }
-
-        public TextView getmCreateTime() {
-            return mCreateTime;
-        }
-
-        public void setmCreateTime(TextView mCreateTime) {
-            this.mCreateTime = mCreateTime;
-        }
-
-        public CircularImageView getmUserPicPath() {
-            return mUserPicPath;
-        }
-
-        public void setmUserPicPath(CircularImageView mUserPicPath) {
-            this.mUserPicPath = mUserPicPath;
-        }
-
-        public TextView getmNoReadNumber() {
-            return mNoReadNumber;
-        }
-
-        public void setmNoReadNumber(TextView mNoReadNumber) {
-            this.mNoReadNumber = mNoReadNumber;
-        }
     }
 }

@@ -10,9 +10,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -62,13 +59,13 @@ public class HomeAdapter extends BaseListAdapter<BlogBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_home_listview, null);
             myHolder = new MyHolder();
-            myHolder.setmTitle((TextView) view.findViewById(R.id.home_item_title));
-            myHolder.setmImg((ImageView) view.findViewById(R.id.home_item_img));
-            myHolder.setmAccount((TextView) view.findViewById(R.id.home_item_account));
-            myHolder.setmTime((TextView) view.findViewById(R.id.home_item_time));
-            myHolder.setmFrom((TextView) view.findViewById(R.id.home_item_from));
-            myHolder.setmDigest((TextView) view.findViewById(R.id.home_item_digest));
-            myHolder.setmTags((LinearLayout)view.findViewById(R.id.home_item_tags));
+            myHolder.title = (TextView) view.findViewById(R.id.home_item_title);
+            myHolder.img = (ImageView) view.findViewById(R.id.home_item_img);
+            myHolder.account = (TextView) view.findViewById(R.id.home_item_account);
+            myHolder.time = (TextView) view.findViewById(R.id.home_item_time);
+            myHolder.from = (TextView) view.findViewById(R.id.home_item_from);
+            myHolder.digest = (TextView) view.findViewById(R.id.home_item_digest);
+            myHolder.tags = (LinearLayout)view.findViewById(R.id.home_item_tags);
             view.setTag(myHolder);
         }else{
             myHolder = (MyHolder)view.getTag();
@@ -85,7 +82,7 @@ public class HomeAdapter extends BaseListAdapter<BlogBean>{
         //设置字体
         //mSpanTitle.setSpan(new TypefaceSpan("monospace"), 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        myHolder.getmTitle().setText(title);
+        myHolder.title.setText(title);
 
         int bid = blogBean.getId();
         final String imgUrl = blogBean.getImgUrl();
@@ -95,7 +92,7 @@ public class HomeAdapter extends BaseListAdapter<BlogBean>{
         if(StringUtil.isNotNull(imgUrl)){
             //myHolder.getmImg().setVisibility(View.VISIBLE);
             if(imgUrl.startsWith("http://") || imgUrl.startsWith("https://")){
-                ImageCacheManager.loadImage(imgUrl, myHolder.getmImg(), BaseApplication.getDefaultImage(), BaseApplication.getErrorImage());
+                ImageCacheManager.loadImage(imgUrl, myHolder.img, BaseApplication.getDefaultImage(), BaseApplication.getErrorImage());
             }else{
                 //从base64格式的字符串中截取
                 String imageTag = imgUrl.substring(10,30) + blogBean.getId();
@@ -113,31 +110,31 @@ public class HomeAdapter extends BaseListAdapter<BlogBean>{
                     }
                 });
             }
-            myHolder.getmImg().setOnClickListener(new View.OnClickListener() {
+            myHolder.img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String picPath = blogBean.getImgUrl();
-                    if(StringUtil.isNotNull(picPath)){
+                    if (StringUtil.isNotNull(picPath)) {
                         List<ImageDetailBean> list = new ArrayList<ImageDetailBean>();
                         ImageDetailBean imageDetailBean = new ImageDetailBean();
                         imageDetailBean.setPath(picPath);
                         list.add(imageDetailBean);
                         CommonHandler.startImageDetailActivity(mContext, list, 0);
-                    }else{
+                    } else {
                         ToastUtil.success(mContext, "暂无图片");
                     }
                 }
             });
         }else{
-            myHolder.getmImg().setClickable(false);
+            myHolder.img.setClickable(false);
             //myHolder.getmImg().setVisibility(View.GONE);
-            myHolder.getmImg().setImageBitmap(BaseApplication.getNotPicImage());
+            myHolder.img.setImageBitmap(BaseApplication.getNotPicImage());
         }
 
 
         final int userId = blogBean.getCreateUserId();
-        myHolder.getmAccount().setText(Html.fromHtml("<font color=\"blue\">" + StringUtil.changeNotNull(blogBean.getAccount()) + "</font>"));
-        myHolder.getmAccount().setOnClickListener(new View.OnClickListener() {
+        myHolder.account.setText(Html.fromHtml("<font color=\"blue\">" + StringUtil.changeNotNull(blogBean.getAccount()) + "</font>"));
+        myHolder.account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(mContext, PersonalActivity.class);
@@ -146,21 +143,21 @@ public class HomeAdapter extends BaseListAdapter<BlogBean>{
             }
         });
 
-        myHolder.getmFrom().setText("来自：" + StringUtil.changeNotNull(blogBean.getFroms()));
+        myHolder.from.setText("来自：" + StringUtil.changeNotNull(blogBean.getFroms()));
 
         String createTime = blogBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
-            myHolder.getmTime().setText("");
+            myHolder.time.setText("");
         }else{
-            myHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
+            myHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 
-        myHolder.getmDigest().setText(StringUtil.changeNotNull(blogBean.getDigest()) +"...");
-        myHolder.getmTags().removeAllViewsInLayout();
+        myHolder.digest.setText(StringUtil.changeNotNull(blogBean.getDigest()) + "...");
+        myHolder.tags.removeAllViewsInLayout();
         if(StringUtil.isNotNull(blogBean.getTag())){
             String[] tagArray = blogBean.getTag().split(",");
             for(int i = 0; i< tagArray.length; i++){
-                myHolder.getmTags().addView(buildTagTextView(tagArray[i]), i);
+                myHolder.tags.addView(buildTagTextView(tagArray[i]), i);
             }
         }
         return view;
@@ -184,70 +181,13 @@ public class HomeAdapter extends BaseListAdapter<BlogBean>{
         return textView;
     }
 
-    private class MyHolder{
-
-        private TextView mTitle;
-        private ImageView mImg;
-        private TextView mAccount;
-        private TextView mFrom;
-        private TextView mTime;
-        private TextView mDigest;
-        private LinearLayout mTags;
-
-        public TextView getmTitle() {
-            return mTitle;
-        }
-
-        public void setmTitle(TextView mTitle) {
-            this.mTitle = mTitle;
-        }
-
-        public ImageView getmImg() {
-            return mImg;
-        }
-
-        public void setmImg(ImageView mImg) {
-            this.mImg = mImg;
-        }
-
-        public TextView getmFrom() {
-            return mFrom;
-        }
-
-        public void setmFrom(TextView mFrom) {
-            this.mFrom = mFrom;
-        }
-
-        public TextView getmDigest() {
-            return mDigest;
-        }
-
-        public void setmDigest(TextView mDigest) {
-            this.mDigest = mDigest;
-        }
-
-        public TextView getmAccount() {
-            return mAccount;
-        }
-
-        public void setmAccount(TextView mAccount) {
-            this.mAccount = mAccount;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
-
-        public LinearLayout getmTags() {
-            return mTags;
-        }
-
-        public void setmTags(LinearLayout mTags) {
-            this.mTags = mTags;
-        }
+    static class MyHolder{
+        TextView title;
+        ImageView img;
+        TextView account;
+        TextView from;
+        TextView time;
+        TextView digest;
+        LinearLayout tags;
     }
 }

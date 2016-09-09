@@ -5,7 +5,6 @@ import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
@@ -49,9 +48,9 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
                 viewHolder = new ViewHolder();
                 TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
                 tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
-                viewHolder.setmContent(tContent);
-                viewHolder.setmUserPicPath((CircularImageView) view.findViewById(R.id.chat_detail_user_pic));
-                viewHolder.setmTime((TextView)view.findViewById(R.id.chat_detail_time));
+                viewHolder.content = tContent;
+                viewHolder.userPicPath = (CircularImageView) view.findViewById(R.id.chat_detail_user_pic);
+                viewHolder.time = (TextView)view.findViewById(R.id.chat_detail_time);
                 view.setTag(R.string.chat_detail_layout_left, viewHolder);
             }
             viewHolder = (ViewHolder)view.getTag(R.string.chat_detail_layout_left);
@@ -60,27 +59,27 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
                 viewHolder = new ViewHolder();
                 TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
                 tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
-                viewHolder.setmContent(tContent);
-                viewHolder.setmUserPicPath((CircularImageView) view.findViewById(R.id.chat_detail_user_pic));
-                viewHolder.setmTime((TextView) view.findViewById(R.id.chat_detail_time));
+                viewHolder.content = tContent;
+                viewHolder.userPicPath = (CircularImageView) view.findViewById(R.id.chat_detail_user_pic);
+                viewHolder.time = (TextView) view.findViewById(R.id.chat_detail_time);
                 view.setTag(R.string.chat_detail_layout_left, viewHolder);
             }
 
-            viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(chatDetailBean.getCreateTime())));
+            viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(chatDetailBean.getCreateTime())));
 
             Spannable spannable= AppUtil.textviewShowImg(mContext, chatDetailBean.getContent());
-            viewHolder.getmContent().setText(spannable);
+            viewHolder.content.setText(spannable);
 
-            viewHolder.getmUserPicPath().setOnClickListener(new View.OnClickListener() {
+            viewHolder.userPicPath.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     CommonHandler.startPersonalActivity(mContext, chatDetailBean.getCreateUserId());
                 }
             });
             if(StringUtil.isNotNull(toUserPicPath))
-                ImageCacheManager.loadImage(toUserPicPath, viewHolder.getmUserPicPath(), 30, 30);
+                ImageCacheManager.loadImage(toUserPicPath, viewHolder.userPicPath, 30, 30);
             else{
-                viewHolder.getmUserPicPath().setImageResource(R.drawable.no_pic);
+                viewHolder.userPicPath.setImageResource(R.drawable.no_pic);
             }
         }else{//自己使用right
             if(view == null) {
@@ -88,9 +87,9 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
                 viewHolder = new ViewHolder();
                 TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
                 tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
-                viewHolder.setmContent(tContent);
-                viewHolder.setmUserPicPath((CircularImageView) view.findViewById(R.id.chat_detail_user_pic));
-                viewHolder.setmTime((TextView) view.findViewById(R.id.chat_detail_time));
+                viewHolder.content = tContent;
+                viewHolder.userPicPath = (CircularImageView) view.findViewById(R.id.chat_detail_user_pic);
+                viewHolder.time = (TextView) view.findViewById(R.id.chat_detail_time);
                 view.setTag(R.string.chat_detail_layout_right, viewHolder);
             }
             viewHolder = (ViewHolder)view.getTag(R.string.chat_detail_layout_right);
@@ -99,18 +98,18 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
                 viewHolder = new ViewHolder();
                 TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
                 tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
-                viewHolder.setmContent(tContent);
-                viewHolder.setmUserPicPath((CircularImageView) view.findViewById(R.id.chat_detail_user_pic));
-                viewHolder.setmTime((TextView) view.findViewById(R.id.chat_detail_time));
+                viewHolder.content = tContent;
+                viewHolder.userPicPath = (CircularImageView) view.findViewById(R.id.chat_detail_user_pic);
+                viewHolder.time = (TextView) view.findViewById(R.id.chat_detail_time);
                 view.setTag(R.string.chat_detail_layout_right, viewHolder);
             }
 
-            viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(chatDetailBean.getCreateTime())));
+            viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(chatDetailBean.getCreateTime())));
 
             Spannable spannable= AppUtil.textviewShowImg(mContext, chatDetailBean.getContent());
-            viewHolder.getmContent().setText(spannable);
+            viewHolder.content.setText(spannable);
 
-            viewHolder.getmUserPicPath().setOnClickListener(new View.OnClickListener() {
+            viewHolder.userPicPath.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     CommonHandler.startPersonalActivity(mContext, chatDetailBean.getCreateUserId());
@@ -118,41 +117,17 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
             });
             if(userPicPath != null)
                 //viewHolder.getmUserPicPath().setImageBitmap(userPicBitMap);
-                ImageCacheManager.loadImage(userPicPath, viewHolder.getmUserPicPath(), 30, 30);
+                ImageCacheManager.loadImage(userPicPath, viewHolder.userPicPath, 30, 30);
             else{
-                viewHolder.getmUserPicPath().setImageResource(R.drawable.no_pic);
+                viewHolder.userPicPath.setImageResource(R.drawable.no_pic);
             }
         }
         return view;
     }
 
-    private class ViewHolder{
-        private TextView mTime;
-        private CircularImageView mUserPicPath;
-        private TextView mContent;
-
-        public TextView getmContent() {
-            return mContent;
-        }
-
-        public void setmContent(TextView mContent) {
-            this.mContent = mContent;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
-
-        public CircularImageView getmUserPicPath() {
-            return mUserPicPath;
-        }
-
-        public void setmUserPicPath(CircularImageView mUserPicPath) {
-            this.mUserPicPath = mUserPicPath;
-        }
+    static class ViewHolder{
+        TextView time;
+        CircularImageView userPicPath;
+        TextView content;
     }
 }

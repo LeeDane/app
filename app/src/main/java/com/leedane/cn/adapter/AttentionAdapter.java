@@ -33,26 +33,20 @@ public class AttentionAdapter extends BaseListAdapter<AttentionBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_attention_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmTime((TextView) view.findViewById(R.id.attention_time));
-            /*viewHolder.setmUserName((TextView) view.findViewById(R.id.attention_user_name));
-            viewHolder.setmUserPic((ImageView) view.findViewById(R.id.attention_user_pic));*/
-            viewHolder.setmSource((TextView)view.findViewById(R.id.attention_source));
+            viewHolder.time = (TextView) view.findViewById(R.id.attention_time);
+            viewHolder.source = (TextView)view.findViewById(R.id.attention_source);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
-
-        viewHolder.getmTime().setTypeface(typeface);
-        viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(attentionBean.getCreateTime())));
-        /*viewHolder.getmUserName().setText(attentionBean.getAccount());
-        if(attentionBean.getUserPicPath() != null)
-            ImageCacheManager.loadImage(attentionBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);*/
+        viewHolder.time.setTypeface(typeface);
+        viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(attentionBean.getCreateTime())));
 
         if(StringUtil.isNotNull(attentionBean.getSource())){
-            viewHolder.getmSource().setVisibility(View.VISIBLE);
+            viewHolder.source.setVisibility(View.VISIBLE);
             Spannable spannable= AppUtil.textviewShowImg(mContext, attentionBean.getSource());
-            viewHolder.getmSource().setText(spannable);
+            viewHolder.source.setText(spannable);
         }else{
-            viewHolder.getmSource().setVisibility(View.GONE);
+            viewHolder.source.setVisibility(View.GONE);
         }
         //设置动画效果
         setAnimation(view, position);
@@ -60,42 +54,8 @@ public class AttentionAdapter extends BaseListAdapter<AttentionBean>{
     }
 
 
-    private class ViewHolder{
-        /*private ImageView mUserPic;
-        private TextView mUserName;*/
-        private TextView mTime;
-        private TextView mSource;
-
-        /*public ImageView getmUserPic() {
-            return mUserPic;
-        }
-
-        public void setmUserPic(ImageView mUserPic) {
-            this.mUserPic = mUserPic;
-        }
-
-        public TextView getmUserName() {
-            return mUserName;
-        }
-
-        public void setmUserName(TextView mUserName) {
-            this.mUserName = mUserName;
-        }*/
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
-
-        public TextView getmSource() {
-            return mSource;
-        }
-
-        public void setmSource(TextView mSource) {
-            this.mSource = mSource;
-        }
+    static class ViewHolder{
+        TextView time;
+        TextView source;
     }
 }

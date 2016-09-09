@@ -31,42 +31,26 @@ public class LocationAdapter extends BaseListAdapter<LocationBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_location_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmName((TextView) view.findViewById(R.id.location_item_name));
+            viewHolder.name = (TextView) view.findViewById(R.id.location_item_name);
             TextView addr = (TextView) view.findViewById(R.id.location_item_addr);
             addr.setSelected(true);
-            viewHolder.setmAddr(addr);
+            viewHolder.addr = addr;
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
         if(StringUtil.isNotNull(locationBean.getName())){
-            viewHolder.getmName().setVisibility(View.VISIBLE);
-            viewHolder.getmName().setText(locationBean.getName());
+            viewHolder.name.setVisibility(View.VISIBLE);
+            viewHolder.name.setText(locationBean.getName());
         }else{
-            viewHolder.getmName().setVisibility(View.GONE);
+            viewHolder.name.setVisibility(View.GONE);
         }
 
-        viewHolder.getmAddr().setText(locationBean.getAddrStr());
+        viewHolder.addr.setText(locationBean.getAddrStr());
         return view;
     }
 
-    private class ViewHolder{
-        private TextView mAddr;
-        private TextView mName;
-
-        public TextView getmAddr() {
-            return mAddr;
-        }
-
-        public void setmAddr(TextView mAddr) {
-            this.mAddr = mAddr;
-        }
-
-        public TextView getmName() {
-            return mName;
-        }
-
-        public void setmName(TextView mName) {
-            this.mName = mName;
-        }
+    static class ViewHolder{
+        TextView addr;
+        TextView name;
     }
 }

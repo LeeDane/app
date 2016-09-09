@@ -43,120 +43,62 @@ public class CircleOfFriendAdapter extends BaseListAdapter<TimeLineBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_circle_of_friend_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmTime((TextView) view.findViewById(R.id.circle_time));
-            viewHolder.setmContent((TextView) view.findViewById(R.id.circle_content));
-            viewHolder.setmSource((TextView) view.findViewById(R.id.circle_source));
-            viewHolder.setmFrom((TextView) view.findViewById(R.id.circle_from));
-            viewHolder.setmUserName((TextView) view.findViewById(R.id.circle_user_name));
-            viewHolder.setmUserPic((CircularImageView) view.findViewById(R.id.circle_user_pic));
-            viewHolder.setmUserInfo((LinearLayout)view.findViewById(R.id.circle_user_info));
+            viewHolder.time = (TextView) view.findViewById(R.id.circle_time);
+            viewHolder.content = (TextView) view.findViewById(R.id.circle_content);
+            viewHolder.source = (TextView) view.findViewById(R.id.circle_source);
+            viewHolder.from = (TextView) view.findViewById(R.id.circle_from);
+            viewHolder.userName = (TextView) view.findViewById(R.id.circle_user_name);
+            viewHolder.userPic = (CircularImageView) view.findViewById(R.id.circle_user_pic);
+            viewHolder.userInfo = (LinearLayout)view.findViewById(R.id.circle_user_info);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(timeLineBean.getCreateTime())));
-        viewHolder.getmUserName().setText(timeLineBean.getAccount());
+        viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(timeLineBean.getCreateTime())));
+        viewHolder.userName.setText(timeLineBean.getAccount());
 
-        viewHolder.getmFrom().setText("来自：" +timeLineBean.getFroms());
+        viewHolder.from.setText("来自：" + timeLineBean.getFroms());
 
-        viewHolder.getmUserInfo().setOnClickListener(new View.OnClickListener() {
+        viewHolder.userInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    CommonHandler.startPersonalActivity(mContext, timeLineBean.getCreateUserId());
+                CommonHandler.startPersonalActivity(mContext, timeLineBean.getCreateUserId());
             }
         });
 
         if(timeLineBean.getCreateUserId() == loginUserId){
             if(StringUtil.isNotNull(loginUserPicPath))
-                ImageCacheManager.loadImage(loginUserPicPath, viewHolder.getmUserPic(), 45, 45);
+                ImageCacheManager.loadImage(loginUserPicPath, viewHolder.userPic, 45, 45);
             else{
-                viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
+                viewHolder.userPic.setImageResource(R.drawable.no_pic);
             }
         }else{
             if(timeLineBean.getUserPicPath() != null)
-                ImageCacheManager.loadImage(timeLineBean.getUserPicPath(), viewHolder.getmUserPic(), 45, 45);
+                ImageCacheManager.loadImage(timeLineBean.getUserPicPath(), viewHolder.userPic, 45, 45);
             else{
-                viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
+                viewHolder.userPic.setImageResource(R.drawable.no_pic);
             }
         }
 
         if(StringUtil.isNotNull(timeLineBean.getSource())){
-
             Spannable spannable= AppUtil.textviewShowImg(mContext, timeLineBean.getSource());
-            viewHolder.getmSource().setText(spannable);
-
-            viewHolder.getmSource().setVisibility(View.VISIBLE);
+            viewHolder.source.setText(spannable);
+            viewHolder.source.setVisibility(View.VISIBLE);
         }else{
-            viewHolder.getmSource().setVisibility(View.GONE);
+            viewHolder.source.setVisibility(View.GONE);
         }
 
         Spannable spannable= AppUtil.textviewShowImg(mContext, timeLineBean.getContent());
-        viewHolder.getmContent().setText(spannable);
+        viewHolder.content.setText(spannable);
         return view;
     }
 
-    private class ViewHolder{
-        private LinearLayout mUserInfo;
-        private CircularImageView mUserPic;
-        private TextView mUserName;
-        private TextView mTime;
-        private TextView mContent;
-        private TextView mSource;
-        private TextView mFrom;
-
-        public LinearLayout getmUserInfo() {
-            return mUserInfo;
-        }
-
-        public void setmUserInfo(LinearLayout mUserInfo) {
-            this.mUserInfo = mUserInfo;
-        }
-
-        public TextView getmContent() {
-            return mContent;
-        }
-
-        public void setmContent(TextView mContent) {
-            this.mContent = mContent;
-        }
-
-        public TextView getmFrom() {
-            return mFrom;
-        }
-
-        public void setmFrom(TextView mFrom) {
-            this.mFrom = mFrom;
-        }
-
-        public TextView getmSource() {
-            return mSource;
-        }
-
-        public void setmSource(TextView mSource) {
-            this.mSource = mSource;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
-
-        public TextView getmUserName() {
-            return mUserName;
-        }
-
-        public void setmUserName(TextView mUserName) {
-            this.mUserName = mUserName;
-        }
-
-        public CircularImageView getmUserPic() {
-            return mUserPic;
-        }
-
-        public void setmUserPic(CircularImageView mUserPic) {
-            this.mUserPic = mUserPic;
-        }
+    static class ViewHolder{
+        LinearLayout userInfo;
+        CircularImageView userPic;
+        TextView userName;
+        TextView time;
+        TextView content;
+        TextView source;
+        TextView from;
     }
 }

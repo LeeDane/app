@@ -75,15 +75,15 @@ public class FindAdapter extends RecyclerView.Adapter{
 
     class FindViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
 
-        public View rootView;
-        public ImageView iconIV;
-        public TextView titleTV;
-        public int position;
+        View rootView;
+        ImageView iconIV;
+        TextView titleTV;
+        int position;
         /**
          * 整个子项的根View
          * @param itemView
          */
-        public FindViewHolder(View itemView){
+        FindViewHolder(View itemView){
             super(itemView);
             rootView = itemView.findViewById(R.id.recyclerview_root);
             iconIV = (ImageView)itemView.findViewById(R.id.recyclerview_icon);

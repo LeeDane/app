@@ -35,11 +35,11 @@ public class DownloadAdapter extends BaseListAdapter<DownloadItem> {
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_download_listview, null);
             myHolder = new MyHolder();
-            myHolder.setCreateTime((TextView) view.findViewById(R.id.download_create_time));
-            myHolder.setDesc((TextView) view.findViewById(R.id.download_desc));
-            myHolder.setFileName((TextView) view.findViewById(R.id.download_filename));
-            myHolder.setProgress((ProgressBar) view.findViewById(R.id.download_progress));
-            myHolder.setPer((TextView) view.findViewById(R.id.download_per));
+            myHolder.createTime = (TextView) view.findViewById(R.id.download_create_time);
+            myHolder.desc = (TextView) view.findViewById(R.id.download_desc);
+            myHolder.fileName = (TextView) view.findViewById(R.id.download_filename);
+            myHolder.progress = (ProgressBar) view.findViewById(R.id.download_progress);
+            myHolder.per = (TextView) view.findViewById(R.id.download_per);
             view.setTag(myHolder);
         }else{
             myHolder = (MyHolder)view.getTag();
@@ -54,12 +54,12 @@ public class DownloadAdapter extends BaseListAdapter<DownloadItem> {
 
         Date createTime = downloadItem.getCreateTime();
         if(createTime == null){
-            myHolder.getCreateTime().setText("");
+            myHolder.createTime.setText("");
         }else{
-            myHolder.getCreateTime().setText(RelativeDateFormat.format(createTime));
+            myHolder.createTime.setText(RelativeDateFormat.format(createTime));
         }
 
-        myHolder.getFileName().setText(downloadItem.getFileName());
+        myHolder.fileName.setText(downloadItem.getFileName());
 
         List<PortDownload> portDownloads = downloadItem.getPortDownloads();
         if(portDownloads.size() >0){
@@ -72,87 +72,46 @@ public class DownloadAdapter extends BaseListAdapter<DownloadItem> {
             }
 
             int per = (int) (allFinishSize/size * 100);
-            myHolder.getProgress().setMax(100);
-            myHolder.getProgress().setProgress(per);
-            myHolder.getPer().setText(per + "%");
+            myHolder.progress.setMax(100);
+            myHolder.progress.setProgress(per);
+            myHolder.per.setText(per + "%");
         }
 
         //异步执行下载任务
         if(downloadCount < 6){
-            myHolder.getDesc().setText(mContext.getResources().getString(R.string.download_now));
+            myHolder.desc.setText(mContext.getResources().getString(R.string.download_now));
         }
         else
-            myHolder.getDesc().setText(mContext.getResources().getString(R.string.download_stop));
+            myHolder.desc.setText(mContext.getResources().getString(R.string.download_stop));
         return view;
     }
 
-    private class MyHolder{
+    static class MyHolder{
 
 
         /**
          * 文件名称
          */
-        private TextView fileName;
+        TextView fileName;
 
         /**
          * 进度条
          */
-        private ProgressBar progress;
+        ProgressBar progress;
 
         /**
          * 百分比
          */
-        private TextView per;
+        TextView per;
 
         /**
          * 状态的描述
          */
-        private TextView desc;
+        TextView desc;
 
         /**
          * 创建时间
          */
-        private TextView createTime;
-
-
-        public TextView getCreateTime() {
-            return createTime;
-        }
-
-        public void setCreateTime(TextView createTime) {
-            this.createTime = createTime;
-        }
-
-        public TextView getDesc() {
-            return desc;
-        }
-
-        public void setDesc(TextView desc) {
-            this.desc = desc;
-        }
-
-        public TextView getFileName() {
-            return fileName;
-        }
-
-        public void setFileName(TextView fileName) {
-            this.fileName = fileName;
-        }
-
-        public TextView getPer() {
-            return per;
-        }
-
-        public void setPer(TextView per) {
-            this.per = per;
-        }
-
-        public ProgressBar getProgress() {
-            return progress;
-        }
-
-        public void setProgress(ProgressBar progress) {
-            this.progress = progress;
-        }
+        TextView createTime;
     }
 }

@@ -132,10 +132,10 @@ public class ChatContactAdapter extends MyFriendsRecyclerviewBaseAdapter<ChatCon
 
         public class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-                public TextView mName;
-                public SwipeItemLayout mRoot;
-                public TextView mDelete;
-                public int position;
+                TextView mName;
+                SwipeItemLayout mRoot;
+                TextView mDelete;
+                int position;
                 public ContactViewHolder(View itemView) {
                         super(itemView);
                         mName = (TextView) itemView.findViewById(R.id.item_chat_contact_name);

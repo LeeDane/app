@@ -33,84 +33,44 @@ public class FriendNotYetAdapter extends BaseListAdapter<FriendBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_friend_no_yet_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmUserPic((ImageView) view.findViewById(R.id.friend_no_yet_user_pic));
-            viewHolder.setmAccount((TextView) view.findViewById(R.id.friend_no_yet_user_name));
-            viewHolder.setmTime((TextView) view.findViewById(R.id.friend_no_yet_time));
+            viewHolder.userPic = (ImageView) view.findViewById(R.id.friend_no_yet_user_pic);
+            viewHolder.account = (TextView) view.findViewById(R.id.friend_no_yet_user_name);
+            viewHolder.time = (TextView) view.findViewById(R.id.friend_no_yet_time);
             TextView introduce = (TextView)view.findViewById(R.id.friend_no_yet_introduce);
             introduce.setSelected(true);
-            viewHolder.setmIntroduce(introduce);
-            viewHolder.setmOperate((TextView) view.findViewById(R.id.friend_no_yet_operate));
+            viewHolder.introduce = introduce;
+            viewHolder.operate = (TextView) view.findViewById(R.id.friend_no_yet_operate);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
         if(StringUtil.isNotNull(friendBean.getUserPicPath()))
-            ImageCacheManager.loadImage(friendBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);
+            ImageCacheManager.loadImage(friendBean.getUserPicPath(), viewHolder.userPic, 30, 30);
         if(StringUtil.isNotNull(friendBean.getAccount()) && !friendBean.getAccount().equals(friendBean.getRemark())){
-            viewHolder.getmAccount().setText(friendBean.getAccount() + (StringUtil.isNotNull(friendBean.getRemark())? "(" + friendBean.getRemark() + ")" : ""));
+            viewHolder.account.setText(friendBean.getAccount() + (StringUtil.isNotNull(friendBean.getRemark()) ? "(" + friendBean.getRemark() + ")" : ""));
         }else{
-            viewHolder.getmAccount().setText(StringUtil.changeNotNull(friendBean.getRemark()));
+            viewHolder.account.setText(StringUtil.changeNotNull(friendBean.getRemark()));
         }
         if(StringUtil.isNotNull(friendBean.getCreateTime()))
-            viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(friendBean.getCreateTime())));
+            viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(friendBean.getCreateTime())));
         else
-            viewHolder.getmTime().setText("");
-        viewHolder.getmIntroduce().setText(StringUtil.changeNotNull(friendBean.getIntroduce()));
+            viewHolder.time.setText("");
+        viewHolder.introduce.setText(StringUtil.changeNotNull(friendBean.getIntroduce()));
 
         if(friendBean.getStatus() == 0){
-            viewHolder.getmOperate().setText("同意添加");
+            viewHolder.operate.setText("同意添加");
         }else{
-            viewHolder.getmOperate().setText("发送邮件提醒TA");
+            viewHolder.operate.setText("发送邮件提醒TA");
         }
         //设置动画效果
         setAnimation(view, position);
         return view;
     }
 
-    private class ViewHolder{
-        private ImageView mUserPic;
-        private TextView mAccount;
-        private TextView mTime;
-        private TextView mIntroduce;
-        private TextView mOperate;
-
-        public ImageView getmUserPic() {
-            return mUserPic;
-        }
-
-        public void setmUserPic(ImageView mUserPic) {
-            this.mUserPic = mUserPic;
-        }
-
-        public TextView getmAccount() {
-            return mAccount;
-        }
-
-        public void setmAccount(TextView mAccount) {
-            this.mAccount = mAccount;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
-
-        public TextView getmIntroduce() {
-            return mIntroduce;
-        }
-
-        public void setmIntroduce(TextView mIntroduce) {
-            this.mIntroduce = mIntroduce;
-        }
-
-        public TextView getmOperate() {
-            return mOperate;
-        }
-
-        public void setmOperate(TextView mOperate) {
-            this.mOperate = mOperate;
-        }
+    static class ViewHolder{
+        ImageView userPic;
+        TextView account;
+        TextView time;
+        TextView introduce;
+        TextView operate;
     }
 }

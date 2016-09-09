@@ -33,92 +33,37 @@ public class ZanAdapter extends BaseListAdapter<ZanBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_zan_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmFrom((TextView) view.findViewById(R.id.zan_from));
-            viewHolder.setmTime((TextView) view.findViewById(R.id.zan_time));
-            /*viewHolder.setmUserName((TextView) view.findViewById(R.id.zan_user_name));
-            viewHolder.setmUserPic((ImageView) view.findViewById(R.id.zan_user_pic));*/
-            viewHolder.setmContent((TextView)view.findViewById(R.id.zan_content));
-            viewHolder.setmSource((TextView)view.findViewById(R.id.zan_source));
+            viewHolder.from = (TextView) view.findViewById(R.id.zan_from);
+            viewHolder.time = (TextView) view.findViewById(R.id.zan_time);
+            viewHolder.content = (TextView)view.findViewById(R.id.zan_content);
+            viewHolder.source = (TextView)view.findViewById(R.id.zan_source);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
 
-        viewHolder.getmFrom().setTypeface(typeface);
-        viewHolder.getmFrom().setText(StringUtil.changeNotNull(zanBean.getFroms()));
+        viewHolder.from.setTypeface(typeface);
+        viewHolder.from.setText(StringUtil.changeNotNull(zanBean.getFroms()));
 
-        viewHolder.getmTime().setTypeface(typeface);
-        viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(zanBean.getCreateTime())));
-        /*viewHolder.getmUserName().setText(zanBean.getAccount());
-        if(zanBean.getUserPicPath() != null)
-            ImageCacheManager.loadImage(zanBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);*/
+        viewHolder.time.setTypeface(typeface);
+        viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(zanBean.getCreateTime())));
 
-        viewHolder.getmContent().setText(StringUtil.changeNotNull(zanBean.getContent()));
+        viewHolder.content.setText(StringUtil.changeNotNull(zanBean.getContent()));
         if(StringUtil.isNotNull(zanBean.getSource())){
-            viewHolder.getmSource().setVisibility(View.VISIBLE);
+            viewHolder.source.setVisibility(View.VISIBLE);
             Spannable spannable= AppUtil.textviewShowImg(mContext, zanBean.getSource());
-            viewHolder.getmSource().setText(spannable);
+            viewHolder.source.setText(spannable);
         }else{
-            viewHolder.getmSource().setVisibility(View.GONE);
+            viewHolder.source.setVisibility(View.GONE);
         }
         //设置动画效果
         setAnimation(view, position);
         return view;
     }
 
-    private class ViewHolder{
-        /*private ImageView mUserPic;
-        private TextView mUserName;*/
-        private TextView mFrom;
-        private TextView mTime;
-        private TextView mContent;
-        private TextView mSource;
-
-        /*public ImageView getmUserPic() {
-            return mUserPic;
-        }
-
-        public void setmUserPic(ImageView mUserPic) {
-            this.mUserPic = mUserPic;
-        }
-
-        public TextView getmUserName() {
-            return mUserName;
-        }
-
-        public void setmUserName(TextView mUserName) {
-            this.mUserName = mUserName;
-        }*/
-
-        public TextView getmFrom() {
-            return mFrom;
-        }
-
-        public void setmFrom(TextView mFrom) {
-            this.mFrom = mFrom;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
-
-        public TextView getmContent() {
-            return mContent;
-        }
-
-        public void setmContent(TextView mContent) {
-            this.mContent = mContent;
-        }
-
-        public TextView getmSource() {
-            return mSource;
-        }
-
-        public void setmSource(TextView mSource) {
-            this.mSource = mSource;
-        }
+    static class ViewHolder{
+        TextView from;
+        TextView time;
+        TextView content;
+        TextView source;
     }
 }

@@ -205,14 +205,14 @@ public class ContactAdapter extends RecyclerviewBaseAdapter<ContactAdapter.Conta
                 mOpenedSil.clear();
         }
 
-        public class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+        class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
 
-                public TextView mName;
-                public SwipeItemLayout mRoot;
-                public TextView mDelete;
-                public TextView mTest;
-                public int position;
-                public ContactViewHolder(View itemView) {
+                TextView mName;
+                SwipeItemLayout mRoot;
+                TextView mDelete;
+                TextView mTest;
+                int position;
+                ContactViewHolder(View itemView) {
                         super(itemView);
                         mName = (TextView) itemView.findViewById(R.id.item_contact_title);
                         mRoot = (SwipeItemLayout) itemView.findViewById(R.id.item_contact_swipe_root);

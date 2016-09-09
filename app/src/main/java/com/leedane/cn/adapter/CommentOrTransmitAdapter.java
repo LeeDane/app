@@ -47,16 +47,15 @@ public class CommentOrTransmitAdapter extends BaseListAdapter<CommentOrTransmitB
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_comment_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmContent((MoodTextView) view.findViewById(R.id.comment_content));
-            viewHolder.setmFrom((TextView) view.findViewById(R.id.comment_from));
-            viewHolder.setmTime((TextView) view.findViewById(R.id.comment_time));
+            viewHolder.content = (MoodTextView) view.findViewById(R.id.comment_content);
+            viewHolder.from = (TextView) view.findViewById(R.id.comment_from);
+            viewHolder.time = (TextView) view.findViewById(R.id.comment_time);
             if(showUserInfo){
-                viewHolder.setmUserInfo((LinearLayout)view.findViewById(R.id.comment_user_info));
-                viewHolder.setmUserName((TextView) view.findViewById(R.id.comment_user_name));
-                viewHolder.setmUserPic((ImageView) view.findViewById(R.id.comment_user_pic));
+                viewHolder.userInfo = (LinearLayout)view.findViewById(R.id.comment_user_info);
+                viewHolder.userName = (TextView) view.findViewById(R.id.comment_user_name);
+                viewHolder.userPic = (ImageView) view.findViewById(R.id.comment_user_pic);
             }
-
-            viewHolder.setmSource((TextView) view.findViewById(R.id.comment_source));
+            viewHolder.source = (TextView) view.findViewById(R.id.comment_source);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
@@ -68,107 +67,51 @@ public class CommentOrTransmitAdapter extends BaseListAdapter<CommentOrTransmitB
                 ToastUtil.success(mContext, "点击："+str);
             }
         });
-        viewHolder.getmContent().setMovementMethod(LinkMovementMethod.getInstance());
-        viewHolder.getmContent().setFocusable(false);
-        viewHolder.getmContent().setDispatchToParent(true);
-        viewHolder.getmContent().setLongClickable(false);
-        viewHolder.getmContent().setText(spannable);
+        viewHolder.content.setMovementMethod(LinkMovementMethod.getInstance());
+        viewHolder.content.setFocusable(false);
+        viewHolder.content.setDispatchToParent(true);
+        viewHolder.content.setLongClickable(false);
+        viewHolder.content.setText(spannable);
 
-        viewHolder.getmFrom().setTypeface(typeface);
-        viewHolder.getmFrom().setText("来自：" + StringUtil.changeNotNull(commentOrTransmitBean.getFroms()));
+        viewHolder.from.setTypeface(typeface);
+        viewHolder.from.setText("来自：" + StringUtil.changeNotNull(commentOrTransmitBean.getFroms()));
 
-        viewHolder.getmTime().setTypeface(typeface);
-        viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(commentOrTransmitBean.getCreateTime())));
+        viewHolder.time.setTypeface(typeface);
+        viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(commentOrTransmitBean.getCreateTime())));
         if(StringUtil.isNotNull(commentOrTransmitBean.getSource())){
-            viewHolder.getmSource().setVisibility(View.VISIBLE);
+            viewHolder.source.setVisibility(View.VISIBLE);
             Spannable spannable1= AppUtil.textviewShowImg(mContext, commentOrTransmitBean.getSource());
-            viewHolder.getmSource().setText(spannable1);
+            viewHolder.source.setText(spannable1);
         }else{
-            viewHolder.getmSource().setVisibility(View.GONE);
+            viewHolder.source.setVisibility(View.GONE);
         }
 
         if(showUserInfo){
-            viewHolder.getmUserInfo().setOnClickListener(new View.OnClickListener() {
+            viewHolder.userInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     CommonHandler.startPersonalActivity(mContext, commentOrTransmitBean.getCreateUserId());
                 }
             });
-            viewHolder.getmUserInfo().setVisibility(View.VISIBLE);
-            viewHolder.getmUserName().setText(commentOrTransmitBean.getAccount());
+            viewHolder.userInfo.setVisibility(View.VISIBLE);
+            viewHolder.userName.setText(commentOrTransmitBean.getAccount());
             if(commentOrTransmitBean.getUserPicPath() != null)
-                ImageCacheManager.loadImage(commentOrTransmitBean.getUserPicPath(), viewHolder.getmUserPic(), 30, 30);
+                ImageCacheManager.loadImage(commentOrTransmitBean.getUserPicPath(), viewHolder.userPic, 30, 30);
             else
-                viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
+                viewHolder.userPic.setImageResource(R.drawable.no_pic);
         }
         //设置动画效果
         setAnimation(view, position);
         return view;
     }
 
-    private class ViewHolder{
-        private MoodTextView mContent;
-        private ImageView mUserPic;
-        private TextView mUserName;
-        private TextView mFrom;
-        private TextView mTime;
-        private TextView mSource;
-        private LinearLayout mUserInfo;
-
-        public MoodTextView getmContent() {
-            return mContent;
-        }
-
-        public void setmContent(MoodTextView mContent) {
-            this.mContent = mContent;
-        }
-
-        public ImageView getmUserPic() {
-            return mUserPic;
-        }
-
-        public void setmUserPic(ImageView mUserPic) {
-            this.mUserPic = mUserPic;
-        }
-
-        public TextView getmUserName() {
-            return mUserName;
-        }
-
-        public void setmUserName(TextView mUserName) {
-            this.mUserName = mUserName;
-        }
-
-        public TextView getmFrom() {
-            return mFrom;
-        }
-
-        public void setmFrom(TextView mFrom) {
-            this.mFrom = mFrom;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
-
-        public TextView getmSource() {
-            return mSource;
-        }
-
-        public void setmSource(TextView mSource) {
-            this.mSource = mSource;
-        }
-
-        public LinearLayout getmUserInfo() {
-            return mUserInfo;
-        }
-
-        public void setmUserInfo(LinearLayout mUserInfo) {
-            this.mUserInfo = mUserInfo;
-        }
+    static class ViewHolder{
+        MoodTextView content;
+        ImageView userPic;
+        TextView userName;
+        TextView from;
+        TextView time;
+        TextView source;
+        LinearLayout userInfo;
     }
 }

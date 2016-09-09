@@ -134,14 +134,14 @@ public class MyFriendsAdapter extends MyFriendsRecyclerviewBaseAdapter<MyFriends
                 mOpenedSil.clear();
         }
 
-        public class ContactViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener{
+        class ContactViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener{
 
-                public TextView mName;
-                public SwipeItemLayout mRoot;
-                public TextView mDelete;
-                private CheckBox mSelect;
-                public int position;
-                public ContactViewHolder(View itemView) {
+                TextView mName;
+                SwipeItemLayout mRoot;
+                TextView mDelete;
+                CheckBox mSelect;
+                int position;
+                ContactViewHolder(View itemView) {
                         super(itemView);
                         mName = (TextView) itemView.findViewById(R.id.item_myfriends_name);
                         mRoot = (SwipeItemLayout) itemView.findViewById(R.id.item_myfriends_swipe_root);

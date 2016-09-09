@@ -29,34 +29,18 @@ public class UserInfoMenuAdapter extends BaseListAdapter<MenuBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_menu_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmIcon((ImageView) view.findViewById(R.id.recyclerview_icon));
-            viewHolder.setmTitle((TextView) view.findViewById(R.id.recyclerview_title));
+            viewHolder.icon = (ImageView) view.findViewById(R.id.recyclerview_icon);
+            viewHolder.title = (TextView) view.findViewById(R.id.recyclerview_title);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getmIcon().setImageResource(menuBean.getIconId());
-        viewHolder.getmTitle().setText(menuBean.getTitle());
+        viewHolder.icon.setImageResource(menuBean.getIconId());
+        viewHolder.title.setText(menuBean.getTitle());
         return view;
     }
 
-    private class ViewHolder{
-        private ImageView mIcon;
-        private TextView mTitle;
-
-        public ImageView getmIcon() {
-            return mIcon;
-        }
-
-        public void setmIcon(ImageView mIcon) {
-            this.mIcon = mIcon;
-        }
-
-        public TextView getmTitle() {
-            return mTitle;
-        }
-
-        public void setmTitle(TextView mTitle) {
-            this.mTitle = mTitle;
-        }
+    static class ViewHolder{
+        ImageView icon;
+        TextView title;
     }
 }

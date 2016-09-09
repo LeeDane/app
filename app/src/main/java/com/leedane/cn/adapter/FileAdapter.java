@@ -34,9 +34,9 @@ public class FileAdapter extends BaseListAdapter<FileBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_file_listview, null);
             myHolder = new MyHolder();
-            myHolder.setCreateTime((TextView) view.findViewById(R.id.file_item_createTime));
-            myHolder.setDesc((TextView) view.findViewById(R.id.file_item_desc));
-            myHolder.setFileName((TextView) view.findViewById(R.id.file_item_fileName));
+            myHolder.createTime = (TextView) view.findViewById(R.id.file_item_createTime);
+            myHolder.desc = (TextView) view.findViewById(R.id.file_item_desc);
+            myHolder.fileName = (TextView) view.findViewById(R.id.file_item_fileName);
             view.setTag(myHolder);
         }else{
             myHolder = (MyHolder)view.getTag();
@@ -46,59 +46,31 @@ public class FileAdapter extends BaseListAdapter<FileBean>{
 
         FileBean fileBean = mDatas.get(position);
 
-        myHolder.getDesc().setText("正常");
+        myHolder.desc.setText("正常");
         String createTime = fileBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
-            myHolder.getCreateTime().setText("");
+            myHolder.createTime.setText("");
         }else{
-            myHolder.getCreateTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
+            myHolder.createTime.setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
-        myHolder.getFileName().setText(fileBean.getPath());
+        myHolder.fileName.setText(fileBean.getPath());
         return view;
     }
 
-    private class MyHolder{
-
-
+    static class MyHolder{
         /**
          * 文件名称
          */
-        private TextView fileName;
+        TextView fileName;
 
         /**
          * 状态的描述
          */
-        private TextView desc;
+        TextView desc;
 
         /**
          * 创建时间
          */
-        private TextView createTime;
-
-
-        public TextView getCreateTime() {
-            return createTime;
-        }
-
-        public void setCreateTime(TextView createTime) {
-            this.createTime = createTime;
-        }
-
-        public TextView getDesc() {
-            return desc;
-        }
-
-        public void setDesc(TextView desc) {
-            this.desc = desc;
-        }
-
-        public TextView getFileName() {
-            return fileName;
-        }
-
-        public void setFileName(TextView fileName) {
-            this.fileName = fileName;
-        }
-
+        TextView createTime;
     }
 }

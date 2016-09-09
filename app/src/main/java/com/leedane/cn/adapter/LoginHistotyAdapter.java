@@ -31,21 +31,21 @@ public class LoginHistotyAdapter extends BaseListAdapter<LoginHistoryBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_login_history_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmMethod((TextView) view.findViewById(R.id.login_history_method));
-            viewHolder.setmIp((TextView) view.findViewById(R.id.login_history_ip));
+            viewHolder.method = (TextView) view.findViewById(R.id.login_history_method);
+            viewHolder.ip = (TextView) view.findViewById(R.id.login_history_ip);
             TextView textView = (TextView)view.findViewById(R.id.login_history_browser);
             textView.setSelected(true);
-            viewHolder.setmBrowser(textView);
-            viewHolder.setmTime((TextView) view.findViewById(R.id.login_history_time));
-            viewHolder.setmStatus((TextView)view.findViewById(R.id.login_history_status));
+            viewHolder.browser = textView;
+            viewHolder.time = (TextView) view.findViewById(R.id.login_history_time);
+            viewHolder.status = (TextView)view.findViewById(R.id.login_history_status);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(loginHistoryBean.getCreateTime())));
-        viewHolder.getmMethod().setText(loginHistoryBean.getMethod());
-        viewHolder.getmIp().setText(loginHistoryBean.getIp());
-        viewHolder.getmBrowser().setText(loginHistoryBean.getBrowser());
-        viewHolder.getmStatus().setText("状态:" +getStatusText(loginHistoryBean.getStatus()));
+        viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(loginHistoryBean.getCreateTime())));
+        viewHolder.method.setText(loginHistoryBean.getMethod());
+        viewHolder.ip.setText(loginHistoryBean.getIp());
+        viewHolder.browser.setText(loginHistoryBean.getBrowser());
+        viewHolder.status.setText("状态:" + getStatusText(loginHistoryBean.getStatus()));
         //设置动画效果
         setAnimation(view, position);
         return view;
@@ -67,51 +67,11 @@ public class LoginHistotyAdapter extends BaseListAdapter<LoginHistoryBean>{
         return "未知异常";
     }
 
-    private class ViewHolder{
-        private TextView mMethod;
-        private TextView mIp;
-        private TextView mBrowser;
-        private TextView mTime;
-        private TextView mStatus;
-
-        public TextView getmBrowser() {
-            return mBrowser;
-        }
-
-        public void setmBrowser(TextView mBrowser) {
-            this.mBrowser = mBrowser;
-        }
-
-        public TextView getmIp() {
-            return mIp;
-        }
-
-        public void setmIp(TextView mIp) {
-            this.mIp = mIp;
-        }
-
-        public TextView getmMethod() {
-            return mMethod;
-        }
-
-        public void setmMethod(TextView mMethod) {
-            this.mMethod = mMethod;
-        }
-
-        public TextView getmStatus() {
-            return mStatus;
-        }
-
-        public void setmStatus(TextView mStatus) {
-            this.mStatus = mStatus;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
+    static class ViewHolder{
+        TextView method;
+        TextView ip;
+        TextView browser;
+        TextView time;
+        TextView status;
     }
 }

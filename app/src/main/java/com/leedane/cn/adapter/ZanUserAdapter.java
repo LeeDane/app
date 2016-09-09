@@ -34,16 +34,16 @@ public class ZanUserAdapter extends BaseListAdapter<ZanUserBean>{
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_zan_user_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmTime((TextView) view.findViewById(R.id.zan_user_time));
-            viewHolder.setmUserName((TextView) view.findViewById(R.id.zan_user_name));
-            viewHolder.setmUserPic((ImageView) view.findViewById(R.id.zan_user_pic));
+            viewHolder.time = (TextView) view.findViewById(R.id.zan_user_time);
+            viewHolder.userName = (TextView) view.findViewById(R.id.zan_user_name);
+            viewHolder.userPic = (ImageView) view.findViewById(R.id.zan_user_pic);
 
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
 
-        viewHolder.getmUserName().setText(zanUserBean.getAccount());
-        viewHolder.getmUserName().setOnClickListener(new View.OnClickListener() {
+        viewHolder.userName.setText(zanUserBean.getAccount());
+        viewHolder.userName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommonHandler.startPersonalActivity(mContext, zanUserBean.getCreateUserId());
@@ -51,50 +51,26 @@ public class ZanUserAdapter extends BaseListAdapter<ZanUserBean>{
         });
 
         if(StringUtil.isNotNull(zanUserBean.getUserPicPath()))
-            ImageCacheManager.loadImage(zanUserBean.getUserPicPath(), viewHolder.getmUserPic(), 40, 40);
+            ImageCacheManager.loadImage(zanUserBean.getUserPicPath(), viewHolder.userPic, 40, 40);
         else{
-            viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
+            viewHolder.userPic.setImageResource(R.drawable.no_pic);
         }
 
-        viewHolder.getmUserPic().setOnClickListener(new View.OnClickListener() {
+        viewHolder.userPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommonHandler.startPersonalActivity(mContext, zanUserBean.getCreateUserId());
             }
         });
-        viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(zanUserBean.getCreateTime())));
+        viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(zanUserBean.getCreateTime())));
         //设置动画效果
         setAnimation(view, position);
         return view;
     }
 
-    private class ViewHolder{
-        private ImageView mUserPic;
-        private TextView mUserName;
-        private TextView mTime;
-
-        public ImageView getmUserPic() {
-            return mUserPic;
-        }
-
-        public void setmUserPic(ImageView mUserPic) {
-            this.mUserPic = mUserPic;
-        }
-
-        public TextView getmUserName() {
-            return mUserName;
-        }
-
-        public void setmUserName(TextView mUserName) {
-            this.mUserName = mUserName;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
+    static class ViewHolder{
+        ImageView userPic;
+        TextView userName;
+        TextView time;
     }
 }

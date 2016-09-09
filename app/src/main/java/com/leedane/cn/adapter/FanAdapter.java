@@ -45,14 +45,14 @@ public class FanAdapter extends BaseListAdapter<FanBean> implements TaskListener
         if(view == null){
             view = LayoutInflater.from(mContext).inflate(R.layout.item_fan_listview, null);
             viewHolder = new ViewHolder();
-            viewHolder.setmUserName((TextView) view.findViewById(R.id.fan_user_name));
-            viewHolder.setmUserPic((ImageView) view.findViewById(R.id.fan_user_pic));
-            viewHolder.setmTime((TextView) view.findViewById(R.id.fan_create_time));
-            viewHolder.setmFanShow((TextView)view.findViewById(R.id.fan_add_fan));
+            viewHolder.userName = (TextView) view.findViewById(R.id.fan_user_name);
+            viewHolder.userPic = (ImageView) view.findViewById(R.id.fan_user_pic);
+            viewHolder.time = (TextView) view.findViewById(R.id.fan_create_time);
+            viewHolder.fanShow = (TextView)view.findViewById(R.id.fan_add_fan);
             view.setTag(viewHolder);
         }
         viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getmUserName().setText(fanBean.getAccount());
+        viewHolder.userName.setText(fanBean.getAccount());
         /*viewHolder.getmUserName().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +60,7 @@ public class FanAdapter extends BaseListAdapter<FanBean> implements TaskListener
             }
         });*/
         if(StringUtil.isNotNull(fanBean.getUserPicPath())){
-            ImageCacheManager.loadImage(fanBean.getUserPicPath(), viewHolder.getmUserPic());
+            ImageCacheManager.loadImage(fanBean.getUserPicPath(), viewHolder.userPic);
             /*viewHolder.getmUserPic().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -68,31 +68,31 @@ public class FanAdapter extends BaseListAdapter<FanBean> implements TaskListener
                 }
             });*/
         }else{
-            viewHolder.getmUserPic().setImageResource(R.drawable.no_pic);
+            viewHolder.userPic.setImageResource(R.drawable.no_pic);
         }
 
-        viewHolder.getmTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(fanBean.getCreateTime())));
+        viewHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(fanBean.getCreateTime())));
         if(userId == fanBean.getToUserId()){
-            viewHolder.getmFanShow().setVisibility(View.GONE);
+            viewHolder.fanShow.setVisibility(View.GONE);
         }else{
-            viewHolder.getmFanShow().setVisibility(View.VISIBLE);
+            viewHolder.fanShow.setVisibility(View.VISIBLE);
             if(fanBean.isAttention() && fanBean.isFan()){
-                viewHolder.getmFanShow().setText(mContext.getResources().getString(R.string.fan_each_other));
+                viewHolder.fanShow.setText(mContext.getResources().getString(R.string.fan_each_other));
             }else{
                 if(fanBean.isAttention() && !fanBean.isFan()){
-                    viewHolder.getmFanShow().setText(mContext.getResources().getString(R.string.personal_is_fan));
+                    viewHolder.fanShow.setText(mContext.getResources().getString(R.string.personal_is_fan));
                 }else if(!fanBean.isAttention() && fanBean.isFan()){
-                    viewHolder.getmFanShow().setText(mContext.getResources().getString(R.string.personal_add_fan));
+                    viewHolder.fanShow.setText(mContext.getResources().getString(R.string.personal_add_fan));
                 }
             }
-            viewHolder.getmFanShow().setOnClickListener(new View.OnClickListener() {
+            viewHolder.fanShow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //关注TA
-                    if(!fanBean.isAttention()){
+                    if (!fanBean.isAttention()) {
                         FanHandler.addAttention(FanAdapter.this, fanBean.getToUserId());
                         //取消关注
-                    }else{
+                    } else {
                         FanHandler.cancelAttention(FanAdapter.this, fanBean.getToUserId());
                     }
                 }
@@ -168,42 +168,10 @@ public class FanAdapter extends BaseListAdapter<FanBean> implements TaskListener
         }
     }
 
-    private class ViewHolder{
-        private ImageView mUserPic;
-        private TextView mUserName;
-        private TextView mTime;
-        private TextView mFanShow;
-
-        public ImageView getmUserPic() {
-            return mUserPic;
-        }
-
-        public void setmUserPic(ImageView mUserPic) {
-            this.mUserPic = mUserPic;
-        }
-
-        public TextView getmUserName() {
-            return mUserName;
-        }
-
-        public void setmUserName(TextView mUserName) {
-            this.mUserName = mUserName;
-        }
-
-        public TextView getmTime() {
-            return mTime;
-        }
-
-        public void setmTime(TextView mTime) {
-            this.mTime = mTime;
-        }
-
-        public TextView getmFanShow() {
-            return mFanShow;
-        }
-
-        public void setmFanShow(TextView mFanShow) {
-            this.mFanShow = mFanShow;
-        }
+    static class ViewHolder{
+        ImageView userPic;
+        TextView userName;
+        TextView time;
+        TextView fanShow;
     }
 }

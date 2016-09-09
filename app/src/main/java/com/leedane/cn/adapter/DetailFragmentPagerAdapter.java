@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class DetailFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private static final String TAG = "DetailFragmentPagerAdapter";
+    private static final String TAG = "DetailFragmentAdapter";
 
     private List<Fragment> mMainFragment;
 
