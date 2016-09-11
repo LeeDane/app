@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.leedane.cn.app.R;
 import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
+import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.financial.adapter.FinancialRecyclerViewAdapter;
 import com.leedane.cn.financial.bean.FinancialList;
 import com.leedane.cn.util.ToastUtil;
@@ -75,9 +76,9 @@ public class YesterDayListDataFragment extends FinancialBaseFragment {
         mRecyclerView.setAdapter(mAdapter);
 
         //mAdapter.addDatas(mFinancialList.getFinancialBeans());
-        mAdapter.setOnItemClickListener(new FinancialRecyclerViewAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position, String data) {
+            public void onItemClick(int position, Object data) {
                 if(mFinancialList != null && mFinancialList.getFinancialBeans() != null && mFinancialList.getFinancialBeans().size() > 0){
                     Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
                     it.putExtra("financialBean", mFinancialList.getFinancialBeans().get(position));

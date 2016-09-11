@@ -26,6 +26,7 @@ import com.leedane.cn.financial.activity.HomeActivity;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.activity.OneLevelOperationActivity;
 import com.leedane.cn.financial.activity.SettingActivity;
+import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.financial.adapter.FinancialRecyclerViewAdapter;
 import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.bean.FinancialList;
@@ -75,7 +76,8 @@ public class MainFragment extends FinancialBaseFragment{
     /**
      * 头部view
      */
-    private View mHeader;
+    private View mHeaderView;
+    private View mFooterView;
 
     public MainFragment(){
     }
@@ -142,15 +144,11 @@ public class MainFragment extends FinancialBaseFragment{
         if(mContext == null)
             mContext = getActivity();
 
-        mHeader = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_header, null);
+        mHeaderView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_header, null);
+        mFooterView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_footer, null);
 
-        //必须，在把headview添加到recycleview中时告诉recycleview期望的布局方式，
-        // 也就是将一个认可的layoutParams传递进去，不然显示的不是全部宽度
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mHeader.setLayoutParams(layoutParams);
-
-        mAddFinancial = (TextView)mHeader.findViewById(R.id.add_financial);
-        mAddFinancial.setOnClickListener(MainFragment.this);
+        mAddFinancial = (TextView)mHeaderView.findViewById(R.id.add_financial);
+        mAddFinancial.setOnClickListener(this);
 
         //mClould = (TextView)mHeader.findViewById(R.id.financial_refresh);
         //mClould.setOnClickListener(this);
@@ -160,13 +158,14 @@ public class MainFragment extends FinancialBaseFragment{
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
-        mAdapter = new FinancialRecyclerViewAdapter();
+        mAdapter = new FinancialRecyclerViewAdapter(mFinancialBeans);
         mRecyclerView.setAdapter(mAdapter);
         generateData();
-        setHeader(mRecyclerView);
-        mAdapter.setOnItemClickListener(new FinancialRecyclerViewAdapter.OnItemClickListener() {
+        setHeader();
+        setFooter();
+        mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position, String data) {
+            public void onItemClick(int position, Object data) {
                 Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
                 it.putExtra("financialBean", mFinancialBeans.get(position));
                 getActivity().startActivityForResult(it, HomeActivity.IS_EDIT_OR_SAVE_FINANCIAL_CODE);
@@ -210,9 +209,9 @@ public class MainFragment extends FinancialBaseFragment{
         BigDecimal incomeTotal = FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME);
         BigDecimal spendTotal = FinancialHandler.getTotalData(mMonthFinancialList, IncomeOrSpendActivity.FINANCIAL_MODEL_SPEND);
         //更新
-        TextView income = (TextView)mHeader.findViewById(R.id.financial_header_income);
-        TextView spend = (TextView)mHeader.findViewById(R.id.financial_header_spend);
-        TextView budget = (TextView)mHeader.findViewById(R.id.financial_header_budget);
+        TextView income = (TextView)mHeaderView.findViewById(R.id.financial_header_income);
+        TextView spend = (TextView)mHeaderView.findViewById(R.id.financial_header_spend);
+        TextView budget = (TextView)mHeaderView.findViewById(R.id.financial_header_budget);
         income.setText("￥" + incomeTotal.floatValue());
         spend.setText("￥" + spendTotal.floatValue());
 
@@ -220,24 +219,24 @@ public class MainFragment extends FinancialBaseFragment{
         BigDecimal surplus = BaseApplication.getTotalBudget().add(incomeTotal).subtract(spendTotal);
         budget.setText( Html.fromHtml(surplus.floatValue() > 0.0f ? "￥" + surplus.floatValue() : "￥" +"<font color='red'>"+String.valueOf(surplus.floatValue())+"</font>"));
 
-        mHeader.findViewById(R.id.financial_header_income_linearlayout).setOnClickListener(this);
-        mHeader.findViewById(R.id.financial_header_spend_linearlayout).setOnClickListener(this);
-        mHeader.findViewById(R.id.financial_header_budget_linearlayout).setOnClickListener(this);
-        mHeader.findViewById(R.id.financial_header_edit_one_level).setOnClickListener(new View.OnClickListener() {
+        mHeaderView.findViewById(R.id.financial_header_income_linearlayout).setOnClickListener(this);
+        mHeaderView.findViewById(R.id.financial_header_spend_linearlayout).setOnClickListener(this);
+        mHeaderView.findViewById(R.id.financial_header_budget_linearlayout).setOnClickListener(this);
+        mHeaderView.findViewById(R.id.financial_header_edit_one_level).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(mContext, OneLevelOperationActivity.class);
                 startActivity(it);
             }
         });
-        mHeader.findViewById(R.id.financial_header_setting).setOnClickListener(new View.OnClickListener() {
+        mHeaderView.findViewById(R.id.financial_header_setting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(mContext, SettingActivity.class);
                 startActivity(it);
             }
         });
-        mHeader.findViewById(R.id.financial_header_cloud).setOnClickListener(new View.OnClickListener() {
+        mHeaderView.findViewById(R.id.financial_header_cloud).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(mContext, CloudActivity.class);
@@ -266,9 +265,18 @@ public class MainFragment extends FinancialBaseFragment{
 
     }
 
-    private void setHeader(RecyclerView view) {
-        //View header = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_header, view, false);
-        mAdapter.setHeaderView(mHeader);
+    /**
+     * 设置头部view
+     */
+    private void setHeader() {
+        mAdapter.setHeaderView(mHeaderView);
+    }
+
+    /**
+     * 设置底部view
+     */
+    private void setFooter() {
+        mAdapter.setFooterView(mFooterView);
     }
 
     /**

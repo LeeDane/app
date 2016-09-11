@@ -24,6 +24,7 @@ import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.financial.Helper.OnStartDragListener;
 import com.leedane.cn.financial.Helper.SimpleItemTouchHelperCallback;
+import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.financial.adapter.OneLevelEditAdapter;
 import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.OneLevelCategoryEdit;
@@ -41,7 +42,7 @@ import java.util.List;
  * Created by LeeDane on 2016/8/23.
  */
 public class OneLevelOperationActivity extends BaseActivity implements OnStartDragListener,
-            OneLevelEditAdapter.OnItemClickListener, OneLevelEditAdapter.OnItemLongClickListener {
+        BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnItemLongClickListener {
 
     //一级分类编辑返回的code
     public static final int ONE_LEVEL_CATEGORY_EDIT_CODE = 57;
@@ -330,7 +331,7 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
      * @param position
      */
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(int position, Object data) {
         Intent it = new Intent(OneLevelOperationActivity.this, OneLevelEditActivity.class);
         it.putExtra("oneLevelCategoryId", mOneLevelGategoryEdits.get(position).getId());
         it.putExtra("clickPosition", position);//方便回传定位

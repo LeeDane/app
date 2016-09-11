@@ -58,6 +58,7 @@
     <string name="img_link">图片链接</string>
     <string name="save_imgage">保存图片</string>
     <string name="tip_double_click_exit">再按一次退出程序</string>
+    <string name="footer">我是有底线的</string>
 
     <!-- 异常相关 -->
     <string name="crash_file_path">"/crash"</string>

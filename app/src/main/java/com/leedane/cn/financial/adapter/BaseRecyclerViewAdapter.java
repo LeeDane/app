@@ -1,20 +1,13 @@
 package com.leedane.cn.financial.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.leedane.cn.app.R;
-import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
-import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.util.CommonUtil;
-import com.leedane.cn.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,65 +20,81 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
     protected List<T> mDatas = new ArrayList<>();
     protected static final int TYPE_HEADER = 0;
     protected static final int TYPE_NORMAL = 1;
-    protected static final int TYPE_EMPTY = 2;//数据为空的展示
+    protected static final int TYPE_FOOTER = 2;//数据为空的展示
     protected View mHeaderView;
-    protected OnItemClickListener mListener;
+    protected View mFooterView;
+    protected OnItemClickListener mOnItemClickListener;
+    protected OnItemLongClickListener mOnItemLongClickListener;
     protected int lastPosition = -1;
-    public void setOnItemClickListener(OnItemClickListener li) {
-        mListener = li;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
     }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.mOnItemLongClickListener = onItemLongClickListener;
+    }
+
     public void setHeaderView(View headerView) {
+        //必须，在把headview添加到recycleview中时告诉recycleview期望的布局方式，
+        // 也就是将一个认可的layoutParams传递进去，不然显示的不是全部宽度
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        headerView.setLayoutParams(layoutParams);
         mHeaderView = headerView;
         notifyItemInserted(0);
     }
-    public View getHeaderView() {
-        return mHeaderView;
+
+    public void setFooterView(View footer) {
+        //必须，在把headview添加到recycleview中时告诉recycleview期望的布局方式，
+        // 也就是将一个认可的layoutParams传递进去，不然显示的不是全部宽度
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        footer.setLayoutParams(layoutParams);
+        this.mFooterView = footer;
+        notifyItemInserted(getFooterPosition());
     }
 
-    public BaseRecyclerViewAdapter(){
 
-    }
     public BaseRecyclerViewAdapter(List<T> datas){
         this.mDatas = datas;
         notifyDataSetChanged();
     }
     public void addDatas(List<T> datas) {
+        mDatas.clear();
         mDatas.addAll(datas);
         notifyDataSetChanged();
     }
 
     /**
      * 获取Recyclerview列表的布局ID
-     */
-    protected abstract int getListRecyclerviewId();
+            */
+    @Override
+    public abstract RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType);
+
+    @Override
+    public abstract void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position);
+
+    @Override
+    public int getItemCount() {
+        int count = 0;
+        //计算头部跟底部的数量
+        count = mHeaderView == null ? (mFooterView == null ? 0 : 1) : (mFooterView == null ? 1 : 2);
+        //头部跟底部的数量
+        int size = !CommonUtil.isEmpty(mDatas) ? mDatas.size(): 0;
+        return count + size;
+    }
     @Override
     public int getItemViewType(int position) {
-        if(mHeaderView == null) {
-            if(CommonUtil.isEmpty(mDatas)){
-                return TYPE_EMPTY;
-            }
-            return TYPE_NORMAL;
-        }else{
-            if(position == 0)
-                return TYPE_HEADER;
+        int type = TYPE_NORMAL;
 
-            //返回空数据类型
-            if(CommonUtil.isEmpty(mDatas))
-                return TYPE_EMPTY;
+        //什么时候展示头部
+        if(mHeaderView != null && position == 0)
+            type = TYPE_HEADER;
 
-            return TYPE_NORMAL;
-        }
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if(getItemViewType(position) == TYPE_HEADER)
-            return;
-        if(getItemViewType(position) == TYPE_EMPTY){
-            EmptyHodler holder = ((EmptyHodler) viewHolder);
-            holder.empty.setText("暂无数据");
-            return;
-        }
+        int count = getItemCount();
+        //什么时候展示底部
+        if(mFooterView != null && count -1 == position)
+            type = TYPE_FOOTER;
+        return type;
     }
 
     /**
@@ -115,49 +124,86 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
         //}
     }
 
-    /**
+   /**
      * 获取真正的索引位置(有可能有header)
      * @param holder
      * @return
      */
     protected int getRealPosition(RecyclerView.ViewHolder holder) {
+
         int position = holder.getLayoutPosition();
-        return mHeaderView == null ? position : position - 1;
-    }
-    @Override
-    public int getItemCount() {
-        int count = 0;
         if(mHeaderView == null){
-            if(CommonUtil.isEmpty(mDatas)){
-                count = 1;
-            }else
-                count = mDatas.size();
-        }else{
-            if(CommonUtil.isEmpty(mDatas)){
-                count = 2; //2是因为加上头部和空的提示
-            }else
-                count = mDatas.size() + 1;
+            return position;
         }
-        return count;
+
+        if(mHeaderView != null && !CommonUtil.isEmpty(mDatas)){
+            if(mFooterView != null && position == getItemCount()-1){
+                position = position - 2;
+            }else
+                position = position - 1;
+        }
+        return position;
     }
-    protected class BaseHolder extends RecyclerView.ViewHolder {
-        public BaseHolder(View itemView) {
-            super(itemView);
-            if(itemView == mHeaderView)
-                return;
+
+    /**
+     * 移除数据
+     * @param position
+     */
+    public void remove(int position) {
+        mDatas.remove(position);
+        notifyItemRemoved(position);
+        if(position != mDatas.size()){
+            notifyItemRangeChanged(position, getItemCount() - position);
         }
     }
 
-    class EmptyHodler extends RecyclerView.ViewHolder{
-        TextView empty;
-        public EmptyHodler(View itemView){
-            super(itemView);
-            if(itemView == mHeaderView)
-                return;
-            empty = (TextView)itemView.findViewById(R.id.financial_list_empty);
+    /**
+     * 局部刷新单个数据
+     * @param t
+     * @param position
+     */
+    public void refresh(T t, int position){
+        mDatas.remove(position);// 先移除后添加
+        mDatas.add(position, t);
+        notifyItemChanged(position);
+    }
+
+    /**
+     * 添加数据
+     * @param t
+     * @param position
+     */
+    public void add(T t, int position) {
+        mDatas.add(position, t);
+        notifyItemInserted(position);
+        if(position != mDatas.size()){
+            notifyItemRangeChanged(position, getItemCount() - position);
         }
     }
+
+    /**
+     * 获取底部控件的索引
+     * @return
+     */
+    private int getFooterPosition(){
+        if(mHeaderView == null){
+            return mDatas.size();
+        }else{
+            return mDatas.size() + 1;
+        }
+    }
+
+    /**
+     * item的单击事件
+     */
     public interface OnItemClickListener {
-        void onItemClick(int position, String data);
+        void onItemClick(int position, Object data);
+    }
+
+    /**
+     * item的长按事件
+     */
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int position);
     }
 }

@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,9 +19,9 @@ import com.leedane.cn.financial.Helper.ItemTouchHelperViewHolder;
 import com.leedane.cn.financial.Helper.OnStartDragListener;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.OneLevelCategoryEdit;
+import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,88 +29,26 @@ import java.util.List;
  * 一级分类编辑列表数据展示的adapter对象
  * Created by LeeDane on 2016/8/23.
  */
-public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter {
-    private List<OneLevelCategoryEdit> mOneLevelGategoryEdits = new ArrayList<>();
-    private OnItemClickListener mOnItemClickListener;
-    private OnItemLongClickListener mOnItemLongClickListener;
+public class OneLevelEditAdapter extends BaseRecyclerViewAdapter<OneLevelCategoryEdit> implements ItemTouchHelperAdapter {
     private Context mContext;
-    public static final int TYPE_NORMAL = 1;
     private  OnStartDragListener mDragStartListener;
-    private int lastPosition = -1;
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.mOnItemClickListener = onItemClickListener;
-    }
-
-    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
-        this.mOnItemLongClickListener = onItemLongClickListener;
-    }
-
-    public OneLevelEditAdapter(){
-
-    }
     public OneLevelEditAdapter(Context context, List<OneLevelCategoryEdit> oneLevelGategoryEdit, OnStartDragListener dragStartListener){
-        this.mOneLevelGategoryEdits = oneLevelGategoryEdit;
+        super(oneLevelGategoryEdit);
         this.mContext = context;
         mDragStartListener = dragStartListener;
-        //notifyDataSetChanged();
-    }
-    public void addDatas(List<OneLevelCategoryEdit> datas) {
-        mOneLevelGategoryEdits.clear();
-        mOneLevelGategoryEdits.addAll(datas);
-        notifyDataSetChanged();
     }
 
-    /**
-     * 移除数据
-     * @param position
-     */
-    public void remove(int position) {
-        mOneLevelGategoryEdits.remove(position);
-        notifyItemRemoved(position);
-        if(position != mOneLevelGategoryEdits.size()){
-            notifyItemRangeChanged(position, getItemCount() - position);
-        }
-    }
-
-    /**
-     * 局部刷新单个数据
-     * @param oneLevelGategoryEdit
-     * @param position
-     */
-    public void refresh(OneLevelCategoryEdit oneLevelGategoryEdit, int position){
-        mOneLevelGategoryEdits.remove(position);// 先移除后添加
-        mOneLevelGategoryEdits.add(position, oneLevelGategoryEdit);
-        notifyItemChanged(position);
-    }
-
-    /**
-     * 添加数据
-     * @param oneLevelGategoryEdit
-     * @param position
-     */
-    public void add(OneLevelCategoryEdit oneLevelGategoryEdit, int position) {
-        mOneLevelGategoryEdits.add(position, oneLevelGategoryEdit);
-        notifyItemInserted(position);
-        if(position != mOneLevelGategoryEdits.size()){
-            notifyItemRangeChanged(position, getItemCount() - position);
-        }
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return TYPE_NORMAL;
-    }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_financila_one_level_operation, parent, false);
-        return new Holder(layout);
+        return new ContentHolder(layout);
     }
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-        final OneLevelCategoryEdit data = mOneLevelGategoryEdits.get(position);
-        if(viewHolder instanceof Holder) {
-            final Holder holder = ((Holder) viewHolder);
+        final OneLevelCategoryEdit data = mDatas.get(position);
+        if(viewHolder instanceof ContentHolder && !CommonUtil.isEmpty(mDatas)) {
+            final ContentHolder holder = ((ContentHolder) viewHolder);
             //收入
             if(data.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME){
                 holder.model.setText(mContext.getString(R.string.income));
@@ -166,7 +102,7 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     @Override
                     public void onClick(View v) {
                         if (mOnItemClickListener != null)
-                            mOnItemClickListener.onItemClick(position);
+                            mOnItemClickListener.onItemClick(position, null);
                     }
                 });
                 holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -182,38 +118,12 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    private void setAnimation(View viewToAnimate, int position) {
-        if (position > lastPosition) {
-            Animation animation = null;
-            if(position % 2 == 0){
-                animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R
-                        .anim.item_anim_in_from_left);
-            }else
-                animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), R
-                    .anim.item_anim_in_from_right);
-            viewToAnimate.startAnimation(animation);
-            lastPosition = position;
-        }
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        //if(holder instanceof Holder) {
-        //  ((Holder) holder).root.clearAnimation();
-        //}
-    }
-
-    @Override
-    public int getItemCount() {
-        return mOneLevelGategoryEdits.size();
-    }
 
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         //ToastUtil.success(mContext, "onItemMove:fromPosition->"+fromPosition+",toPosition->"+toPosition);
-        Collections.swap(mOneLevelGategoryEdits, fromPosition, toPosition);
+        Collections.swap(mDatas, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
         return true;
     }
@@ -221,11 +131,11 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onItemDismiss(int position) {
         //ToastUtil.success(mContext, "onItemDismiss:position->"+position);
-        mOneLevelGategoryEdits.remove(position);
+        mDatas.remove(position);
         notifyItemRemoved(position);
     }
 
-    class Holder extends RecyclerView.ViewHolder implements
+    class ContentHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
         ImageView icon; //图表
         TextView name; //分类名称
@@ -234,7 +144,7 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView status; //状态
         ImageView right; //右侧的点击图标
         LinearLayout root;
-        public Holder(View itemView) {
+        public ContentHolder(View itemView) {
             super(itemView);
             icon = (ImageView)itemView.findViewById(R.id.financial_one_level_icon);
             model = (TextView) itemView.findViewById(R.id.financial_one_level_model);
@@ -258,19 +168,5 @@ public class OneLevelEditAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             //right.setImageResource(R.mipmap.right_sign);
             //itemView.setBackgroundColor(0);
         }
-    }
-
-    /**
-     * item的点击事件
-     */
-    public interface OnItemClickListener {
-        void onItemClick(int oneLevelId);
-    }
-
-    /**
-     * item的长按事件
-     */
-    public interface OnItemLongClickListener {
-        void onItemLongClick(int position);
     }
 }

@@ -15,6 +15,7 @@ import com.leedane.cn.activity.BaseActivity;
 import com.leedane.cn.activity.LoginActivity;
 import com.leedane.cn.app.R;
 import com.leedane.cn.customview.RecycleViewDivider;
+import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.financial.adapter.FinancialCloudAdapter;
 import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.database.FinancialDataBase;
@@ -47,6 +48,7 @@ public class CloudActivity extends BaseActivity{
     private List<FinancialBean> mFinancialBeans = new ArrayList<>();
     private FinancialDataBase financialDataBase;
     private View mHeaderView;
+    private View mFooterView;
     private boolean isEnd = true;//是否单个任务结束
     private boolean isCancel; //是否取消任务
     private int endIndex; //标记同步结束的位置
@@ -78,10 +80,8 @@ public class CloudActivity extends BaseActivity{
         financialDataBase = new FinancialDataBase(this);
 
         mHeaderView = LayoutInflater.from(this).inflate(R.layout.activity_cloud_header, null);
-        //必须，在把headview添加到recycleview中时告诉recycleview期望的布局方式，
-        // 也就是将一个认可的layoutParams传递进去，不然显示的不是全部宽度
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mHeaderView.setLayoutParams(layoutParams);
+        mFooterView = LayoutInflater.from(this).inflate(R.layout.fragment_financial_main_footer, null);
+
         TextView textView = (TextView)mHeaderView.findViewById(R.id.financial_cloud_header_start);
         textView.setOnClickListener(this);
 
@@ -91,11 +91,14 @@ public class CloudActivity extends BaseActivity{
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL));
         mAdapter = new FinancialCloudAdapter(this, mFinancialBeans);
+
         mAdapter.setHeaderView(mHeaderView);
+        mAdapter.setFooterView(mFooterView);
+
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new FinancialCloudAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position, String data) {
+            public void onItemClick(int position, Object data) {
                 ToastUtil.success(CloudActivity.this, "click");
             }
         });
