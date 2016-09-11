@@ -1,6 +1,7 @@
 package com.leedane.cn.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.activity.MoodDetailActivity;
+import com.leedane.cn.activity.TopicActivity;
 import com.leedane.cn.adapter.CommentOrTransmitAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CommentOrTransmitBean;
@@ -306,7 +308,7 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
             spannable = AppUtil.textviewShowTopic(mContext, spannable, new AppUtil.ClickTextAction() {
                 @Override
                 public void call(String str) {
-                    ToastUtil.success(mContext, "点击："+str);
+                    CommonHandler.startTopActivity(mContext, str);
                 }
             });
             mTVContent.setText(spannable);

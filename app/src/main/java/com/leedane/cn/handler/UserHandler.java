@@ -48,15 +48,13 @@ public class UserHandler {
     /**
      * 个人中心获取用户的基本信息
      * @param listener
-     * @param userId
+     * @param params
      */
-    public static void asnyLoadUserInfo(TaskListener listener, int userId){
+    public static void asnyLoadUserInfo(TaskListener listener, Map<String, Object> params){
         HttpRequestBean requestBean = new HttpRequestBean();
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("searchUserId", userId);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user/searchUserByUserId.action");
+        requestBean.setServerMethod("leedane/user/searchUserByUserIdOrAccount.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_USER_INFO, listener, requestBean);
     }

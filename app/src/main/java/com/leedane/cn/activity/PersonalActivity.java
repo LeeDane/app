@@ -130,6 +130,7 @@ public class PersonalActivity extends BaseActivity {
     private ImageView mRightImg;
     private Intent currentIntent;
     private boolean isCheckFanOrSignIn = true;
+    private int type = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,10 +161,12 @@ public class PersonalActivity extends BaseActivity {
         mRightImg.setVisibility(View.VISIBLE);
         mRightImg.setOnClickListener(this);
 
+        type = currentIntent.getIntExtra("type", 0);
+
         mUserId = currentIntent.getIntExtra("userId", 0);
         mCurrentTab = currentIntent.getIntExtra("currentTab", 0);
 
-        if(mUserId <= 0){
+        if(type == 0 && mUserId <= 0){
             ToastUtil.success(PersonalActivity.this, "该用户不存在");
             finish();
             return;
@@ -189,7 +192,14 @@ public class PersonalActivity extends BaseActivity {
      * 异步加载mUserId对应的用户信息
      */
     private void asnyLoadUserInfo() {
-        UserHandler.asnyLoadUserInfo(this, mUserId);
+        HashMap<String, Object> params = new HashMap<>();
+        if(type == 1){
+            params.put("searchUserIdOrAccount", currentIntent.getStringExtra("account"));
+            params.put("type", 1);
+        }else{
+            params.put("searchUserIdOrAccount", mUserId);
+        }
+        UserHandler.asnyLoadUserInfo(this, params);
     }
     
 
@@ -593,6 +603,7 @@ public class PersonalActivity extends BaseActivity {
                 dismissLoadingDialog();
                 if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
                     mUserInfo = new JSONObject(jsonObject.getString("userinfo"));
+                    mUserId = mUserInfo.getInt("id");
                     initView();
                 }else{
                     ToastUtil.failure(PersonalActivity.this, jsonObject);

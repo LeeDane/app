@@ -171,6 +171,13 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
 
+        <activity
+            android:name="com.leedane.cn.activity.TopicActivity"
+            android:label="@string/topic"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
         <!--  暂时使用这个adjustPan来解决，感觉不是很好的方式  -->
         <activity
             android:name="com.leedane.cn.activity.MoodDetailActivity"

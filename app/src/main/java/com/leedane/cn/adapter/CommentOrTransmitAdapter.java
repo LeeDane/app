@@ -1,6 +1,7 @@
 package com.leedane.cn.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.leedane.cn.activity.TopicActivity;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CommentOrTransmitBean;
 import com.leedane.cn.customview.MoodTextView;
@@ -74,7 +76,7 @@ public class CommentOrTransmitAdapter extends BaseRecyclerViewAdapter<CommentOrT
             spannable = AppUtil.textviewShowTopic(mContext, spannable, new AppUtil.ClickTextAction() {
                 @Override
                 public void call(String str) {
-                    ToastUtil.success(mContext, "点击："+str);
+                    CommonHandler.startTopActivity(mContext, str);
                 }
             });
             holder.content.setMovementMethod(LinkMovementMethod.getInstance());

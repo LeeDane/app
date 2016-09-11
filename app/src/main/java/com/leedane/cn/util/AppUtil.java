@@ -253,7 +253,40 @@ public class AppUtil {
 
                 int start = m.start();
                 int end = m.end();
-                final String g = group.substring(1, group.length() -1);
+                final String g = group.substring(1, group.length() - 1);
+                ClickableSpan clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        action.call(g);
+                    }
+                };
+                builder.setSpan(clickableSpan, start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return builder;
+    }
+
+    /**
+     * 展示文本中的@用户名称
+     * @param context
+     * @param text
+     * @param action
+     * @return
+     */
+    public static Spannable textviewShowAtUser(final Context context, CharSequence text, final ClickTextAction action){
+        Pattern p = Pattern.compile("\\s*\\@[\\S]+\\s*");
+        String group;
+        //SpannableString spannableString = new SpannableString(text);
+        //要让图片替代指定的文字就要用ImageSpan
+        SpannableStringBuilder builder = new SpannableStringBuilder(text);
+        Matcher m=p.matcher(builder.toString());
+        while(m.find()){
+            group = m.group().trim();
+            if(StringUtil.isNotNull(group) && group.startsWith("@")){
+
+                int start = m.start();
+                int end = m.end();
+                final String g = group.substring(1, group.length());
                 ClickableSpan clickableSpan = new ClickableSpan() {
                     @Override
                     public void onClick(View widget) {

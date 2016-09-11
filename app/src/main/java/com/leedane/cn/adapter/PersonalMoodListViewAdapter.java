@@ -15,12 +15,15 @@ import android.widget.TextView;
 
 import com.leedane.cn.activity.MoodActivity;
 import com.leedane.cn.activity.PersonalActivity;
+import com.leedane.cn.activity.TopicActivity;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.MoodBean;
+import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.customview.MoodTextView;
 import com.leedane.cn.customview.RightBorderTextView;
 import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.fragment.PersonalMoodFragment;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.helper.PraiseUserHelper;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
@@ -30,6 +33,7 @@ import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
+import com.leedane.cn.volley.ImageCacheManager;
 
 import java.util.List;
 
@@ -86,7 +90,14 @@ public class PersonalMoodListViewAdapter extends BaseRecyclerViewAdapter<MoodBea
             spannable= AppUtil.textviewShowTopic(mContext, spannable, new AppUtil.ClickTextAction() {
                 @Override
                 public void call(String str) {
-                    ToastUtil.success(mContext, "哈哈+"+str);
+                    CommonHandler.startTopActivity(mContext, str);
+                }
+            });
+
+            spannable= AppUtil.textviewShowAtUser(mContext, spannable, new AppUtil.ClickTextAction() {
+                @Override
+                public void call(String str) {
+                    CommonHandler.startPersonalActivity(mContext, str);
                 }
             });
             holder.content.setText(spannable);
@@ -120,44 +131,60 @@ public class PersonalMoodListViewAdapter extends BaseRecyclerViewAdapter<MoodBea
             }
 
             final int index = position;
-            holder.more.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fragment.showMoodListItemMenuDialog(index, mDatas.get(index));
-                }
-            });
-            ImageUtil.addImages(mContext, moodBean.getImgs(), holder.imgContainer);
-
             holder.transmit.setText(mContext.getResources().getString(R.string.personal_transmit) + "(" + StringUtil.changeNotNull(moodBean.getTransmitNumber()) + ")");
             holder.comment.setText(mContext.getResources().getString(R.string.personal_comment) + "(" + StringUtil.changeNotNull(moodBean.getCommentNumber()) + ")");
-            holder.transmit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //ToastUtil.success(mContext, "转发", Toast.LENGTH_SHORT);
-                    Intent it_transmit = new Intent();
-                    PersonalActivity activity = (PersonalActivity) mContext;
-                    it_transmit.setClass(activity, MoodActivity.class);
-                    it_transmit.putExtra("operateType", EnumUtil.MoodOperateType.转发.value);
-                    it_transmit.putExtra("moodObj", mDatas.get(index));
-                    it_transmit.putExtra("width", "30");//展示的图像的宽度
-                    it_transmit.putExtra("height", "30"); //展示的图像的高度
-                    activity.startActivity(it_transmit);
-                }
-            });
-            holder.comment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //ToastUtil.success(mContext, "评论", Toast.LENGTH_SHORT);
-                    Intent it_transmit = new Intent();
-                    PersonalActivity activity = (PersonalActivity) mContext;
-                    it_transmit.setClass(activity, MoodActivity.class);
-                    it_transmit.putExtra("operateType", EnumUtil.MoodOperateType.评论.value);
-                    it_transmit.putExtra("moodObj", mDatas.get(index));
-                    it_transmit.putExtra("width", "30");//展示的图像的宽度
-                    it_transmit.putExtra("height", "30"); //展示的图像的高度
-                    activity.startActivityForResult(it_transmit, PersonalActivity.MOOD_UPDATE_REQUEST_CODE);
-                }
-            });
+
+            if(fragment != null){
+                holder.more.setVisibility(View.VISIBLE);
+                holder.more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fragment.showMoodListItemMenuDialog(index, mDatas.get(index));
+                    }
+                });
+                holder.transmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //ToastUtil.success(mContext, "转发", Toast.LENGTH_SHORT);
+                        Intent it_transmit = new Intent();
+                        PersonalActivity activity = (PersonalActivity) mContext;
+                        it_transmit.setClass(activity, MoodActivity.class);
+                        it_transmit.putExtra("operateType", EnumUtil.MoodOperateType.转发.value);
+                        it_transmit.putExtra("moodObj", mDatas.get(index));
+                        it_transmit.putExtra("width", "30");//展示的图像的宽度
+                        it_transmit.putExtra("height", "30"); //展示的图像的高度
+                        activity.startActivity(it_transmit);
+                    }
+                });
+                holder.comment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //ToastUtil.success(mContext, "评论", Toast.LENGTH_SHORT);
+                        Intent it_transmit = new Intent();
+                        PersonalActivity activity = (PersonalActivity) mContext;
+                        it_transmit.setClass(activity, MoodActivity.class);
+                        it_transmit.putExtra("operateType", EnumUtil.MoodOperateType.评论.value);
+                        it_transmit.putExtra("moodObj", mDatas.get(index));
+                        it_transmit.putExtra("width", "30");//展示的图像的宽度
+                        it_transmit.putExtra("height", "30"); //展示的图像的高度
+                        activity.startActivityForResult(it_transmit, PersonalActivity.MOOD_UPDATE_REQUEST_CODE);
+                    }
+                });
+            }else{
+                holder.userInfo.setVisibility(View.VISIBLE);
+                holder.userInfo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CommonHandler.startPersonalActivity(mContext, moodBean.getCreateUserId());
+                    }
+                });
+                ImageCacheManager.loadImage(moodBean.getUserPicPath(), holder.userPic, 30, 30);
+                holder.account.setText(StringUtil.changeNotNull(moodBean.getAccount()));
+                holder.transmit.setTextColor(mContext.getResources().getColor(R.color.gray));
+                holder.comment.setTextColor(mContext.getResources().getColor(R.color.gray));
+            }
+
+            ImageUtil.addImages(mContext, moodBean.getImgs(), holder.imgContainer);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -189,6 +216,9 @@ public class PersonalMoodListViewAdapter extends BaseRecyclerViewAdapter<MoodBea
         RightBorderTextView comment;
         RightBorderTextView transmit;
         TextView location;
+        LinearLayout userInfo;
+        CircularImageView userPic;
+        TextView account;
         public ContentHolder(View itemView) {
             super(itemView);
             if (itemView == mHeaderView || itemView == mFooterView)
@@ -196,12 +226,18 @@ public class PersonalMoodListViewAdapter extends BaseRecyclerViewAdapter<MoodBea
             content = (MoodTextView) itemView.findViewById(R.id.personal_mood_content);
             froms = (TextView) itemView.findViewById(R.id.personal_mood_froms);
             time = (TextView) itemView.findViewById(R.id.personal_mood_time);
-            more = (ImageView) itemView.findViewById(R.id.personal_mood_more);
+
             location =(TextView) itemView.findViewById(R.id.personal_mood_location_show);
             imgContainer = (LinearLayout) itemView.findViewById(R.id.personal_mood_img_container);
             transmit = (RightBorderTextView) itemView.findViewById(R.id.personal_mood_operate_transmit);
             comment = (RightBorderTextView) itemView.findViewById(R.id.personal_mood_operate_comment);
             praiseList = (TextView)itemView.findViewById(R.id.personal_mood_praise_list);
+            if(fragment == null){
+                userInfo = (LinearLayout) itemView.findViewById(R.id.personal_mood_user_info);
+                userPic = (CircularImageView) itemView.findViewById(R.id.personal_mood_user_pic);
+                account = (TextView)itemView.findViewById(R.id.personal_mood_account);
+            }else
+                more = (ImageView) itemView.findViewById(R.id.personal_mood_more);
         }
     }
 }

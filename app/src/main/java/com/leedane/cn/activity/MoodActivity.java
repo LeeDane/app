@@ -83,18 +83,9 @@ public class MoodActivity extends BaseActivity {
     private CheckBox mCanTransmit;
 
     /**
-     * 选择At好友
-     */
-    private ImageView mMoodFriend;
-    /**
      * 发表的按钮
      */
     private Button mBtnPublish;
-
-    /**
-     * 添加图片
-     */
-    private ImageView mMoodAdd;
 
     /**
      * 展示原文的信息
@@ -249,12 +240,14 @@ public class MoodActivity extends BaseActivity {
             mMoodLocation.setOnClickListener(this);
 
             //选择好友
-            mMoodFriend = (ImageView)findViewById(R.id.mood_friend);
-            mMoodFriend.setOnClickListener(this);
+            findViewById(R.id.mood_friend).setOnClickListener(this);
+
+            //添加话题
+            findViewById(R.id.mood_topic).setOnClickListener(this);
 
             //添加照片
-            mMoodAdd = (ImageView)findViewById(R.id.mood_add);
-            mMoodAdd.setOnClickListener(this);
+            findViewById(R.id.mood_add).setOnClickListener(this);
+
             mMoodGridViewAdapter = new MoodGridViewAdapter(MoodActivity.this, mLocalUris);
             //显示添加后的图片
             mGridview = (GridView)findViewById(R.id.mood_gridview);
@@ -318,6 +311,9 @@ public class MoodActivity extends BaseActivity {
                 break;
             case R.id.mood_friend: //选择好友
                 startATFriendActivity();
+                break;
+            case R.id.mood_topic: //添加话题
+                showAddTopicDialog();
                 break;
             case R.id.mood_add:
                 showSelectItemMenuDialog();
@@ -412,6 +408,27 @@ public class MoodActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    /**
+     * 弹出添加话题的对话框
+     */
+    private void showAddTopicDialog(){
+        final EditText inputServer = new EditText(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("请输入话题").setIcon(android.R.drawable.ic_dialog_info).setView(inputServer)
+                .setNegativeButton("放弃", null);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                String s = inputServer.getText().toString();
+                if(StringUtil.isNotNull(s)){
+                    mMoodContent.setText(mMoodContent.getText().toString() + " #" + s + "# ");
+                }
+            }
+        });
+        builder.show();
+
     }
 
     /**

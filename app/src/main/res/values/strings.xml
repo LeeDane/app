@@ -159,6 +159,9 @@
     <string name="mood_can_comment">是否能评论</string>
     <string name="mood_can_transmit">是否能转发</string>
 
+    <!--  话题相关的  -->
+    <string name="topic">话题</string>
+
     <!-- 基本信息 -->
     <string name="info_age">年龄：</string>
     <string name="info_birth_day">出生日期：</string>

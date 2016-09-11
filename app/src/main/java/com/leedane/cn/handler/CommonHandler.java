@@ -13,6 +13,7 @@ import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.activity.MySettingActivity;
 import com.leedane.cn.activity.NotificationActivity;
 import com.leedane.cn.activity.PersonalActivity;
+import com.leedane.cn.activity.TopicActivity;
 import com.leedane.cn.activity.UpdateChatBGActivity;
 import com.leedane.cn.activity.UpdateUserHeaderActivity;
 import com.leedane.cn.activity.UserBaseActivity;
@@ -94,6 +95,29 @@ public class CommonHandler {
     public static void startPersonalActivity(Context context, int toUserId){
         Intent it = new Intent(context, PersonalActivity.class);
         it.putExtra("userId", toUserId);
+        context.startActivity(it);
+    }
+
+    /**
+     * 根据用户名称触发个人中心的activity
+     * @param context
+     * @param account
+     */
+    public static void startPersonalActivity(Context context, String account){
+        Intent it = new Intent(context, PersonalActivity.class);
+        it.putExtra("account", account);
+        it.putExtra("type", 1);
+        context.startActivity(it);
+    }
+
+    /**
+     * 触发话题的activity
+     * @param context
+     * @param topic
+     */
+    public static void startTopActivity(Context context, String topic){
+        Intent it = new Intent(context, TopicActivity.class);
+        it.putExtra("topic", topic);
         context.startActivity(it);
     }
 

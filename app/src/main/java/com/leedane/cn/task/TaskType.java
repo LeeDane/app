@@ -60,6 +60,7 @@ public enum TaskType {
     LOAD_SEARCH_MOOD, //加载搜索心情列表
     LOAD_FILE, //加载文件列表
     LOAD_CHAT_BG_SELECT_WEB,//获取聊天背景的选择图片
+    LOAD_TOPIC, //加载心情列表
     DO_LOGIN_PHONE, //手机登录
     DO_GET_LOGIN_CODE, //获取手机登录的验证码
     GET_APP_VERSION, //检查APP版本

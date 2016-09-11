@@ -72,6 +72,13 @@
                 android:layout_marginRight="10dp"
                 android:background="@mipmap/at"/>
             <ImageView
+                android:id="@+id/mood_topic"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:background="@mipmap/quote"/>
+            <ImageView
                 android:id="@+id/mood_add"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
