@@ -79,7 +79,7 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
                 }
             });
 
-            setAnimation(holder.root, position);
+            setAnimation(holder.itemView, position);
         }
     }
 
@@ -88,7 +88,6 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
         TextView category;
         TextView money;
         TextView addTime;
-        LinearLayout root;
         public ContentHolder(View itemView) {
             super(itemView);
             if(itemView == mHeaderView || itemView == mFooterView)
@@ -97,7 +96,6 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
             category = (TextView) itemView.findViewById(R.id.financial_list_category);
             money = (TextView) itemView.findViewById(R.id.financial_list_money);
             addTime = (TextView) itemView.findViewById(R.id.financial_list_time);
-            root = (LinearLayout)itemView.findViewById(R.id.financial_list_root);
         }
     }
 }

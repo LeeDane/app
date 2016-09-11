@@ -16,7 +16,6 @@
     android:foreground="?android:selectableItemBackground">
     <!--  app:cardBackgroundColor 设置卡片的背景颜色-->
     <LinearLayout
-        android:id="@+id/financial_list_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"

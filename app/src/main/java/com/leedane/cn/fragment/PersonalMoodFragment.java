@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,9 @@ import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpResponseMoodBean;
 import com.leedane.cn.bean.MoodBean;
+import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.database.MoodDataBase;
+import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.handler.AttentionHandler;
 import com.leedane.cn.handler.CollectionHandler;
 import com.leedane.cn.handler.CommentHandler;
@@ -44,22 +48,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.crypto.Mac;
-
 /**
  * 个人中心显示心情列表的frament类
  * Created by LeeDane on 2015/12/7.
  */
-public class PersonalMoodFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnItemLongClickListener{
 
     public static final String TAG = "PersonalMoodFragment";
 
     private MoodDataBase moodDataBase;
     private Context mContext;
-    private ListView mListView;
-    //private TextView mTextViewLoading;
-    private SwipeRefreshLayout mSwipeLayout;
-
+    private RecyclerView mRecyclerView;
     private View mRootView;
     private Dialog mDialog;
     private int mPreUid; //当前个人中心用户ID，不一定是系统登录用户ID
@@ -90,7 +89,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                              Bundle savedInstanceState) {
 
         if(mRootView == null)
-            mRootView = inflater.inflate(R.layout.fragment_personal_list, container,
+            mRootView = inflater.inflate(R.layout.fragment_recyclerview, container,
                     false);
         setHasOptionsMenu(true);
         return mRootView;
@@ -101,7 +100,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         isLoading = false;
         if(result instanceof Error){
             if(type == TaskType.PERSONAL_LOADMOODS && !mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
+                mRecyclerViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
@@ -119,7 +118,6 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                         //临时list
                         List<MoodBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mListView.removeAllViewsInLayout();
                             mMoodBeans.clear();
                         }
                         //将新的数据和以前的数据进行叠加
@@ -135,10 +133,10 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                         //Log.i(TAG, "原来的大小：" + mMoodBeans.size());
                         if(mAdapter == null) {
                             mAdapter = new PersonalMoodListViewAdapter(mContext, mMoodBeans, this);
-                            mListView.setAdapter(mAdapter);
+                            mRecyclerView.setAdapter(mAdapter);
                         }
 
-                        mAdapter.refreshData(temList);
+                        mAdapter.addDatas(temList);
                         //Log.i(TAG, "后来的大小：" + mMoodBeans.size());
 
                         //Toast.makeText(mContext, "成功加载"+ moodBeans.size() + "条数据,总数是："+mMoodBeans.size(), Toast.LENGTH_SHORT).show();
@@ -149,24 +147,22 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mListView.setSelection(0);
+                            mRecyclerView.smoothScrollToPosition(0);
                         }
                         if(MySettingConfigUtil.getCacheMood()){
                             for(MoodBean mb: moodBeans){
                                 moodDataBase.insert(mb);
                             }
                         }
-                        mListViewFooter.setText(getStringResource(mContext, R.string.load_finish));
+                        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.load_finish));
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mMoodBeans.clear();
-                            mAdapter.refreshData(new ArrayList<MoodBean>());
+                            mAdapter.addDatas(new ArrayList<MoodBean>());
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            mListView.removeFooterView(viewFooter);
-                            mListView.addFooterView(viewFooter, null, false);
-                            mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
+                            mRecyclerViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
                         }else {
                             ToastUtil.success(mContext, getStringResource(mContext, R.string.no_load_more));
                         }
@@ -175,13 +171,11 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mMoodBeans.clear();
-                            mAdapter.refreshData(new ArrayList<MoodBean>());
+                            mAdapter.addDatas(new ArrayList<MoodBean>());
                         }
-                        mListView.removeFooterView(viewFooter);
-                        mListView.addFooterView(viewFooter, null, false);
                         //mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
-                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
-                        mListViewFooter.setOnClickListener(this);
+                        mRecyclerViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
+                        mRecyclerViewFooter.setOnClickListener(this);
                     }else{
                         ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                     }
@@ -228,7 +222,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                             moodDataBase.delete(mMoodBeans.get(clickListItemPosition).getCreateUserId(), mMoodBeans.get(clickListItemPosition).getId());
                     }
                     //mMoodBeans.remove(clickListItemPosition);
-                    mAdapter.refreshData(tempList);
+                    mAdapter.addDatas(tempList);
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
                 }
@@ -325,36 +319,29 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
                 sendFirstLoading();
             }
             //initFirstData();
-            mListView = (ListView)mRootView.findViewById(R.id.personal_fragment_listview);
+            mRecyclerView = (RecyclerView)mRootView.findViewById(R.id.id_recyclerview);
             mAdapter = new PersonalMoodListViewAdapter(mContext, mMoodBeans, this);
-            mListView.setOnScrollListener(new ListViewOnScrollListener());
+            mAdapter.setOnItemClickListener(this);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
+            mRecyclerView.addOnScrollListener(new RecyclerViewOnScrollListener<MoodBean>(mAdapter));
 
             //listview下方的显示
-            viewFooter = LayoutInflater.from(getContext()).inflate(R.layout.listview_footer_item, null);
-            mListView.addFooterView(viewFooter, null, false);
-            mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-            mListViewFooter.setOnClickListener(PersonalMoodFragment.this);//添加点击事件
-            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
-            mSwipeLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.id_swipe_listview);
+            mFooterView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_financial_main_footer, null);
+            mAdapter.setFooterView(mFooterView);
+            mRecyclerViewFooter = (TextView)mFooterView.findViewById(R.id.financial_footer);
+            mRecyclerViewFooter.setOnClickListener(PersonalMoodFragment.this);//添加点击事件
+            mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
+            mSwipeLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefreshLayout);
             mSwipeLayout.setOnRefreshListener(this);
             mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                     android.R.color.holo_orange_light,
                     android.R.color.holo_green_light);
         }
 
-        mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(this);
-
-        Log.i(TAG, "哈哈onActivityCreated............");
-
-        //setListViewHeightBasedOnChildren();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("hasImg", !StringUtil.isNull(mMoodBeans.get(position).getImgs()));
-        CommonHandler.startDetailActivity(mContext, "t_mood", mMoodBeans.get(position).getId(), params);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
@@ -512,7 +499,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.listview_footer_reLoad:
+            case R.id.financial_footer:
                 sendLoadAgain(v);
                 break;
         }
@@ -522,8 +509,8 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
      * 将列表移动到最顶部
      */
     public void smoothScrollToTop(){
-        if(mMoodBeans != null && mMoodBeans.size() > 0 && mListView != null /*&& !isLoading*/){
-            mListView.smoothScrollToPosition(0);
+        if(mMoodBeans != null && mMoodBeans.size() > 0 && mRecyclerView != null /*&& !isLoading*/){
+            mRecyclerView.smoothScrollToPosition(0);
         }
     }
     /**
@@ -578,7 +565,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
     @Override
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())) {
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())) {
             return;
         }
         //没有lastID时当作第一次请求加载
@@ -588,7 +575,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         }
         //刷新之前先把以前的任务取消
         taskCanceled(TaskType.PERSONAL_LOADMOODS);
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
@@ -607,8 +594,8 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
     @Override
     protected void sendLoadAgain(View view){
         //加载失败或者点击加载更多的情况下才不能点击
-        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())
-                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mListViewFooter.getText().toString())){
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())
+                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())){
             return;
         }
         taskCanceled(TaskType.PERSONAL_LOADMOODS);
@@ -619,7 +606,7 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
         MoodHandler.sendMood(this, params);
     }
 
@@ -646,5 +633,17 @@ public class PersonalMoodFragment extends BaseFragment implements AdapterView.On
         if(context == null){
             this.mContext = this.getContext();
         }
+    }
+
+    @Override
+    public void onItemClick(int position, Object data) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("hasImg", !StringUtil.isNull(mMoodBeans.get(position).getImgs()));
+        CommonHandler.startDetailActivity(mContext, "t_mood", mMoodBeans.get(position).getId(), params);
+    }
+
+    @Override
+    public void onItemLongClick(int position) {
+
     }
 }
