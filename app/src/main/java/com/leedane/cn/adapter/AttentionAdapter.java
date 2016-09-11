@@ -96,7 +96,6 @@ public class AttentionAdapter extends BaseRecyclerViewAdapter<AttentionBean> {
             super(itemView);
             if(itemView == mHeaderView || itemView == mFooterView)
                 return;
-
             time = (TextView) itemView.findViewById(R.id.attention_time);
             source = (TextView)itemView.findViewById(R.id.attention_source);
         }

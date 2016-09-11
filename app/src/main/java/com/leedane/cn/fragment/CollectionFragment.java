@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +16,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leedane.cn.adapter.AttentionAdapter;
 import com.leedane.cn.adapter.CollectionAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CollectionBean;
 import com.leedane.cn.bean.HttpResponseCollectionBean;
+import com.leedane.cn.customview.RecycleViewDivider;
+import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.handler.CollectionHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.TaskType;
@@ -35,15 +41,13 @@ import java.util.List;
  * 收藏列表的fragment类
  * Created by LeeDane on 2016/4/6.
  */
-public class CollectionFragment extends BaseFragment{
+public class CollectionFragment extends BaseRecyclerViewFragment implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnItemLongClickListener{
 
     public static final String TAG = "CollectionFragment";
     private Context mContext;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private CollectionAdapter mAdapter;
     private List<CollectionBean> mCollectionBeans = new ArrayList<>();
-
-    private SwipeRefreshLayout mSwipeLayout;
     private View mRootView;
     //private HashMap<String, Object> baseRequestParams;
     private int toUserId;
@@ -67,7 +71,7 @@ public class CollectionFragment extends BaseFragment{
                              Bundle savedInstanceState) {
 
         if(mRootView == null)
-            mRootView = inflater.inflate(R.layout.fragment_listview, container,
+            mRootView = inflater.inflate(R.layout.fragment_recyclerview, container,
                     false);
         setHasOptionsMenu(true);
         return mRootView;
@@ -77,7 +81,7 @@ public class CollectionFragment extends BaseFragment{
         isLoading = false;
         if(result instanceof Error){
             if((type == TaskType.LOAD_COLLECTION) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
+                mRecyclerViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
@@ -96,7 +100,6 @@ public class CollectionFragment extends BaseFragment{
                         //临时list
                         List<CollectionBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mListView.removeAllViewsInLayout();
                             mCollectionBeans.clear();
                         }
                         //将新的数据和以前的数据进行叠加
@@ -112,9 +115,9 @@ public class CollectionFragment extends BaseFragment{
                         Log.i(TAG, "原来的大小：" + mCollectionBeans.size());
                         if(mAdapter == null) {
                             mAdapter = new CollectionAdapter(mContext, mCollectionBeans);
-                            mListView.setAdapter(mAdapter);
+                            mRecyclerView.setAdapter(mAdapter);
                         }
-                        mAdapter.refreshData(temList);
+                        mAdapter.addDatas(temList);
                         //Log.i(TAG, "后来的大小：" + mCollectionBeans.size());
                         //ToastUtil.success(mContext, "成功加载" + CollectionBeans.size() + "条数据,总数是：" + mCollectionBeans.size(), Toast.LENGTH_SHORT);
                         int size = mCollectionBeans.size();
@@ -124,20 +127,18 @@ public class CollectionFragment extends BaseFragment{
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mListView.setSelection(0);
+                            mRecyclerView.smoothScrollToPosition(0);
                         }
-                        mListViewFooter.setText(getStringResource(mContext, R.string.load_finish));
+                        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.load_finish));
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mCollectionBeans.clear();
-                            mAdapter.refreshData(new ArrayList<CollectionBean>());
+                            mAdapter.addDatas(new ArrayList<CollectionBean>());
                             //mListView.addHeaderView(viewHeader);
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            mListView.removeFooterView(viewFooter);
-                            mListView.addFooterView(viewFooter, null, false);
-                            mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
+                            mRecyclerViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
                         }else {
                             ToastUtil.success(mContext, getStringResource(mContext, R.string.no_load_more));
                         }
@@ -146,13 +147,11 @@ public class CollectionFragment extends BaseFragment{
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mCollectionBeans.clear();
-                            mAdapter.refreshData(new ArrayList<CollectionBean>());
+                            mAdapter.addDatas(new ArrayList<CollectionBean>());
                         }
-                        mListView.removeFooterView(viewFooter);
-                        mListView.addFooterView(viewFooter, null, false);
                         //mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
-                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
-                        mListViewFooter.setOnClickListener(this);
+                        mRecyclerViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
+                        mRecyclerViewFooter.setOnClickListener(this);
                     }else{
                         ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                     }
@@ -177,8 +176,8 @@ public class CollectionFragment extends BaseFragment{
      * 将列表移动到最顶部
      */
     public void smoothScrollToTop(){
-        if(mCollectionBeans != null && mCollectionBeans.size() > 0 && mListView != null /*&& !isLoading*/){
-            mListView.smoothScrollToPosition(0);
+        if(mCollectionBeans != null && mCollectionBeans.size() > 0 && mRecyclerView != null /*&& !isLoading*/){
+            mRecyclerView.smoothScrollToPosition(0);
         }
     }
 
@@ -227,7 +226,7 @@ public class CollectionFragment extends BaseFragment{
     @Override
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString()) || isLoading) {
             return;
         }
         //没有lastID时当作第一次请求加载
@@ -236,7 +235,7 @@ public class CollectionFragment extends BaseFragment{
             return;
         }
 
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
@@ -256,8 +255,8 @@ public class CollectionFragment extends BaseFragment{
     @Override
     protected void sendLoadAgain(View view){
         //加载失败或者点击加载更多的情况下才不能点击
-        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())
-                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mListViewFooter.getText().toString())){
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())
+                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())){
             return;
         }
         taskCanceled(TaskType.LOAD_COLLECTION);
@@ -268,7 +267,7 @@ public class CollectionFragment extends BaseFragment{
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
         CollectionHandler.getCollectionsRequest(this, params);
     }
     @Override
@@ -286,52 +285,27 @@ public class CollectionFragment extends BaseFragment{
             //ToastUtil.success(mContext, "评论");
             //isFirstLoading = false;
             sendFirstLoading();
-            //initFirstData();
-            this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
+
+            this.mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.id_recyclerview);
             mAdapter = new CollectionAdapter(mContext, mCollectionBeans);
-            mListView.setOnScrollListener(new ListViewOnScrollListener());
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    CommonHandler.startDetailActivity(mContext, mCollectionBeans.get(position).getTableName(), mCollectionBeans.get(position).getTableId(), null);
-                }
-            });
+            mAdapter.setOnItemClickListener(this);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
+            mRecyclerView.addOnScrollListener(new RecyclerViewOnScrollListener(mAdapter));
 
             if(isLoginUser){
                 //长按执行删除的操作
-                mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
-                        builder.setCancelable(true);
-                        builder.setIcon(R.drawable.menu_feedback);
-                        builder.setTitle("提示");
-                        builder.setMessage("删除该收藏记录?");
-                        builder.setPositiveButton("删除",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        CollectionHandler.deleteCollection(CollectionFragment.this, mCollectionBeans.get(position).getId(), mCollectionBeans.get(position).getCreateUserId());
-                                        showLoadingDialog("Delete", "try best to delete...");
-                                    }
-                                });
-                        builder.setNegativeButton("取消",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                                    }
-                                });
-                        builder.show();
-                        return true;
-                    }
-                });
+                mAdapter.setOnItemLongClickListener(this);
             }
 
             //listview下方的显示
-            viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
-            mListView.addFooterView(viewFooter, null, false);
-            mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-            mListViewFooter.setOnClickListener(CollectionFragment.this);//添加点击事件
-            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+            mFooterView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_footer, null);
+            mAdapter.setFooterView(mFooterView);
+            mRecyclerViewFooter = (TextView)mFooterView.findViewById(R.id.financial_footer);
+            mRecyclerViewFooter.setOnClickListener(CollectionFragment.this);//添加点击事件
+            mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
 
             mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
             mSwipeLayout.setOnRefreshListener(this);
@@ -340,17 +314,44 @@ public class CollectionFragment extends BaseFragment{
                     android.R.color.holo_green_light);
 
         }
-        mListView.setAdapter(mAdapter);
-       // mListView.setOnItemClickListener(this);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
-            case R.id.listview_footer_reLoad:
+            case R.id.financial_footer:
                 sendLoadAgain(v);
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(int position, Object data) {
+        CommonHandler.startDetailActivity(mContext, mCollectionBeans.get(position).getTableName(), mCollectionBeans.get(position).getTableId(), null);
+    }
+
+    @Override
+    public void onItemLongClick(final int position) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
+        builder.setCancelable(true);
+        builder.setIcon(R.drawable.menu_feedback);
+        builder.setTitle("提示");
+        builder.setMessage("删除该收藏记录?");
+        builder.setPositiveButton("删除",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        CollectionHandler.deleteCollection(CollectionFragment.this, mCollectionBeans.get(position).getId(), mCollectionBeans.get(position).getCreateUserId());
+                        showLoadingDialog("Delete", "try best to delete...");
+                    }
+                });
+        builder.setNegativeButton("取消",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                    }
+                });
+        builder.show();
     }
 }
