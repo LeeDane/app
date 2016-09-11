@@ -91,7 +91,7 @@ public class ZanAdapter extends BaseRecyclerViewAdapter<ZanBean> {
         }
     }
 
-    class ContentHolder extends RecyclerView.ViewHolder {
+    class ContentHolder extends RecyclerView.ViewHolder{
         TextView from;
         TextView time;
         TextView content;

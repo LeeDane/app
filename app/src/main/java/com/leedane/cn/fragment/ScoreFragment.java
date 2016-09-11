@@ -3,6 +3,9 @@ package com.leedane.cn.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.adapter.ScoreAdapter;
+import com.leedane.cn.adapter.ZanAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpResponseScoreBean;
 import com.leedane.cn.bean.ScoreBean;
+import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.handler.ScoreHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
@@ -32,15 +37,13 @@ import java.util.List;
  * 积分历史记录列表的fragment类
  * Created by LeeDane on 2016/5/5.
  */
-public class ScoreFragment extends BaseFragment{
+public class ScoreFragment extends BaseRecyclerViewFragment{
 
     public static final String TAG = "ScoreFragment";
     private Context mContext;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private ScoreAdapter mAdapter;
     private List<ScoreBean> mScoreBeans = new ArrayList<>();
-
-    private SwipeRefreshLayout mSwipeLayout;
     private View mRootView;
 
     public ScoreFragment() {
@@ -57,7 +60,7 @@ public class ScoreFragment extends BaseFragment{
                              Bundle savedInstanceState) {
 
         if(mRootView == null)
-            mRootView = inflater.inflate(R.layout.fragment_listview, container,
+            mRootView = inflater.inflate(R.layout.fragment_recyclerview, container,
                     false);
         setHasOptionsMenu(true);
         return mRootView;
@@ -67,7 +70,7 @@ public class ScoreFragment extends BaseFragment{
         isLoading = false;
         if(result instanceof Error){
             if((type == TaskType.LOAD_SCORE) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
+                mRecyclerViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
@@ -83,7 +86,6 @@ public class ScoreFragment extends BaseFragment{
                         //临时list
                         List<ScoreBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mListView.removeAllViewsInLayout();
                             mScoreBeans.clear();
                         }
                         //将新的数据和以前的数据进行叠加
@@ -99,9 +101,9 @@ public class ScoreFragment extends BaseFragment{
                         Log.i(TAG, "原来的大小：" + mScoreBeans.size());
                         if(mAdapter == null) {
                             mAdapter = new ScoreAdapter(mContext, mScoreBeans);
-                            mListView.setAdapter(mAdapter);
+                            mRecyclerView.setAdapter(mAdapter);
                         }
-                        mAdapter.refreshData(temList);
+                        mAdapter.addDatas(temList);
                         //Log.i(TAG, "后来的大小：" + mCollectionBeans.size());
                         //ToastUtil.success(mContext, "成功加载" + CollectionBeans.size() + "条数据,总数是：" + mCollectionBeans.size(), Toast.LENGTH_SHORT);
                         int size = mScoreBeans.size();
@@ -111,20 +113,18 @@ public class ScoreFragment extends BaseFragment{
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mListView.setSelection(0);
+                            mRecyclerView.smoothScrollToPosition(0);
                         }
-                        mListViewFooter.setText(getStringResource(mContext, R.string.load_finish));
+                        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.load_finish));
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mScoreBeans.clear();
-                            mAdapter.refreshData(new ArrayList<ScoreBean>());
+                            mAdapter.addDatas(new ArrayList<ScoreBean>());
                             //mListView.addHeaderView(viewHeader);
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            mListView.removeFooterView(viewFooter);
-                            mListView.addFooterView(viewFooter, null, false);
-                            mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
+                            mRecyclerViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
                         }else {
                             ToastUtil.success(mContext, getStringResource(mContext, R.string.no_load_more));
                         }
@@ -133,13 +133,10 @@ public class ScoreFragment extends BaseFragment{
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mScoreBeans.clear();
-                            mAdapter.refreshData(new ArrayList<ScoreBean>());
+                            mAdapter.addDatas(new ArrayList<ScoreBean>());
                         }
-                        mListView.removeFooterView(viewFooter);
-                        mListView.addFooterView(viewFooter, null, false);
-                        //mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
-                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
-                        mListViewFooter.setOnClickListener(this);
+                        mRecyclerViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
+                        mRecyclerViewFooter.setOnClickListener(this);
                     }else{
                         ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                     }
@@ -164,8 +161,8 @@ public class ScoreFragment extends BaseFragment{
      * 将列表移动到最顶部
      */
     public void smoothScrollToTop(){
-        if(mScoreBeans != null && mScoreBeans.size() > 0 && mListView != null /*&& !isLoading*/){
-            mListView.smoothScrollToPosition(0);
+        if(mScoreBeans != null && mScoreBeans.size() > 0 && mRecyclerView != null /*&& !isLoading*/){
+            mRecyclerView.smoothScrollToPosition(0);
         }
     }
 
@@ -212,7 +209,7 @@ public class ScoreFragment extends BaseFragment{
     @Override
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString()) || isLoading) {
             return;
         }
         //没有lastID时当作第一次请求加载
@@ -221,7 +218,7 @@ public class ScoreFragment extends BaseFragment{
             return;
         }
 
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
@@ -240,8 +237,8 @@ public class ScoreFragment extends BaseFragment{
     @Override
     protected void sendLoadAgain(View view){
         //加载失败或者点击加载更多的情况下才不能点击
-        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())
-                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mListViewFooter.getText().toString())){
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())
+                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())){
             return;
         }
         isLoading = true;
@@ -250,7 +247,7 @@ public class ScoreFragment extends BaseFragment{
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
         taskCanceled(TaskType.LOAD_SCORE);
         ScoreHandler.getScoresRequest(this, params);
     }
@@ -260,23 +257,28 @@ public class ScoreFragment extends BaseFragment{
         if(mContext == null)
             mContext = getActivity();
         sendFirstLoading();
-        //initFirstData();
-        this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
+
+        this.mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.id_recyclerview);
         mAdapter = new ScoreAdapter(mContext, mScoreBeans);
-        mListView.setOnScrollListener(new ListViewOnScrollListener());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
+        mRecyclerView.addOnScrollListener(new RecyclerViewOnScrollListener(mAdapter));
+
         //listview下方的显示
-        viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
-        mListView.addFooterView(viewFooter, null, false);
-        mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-        mListViewFooter.setOnClickListener(ScoreFragment.this);//添加点击事件
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mFooterView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_footer, null);
+        mAdapter.setFooterView(mFooterView);
+        mRecyclerViewFooter = (TextView)mFooterView.findViewById(R.id.financial_footer);
+        mRecyclerViewFooter.setOnClickListener(ScoreFragment.this);//添加点击事件
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
 
         mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_green_light);
-        mListView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
        // mListView.setOnItemClickListener(this);
     }
 
@@ -285,7 +287,7 @@ public class ScoreFragment extends BaseFragment{
         super.onClick(v);
 
         switch (v.getId()){
-            case R.id.listview_footer_reLoad:
+            case R.id.financial_footer:
                 sendLoadAgain(v);
                 break;
         }
