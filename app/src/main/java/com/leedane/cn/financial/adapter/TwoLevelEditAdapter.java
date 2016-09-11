@@ -37,7 +37,7 @@ public class TwoLevelEditAdapter extends BaseRecyclerViewAdapter<TwoLevelCategor
     private  OnStartDragListener mDragStartListener;
 
     public TwoLevelEditAdapter(Context context, List<TwoLevelCategoryEdit> twoLevelCategoryEdit, OnStartDragListener dragStartListener){
-        super(twoLevelCategoryEdit);
+        super(context, twoLevelCategoryEdit);
         this.mContext = context;
         mDragStartListener = dragStartListener;
     }
@@ -145,6 +145,8 @@ public class TwoLevelEditAdapter extends BaseRecyclerViewAdapter<TwoLevelCategor
         LinearLayout root;
         public ContentHolder(View itemView) {
             super(itemView);
+            if(itemView == mHeaderView || itemView == mFooterView)
+                return;
             icon = (ImageView)itemView.findViewById(R.id.financial_two_level_icon);
             model = (TextView) itemView.findViewById(R.id.financial_two_level_model);
             name = (TextView) itemView.findViewById(R.id.financial_two_level_name);

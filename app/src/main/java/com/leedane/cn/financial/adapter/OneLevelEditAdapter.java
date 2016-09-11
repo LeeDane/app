@@ -34,7 +34,7 @@ public class OneLevelEditAdapter extends BaseRecyclerViewAdapter<OneLevelCategor
     private  OnStartDragListener mDragStartListener;
 
     public OneLevelEditAdapter(Context context, List<OneLevelCategoryEdit> oneLevelGategoryEdit, OnStartDragListener dragStartListener){
-        super(oneLevelGategoryEdit);
+        super(context, oneLevelGategoryEdit);
         this.mContext = context;
         mDragStartListener = dragStartListener;
     }
@@ -146,6 +146,8 @@ public class OneLevelEditAdapter extends BaseRecyclerViewAdapter<OneLevelCategor
         LinearLayout root;
         public ContentHolder(View itemView) {
             super(itemView);
+            if(itemView == mHeaderView || itemView == mFooterView)
+                return;
             icon = (ImageView)itemView.findViewById(R.id.financial_one_level_icon);
             model = (TextView) itemView.findViewById(R.id.financial_one_level_model);
             name = (TextView) itemView.findViewById(R.id.financial_one_level_name);

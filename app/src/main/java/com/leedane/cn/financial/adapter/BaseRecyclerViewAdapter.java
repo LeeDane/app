@@ -1,5 +1,7 @@
 package com.leedane.cn.financial.adapter;
 
+import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.leedane.cn.app.R;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.util.CommonUtil;
 
 import java.util.ArrayList;
@@ -26,6 +29,19 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
     protected OnItemClickListener mOnItemClickListener;
     protected OnItemLongClickListener mOnItemLongClickListener;
     protected int lastPosition = -1;
+    protected Context mContext;
+    protected Typeface typeface;
+    /**
+     * 唯一入口适配器
+     * @param context
+     * @param datas
+     */
+    public BaseRecyclerViewAdapter(Context context, List<T> datas){
+        typeface = BaseApplication.getDefaultTypeface();
+        this.mDatas = datas;
+        this.mContext = context;
+        notifyDataSetChanged();
+    }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
@@ -53,11 +69,6 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
         notifyItemInserted(getFooterPosition());
     }
 
-
-    public BaseRecyclerViewAdapter(List<T> datas){
-        this.mDatas = datas;
-        notifyDataSetChanged();
-    }
     public void addDatas(List<T> datas) {
         mDatas.clear();
         mDatas.addAll(datas);

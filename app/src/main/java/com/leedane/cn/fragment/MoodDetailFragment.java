@@ -1,11 +1,12 @@
 package com.leedane.cn.fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -16,38 +17,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.adapter.CommentOrTransmitAdapter;
 import com.leedane.cn.app.R;
-import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.CommentOrTransmitBean;
-import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.bean.HttpResponseCommentOrTransmitBean;
 import com.leedane.cn.bean.HttpResponseMoodImagesBean;
 import com.leedane.cn.bean.ImageDetailBean;
-import com.leedane.cn.bean.MoodImagesBean;
 import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.customview.MoodTextView;
+import com.leedane.cn.customview.RecycleViewDivider;
+import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.MoodHandler;
 import com.leedane.cn.handler.PraiseHandler;
 import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.helper.PraiseUserHelper;
-import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.BeanConvertUtil;
-import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DensityUtil;
-import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.NotificationUtil;
@@ -72,7 +67,20 @@ import pl.droidsonroids.gif.GifImageView;
  * 心情详情的Fragment
  * Created by LeeDane on 2016/5/3.
  */
-public class MoodDetailFragment extends BaseFragment implements View.OnLongClickListener{
+public class MoodDetailFragment extends BaseRecyclerViewFragment implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnItemLongClickListener{
+
+    @Override
+    public void onItemClick(int position, Object data) {
+        if (mCommentOrTransmits.size() > 0) {
+            ToastUtil.success(mContext, "type:" + getOperateType());
+            onItemClickListener.onItemClick(position, mCommentOrTransmits.get(position), getOperateType());
+        }
+    }
+
+    @Override
+    public void onItemLongClick(int position) {
+
+    }
 
     public interface OnItemClickListener{
         void onItemClick(int position, CommentOrTransmitBean commentOrTransmitBean, int commentOrTransmit);
@@ -115,7 +123,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
      */
     private boolean hasImg;
 
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
 
 
     private View mRootView;
@@ -125,11 +133,8 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     private boolean isLoading; //标记当前是否在加载数据
     private int mFirstId;  //页面上第一条数据的ID
     private int mLastId; //页面上第一条数据的ID
-    private TextView mListViewFooter;
 
-    private SwipeRefreshLayout mSwipeLayout;
     private View viewHeader;
-    private View viewFooter;
     private JSONObject detail = new JSONObject();
     private HttpResponseMoodImagesBean mMoodImagesBean;
     private LinearLayout mDetailInfoShowLinearLayout;
@@ -153,7 +158,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
      * List存放页面上的评论对象列表
      */
     private List<CommentOrTransmitBean> mCommentOrTransmits = new ArrayList<>();
-    private CommentOrTransmitAdapter mCommentOrTransmitAdapter;
+    private CommentOrTransmitAdapter mAdapter;
     private ImageView mCommentLine;
     private ImageView mTransmitLine;
     public MoodDetailFragment(){
@@ -197,7 +202,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                              Bundle savedInstanceState) {
 
         if(mRootView == null)
-            mRootView = inflater.inflate(R.layout.fragment_mood_detail, container,
+            mRootView = inflater.inflate(R.layout.fragment_recyclerview, container,
                     false);
         setHasOptionsMenu(true);
         return mRootView;
@@ -225,26 +230,21 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         sendFirstLoading();
     }
     private void initView(){
-        mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.mood_detail_swipe_listview);
+        mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_green_light);
 
-        mListView = (ListView)mRootView.findViewById(R.id.mood_detail_listview);
-        mCommentOrTransmitAdapter = new CommentOrTransmitAdapter(mContext, mCommentOrTransmits, true);
-        mListView.setAdapter(mCommentOrTransmitAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mCommentOrTransmits.size() > 0) {
-                    ToastUtil.success(mContext, "type:" + getOperateType());
-                    onItemClickListener.onItemClick(position, mCommentOrTransmits.get(position - 1), getOperateType());
-                }
-            }
-        });
+        this.mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.id_recyclerview);
+        mAdapter = new CommentOrTransmitAdapter(mContext, mCommentOrTransmits, true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
+        mRecyclerView.addOnScrollListener(new RecyclerViewOnScrollListener(mAdapter));
 
-
+        mAdapter.setOnItemClickListener(this);
 
         viewHeader = LayoutInflater.from(mContext).inflate(R.layout.mood_detail_header, null);
         mDetailInfoShowLinearLayout = (LinearLayout)viewHeader.findViewById(R.id.mood_detail_info_show);
@@ -273,14 +273,15 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         mTVPraise.setOnClickListener(this);
         mCommentLine = (ImageView)viewHeader.findViewById(R.id.mood_detail_comment_show_line);
         mTransmitLine = (ImageView)viewHeader.findViewById(R.id.mood_detail_transmit_show_line);
-        mListView.addHeaderView(viewHeader, null, false);
-        mListView.setOnScrollListener(new ListViewOnScrollListener());
+        mAdapter.setHeaderView(viewHeader);
 
-        viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
-        mListView.addFooterView(viewFooter, null, false);
-        mListViewFooter = (TextView)viewFooter.findViewById(R.id.listview_footer_reLoad);
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
-        mListViewFooter.setOnClickListener(this);//添加点击事件
+        mFooterView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_footer, null);
+        mAdapter.setFooterView(mFooterView);
+        mRecyclerViewFooter = (TextView)mFooterView.findViewById(R.id.financial_footer);
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setOnClickListener(this);//添加点击事件
+
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private int getOperateType(){
@@ -435,7 +436,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         isLoading = false;
         if(result instanceof Error){
             if((type == TaskType.LOAD_COMMENT || type == TaskType.LOAD_TRANSMIT) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
+                mRecyclerViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
             }
         }
         super.taskFinished(type, result);
@@ -489,7 +490,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                         //临时list
                         List<CommentOrTransmitBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mListView.removeAllViewsInLayout();
+                            //mListView.removeAllViewsInLayout();
                             mCommentOrTransmits.clear();
                         }
                         //将新的数据和以前的数据进行叠加
@@ -503,11 +504,11 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                             temList.addAll(commentOrTransmitBeans);
                         }
                         Log.i(TAG, "原来的大小：" + mCommentOrTransmits.size());
-                        if(mCommentOrTransmitAdapter == null) {
-                            mCommentOrTransmitAdapter = new CommentOrTransmitAdapter(mContext, mCommentOrTransmits, true);
-                            mListView.setAdapter(mCommentOrTransmitAdapter);
+                        if(mAdapter == null) {
+                            mAdapter = new CommentOrTransmitAdapter(mContext, mCommentOrTransmits, true);
+                            mRecyclerView.setAdapter(mAdapter);
                         }
-                        mCommentOrTransmitAdapter.refreshData(temList);
+                        mAdapter.addDatas(temList);
                         //Log.i(TAG, "后来的大小：" + mCommentOrTransmits.size());
                         //Toast.makeText(MoodDetailActivity.this, "成功加载"+ commentOrTransmitBeans.size() + "条数据,总数是："+mCommentOrTransmits.size(), Toast.LENGTH_SHORT).show();
                         int size = mCommentOrTransmits.size();
@@ -517,19 +518,16 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mListView.setSelection(0);
+                            mRecyclerView.smoothScrollToPosition(0);
                         }
-                        mListViewFooter.setText(getStringResource(mContext, R.string.load_finish));
+                        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.load_finish));
                     } else {
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mCommentOrTransmits.clear();
-                            mCommentOrTransmitAdapter.refreshData(new ArrayList<CommentOrTransmitBean>());
+                            mAdapter.addDatas(new ArrayList<CommentOrTransmitBean>());
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            mListView.removeFooterView(viewFooter);
-                            mListView.addFooterView(viewFooter, null, false);
-                            mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
+                            mRecyclerViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
                         }else {
                             Toast.makeText(mContext, getStringResource(mContext, R.string.no_load_more), Toast.LENGTH_LONG).show();
                         }
@@ -538,13 +536,10 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mCommentOrTransmits.clear();
-                            mCommentOrTransmitAdapter.refreshData(new ArrayList<CommentOrTransmitBean>());
+                            mAdapter.addDatas(new ArrayList<CommentOrTransmitBean>());
                         }
-                        mListView.removeFooterView(viewFooter);
-                        mListView.addFooterView(viewFooter, null, false);
-                        //mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
-                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
-                        mListViewFooter.setOnClickListener(this);
+                        mRecyclerViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
+                        mRecyclerViewFooter.setOnClickListener(this);
                     }else{
                         ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                     }
@@ -798,7 +793,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
      */
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())) {
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())) {
             return;
         }
         //没有lastID时当作第一次请求加载
@@ -807,7 +802,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
             return;
         }
 
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
@@ -846,8 +841,8 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
      */
     public void sendLoadAgain(View view){
         //加载失败或者点击加载更多的情况下才不能点击
-        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())
-                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mListViewFooter.getText().toString())){
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())
+                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())){
             return;
         }
         taskCanceled(TaskType.LOAD_COMMENT);
@@ -861,7 +856,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("showUserInfo", true);
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
         if(commentOrTransmit == 0){
             CommentHandler.getCommentsRequest(MoodDetailFragment.this, params);
         }else{
@@ -911,7 +906,7 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
                 params.put("content", "赞了这条心情");
                 PraiseHandler.sendZan(this, params);
                 break;
-            case R.id.listview_footer_reLoad:
+            case R.id.financial_footer:
                 sendLoadAgain(v);
                 break;
             case R.id.mood_detail_user:
@@ -932,49 +927,6 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
     }
 
     @Override
-    public boolean onLongClick(View v) {
-        switch (v.getId()){
-            /*case R.id.mood_detail_img:
-                //创建离开的警告提示框
-                AlertDialog alertDialog = new AlertDialog.Builder(mContext).setTitle("添加图库")
-                        .setMessage("把该图片加入我的图库？")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int which) {
-                                HttpRequestBean requestBean = new HttpRequestBean();
-                                HashMap<String, Object> params = new HashMap<>();
-
-                                for (MoodImagesBean moodImagesBean : mMoodImagesBean.getMessage()) {
-                                    if ((moodImagesBean.getSize().equalsIgnoreCase("120x120") || moodImagesBean.getSize().equalsIgnoreCase("source")) && moodImagesBean.getOrder() == 0) {
-                                        params.put("path", moodImagesBean.getPath());
-                                        params.put("desc", "app心情详情图片加入图库");
-                                        params.put("width", moodImagesBean.getWidth());
-                                        params.put("height", moodImagesBean.getHeight());
-                                        break;
-                                    } else {
-                                        continue;
-                                    }
-                                }
-                                params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-                                requestBean.setParams(params);
-                                requestBean.setServerMethod("leedane/gallery/addLink.action");
-                                //showLoadingDialog("Gallery", "Loading, please wait。。。");ss
-                                TaskLoader.getInstance().startTaskForResult(TaskType.ADD_GALLERY, MoodDetailFragment.this, requestBean);
-                                showLoadingDialog("Gallery","Loading, try my best to adding gallery...");
-                            }
-                        })
-                        .setNegativeButton("放弃",new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                return;
-                            }
-                        }).create(); // 创建对话框
-                alertDialog.show(); // 显示对话框
-                break;*/
-        }
-        return true;
-    }
-
-    @Override
     public void onRefresh() {
         if(isLoading){
             taskCanceled(TaskType.LOAD_COMMENT);
@@ -982,8 +934,4 @@ public class MoodDetailFragment extends BaseFragment implements View.OnLongClick
         }
         sendUpLoading();
     }
-
-
-
-
 }

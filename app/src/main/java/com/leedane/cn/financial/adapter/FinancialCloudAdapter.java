@@ -26,12 +26,9 @@ import java.util.List;
  * Created by LeeDane on 2016/8/26.
  */
 public class FinancialCloudAdapter extends BaseRecyclerViewAdapter<FinancialBean>{
-    private Context mContext;
 
     public FinancialCloudAdapter(Context context, List<FinancialBean> financialBeans){
-        super(financialBeans);
-        this.mContext = context;
-        notifyDataSetChanged();
+        super(context, financialBeans);
     }
 
     /**
@@ -132,7 +129,7 @@ public class FinancialCloudAdapter extends BaseRecyclerViewAdapter<FinancialBean
         TextView tip;
         public ContentHolder(View itemView) {
             super(itemView);
-            if(itemView == mHeaderView)
+            if(itemView == mHeaderView || itemView == mFooterView)
                 return;
             model = (ImageView)itemView.findViewById(R.id.financial_cloud_model);
             category = (TextView) itemView.findViewById(R.id.financial_cloud_category);

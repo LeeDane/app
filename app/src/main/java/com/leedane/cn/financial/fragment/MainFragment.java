@@ -158,7 +158,7 @@ public class MainFragment extends FinancialBaseFragment{
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
-        mAdapter = new FinancialRecyclerViewAdapter(mFinancialBeans);
+        mAdapter = new FinancialRecyclerViewAdapter(mContext, mFinancialBeans);
         mRecyclerView.setAdapter(mAdapter);
         generateData();
         setHeader();

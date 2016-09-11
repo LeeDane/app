@@ -71,7 +71,7 @@ public class WeekListDataFragment extends FinancialBaseFragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
-        mAdapter = new FinancialRecyclerViewAdapter(mFinancialList.getFinancialBeans());
+        mAdapter = new FinancialRecyclerViewAdapter(mContext, mFinancialList.getFinancialBeans());
         mRecyclerView.setAdapter(mAdapter);
 
         //mAdapter.addDatas();

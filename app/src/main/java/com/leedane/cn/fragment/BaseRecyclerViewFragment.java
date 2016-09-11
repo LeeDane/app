@@ -7,20 +7,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
 
 /**
- * 公共的fragment类
- * Created by LeeDane on 2015/12/8.
+ * RecyclerView做fragment公共的fragment类
+ * Created by LeeDane on 2016/9/11.
  */
-public abstract class BaseFragment extends Fragment implements TaskListener, View.OnClickListener,SwipeRefreshLayout.OnRefreshListener{
+public abstract class BaseRecyclerViewFragment extends Fragment implements TaskListener, View.OnClickListener,SwipeRefreshLayout.OnRefreshListener{
 
     /**
      * 弹出加载ProgressDiaLog
@@ -32,8 +34,10 @@ public abstract class BaseFragment extends Fragment implements TaskListener, Vie
     protected int mFirstId;  //页面上第一条数据的ID
     protected int mLastId; //页面上第一条数据的ID
 
-    protected TextView mListViewFooter;
-    protected View viewFooter;
+    protected TextView mRecyclerViewFooter;
+    protected View mFooterView;
+
+    protected SwipeRefreshLayout mSwipeLayout;
 
     @Override
     public void taskStarted(TaskType type) {
@@ -129,59 +133,56 @@ public abstract class BaseFragment extends Fragment implements TaskListener, Vie
         sendUpLoading();
     }
 
-    /**
-     *
-     * ListView向下滚动事件的监听
-     */
-    public class ListViewOnScrollListener implements AbsListView.OnScrollListener {
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            //滚动停止
-            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-
-                //当倒数第三个数据出现的时候就开始加载
-                if (view.getLastVisiblePosition() == view.getCount() -1) {
-                    if(!isLoading){
-                        sendLowLoading();
-                    }
-                }
-            }
-        }
-
-        /**
-         * 获取字符串资源
-         * @param context
-         * @param resourseId
-         * @return
-         */
-        public String getStringResource1(Context context, int resourseId){
-            if(context == null){
-                return BaseApplication.newInstance().getResources().getString(resourseId);
-            }else{
-                return context.getResources().getString(resourseId);
-            }
-        }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        }
-    }
-
-    protected class RecyclerViewOnScrollListener extends RecyclerView.OnScrollListener{
+    protected class RecyclerViewOnScrollListener<T> extends RecyclerView.OnScrollListener{
+        RecyclerView recyclerView;
+        int lastVisibleItem;
+        BaseRecyclerViewAdapter<T> mAdapter;
+        boolean isScrooll;
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
+            LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+            lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+            this.recyclerView = recyclerView;
+            isScrooll = true;
 
         }
 
-        public RecyclerViewOnScrollListener() {
+        public RecyclerViewOnScrollListener(BaseRecyclerViewAdapter<T> adapter) {
             super();
+            mAdapter = adapter;
         }
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
+            LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+            int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+            if (lastVisibleItemPosition + 1 == mAdapter.getItemCount()) {
+                Log.i("test", "loading executed");
+
+                if(mSwipeLayout != null){
+                    boolean isRefreshing = mSwipeLayout.isRefreshing();
+                    if (isRefreshing) {
+                        mAdapter.notifyItemRemoved(mAdapter.getItemCount());
+                        return;
+                    }
+                }
+
+                if (!isLoading) {
+                    sendLowLoading();
+                }
+            }
+            //滚动停止
+            /*if (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && isScrooll) {
+                int childCount = recyclerView.getChildCount();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem == childCount -1) {
+                    if(!isLoading){
+                        sendLowLoading();
+                        isScrooll = false;
+                    }
+                }
+            }*/
         }
     }
 }

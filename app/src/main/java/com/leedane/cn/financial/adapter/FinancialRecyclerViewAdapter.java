@@ -1,5 +1,6 @@
 package com.leedane.cn.financial.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,8 +24,8 @@ import java.util.List;
  */
 public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<FinancialBean>{
 
-    public FinancialRecyclerViewAdapter(List<FinancialBean> financialBeans){
-        super(financialBeans);
+    public FinancialRecyclerViewAdapter(Context context, List<FinancialBean> financialBeans){
+        super(context, financialBeans);
     }
 
     @Override
@@ -41,7 +42,6 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         int viewType = getItemViewType(position);
-;
         if(viewType == TYPE_HEADER)
             return;
         if(viewType == TYPE_FOOTER){
@@ -71,7 +71,7 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
                 holder.addTime.setText(data.getAdditionTime().substring(0, 10));
             }
 
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(mOnItemClickListener == null) return;
@@ -79,7 +79,7 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
                 }
             });
 
-            setAnimation(((ContentHolder) viewHolder).root, position);
+            setAnimation(holder.root, position);
         }
     }
 

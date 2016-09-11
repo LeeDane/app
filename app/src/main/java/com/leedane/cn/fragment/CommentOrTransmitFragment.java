@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,8 @@ import com.leedane.cn.adapter.CommentOrTransmitAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.CommentOrTransmitBean;
 import com.leedane.cn.bean.HttpResponseCommentOrTransmitBean;
+import com.leedane.cn.customview.RecycleViewDivider;
+import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.handler.CommentHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.TransmitHandler;
@@ -36,17 +39,16 @@ import java.util.List;
  * 评论列表的fragment类
  * Created by LeeDane on 2015/11/14.
  */
-public class CommentOrTransmitFragment extends BaseFragment{
+public class CommentOrTransmitFragment extends BaseRecyclerViewFragment implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnItemLongClickListener{
 
     public static final String TAG = "CommentOrTransmitFragment";
     private boolean isComment;
     private boolean itemSingleClick; //控制每一项是否可以出发单击事件
     private Context mContext;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private CommentOrTransmitAdapter mAdapter;
     private List<CommentOrTransmitBean> mCommentOrTransmitBeans = new ArrayList<>();
 
-    private SwipeRefreshLayout mSwipeLayout;
     private View mRootView;
     private SerializableMap baseRequestParams = new SerializableMap();
 
@@ -101,7 +103,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
                              Bundle savedInstanceState) {
 
         if(mRootView == null)
-            mRootView = inflater.inflate(R.layout.fragment_listview, container,
+            mRootView = inflater.inflate(R.layout.fragment_recyclerview, container,
                     false);
         setHasOptionsMenu(true);
         return mRootView;
@@ -111,7 +113,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
         isLoading = false;
         if(result instanceof Error){
             if((type == TaskType.LOAD_COMMENT || type == TaskType.LOAD_TRANSMIT) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
-                mListViewFooter.setText(getStringResource(mContext, (R.string.no_load_more)));
+                mRecyclerViewFooter.setText(getStringResource(mContext, (R.string.no_load_more)));
             }
         }
         super.taskFinished(type, result);
@@ -129,7 +131,6 @@ public class CommentOrTransmitFragment extends BaseFragment{
                         //临时list
                         List<CommentOrTransmitBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mListView.removeAllViewsInLayout();
                             mCommentOrTransmitBeans.clear();
                         }
                         //将新的数据和以前的数据进行叠加
@@ -145,9 +146,9 @@ public class CommentOrTransmitFragment extends BaseFragment{
                         //Log.i(TAG, "原来的大小：" + mCommentOrTransmitBeans.size());
                         if(mAdapter == null) {
                             mAdapter = new CommentOrTransmitAdapter(mContext, mCommentOrTransmitBeans);
-                            mListView.setAdapter(mAdapter);
+                            mRecyclerView.setAdapter(mAdapter);
                         }
-                        mAdapter.refreshData(temList);
+                        mAdapter.addDatas(temList);
                         //Log.i(TAG, "后来的大小：" + mCommentOrTransmitBeans.size());
 
                         //Toast.makeText(mContext, "成功加载"+ commentOrTransmitBeans.size() + "条数据,总数是："+mCommentOrTransmitBeans.size(), Toast.LENGTH_SHORT).show();
@@ -158,20 +159,18 @@ public class CommentOrTransmitFragment extends BaseFragment{
 
                         //将ListView的位置设置为0
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            mListView.setSelection(0);
+                            mRecyclerView.smoothScrollToPosition(0);
                         }
-                        mListViewFooter.setText(getStringResource(mContext, R.string.load_finish));
+                        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.load_finish));
                     }else{
 
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mCommentOrTransmitBeans.clear();
-                            mAdapter.refreshData(new ArrayList<CommentOrTransmitBean>());
+                            mAdapter.addDatas(new ArrayList<CommentOrTransmitBean>());
                             //mListView.addHeaderView(viewHeader);
                         }
                         if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
-                            mListView.removeFooterView(viewFooter);
-                            mListView.addFooterView(viewFooter, null, false);
-                            mListViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
+                            mRecyclerViewFooter.setText(getStringResource(mContext, R.string.no_load_more));
                         }else {
                             ToastUtil.success(mContext, getStringResource(mContext, R.string.no_load_more));
                         }
@@ -179,17 +178,10 @@ public class CommentOrTransmitFragment extends BaseFragment{
                 }else{
                     if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
-                            //mCommentOrTransmits = new ArrayList<>();
-                            //mListView.removeAllViewsInLayout();
-                            mCommentOrTransmitBeans.clear();
-                            mAdapter.refreshData(new ArrayList<CommentOrTransmitBean>());
-                            //mListView.addHeaderView(viewHeader);
+                            mAdapter.addDatas(new ArrayList<CommentOrTransmitBean>());
                         }
-                        mListView.removeFooterView(viewFooter);
-                        mListView.addFooterView(viewFooter, null, false);
-                        //mListViewFooter.setText(getStringResource(mContext, R.string.load_more_error));
-                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
-                        mListViewFooter.setOnClickListener(this);
+                        mRecyclerViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(mContext, R.string.click_to_load));
+                        mRecyclerViewFooter.setOnClickListener(this);
                     }else{
                         ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                     }
@@ -214,8 +206,8 @@ public class CommentOrTransmitFragment extends BaseFragment{
      * 将列表移动到最顶部
      */
     public void smoothScrollToTop(){
-        if(mCommentOrTransmitBeans != null && mCommentOrTransmitBeans.size() > 0 && mListView != null /*&& !isLoading*/){
-            mListView.smoothScrollToPosition(0);
+        if(mCommentOrTransmitBeans != null && mCommentOrTransmitBeans.size() > 0 && mRecyclerView != null /*&& !isLoading*/){
+            mRecyclerView.smoothScrollToPosition(0);
         }
     }
 
@@ -280,7 +272,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
     @Override
     protected void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString()) || isLoading) {
             return;
         }
         //没有lastID时当作第一次请求加载
@@ -289,7 +281,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
             return;
         }
 
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
@@ -315,8 +307,8 @@ public class CommentOrTransmitFragment extends BaseFragment{
     @Override
     protected void sendLoadAgain(View view){
         //加载失败或者点击加载更多的情况下才不能点击
-        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())
-                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mListViewFooter.getText().toString())){
+        if(getStringResource(mContext, R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())
+                ||  getStringResource(mContext, R.string.load_finish).equalsIgnoreCase(mRecyclerViewFooter.getText().toString())){
             return;
         }
         isLoading = true;
@@ -327,7 +319,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
         params.put("method", mPreLoadMethod);
         if(baseRequestParams != null)
             params.putAll(baseRequestParams.getMap());
-        mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+        mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
         if(isComment){
             taskCanceled(TaskType.LOAD_COMMENT);
             CommentHandler.getCommentsRequest(this, params);
@@ -354,60 +346,29 @@ public class CommentOrTransmitFragment extends BaseFragment{
             //isFirstLoading = false;
             sendFirstLoading();
             //initFirstData();
-            this.mListView = (ListView) mRootView.findViewById(R.id.listview_items);
+            this.mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.id_recyclerview);
             mAdapter = new CommentOrTransmitAdapter( mContext, mCommentOrTransmitBeans);
-            mListView.setOnScrollListener(new ListViewOnScrollListener());
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
+            mRecyclerView.addOnScrollListener(new RecyclerViewOnScrollListener(mAdapter));
 
             //只有登录用户才给予删除的权限
             if(isLoginUser){
                 //长按执行删除的操作
-                mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
-                        builder.setCancelable(true);
-                        builder.setIcon(R.drawable.menu_feedback);
-                        builder.setTitle("提示");
-                        builder.setMessage("删除该记录?");
-                        builder.setPositiveButton("删除",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        if(isComment){
-                                            CommentHandler.deleteComment(CommentOrTransmitFragment.this, mCommentOrTransmitBeans.get(position).getId(),  mCommentOrTransmitBeans.get(position).getCreateUserId());
-                                        } else{
-                                            TransmitHandler.deleteTransmit(CommentOrTransmitFragment.this, mCommentOrTransmitBeans.get(position).getId(),  mCommentOrTransmitBeans.get(position).getCreateUserId());
-                                        }
-                                        showLoadingDialog("Delete", "try best to delete...");
-                                        //ToastUtil.success(mContext, "删除"+position);
-                                    }
-                                });
-                        builder.setNegativeButton("取消",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                                    }
-                                });
-                        builder.show();
-                        return true;
-                    }
-                });
+                mAdapter.setOnItemLongClickListener(this);
             }
             if(itemSingleClick){
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //ToastUtil.success(mContext,"点击的位置是："+position+",内容："+mCommentOrTransmitBeans.get(position).getContent());
-                        CommonHandler.startDetailActivity(mContext,mCommentOrTransmitBeans.get(position).getTableName(), mCommentOrTransmitBeans.get(position).getTableId(), null);
-                    }
-                });
+                mAdapter.setOnItemClickListener(this);
             }
 
             //listview下方的显示
-            viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
-            mListView.addFooterView(viewFooter, null, false);
-            mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-            mListViewFooter.setOnClickListener(CommentOrTransmitFragment.this);//添加点击事件
-            mListViewFooter.setText(getStringResource(mContext, R.string.loading));
+            mFooterView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_footer, null);
+            mAdapter.setFooterView(mFooterView);
+            mRecyclerViewFooter = (TextView)mFooterView.findViewById(R.id.financial_footer);
+            mRecyclerViewFooter.setOnClickListener(CommentOrTransmitFragment.this);//添加点击事件
+            mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
 
             mSwipeLayout = (SwipeRefreshLayout)mRootView.findViewById(R.id.swipeRefreshLayout);
             mSwipeLayout.setOnRefreshListener(this);
@@ -416,8 +377,7 @@ public class CommentOrTransmitFragment extends BaseFragment{
                     android.R.color.holo_green_light);
 
         }
-        mListView.setAdapter(mAdapter);
-       // mListView.setOnItemClickListener(this);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -425,9 +385,42 @@ public class CommentOrTransmitFragment extends BaseFragment{
         super.onClick(v);
 
         switch (v.getId()){
-            case R.id.listview_footer_reLoad:
+            case R.id.financial_footer:
                 sendLoadAgain(v);
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(int position, Object data) {
+        CommonHandler.startDetailActivity(mContext,mCommentOrTransmitBeans.get(position).getTableName(), mCommentOrTransmitBeans.get(position).getTableId(), null);
+    }
+
+    @Override
+    public void onItemLongClick(final int position) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
+        builder.setCancelable(true);
+        builder.setIcon(R.drawable.menu_feedback);
+        builder.setTitle("提示");
+        builder.setMessage("删除该记录?");
+        builder.setPositiveButton("删除",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(isComment){
+                            CommentHandler.deleteComment(CommentOrTransmitFragment.this, mCommentOrTransmitBeans.get(position).getId(),  mCommentOrTransmitBeans.get(position).getCreateUserId());
+                        } else{
+                            TransmitHandler.deleteTransmit(CommentOrTransmitFragment.this, mCommentOrTransmitBeans.get(position).getId(),  mCommentOrTransmitBeans.get(position).getCreateUserId());
+                        }
+                        showLoadingDialog("Delete", "try best to delete...");
+                        //ToastUtil.success(mContext, "删除"+position);
+                    }
+                });
+        builder.setNegativeButton("取消",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                    }
+                });
+        builder.show();
     }
 }

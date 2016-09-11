@@ -276,8 +276,8 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 break;
             case R.id.my_setting_first_load:
                 NumberPicker mPicker = new NumberPicker(this);
-                mPicker.setMinValue(20);
-                mPicker.setMaxValue(35);
+                mPicker.setMinValue(15);
+                mPicker.setMaxValue(28);
                 mPicker.setValue(MySettingConfigUtil.getFirstLoad());
                 mPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
@@ -299,8 +299,8 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 break;
             case R.id.my_setting_other_load:
                 NumberPicker mPicker1 = new NumberPicker(this);
-                mPicker1.setMinValue(10);
-                mPicker1.setMaxValue(20);
+                mPicker1.setMinValue(8);
+                mPicker1.setMaxValue(18);
                 mPicker1.setValue(MySettingConfigUtil.getOtherLoad());
                 mPicker1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
