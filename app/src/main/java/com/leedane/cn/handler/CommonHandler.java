@@ -115,7 +115,7 @@ public class CommonHandler {
      * @param context
      * @param topic
      */
-    public static void startTopActivity(Context context, String topic){
+    public static void startTopicActivity(Context context, String topic){
         Intent it = new Intent(context, TopicActivity.class);
         it.putExtra("topic", topic);
         context.startActivity(it);

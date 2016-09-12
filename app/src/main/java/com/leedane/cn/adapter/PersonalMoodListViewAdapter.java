@@ -85,24 +85,7 @@ public class PersonalMoodListViewAdapter extends BaseRecyclerViewAdapter<MoodBea
             //spannable = AssimilateUtils.assimilateOnlyAtUser(mContext, spannable);
             //spannable = AssimilateUtils.assimilateOnlyTag(mContext, spannable);
             //spannable = InputHelper.displayEmoji(mContext.getResources(), spannable);
-
-            Spannable spannable= AppUtil.textviewShowImg(mContext, content);
-            spannable= AppUtil.textviewShowTopic(mContext, spannable, new AppUtil.ClickTextAction() {
-                @Override
-                public void call(String str) {
-                    CommonHandler.startTopActivity(mContext, str);
-                }
-            });
-
-            spannable= AppUtil.textviewShowAtUser(mContext, spannable, new AppUtil.ClickTextAction() {
-                @Override
-                public void call(String str) {
-                    CommonHandler.startPersonalActivity(mContext, str);
-                }
-            });
-            holder.content.setText(spannable);
-
-            //viewHolder.getmContent().setText(content, TextView.BufferType.SPANNABLE);
+            holder.content.setText(AppUtil.textParsing(mContext, content));
 
             holder.froms.setTypeface(typeface);
             holder.froms.setText("来自：" + moodBean.getFroms());

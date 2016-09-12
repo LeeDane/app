@@ -304,15 +304,8 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
                 mTVUser.setOnClickListener(MoodDetailFragment.this);
             mTVTime.setText(detail.getString("create_time"));
             mTVContent.setText(detail.getString("content"));
-            Spannable spannable= AppUtil.textviewShowImg(mContext, mTVContent.getText().toString());
-            spannable = AppUtil.textviewShowTopic(mContext, spannable, new AppUtil.ClickTextAction() {
-                @Override
-                public void call(String str) {
-                    CommonHandler.startTopActivity(mContext, str);
-                }
-            });
-            mTVContent.setText(spannable);
 
+            mTVContent.setText(AppUtil.textParsing(mContext, mTVContent.getText().toString()));
             mTVPraise.setText(getStringResource(mContext, R.string.personal_praise) +"("+ detail.getInt("zan_number")+")");
             mTVComment.setText("评论("+detail.getInt("comment_number")+")");
             mTVTransmit.setText("转发(" + detail.getInt("transmit_number") + ")");

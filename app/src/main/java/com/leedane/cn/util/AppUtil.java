@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.leedane.cn.emoji.EmojiUtil;
+import com.leedane.cn.handler.CommonHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -297,5 +298,68 @@ public class AppUtil {
             }
         }
         return builder;
+    }
+
+    /**
+     * 展示文本中的网络链接
+     * @param context
+     * @param text
+     * @param action
+     * @return
+     */
+    public static Spannable textviewShowLink(final Context context, CharSequence text, final ClickTextAction action){
+        Pattern p = Pattern.compile("(http://|ftp://|https://|www){0,1}[^\u4e00-\u9fa5\\s]*?\\.(com|net|cn|me|tw|fr)[^\u4e00-\u9fa5\\s]*");
+        String group;
+        //SpannableString spannableString = new SpannableString(text);
+        //要让图片替代指定的文字就要用ImageSpan
+        SpannableStringBuilder builder = new SpannableStringBuilder(text);
+        Matcher m=p.matcher(builder.toString());
+        while(m.find()){
+            group = m.group().trim();
+            if(StringUtil.isNotNull(group)){
+                int start = m.start();
+                int end = m.end();
+                final String g = group;
+                ClickableSpan clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        action.call(g);
+                    }
+                };
+                builder.setSpan(clickableSpan, start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return builder;
+    }
+
+    /**
+     * 展示文本的解析
+     * 支持表情，话题，@用户，网络链接
+     * @param context
+     * @param text
+     * @return
+     */
+    public static Spannable textParsing(final Context context, CharSequence text){
+        Spannable spannable = textviewShowImg(context, text);
+        spannable = textviewShowTopic(context, spannable, new ClickTextAction() {
+            @Override
+            public void call(String str) {
+                CommonHandler.startTopicActivity(context, str);
+            }
+        });
+        spannable = textviewShowAtUser(context, spannable, new ClickTextAction() {
+            @Override
+            public void call(String str) {
+                CommonHandler.startPersonalActivity(context, str);
+            }
+        });
+        spannable = textviewShowLink(context, spannable, new ClickTextAction() {
+            @Override
+            public void call(String str) {
+                ToastUtil.success(context, "链接："+str);
+                CommonHandler.openLink(context, str);
+            }
+        });
+        return spannable;
     }
 }

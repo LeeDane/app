@@ -72,18 +72,11 @@ public class CommentOrTransmitAdapter extends BaseRecyclerViewAdapter<CommentOrT
             final CommentOrTransmitBean commentOrTransmitBean = mDatas.get(pos);
             ContentHolder holder = ((ContentHolder) viewHolder);
 
-            Spannable spannable= AppUtil.textviewShowImg(mContext, commentOrTransmitBean.getContent());
-            spannable = AppUtil.textviewShowTopic(mContext, spannable, new AppUtil.ClickTextAction() {
-                @Override
-                public void call(String str) {
-                    CommonHandler.startTopActivity(mContext, str);
-                }
-            });
             holder.content.setMovementMethod(LinkMovementMethod.getInstance());
             holder.content.setFocusable(false);
             holder.content.setDispatchToParent(true);
             holder.content.setLongClickable(false);
-            holder.content.setText(spannable);
+            holder.content.setText(AppUtil.textParsing(mContext, commentOrTransmitBean.getContent()));
 
             holder.from.setTypeface(typeface);
             holder.from.setText("来自：" + StringUtil.changeNotNull(commentOrTransmitBean.getFroms()));
@@ -92,8 +85,8 @@ public class CommentOrTransmitAdapter extends BaseRecyclerViewAdapter<CommentOrT
             holder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(commentOrTransmitBean.getCreateTime())));
             if(StringUtil.isNotNull(commentOrTransmitBean.getSource())){
                 holder.source.setVisibility(View.VISIBLE);
-                Spannable spannable1= AppUtil.textviewShowImg(mContext, commentOrTransmitBean.getSource());
-                holder.source.setText(spannable1);
+                //Spannable spannable1= AppUtil.textviewShowImg(mContext, commentOrTransmitBean.getSource());
+                holder.source.setText(AppUtil.textParsing(mContext, commentOrTransmitBean.getSource()));
             }else{
                 holder.source.setVisibility(View.GONE);
             }
