@@ -137,6 +137,14 @@ public class ImageDetailActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 对某张图片的单击事件
+     * 将关闭该activity
+     */
+    public void itemClick(){
+        finish();
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);

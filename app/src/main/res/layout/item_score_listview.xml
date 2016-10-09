@@ -43,6 +43,8 @@
             android:id="@+id/score_status"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:text="@string/no_text"/>
 
         <TextView

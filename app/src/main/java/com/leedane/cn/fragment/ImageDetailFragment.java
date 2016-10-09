@@ -23,10 +23,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.leedane.cn.activity.ImageDetailActivity;
 import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ImageDetailBean;
+import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.NetworkImageLoader;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.FileUtil;
@@ -130,6 +132,13 @@ public class ImageDetailFragment extends Fragment{
                     return true;
                 }
             });
+            mScaleImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(getActivity() != null)
+                        ((ImageDetailActivity)getActivity()).itemClick();
+                }
+            });
 
             /*PhotoView photoView = (PhotoView )getView().findViewById(R.id.image_detail_imageview);
             final PhotoViewAttacher attacher = new PhotoViewAttacher(photoView);
@@ -204,6 +213,7 @@ public class ImageDetailFragment extends Fragment{
         menus.add(getResources().getString(R.string.copyLink));
         menus.add(getResources().getString(R.string.setWallpaper));
         menus.add(getResources().getString(R.string.save_imgage));
+        menus.add(getResources().getString(R.string.browser_imgage));
 
         SimpleListAdapter adapter = new SimpleListAdapter(getContext().getApplicationContext(), menus);
         listView.setAdapter(adapter);
@@ -238,6 +248,10 @@ public class ImageDetailFragment extends Fragment{
                     //保存图片
                 }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.save_imgage))){
                     new Thread(new myThread()).start();
+
+                    //浏览器查看图片
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.browser_imgage))){
+                    CommonHandler.openLink(mContext, mImageDetailBean.getPath());
                 }
                 dismissListItemMenuDialog();
             }

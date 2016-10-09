@@ -95,4 +95,6 @@ public enum TaskType {
     VERIFY_CHAT_BG, //校验聊天背景
     SEND_EMAIL, //发送电子邮件
     SYNCHRONOUS_FINANCIAL, //同步记账记录
+    FORCE_ALL, //强制与云端同步
+    SMART_ALL, //智能与云端同步
 }

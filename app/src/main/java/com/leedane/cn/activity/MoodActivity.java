@@ -423,7 +423,15 @@ public class MoodActivity extends BaseActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String s = inputServer.getText().toString();
                 if(StringUtil.isNotNull(s)){
-                    mMoodContent.setText(mMoodContent.getText().toString() + " #" + s + "# ");
+                    if(mMoodContent.isCursorVisible()){
+                        int index = mMoodContent.getSelectionStart();
+                        //将字符串转换为StringBuffer
+                        StringBuffer sb = new StringBuffer(mMoodContent.getText().toString().trim());
+                        //将字符插入光标所在的位置
+                        sb = sb.insert(index, " #" + s + "# ");
+                    }else{
+                        mMoodContent.setText(mMoodContent.getText().toString() + " #" + s + "# ");
+                    }
                 }
             }
         });

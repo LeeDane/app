@@ -1,6 +1,8 @@
 package com.leedane.cn.financial.bean;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -19,13 +21,16 @@ public class FinancialBean implements Serializable{
 
 	private int id; // 与服务器保持一致的ID，可以为空
 
+	@SerializedName("create_user_id")
 	private int createUserId;
 
+	@SerializedName("create_time")
 	private String createTime;
 
 	/**
 	 * 很重要，添加时间，用于今后的统计时间，必须
 	 */
+	@SerializedName("addition_time")
 	private String additionTime;
 
 	/**
@@ -46,16 +51,19 @@ public class FinancialBean implements Serializable{
 	/**
 	 * 一级分类
 	 */
+	@SerializedName("one_level")
 	private String oneLevel;
 	
 	/**
 	 * 二级分类
 	 */
+	@SerializedName("two_level")
 	private String twoLevel;
 	
 	/**
 	 * 是否有图片
 	 */
+	@SerializedName("has_img")
 	private boolean hasImg;
 	
 	/**
@@ -76,11 +84,13 @@ public class FinancialBean implements Serializable{
     /**
      * 备注信息
      */
+	@SerializedName("financial_desc")
     private String financialDesc;
 
 	/**
 	 * 是否已经同步
 	 */
+	@SerializedName("synchronous")
 	private boolean synchronous;
 
 	/**

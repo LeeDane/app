@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -261,6 +262,10 @@ public class IncomeOrSpendActivity extends BaseActivity {
         mRemark = (EditText)findViewById(R.id.financial_income_or_spend_remark);
 
         if(isEdit()){
+            Drawable drawable= getResources().getDrawable(R.drawable.ic_delete_forever_blue_a400_18dp);
+            /// 这一步必须要做,否则不会显示.
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            mDraft.setCompoundDrawables(drawable,null,null,null);
             mDraft.setText(R.string.delete);
             showTime = Calendar.getInstance();
             String addTime = editFinancialBean.getAdditionTime();
@@ -626,6 +631,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
 
         menus.add(getStringResource(R.string.select_gallery));
         menus.add(getStringResource(R.string.img_link));
+        menus.add(getStringResource(R.string.image_detail));
         SimpleListAdapter adapter = new SimpleListAdapter(IncomeOrSpendActivity.this, menus);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -661,6 +667,11 @@ public class IncomeOrSpendActivity extends BaseActivity {
                         }
                     });
                     builder.show();
+                } else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.image_detail))){
+                    if(StringUtil.isNotNull(mPath) && mPath.startsWith("http")){
+                        CommonHandler.startImageDetailActivity(IncomeOrSpendActivity.this, mPath);
+                    }else
+                        ToastUtil.failure(IncomeOrSpendActivity.this, "请先上传图片");
                 }
                 dismissSelectItemMenuDialog();
             }

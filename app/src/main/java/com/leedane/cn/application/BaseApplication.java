@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Vibrator;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
@@ -24,6 +26,7 @@ import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.database.FinancialDataBase;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
+import com.leedane.cn.financial.handler.FinancialHandler;
 import com.leedane.cn.handler.CrashUncaughtExceptionHandler;
 import com.leedane.cn.service.LocationService;
 import com.leedane.cn.task.Task;
@@ -45,12 +48,13 @@ import java.util.List;
  */
 public class BaseApplication extends Application {
     public static final String TAG = "BaseApplication";
+    public static final int TASK_FINISH_CODE = 190;
     public static RequestQueue queue;
     private static BaseApplication mBaseApplication ;
 
     private static Bitmap getDefaultImage;
     private static Bitmap getErrorImage;
-    private static  boolean isLogin;
+    private static boolean isLogin;
     public LocationService locationService;
     public Vibrator mVibrator;
 
@@ -87,27 +91,36 @@ public class BaseApplication extends Application {
         //SDKInitializer.initialize(getApplicationContext());
         queue = Volley.newRequestQueue(getApplicationContext());//使用全局上下文
 
-        MySettingConfigUtil.getInstance();
 
-        //MySettingDataBase.initMySetting();
 
-        OneLevelCategoryDataBase oneLevelCategoryDataBase = new OneLevelCategoryDataBase(newInstance());
-        oneLevelCategories = oneLevelCategoryDataBase.query(" order by order_ ");
-        if(oneLevelCategories == null || oneLevelCategories.size() == 0){
-            oneLevelCategoryDataBase.deleteAll();
-            oneLevelCategories = OneLevelCategoryDataBase.initData();
-            oneLevelCategories = oneLevelCategoryDataBase.query(" order by order_ ");//通过再次查找才能有ID
-        }
-        oneLevelCategoryDataBase.destroy();
+        //一些耗时操作放到线程处理
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {*/
+                MySettingConfigUtil.getInstance();
 
-        TwoLevelCategoryDataBase twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(newInstance());
-        twoLevelCategories = twoLevelCategoryDataBase.query(" order by order_ ");
-        if(twoLevelCategories == null || twoLevelCategories.size() == 0){
-            twoLevelCategoryDataBase.deleteAll();
-            twoLevelCategories = TwoLevelCategoryDataBase.initData();
-            twoLevelCategories = twoLevelCategoryDataBase.query(" order by order_ "); ////通过再次查找才能有ID
-        }
-        twoLevelCategoryDataBase.destroy();
+                //MySettingDataBase.initMySetting();
+
+                OneLevelCategoryDataBase oneLevelCategoryDataBase = new OneLevelCategoryDataBase(newInstance());
+                oneLevelCategories = oneLevelCategoryDataBase.query(" order by order_ ");
+                if(oneLevelCategories == null || oneLevelCategories.size() == 0){
+                    oneLevelCategoryDataBase.deleteAll();
+                    oneLevelCategories = OneLevelCategoryDataBase.initData();
+                    oneLevelCategories = oneLevelCategoryDataBase.query(" order by order_ ");//通过再次查找才能有ID
+                }
+                oneLevelCategoryDataBase.destroy();
+
+                TwoLevelCategoryDataBase twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(newInstance());
+                twoLevelCategories = twoLevelCategoryDataBase.query(" order by order_ ");
+                if(twoLevelCategories == null || twoLevelCategories.size() == 0){
+                    twoLevelCategoryDataBase.deleteAll();
+                    twoLevelCategories = TwoLevelCategoryDataBase.initData();
+                    twoLevelCategories = twoLevelCategoryDataBase.query(" order by order_ "); ////通过再次查找才能有ID
+                }
+                twoLevelCategoryDataBase.destroy();
+
+           /* }
+        }).start();*/
 
         //financialDataBase = new FinancialDataBase(this);
         //financialDataBase.updateAllNoSynchronous();

@@ -55,8 +55,8 @@ public class FinancialDataBase {
      */
     public boolean insert(FinancialBean data) {
 
-        if(isExists(data.getId())){
-            Log.i(TAG, "数据已经存在:"+data.getId());
+        if(isExists(data.getLocalId())){
+            Log.i(TAG, "数据已经存在:"+data.getLocalId());
             return false;
         }
         
@@ -95,6 +95,56 @@ public class FinancialDataBase {
         sqlite.close();
         return id > 0 ;
     }
+
+
+    /**
+     * 新增
+     * @param data
+     * @return true表示成功插入,false表示不成功插入
+     */
+    public boolean insertServer(FinancialBean data) {
+
+        if(isExistsServer(data.getId())){
+            Log.i(TAG, "数据已经存在:"+data.getId());
+            return false;
+        }
+
+        String sql = "insert into " + FINANCIAL_TABLE_NAME;
+
+        sql += "(id, status, model, money, one_level, two_level, has_img, path,location, longitude,latitude,financial_desc,synchronous,create_user_id, create_time, addition_time) " +
+                "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        sqlite.execSQL(sql, new String[] {
+                data.getId() + "", data.getStatus() +"", data.getModel() +"", data.getMoney() +"",
+                data.getOneLevel(), data.getTwoLevel(), StringUtil.changeTrueOrFalseToInt(data.isHasImg()) +"", data.getPath()
+                , data.getLocation(), data.getLongitude() +"", data.getLatitude() +"",
+                data.getFinancialDesc(), StringUtil.changeTrueOrFalseToInt(data.isSynchronous()) +"", data.getCreateUserId() +"", data.getCreateTime(), data.getAdditionTime() });
+        sqlite.close();
+
+        Log.i(TAG, "数据插入成功:" + data.getId());
+        return true;
+    }
+
+    /**
+     * 判断记录是否存在
+     * @param id
+     * @return
+     */
+    private boolean isExistsServer(int id){
+        SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
+        int i = 0;
+        Cursor cursor = sqlite.rawQuery("select local_id from "
+                + FINANCIAL_TABLE_NAME + " where id = ?", new String[]{id + ""});
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            i = cursor.getInt(0);
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        sqlite.close();
+        return i > 0 ;
+    }
+
 
     /**
      * 删掉指定一条记录
@@ -259,7 +309,7 @@ public class FinancialDataBase {
      * @param data
      */
     public void save(FinancialBean data) {
-        List<FinancialBean> datas = query(" where local_id=" + data.getId());
+        List<FinancialBean> datas = query(" where local_id=" + data.getLocalId());
         if (datas != null && !datas.isEmpty()) {
             update(data);
         } else {

@@ -198,10 +198,13 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
      */
     private int getFooterPosition(){
         if(mHeaderView == null){
-            return mDatas.size();
+            if(!CommonUtil.isEmpty(mDatas))
+                return mDatas.size();
         }else{
-            return mDatas.size() + 1;
+            if(!CommonUtil.isEmpty(mDatas))
+                return mDatas.size() + 1;
         }
+        return 0;
     }
 
     /**

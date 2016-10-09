@@ -45,7 +45,7 @@
                         android:textOn="开"
                         android:textOff="关"
                         android:checked="true"
-                        android:id="@+id/financial_setting_refresh"
+                        android:id="@+id/financial_setting_auto_synchronized"
                         android:layout_marginRight="10dp"
                         android:layout_column="4" />
                 </LinearLayout>
@@ -85,6 +85,7 @@
                 android:background="@drawable/shape_no_corner_without_bottom"
                 android:padding="10dip" >
                 <LinearLayout
+                    android:id="@+id/financial_setting_category"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="32dp"
@@ -95,11 +96,10 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:layout_marginLeft="30dip"
+                        android:background="?android:attr/selectableItemBackground"
                         android:text="@string/category_manager" />
                     <ImageView
-                        android:id="@+id/financila_list_right"
                         android:layout_width="@dimen/default_30dp"
                         android:layout_height="@dimen/default_30dp"
                         android:scaleType="fitXY"
@@ -114,23 +114,82 @@
                 android:background="@drawable/shape_no_corner_without_bottom"
                 android:padding="10dip" >
                 <LinearLayout
+                    android:id="@+id/financial_setting_force_all"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="32dp"
                     android:orientation="horizontal">
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_other_load" />
-                    <TextView
-                        android:id="@+id/my_setting_other_load"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="32dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:layout_marginLeft="30dip"
+                            android:text="@string/cloud_force_all" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="30dip"
+                            android:textSize="@dimen/default_12sp"
+                            android:enabled="false"
+                            android:text="@string/cloud_force_all_tip" />
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="@dimen/default_30dp"
+                        android:layout_height="@dimen/default_30dp"
+                        android:scaleType="fitXY"
                         android:layout_marginRight="10dp"
-                        android:text="@string/my_setting_first_other_default"/>
+                        android:src="@mipmap/right_sign"/>
+                </LinearLayout>
+            </TableRow>
+            <!-- 表格布局：第二行 -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_no_corner_without_bottom"
+                android:padding="10dip" >
+                <LinearLayout
+                    android:id="@+id/financial_setting_smart_all"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="32dp"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="32dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="30dip"
+                            android:text="@string/cloud_smart_all" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="30dip"
+                            android:textSize="@dimen/default_12sp"
+                            android:enabled="false"
+                            android:text="@string/cloud_smart_all_tip" />
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="@dimen/default_30dp"
+                        android:layout_height="@dimen/default_30dp"
+                        android:scaleType="fitXY"
+                        android:layout_marginRight="10dp"
+                        android:src="@mipmap/right_sign"/>
                 </LinearLayout>
             </TableRow>
             <!-- 表格布局：第三行 -->
@@ -140,9 +199,11 @@
                 android:background="@drawable/shape_bottom_corner_no_top_line"
                 android:padding="10dip" >
                 <LinearLayout
+                    android:id="@+id/financial_setting_recent_load"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="32dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
                     <TextView
                         android:layout_width="0dp"
@@ -150,383 +211,21 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_double_click_out" />
-                    <Switch
-                        android:id="@+id/my_setting_double_click_out"
+                        android:text="@string/recent_load_number" />
+                    <TextView
+                        android:id="@+id/financial_setting_recent_load_show"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textOn="开"
-                        android:textOff="关"
                         android:layout_marginRight="10dp"
-                        android:layout_column="4" />
+                        android:text="@string/my_setting_first_load_default"/>
                 </LinearLayout>
             </TableRow>
        </TableLayout>
-
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textSize="16dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/my_setting_cache" />
-        <!-- 缓存表格布局 -->
-        <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip" >
-            <!-- 表格布局：第一行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_top_corner_no_bottom_line"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_cache_blog" />
-                    <Switch
-                        android:id="@+id/my_setting_cache_blog"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textOn="开"
-                        android:textOff="关"
-                        android:checked="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_column="4" />
-                </LinearLayout>
-            </TableRow>
-            <!-- 缓存表格布局：第二行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_no_corner_without_bottom"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/my_setting_cache_clear_blog"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_cache_clear_blog" />
-                    <TextView
-                        android:id="@+id/my_setting_cache_clear_blog_show"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"/>
-                </LinearLayout>
-            </TableRow>
-            <!-- 缓存表格布局：第二行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_no_corner_without_bottom"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_cache_gallery" />
-                    <Switch
-                        android:id="@+id/my_setting_cache_gallery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textOn="开"
-                        android:textOff="关"
-                        android:checked="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_column="4" />
-                </LinearLayout>
-            </TableRow>
-            <!-- 缓存表格布局：第二行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_no_corner_without_bottom"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/my_setting_cache_clear_gallery"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_cache_clear_gallery" />
-                    <TextView
-                        android:id="@+id/my_setting_cache_clear_gallery_show"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"/>
-                </LinearLayout>
-            </TableRow>
-            <!-- 缓存表格布局：第二行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_no_corner_without_bottom"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_cache_file" />
-                    <Switch
-                        android:id="@+id/my_setting_cache_file"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textOn="开"
-                        android:textOff="关"
-                        android:checked="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_column="4" />
-                </LinearLayout>
-            </TableRow>
-            <!-- 缓存表格布局：第二行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_no_corner_without_bottom"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/my_setting_cache_clear_file"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_cache_clear_file" />
-                    <TextView
-                        android:id="@+id/my_setting_cache_clear_file_show"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"/>
-                </LinearLayout>
-            </TableRow>
-            <!-- 缓存表格布局：第二行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_no_corner_without_bottom"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_cache_mood" />
-                    <Switch
-                        android:id="@+id/my_setting_cache_mood"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textOn="开"
-                        android:textOff="关"
-                        android:checked="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_column="4" />
-                </LinearLayout>
-            </TableRow>
-            <!-- 表格布局：第三行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_bottom_corner_no_top_line"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/my_setting_cache_clear_mood"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_cache_clear_mood" />
-                    <TextView
-                        android:id="@+id/my_setting_cache_clear_mood_show"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"/>
-                </LinearLayout>
-            </TableRow>
-        </TableLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textSize="16dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/my_setting_chat" />
-        <!-- 聊天表格布局 -->
-        <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip" >
-            <!-- 表格布局：第一行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_top_corner_no_bottom_line"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_chat_text_size" />
-                    <TextView
-                        android:id="@+id/my_setting_chat_text_size"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:text="@string/my_setting_chat_text_size_default"/>
-                </LinearLayout>
-            </TableRow>
-            <!-- 缓存表格布局：第二行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_no_corner_without_bottom"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:id="@+id/my_setting_chat_bg"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_chat_bg" />
-                </LinearLayout>
-            </TableRow>
-            <!-- 缓存表格布局：第二行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_no_corner_without_bottom"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_chat_delete" />
-                    <Spinner
-                        android:id="@+id/my_setting_chat_delete"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp" />
-                </LinearLayout>
-            </TableRow>
-            <!-- 表格布局：第三行 -->
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_bottom_corner_no_top_line"
-                android:padding="10dip" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="32dp"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="30dip"
-                        android:text="@string/my_setting_chat_send_enter" />
-                    <Switch
-                        android:id="@+id/my_setting_chat_send_enter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textOn="开"
-                        android:textOff="关"
-                        android:layout_marginRight="10dp"
-                        android:layout_column="4" />
-                </LinearLayout>
-            </TableRow>
-
-
-        </TableLayout>
         <Button
-           android:id="@+id/button1"
+           android:id="@+id/restore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Button" />
+            android:text="@string/restore" />
     </LinearLayout>
 </ScrollView>

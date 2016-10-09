@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * http响应获取记账列表的bean
- * Created by LeeDane on 2016/7/24.
+ * Created by LeeDane on 2016/9/19.
  */
 public class HttpResponseFinancialBean {
     private boolean isSuccess;

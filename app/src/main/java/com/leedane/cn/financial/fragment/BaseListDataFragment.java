@@ -30,6 +30,7 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
     private FinancialRecyclerViewAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
+    private View mFooterView;
     /**
      * 所在容器的ID
      * @return
@@ -82,6 +83,10 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
         mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
         mAdapter = new FinancialRecyclerViewAdapter(mContext, mFinancialList.getFinancialBeans());
         mRecyclerView.setAdapter(mAdapter);
+
+        mFooterView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_footer, null);
+        mAdapter.setFooterView(mFooterView);
+
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, Object data) {

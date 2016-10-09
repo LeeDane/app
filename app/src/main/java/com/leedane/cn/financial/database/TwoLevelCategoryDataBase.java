@@ -57,8 +57,9 @@ public class TwoLevelCategoryDataBase {
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "夜宵", false, 4));
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "水果", false, 5));
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "零食", false, 6));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "买菜做饭", false, 7));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "请客吃饭", false, 8));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "饮料", false, 7));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "买菜做饭", false, 8));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "请客吃饭", false, 9));
 
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "网上商城", false, 1));
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "超市", false, 2));
@@ -108,12 +109,16 @@ public class TwoLevelCategoryDataBase {
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("人情往来"), "慈善捐助", false, 4));
 
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "信用卡", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "银行手续", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "投资亏损", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "按揭还款", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "消费税收", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "利息支出", false, 5));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "赔偿罚款", false, 6));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "微信红包", false, 2));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "支付宝红包", false, 3));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "微信转账", false, 4));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "支付宝转账", false, 5));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "银行手续", false, 6));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "投资亏损", false, 7));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "按揭还款", false, 8));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "消费税收", false, 9));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "利息支出", false, 10));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "赔偿罚款", false, 11));
 
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("生活保健"), "药品费", false, 1));
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("生活保健"), "保健费", false, 2));
@@ -136,6 +141,7 @@ public class TwoLevelCategoryDataBase {
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "中奖收入", false, 2));
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "意外来钱", false, 3));
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "经营所得", false, 4));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "借钱", false, 5));
 
         TwoLevelCategoryDataBase dataBase = new TwoLevelCategoryDataBase(BaseApplication.newInstance());
         for(TwoLevelCategory twoLevelCategory: twoLevelCategories){

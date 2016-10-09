@@ -49,8 +49,9 @@ public class FinancialHandler {
     /**
      * 获取全部的记账记录请求
      * @param listener
+     * @param type
      */
-    public static void getAll(TaskListener listener){
+    public static void getAll(TaskListener listener, TaskType type){
         HttpRequestBean requestBean = new HttpRequestBean();
         Map<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
@@ -58,7 +59,7 @@ public class FinancialHandler {
         requestBean.setRequestMethod("POST");
         requestBean.setServerMethod("leedane/financial/getAll.action");
 
-        TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_ALL_FINANCIAL, listener, requestBean);
+        TaskLoader.getInstance().startTaskForResult(type, listener, requestBean);
     }
 
     /**
@@ -118,6 +119,22 @@ public class FinancialHandler {
         }
 
         return total;
+    }
+
+    /**
+     * 强制与云端数据同步
+     * @param listener
+     */
+    public static void forceAll(TaskListener listener){
+        getAll(listener, TaskType.FORCE_ALL);
+    }
+
+    /**
+     * 智能与云端数据同步
+     * @param listener
+     */
+    public static void smartAll(TaskListener listener){
+        getAll(listener, TaskType.SMART_ALL);
     }
 
     /**

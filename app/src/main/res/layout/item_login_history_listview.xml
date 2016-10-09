@@ -51,6 +51,8 @@
             android:id="@+id/login_history_status"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:text="@string/no_text"/>
         <TextView
             android:id="@+id/login_history_time"

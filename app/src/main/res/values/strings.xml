@@ -57,8 +57,10 @@
     <string name="type">类型</string>
     <string name="img_link">图片链接</string>
     <string name="save_imgage">保存图片</string>
+    <string name="browser_imgage">浏览器查看图片</string>
     <string name="tip_double_click_exit">再按一次退出程序</string>
     <string name="footer">我是有底线的</string>
+    <string name="restore">恢复默认设置</string>
 
     <!-- 异常相关 -->
     <string name="crash_file_path">"/crash"</string>
@@ -352,6 +354,7 @@
     <string name="location_current">当前位置:</string>
 
     <!-- 记账 -->
+    <string name="financial_setting_dirsname">financial_setting</string>
     <string name="income">收入</string>
     <string name="spend">支出</string>
     <string name="financial">记账</string>
@@ -390,4 +393,9 @@
     <string name="category_manager">分类管理</string>
     <string name="one_level_default_tip">(修改默认值请通过其二级分类设置)</string>
     <string name="one_level_budget_tip">(修改预算请通过其二级分类设置)</string>
+    <string name="cloud_force_all">强制云端拉取</string>
+    <string name="cloud_force_all_tip">注意：此操作将先清空本地数据后同步</string>
+    <string name="cloud_smart_all">智能云端拉取</string>
+    <string name="cloud_smart_all_tip">注意：此操作不清空数据，增量比对后同步</string>
+    <string name="recent_load_number">展示最近操作条数</string>
 </resources>

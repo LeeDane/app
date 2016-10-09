@@ -245,26 +245,6 @@ public class MainFragment extends FinancialBaseFragment{
         });
     }
 
-    @Override
-    protected void sendFirstLoading() {
-
-    }
-
-    @Override
-    protected void sendUpLoading() {
-
-    }
-
-    @Override
-    protected void sendLowLoading() {
-
-    }
-
-    @Override
-    protected void sendLoadAgain(View view) {
-
-    }
-
     /**
      * 设置头部view
      */

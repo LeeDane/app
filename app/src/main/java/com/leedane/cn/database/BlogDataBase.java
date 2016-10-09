@@ -203,32 +203,34 @@ public class BlogDataBase {
         ArrayList<BlogBean> datas = new ArrayList<>();
         Cursor cursor = sqlite.rawQuery("select bid,title,content,digest,tag,froms,has_img,img_url,origin_link,source,is_read,create_user_id,account,create_time  from "
                 + BLOG_TABLE_NAME + where, null);
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            BlogBean blogBean = new BlogBean();
-            blogBean.setId(cursor.getInt(0));
-            blogBean.setTitle(cursor.getString(1));
-            blogBean.setContent(cursor.getString(2));
-            blogBean.setDigest(cursor.getString(3));
-            blogBean.setTag(cursor.getString(4));
-            blogBean.setFroms(cursor.getString(5));
-            int hasImg = cursor.getInt(6);
-            if(hasImg == 1){
-                blogBean.setHasImg(true);
+        if(!cursor.isClosed()){
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                BlogBean blogBean = new BlogBean();
+                blogBean.setId(cursor.getInt(0));
+                blogBean.setTitle(cursor.getString(1));
+                blogBean.setContent(cursor.getString(2));
+                blogBean.setDigest(cursor.getString(3));
+                blogBean.setTag(cursor.getString(4));
+                blogBean.setFroms(cursor.getString(5));
+                int hasImg = cursor.getInt(6);
+                if(hasImg == 1){
+                    blogBean.setHasImg(true);
+                }
+                blogBean.setImgUrl(cursor.getString(7));
+                blogBean.setOriginLink(cursor.getString(8));
+                blogBean.setSource(cursor.getString(9));
+                int read = cursor.getInt(10);
+                if(read == 1){
+                    blogBean.setRead(true);
+                }
+                blogBean.setCreateUserId(cursor.getInt(11));
+                blogBean.setAccount(cursor.getString(12));
+                blogBean.setCreateTime(cursor.getString(13));
+                datas.add(blogBean);
             }
-            blogBean.setImgUrl(cursor.getString(7));
-            blogBean.setOriginLink(cursor.getString(8));
-            blogBean.setSource(cursor.getString(9));
-            int read = cursor.getInt(10);
-            if(read == 1){
-                blogBean.setRead(true);
+            if (!cursor.isClosed()) {
+                cursor.close();
             }
-            blogBean.setCreateUserId(cursor.getInt(11));
-            blogBean.setAccount(cursor.getString(12));
-            blogBean.setCreateTime(cursor.getString(13));
-            datas.add(blogBean);
-        }
-        if (!cursor.isClosed()) {
-            cursor.close();
         }
         sqlite.close();
 
