@@ -226,7 +226,7 @@ public class GalleryDataBase {
      * @return
      */
     public List<GalleryBean> queryGalleryLimit50(int userId) {
-        return query(" where gid > 0 and create_user_id="+userId+" order by create_time desc limit 0,50 ");
+        return query(" where gid > 0 and create_user_id="+userId+" order by datetime(create_time) desc limit 0,50 ");
     }
 
     /**

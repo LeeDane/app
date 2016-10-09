@@ -75,7 +75,7 @@ public class SearchHistoryFragment extends Fragment implements View.OnClickListe
             mContext = getActivity();
 
         searchHistoryDataBase = new SearchHistoryDataBase(mContext);
-        mSearchHistoryBeans = searchHistoryDataBase.query(" order by create_time desc");
+        mSearchHistoryBeans = searchHistoryDataBase.query(" order by datetime(create_time) desc");
 
         this.mListView = (ListView) mRootView.findViewById(R.id.no_swipe_refresh_listview);
         mAdapter = new SearchHistoryAdapter(mContext, mSearchHistoryBeans);

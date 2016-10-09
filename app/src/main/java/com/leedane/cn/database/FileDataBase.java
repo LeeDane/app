@@ -211,7 +211,7 @@ public class FileDataBase {
      * @return
      */
     public List<FileBean> queryFileLimit50() {
-        return query(" where fid > 0 order by create_time desc limit 0,50 ");
+        return query(" where fid > 0 order by datetime(create_time) desc limit 0,50 ");
     }
 
     /**

@@ -244,7 +244,7 @@ public class MoodDataBase {
      * @return
      */
     public List<MoodBean> queryMoodLimit25(int userId) {
-        return query(" where mid > 0 and create_user_id="+userId+" order by create_time desc limit 0,25 ");
+        return query(" where mid > 0 and create_user_id="+userId+" order by datetime(create_time) desc limit 0,25 ");
     }
 
     /**

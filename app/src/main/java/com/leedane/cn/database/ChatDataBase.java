@@ -227,7 +227,7 @@ public class ChatDataBase {
                     "from " + CHAT_TABLE_NAME + " o  " +
                     "where not EXISTS(" +
                     "select 0 from " + CHAT_TABLE_NAME + " o1  where o1.code = o.code and o1.cid > o.cid" +
-                    ") order by create_time desc";
+                    ") order by datetime(create_time) desc";
             SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
 
             Cursor cursor = sqlite.rawQuery(sql, null);

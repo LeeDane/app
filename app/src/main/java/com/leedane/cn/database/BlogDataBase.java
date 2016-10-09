@@ -242,7 +242,7 @@ public class BlogDataBase {
      * @return
      */
     public List<BlogBean> queryBlogLimit25() {
-        return query(" where bid > 0 order by create_time desc limit 0,25 ");
+        return query(" where bid > 0 order by datetime(create_time) desc limit 0,25 ");
     }
 
     /**
