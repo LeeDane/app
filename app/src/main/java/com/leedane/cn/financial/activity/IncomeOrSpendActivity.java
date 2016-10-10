@@ -155,11 +155,11 @@ public class IncomeOrSpendActivity extends BaseActivity {
         }
         setContentView(R.layout.activity_financial_income_or_spend);
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
+        financialDataBase = new FinancialDataBase(IncomeOrSpendActivity.this);
+
         initData();
         backLayoutVisible();
-        ((TextView)findViewById(R.id.base_title_textview)).setOnClickListener(this);
-
-        financialDataBase = new FinancialDataBase(IncomeOrSpendActivity.this);
+        findViewById(R.id.base_title_textview).setOnClickListener(this);
         oneLevelCategoryDataBase = new OneLevelCategoryDataBase(this);
         twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(this);
 
@@ -171,8 +171,13 @@ public class IncomeOrSpendActivity extends BaseActivity {
      */
     private void initData(){
         //判断是否是编辑状态
-        if(getIntent().getSerializableExtra("financialBean") != null){
-            editFinancialBean = (FinancialBean)getIntent().getSerializableExtra("financialBean");
+        if(getIntent().getIntExtra("local_id", 0) > 0){
+            List<FinancialBean> fbeans = financialDataBase.query(" where local_id="+getIntent().getIntExtra("local_id", 0));
+            if(CommonUtil.isEmpty(fbeans)){
+                ToastUtil.failure(this, "该记账记录已经不存在！");
+                finish();
+            }
+            editFinancialBean = fbeans.get(0);
             mModel = editFinancialBean.getModel();
             isEdit = true;
         }else{

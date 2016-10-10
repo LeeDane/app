@@ -58,9 +58,9 @@ public abstract class BaseFragment extends FinancialBaseFragment {
         if(mContext == null)
             mContext = getActivity();
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(getFinancialListKey(), financialList);
-        getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
+        //Bundle bundle = new Bundle();
+        //bundle.putSerializable(getFinancialListKey(), financialList);
+        //getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
 
         chartOrListButton = (ToggleButton)mRootView.findViewById(R.id.chart_or_list_toggle_button);
         chartOrListButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

@@ -52,6 +52,9 @@ public class WeekFragment extends BaseFragment {
         super.calculate(financialList, model);
         if(model == EnumUtil.FinancialModel.本周.value){
             super.financialList =  CalculateUtil.weekList;
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(getFinancialListKey(), financialList);
+            getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
         }
     }
 }

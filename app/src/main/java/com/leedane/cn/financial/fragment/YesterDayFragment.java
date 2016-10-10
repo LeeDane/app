@@ -52,6 +52,9 @@ public class YesterDayFragment extends BaseFragment {
         super.calculate(financialList, model);
         if(model == EnumUtil.FinancialModel.昨日.value){
             super.financialList =  CalculateUtil.yesterDayList;
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(getFinancialListKey(), financialList);
+            getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
         }
     }
 }

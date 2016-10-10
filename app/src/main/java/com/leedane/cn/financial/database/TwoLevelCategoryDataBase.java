@@ -93,11 +93,13 @@ public class TwoLevelCategoryDataBase {
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "快递费", false, 5));
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "其他电子", false, 6));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "运动健身", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "腐败聚会", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "休闲玩乐", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "旅游度假", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "宠物宝贝", false, 5));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "景区门票", false, 1));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "酒店住宿", false, 2));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "运动健身", false, 3));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "腐败聚会", false, 4));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "休闲玩乐", false, 5));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "旅游度假", false, 6));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "宠物宝贝", false, 7));
 
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("学习进修"), "学习资料", false, 1));
         twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("学习进修"), "培训进修", false, 2));

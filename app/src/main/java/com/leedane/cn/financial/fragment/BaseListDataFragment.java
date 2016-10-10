@@ -92,7 +92,7 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
             public void onItemClick(int position, Object data) {
                 if(mFinancialList != null && mFinancialList.getFinancialBeans() != null && mFinancialList.getFinancialBeans().size() > 0){
                     Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
-                    it.putExtra("financialBean", mFinancialList.getFinancialBeans().get(position));
+                    it.putExtra("local_id", mFinancialList.getFinancialBeans().get(position).getLocalId());
                     mContext.startActivity(it);
                 }
             }

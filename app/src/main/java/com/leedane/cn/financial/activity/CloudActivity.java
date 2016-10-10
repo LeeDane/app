@@ -108,7 +108,7 @@ public class CloudActivity extends BaseActivity{
 
     private void loadInitData(){
         //获取非同步却状态不是草稿的数据列表
-        mFinancialBeans = financialDataBase.query(" where synchronous = "+ ConstantsUtil.STATUS_DISABLE +" and status !="+ ConstantsUtil.STATUS_DRAFT +" order by datetime(addition_time) asc");
+        mFinancialBeans = financialDataBase.query(" where (id = 0 or synchronous = "+ ConstantsUtil.STATUS_DISABLE +") and status !="+ ConstantsUtil.STATUS_DRAFT +" order by datetime(addition_time) asc");
         mAdapter.addDatas(mFinancialBeans);
     }
 
@@ -140,7 +140,7 @@ public class CloudActivity extends BaseActivity{
             return;
         }
 
-        if(mFinancialBeans.get(endIndex).isSynchronous()){
+        if(mFinancialBeans.get(endIndex).isSynchronous() && mFinancialBeans.get(endIndex).getId() > 0){
             endIndex = endIndex + 1;
             startSynchronous();
             return;

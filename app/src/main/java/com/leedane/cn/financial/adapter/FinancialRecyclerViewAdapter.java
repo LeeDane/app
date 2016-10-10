@@ -79,7 +79,7 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
                 }
             });
 
-            setAnimation(holder.itemView, position);
+            //setAnimation(holder.itemView, position);
         }
     }
 

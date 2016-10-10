@@ -167,7 +167,7 @@ public class MainFragment extends FinancialBaseFragment{
             @Override
             public void onItemClick(int position, Object data) {
                 Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
-                it.putExtra("financialBean", mFinancialBeans.get(position));
+                it.putExtra("local_id", mFinancialBeans.get(position).getLocalId());
                 getActivity().startActivityForResult(it, HomeActivity.IS_EDIT_OR_SAVE_FINANCIAL_CODE);
                 /*Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
                 it.putExtra("financialBean", mFinancialBeans.get(position));
