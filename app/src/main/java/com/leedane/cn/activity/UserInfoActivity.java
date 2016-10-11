@@ -123,6 +123,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
         menuBeans.add(new MenuBean(R.drawable.qr_code, getStringResource(R.string.qr_code_idcard)));
         menuBeans.add(new MenuBean(R.drawable.menu_security, getStringResource(R.string.update_login_password)));
         menuBeans.add(new MenuBean(R.drawable.menu_message, getStringResource(R.string.nav_message)));
+        menuBeans.add(new MenuBean(R.drawable.ic_note_add_pink_200_18dp, getStringResource(R.string.push_blog)));
         menuBeans.add(new MenuBean(R.drawable.menu_feedback, getStringResource(R.string.feedback)));
         menuBeans.add(new MenuBean(R.drawable.menu_setting, getStringResource(R.string.nav_setting)));
 
@@ -150,6 +151,9 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
                     CommonHandler.startMySettingActivity(UserInfoActivity.this);
                 }else if(title.equalsIgnoreCase(getStringResource(R.string.qr_code_idcard))){ //二维码名片
                     showQrCodeDialog();//展示二维码名片
+                }else if(title.equalsIgnoreCase(getStringResource(R.string.push_blog))){//发布博客
+                    Intent it = new Intent(UserInfoActivity.this, PushBlogActivity.class);
+                    startActivity(it);
                 }else if(title.equalsIgnoreCase(getStringResource(R.string.update_login_password))){//修改登录密码
                     Intent it = new Intent(UserInfoActivity.this, UpdateLoginPswActivity.class);
                     startActivityForResult(it, UpdateLoginPswActivity.UPDATE_LOGIN_PASSWORD_CODE);

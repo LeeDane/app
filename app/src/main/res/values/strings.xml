@@ -398,4 +398,9 @@
     <string name="cloud_smart_all">智能云端拉取</string>
     <string name="cloud_smart_all_tip">注意：此操作不清空数据，增量比对后同步</string>
     <string name="recent_load_number">展示最近操作条数</string>
+
+    <!--  发布博客  -->
+    <string name="push_blog">发布博客</string>
+    <string name="push_blog_hint_title">请输入博客的标题</string>
+    <string name="push_blog_hint_content">请输入博客的内容(支持html标签)</string>
 </resources>

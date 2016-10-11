@@ -101,6 +101,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.leedane.cn.activity.PushBlogActivity"
+            android:label="@string/push_blog"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
             android:name="com.leedane.cn.activity.NavigationActivity" >
         </activity>
         <activity
