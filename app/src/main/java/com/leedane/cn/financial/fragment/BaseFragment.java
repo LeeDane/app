@@ -75,9 +75,9 @@ public abstract class BaseFragment extends FinancialBaseFragment {
                 bundle.putSerializable(getFinancialListKey(), financialList);
 
                 if(isChecked){
-                    getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), getListDataFragment(bundle)).commit();
                 }else{
-                    getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getChartDataFragment(bundle)).commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), getChartDataFragment(bundle)).commit();
                 }
             }
         });
