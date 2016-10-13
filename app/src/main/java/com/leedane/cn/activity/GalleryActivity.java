@@ -114,8 +114,6 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
                 mDialog.show();
                 break;
             case R.id.gallery_add_submit:
-
-                HttpRequestBean requestBean = new HttpRequestBean();
                 HashMap<String, Object> params = new HashMap<>();
 
                 if(galleryNetworkLink ==null || StringUtil.isNull(galleryNetworkLink.getText().toString())){

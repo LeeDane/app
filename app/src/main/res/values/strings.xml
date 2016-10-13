@@ -208,6 +208,7 @@
     <string name="gallery_add_height">高度(不确定请不填写)</string>
     <string name="gallery_add_length">大小(kb换算，不确定请不填写)</string>
     <string name="gallery_add_submit">添加图库</string>
+    <string name="gallery_add">加入图库</string>
     <string name="gallery_menu_delete">移出图库</string>
     <string name="gallery_menu_report">举报</string>
     <string name="gallery_menu_share">分享</string>

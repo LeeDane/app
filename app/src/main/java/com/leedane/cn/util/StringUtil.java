@@ -169,6 +169,27 @@ public class StringUtil {
     }
 
     /**
+     * 检验字符串是否是链接
+     * @param origin
+     * @return
+     */
+    public static boolean isLink(String origin){
+
+        if(!StringUtil.isNull(origin)){
+            Pattern p = Pattern.compile("(http://|ftp://|https://|www){0,1}[^\u4e00-\u9fa5\\s]*?\\.(com|net|cn|me|tw|fr)[^\u4e00-\u9fa5\\s]*");
+            String group;
+            Matcher m=p.matcher(origin);
+            while(m.find()){
+                group = m.group().trim();
+                if(StringUtil.isNotNull(group)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * 判断一个地址是否是7牛网站
      * @param url
      * @return

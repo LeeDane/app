@@ -1,14 +1,13 @@
 package com.leedane.cn.fragment;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.WallpaperManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,15 +28,20 @@ import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ImageDetailBean;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.handler.GalleryHandler;
 import com.leedane.cn.task.NetworkImageLoader;
+import com.leedane.cn.task.TaskListener;
+import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.FileUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +52,7 @@ import java.util.Map;
  * 多图像详情的frament类
  * Created by LeeDane on 2015/11/16.
  */
-public class ImageDetailFragment extends Fragment{
+public class ImageDetailFragment extends Fragment implements TaskListener {
 
     public static final String TAG = "ImageDetailFragment";
     public static final int LOAD_NETWORK_IMG_CODE = 33;
@@ -118,13 +122,11 @@ public class ImageDetailFragment extends Fragment{
         if(mContext == null)
             mContext = getActivity();
 
-        String currentImageUrl = mImageDetailBean.getPath();
-        int width = mImageDetailBean.getWidth() == 0 ||  mImageDetailBean.getWidth() > acreenWidth ? acreenWidth: mImageDetailBean.getWidth();
-        int height = mImageDetailBean.getHeight() == 0 ||  mImageDetailBean.getHeight() > screenHeight ? screenHeight: mImageDetailBean.getHeight();
+        String currentImageUrl = getImageUrl();
         if(currentImageUrl.startsWith("http://") || currentImageUrl.startsWith("https://")){
             //ImageCacheManager.loadImage(currentImageUrl, (ImageView) getView().findViewById(R.id.image_detail_imageview), width, height);
             mScaleImageView = (SubsamplingScaleImageView)getView().findViewById(R.id.image_detail_imageview);
-            ImageCacheManager.loadImage(currentImageUrl, mScaleImageView, width, height);
+            ImageCacheManager.loadImage(currentImageUrl, mScaleImageView, getImageWidth(), getImageHeight());
             mScaleImageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -183,6 +185,29 @@ public class ImageDetailFragment extends Fragment{
     }
 
     /**
+     * 获取当前图片的链接
+     * @return
+     */
+    private String getImageUrl(){
+        return mImageDetailBean.getPath();
+    }
+
+    /**
+     * 获取当前图片的宽度
+     * @return
+     */
+    private int getImageWidth(){
+        return mImageDetailBean.getWidth() == 0 ||  mImageDetailBean.getWidth() > acreenWidth ? acreenWidth: mImageDetailBean.getWidth();
+    }
+
+    /**
+     * 获取当前图片的高度
+     * @return
+     */
+    private int getImageHeight(){
+        return mImageDetailBean.getHeight() == 0 ||  mImageDetailBean.getHeight() > screenHeight ? screenHeight: mImageDetailBean.getHeight();
+    }
+    /**
      * 获取字符串资源
      * @param resourseId
      * @return
@@ -213,6 +238,7 @@ public class ImageDetailFragment extends Fragment{
         menus.add(getResources().getString(R.string.copyLink));
         menus.add(getResources().getString(R.string.setWallpaper));
         menus.add(getResources().getString(R.string.save_imgage));
+        menus.add(getResources().getString(R.string.gallery_add));
         menus.add(getResources().getString(R.string.browser_imgage));
 
         SimpleListAdapter adapter = new SimpleListAdapter(getContext().getApplicationContext(), menus);
@@ -252,6 +278,32 @@ public class ImageDetailFragment extends Fragment{
                     //浏览器查看图片
                 }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.browser_imgage))){
                     CommonHandler.openLink(mContext, mImageDetailBean.getPath());
+                }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.gallery_add))){
+                    if(StringUtil.isLink(getImageUrl())){
+                        AlertDialog alertDialog = new AlertDialog.Builder(mContext).setTitle("添加图库")
+                                .setMessage("把该图片加入我的图库？")
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        HashMap<String, Object> params = new HashMap<>();
+                                        params.put("path", getImageUrl());
+                                        params.put("width", mImageDetailBean.getWidth());
+                                        params.put("height", mImageDetailBean.getHeight());
+                                        params.put("lenght", mImageDetailBean.getLenght());
+                                        params.put("desc", "androidApp图库查看器上加入");
+                                        GalleryHandler.add(ImageDetailFragment.this, params);
+                                    }
+                                })
+                                .setNegativeButton("放弃",new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        return;
+                                    }
+                                }).create(); // 创建对话框
+                        alertDialog.show();
+                    }else{
+                        ToastUtil.failure(mContext, "抱歉，当前的图片链接不符合要求，添加失败");
+                    }
+
                 }
                 dismissListItemMenuDialog();
             }
@@ -283,6 +335,39 @@ public class ImageDetailFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void taskStarted(TaskType type) {
+
+    }
+
+    @Override
+    public void taskFinished(TaskType type, Object result) {
+        if(result instanceof Error){
+            ToastUtil.failure(mContext, ((Error) result).getMessage(), Toast.LENGTH_SHORT);
+            dismissLoadingDialog();
+            return;
+        }
+        try{
+            dismissLoadingDialog();
+            if(type == TaskType.ADD_GALLERY){
+                JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
+                if(jsonObject != null && jsonObject.has("isSuccess")){
+                    //隐藏掉添加的弹出框
+                    ToastUtil.success(mContext, "添加入图库成功");
+                }else{
+                    ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void taskCanceled(TaskType type) {
+
     }
 
     class myThread implements Runnable {
