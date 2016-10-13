@@ -22,6 +22,7 @@ import com.leedane.cn.handler.GalleryHandler;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.StringUtil;
+import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -156,7 +157,7 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
                     }
                     addGalleryShowAlertDialog();
                 }else{
-                    Toast.makeText(GalleryActivity.this, "添加入图库失败", Toast.LENGTH_LONG).show();
+                    ToastUtil.failure(GalleryActivity.this, "添加入图库失败", Toast.LENGTH_LONG);
                 }
             }
         }catch (JSONException e){

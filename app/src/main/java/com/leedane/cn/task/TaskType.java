@@ -31,6 +31,7 @@ public enum TaskType {
     DETAIL_MOOD_IMAGE, //查看心情详细的图片
     PERSONAL_LOADMOODS, //个人中心加载心情列表
     DO_GALLERY, //加载图库
+    ADD_BLOG, //发表博客
     ADD_GALLERY, //加入图库
     DELETE_GALLERY, //删除图库
     ADD_COMMENT, //添加评论

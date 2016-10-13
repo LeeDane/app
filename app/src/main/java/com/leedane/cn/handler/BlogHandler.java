@@ -20,6 +20,20 @@ public class BlogHandler {
      * @param listener
      * @param params
      */
+    public static void send(TaskListener listener, HashMap<String, Object> params){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/blog/releaseBlog.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.ADD_BLOG, listener, requestBean);
+    }
+
+    /**
+     * 发送博客的请求
+     * @param listener
+     * @param params
+     */
     public static void getBlogsRequest(TaskListener listener, HashMap<String, Object> params){
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
