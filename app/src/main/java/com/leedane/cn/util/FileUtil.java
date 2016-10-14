@@ -65,6 +65,26 @@ public class FileUtil {
     }
 
     /**
+     * 获取临时文件的文件夹
+     *
+     * @param context
+     * @return
+     */
+    public static File getTempDir(Context context) {
+        File sdDir = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            sdDir = Environment.getExternalStorageDirectory();
+        } else {
+            sdDir = context.getCacheDir();
+        }
+        File cacheDir = new File(sdDir, context.getResources().getString(R.string.app_dirsname) + File.separator + context.getResources().getString(R.string.temp_filepath));
+        if (!cacheDir.exists()) {
+            cacheDir.mkdirs();
+        }
+        return cacheDir;
+    }
+
+    /**
      * 构建上传文件项实体对象
      * @param context
      * @param uri

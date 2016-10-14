@@ -52,7 +52,7 @@ public class BlogHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/blog/delete.action");
+        requestBean.setServerMethod("leedane/blog/deleteBlog.action");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_BLOG, listener, requestBean);
     }

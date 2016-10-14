@@ -1,10 +1,8 @@
 package com.leedane.cn.service;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -12,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.leedane.cn.activity.MoodActivity;
-import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.handler.CommonHandler;
@@ -22,16 +19,13 @@ import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
+import com.leedane.cn.util.FileUtil;
 import com.leedane.cn.util.NotificationUtil;
-import com.leedane.cn.util.QiniuConfig;
 import com.leedane.cn.util.QiniuUploadManager;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
-import com.qiniu.android.common.Zone;
 import com.qiniu.android.http.ResponseInfo;
-import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UpCompletionHandler;
-import com.qiniu.android.storage.UploadManager;
 
 import org.json.JSONObject;
 
@@ -188,26 +182,6 @@ public class SendMoodService extends Service implements TaskListener {
         return super.stopService(name);
     }
 
-    /**
-     * 获取临时文件的文件夹
-     *
-     * @param context
-     * @return
-     */
-    private File getTempDir(Context context) {
-        File sdDir = null;
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            sdDir = Environment.getExternalStorageDirectory();
-        } else {
-            sdDir = context.getCacheDir();
-        }
-        File cacheDir = new File(sdDir, context.getResources().getString(R.string.app_dirsname) + File.separator + getApplicationContext().getResources().getString(R.string.temp_filepath));
-        if (!cacheDir.exists()) {
-            cacheDir.mkdirs();
-        }
-        return cacheDir;
-    }
-
     @Override
     public boolean onUnbind(Intent intent) {
         return super.onUnbind(intent);
@@ -255,7 +229,7 @@ public class SendMoodService extends Service implements TaskListener {
                                     return;
                                 }
 
-                                tempFilePath = getTempDir(getApplicationContext()) + File.separator + file.getName();
+                                tempFilePath =  FileUtil.getTempDir(getApplicationContext()) + File.separator + file.getName();
                                 //ToastUtil.success(getApplicationContext(), "临时文件路径：" + tempFilePath);
                                 file = new File(tempFilePath);
                                 if (file.exists()) {

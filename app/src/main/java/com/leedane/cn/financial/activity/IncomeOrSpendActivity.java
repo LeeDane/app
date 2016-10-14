@@ -48,6 +48,7 @@ import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.DensityUtil;
+import com.leedane.cn.util.FileUtil;
 import com.leedane.cn.util.MediaUtil;
 import com.leedane.cn.util.QiniuUploadManager;
 import com.leedane.cn.util.StringUtil;
@@ -797,7 +798,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 String h = hourOfDay > 9 ? hourOfDay +"" : "0" +hourOfDay;
                 String m = minute > 9 ? minute +"" : "0" + minute;
-                mTime.setText(h +":" +m +":"+"00");
+                mTime.setText(h + ":" + m + ":" + "00");
                 String date = mDate.getText().toString() + " " + mTime.getText().toString();
                 showTime.setTime(DateUtil.stringToDate(date));
             }
@@ -873,10 +874,10 @@ public class IncomeOrSpendActivity extends BaseActivity {
                         mProgressBar.setProgress(i);
                         if (i == 100) {
                             mProgressBar.setVisibility(View.GONE);
-                            mPath = ConstantsUtil.QINIU_CLOUD_SERVER +  key;
+                            mPath = ConstantsUtil.QINIU_CLOUD_SERVER + key;
                         }
-                       // ToastUtil.success(IncomeOrSpendActivity.this, "qiniu progress--->" + percent);
-                        Log.i("qiniu progress", "i="+i + "---->" +key + ": " + percent);
+                        // ToastUtil.success(IncomeOrSpendActivity.this, "qiniu progress--->" + percent);
+                        Log.i("qiniu progress", "i=" + i + "---->" + key + ": " + percent);
                     }
                 }, null));
     }
@@ -885,13 +886,16 @@ public class IncomeOrSpendActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            System.out.println("requestCode"+requestCode);
+            System.out.println("requestCode" + requestCode);
             if (requestCode == GET_SYSTEM_IMAGE_CODE) {//图库返回
                 mLocalPath = MediaUtil.getImageAbsolutePath(IncomeOrSpendActivity.this, data.getData());
                 Bitmap bitmap = null;
                 if(StringUtil.isNotNull(mLocalPath)){
-                    bitmap = BitmapUtil.getSmallBitmap(IncomeOrSpendActivity.this, mLocalPath, 150, 150);
+                    bitmap = BitmapUtil.getSmallBitmap(IncomeOrSpendActivity.this, mLocalPath, 600, 800);
                     mImg.setImageBitmap(bitmap);
+                    //将图片进行压缩
+                    mLocalPath = FileUtil.getTempDir(getApplicationContext()) + File.separator + StringUtil.getFileName(mLocalPath);
+                    BitmapUtil.bitmapToLocalPath(bitmap, mLocalPath);
                     CommonHandler.getQiniuTokenRequest(IncomeOrSpendActivity.this);
                     badge.show();
                 }else
@@ -899,4 +903,6 @@ public class IncomeOrSpendActivity extends BaseActivity {
             }
         }
     }
+
+
 }
