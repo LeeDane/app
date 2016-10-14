@@ -190,6 +190,35 @@ public class StringUtil {
     }
 
     /**
+     * 检验字符串的光标位置是否在标签内
+     * @param string
+     * @param focusIndex
+     * @param tagLeft
+     * @param tagRight
+     * @return
+     */
+    public static boolean foucsIsInTag(String string, int focusIndex, String tagLeft, String tagRight){
+
+        if(isNull(string) || focusIndex < 0 || string.length() < focusIndex)
+            return false;
+
+        //从左边找a的开始索引
+        String left = string.substring(0, focusIndex);
+        String right = string.substring(focusIndex, string.length());
+        int leftLastTagIndex = left.lastIndexOf(tagRight);
+        int leftFirstTagIndex = left.lastIndexOf(tagLeft);
+        int rightFirtTagIndex = right.indexOf(tagLeft);
+        int rightLastTagIndex = right.indexOf(tagRight);
+
+        if((leftLastTagIndex == -1 && leftFirstTagIndex > 0) || leftLastTagIndex < leftFirstTagIndex){
+            if((rightFirtTagIndex == -1 && rightLastTagIndex > 0) || rightFirtTagIndex > rightLastTagIndex){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 判断一个地址是否是7牛网站
      * @param url
      * @return

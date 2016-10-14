@@ -57,4 +57,16 @@
     <style name="chart_or_list" parent="@android:style/Widget.CompoundButton">
         <item name="android:button">@drawable/chart_or_list_checkbox_button</item>
     </style>
+
+    <style name="FadeShowAnimation" parent="android:Animation" mce_bogus="1">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+    <style name="colorsdialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/dialog_color_select_bg</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 </resources>

@@ -3,12 +3,15 @@ package com.leedane.cn.richtext;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -17,6 +20,10 @@ import android.widget.TextView;
 import com.leedane.cn.activity.PushBlogActivity;
 import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.app.R;
+import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.DensityUtil;
+import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -53,6 +60,8 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
     private ImageButton rich_text_image;
     private ImageButton rich_text_link;
 
+    private String[] colors;
+
     public ToolFragment(){
     }
 
@@ -82,6 +91,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
         if(mContext == null)
             mContext = getActivity();
 
+        colors = mContext.getResources().getStringArray(R.array.colors);
         mParentView = (LinearLayout)mRootView.findViewById(R.id.rich_text_parent);
 
 
@@ -147,6 +157,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
             }
         }
 
+        ((PushBlogActivity)getActivity()).preSelectToolId = v.getId();
         RichTextEditText richTextContent = ((PushBlogActivity)getActivity()).richTextContent;
         boolean isSelectText = richTextContent.getSelectionEnd() > richTextContent.getSelectionStart();//是否选中文字
 
@@ -166,7 +177,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                     buffer.insert(richTextContent.getSelectionStart(), bStart);
                     buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
                     richTextContent.setText(buffer.toString());
-                    richTextContent.setSelection(buffer.toString().length());
+                    richTextContent.setSelection(buffer.length());
                 }
                 break;
             case R.id.rich_text_italic: //斜体
@@ -176,7 +187,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                     buffer.insert(richTextContent.getSelectionStart(), bStart);
                     buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
                     richTextContent.setText(buffer.toString());
-                    richTextContent.setSelection(buffer.toString().length());
+                    richTextContent.setSelection(buffer.length());
                 }
                 break;
             case R.id.rich_text_strikethrough: //过期
@@ -186,7 +197,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                     buffer.insert(richTextContent.getSelectionStart(), bStart);
                     buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
                     richTextContent.setText(buffer.toString());
-                    richTextContent.setSelection(buffer.toString().length());
+                    richTextContent.setSelection(buffer.length());
                 }
                 break;
             case R.id.rich_text_underline: //下划线
@@ -196,7 +207,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                     buffer.insert(richTextContent.getSelectionStart(), bStart);
                     buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
                     richTextContent.setText(buffer.toString());
-                    richTextContent.setSelection(buffer.toString().length());
+                    richTextContent.setSelection(buffer.length());
                 }
                 break;
 
@@ -207,7 +218,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                     buffer.insert(richTextContent.getSelectionStart(), bStart);
                     buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
                     richTextContent.setText(buffer.toString());
-                    richTextContent.setSelection(buffer.toString().length());
+                    richTextContent.setSelection(buffer.length());
                 }
                 break;
             case R.id.rich_text_h2: //H2标签
@@ -217,7 +228,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                     buffer.insert(richTextContent.getSelectionStart(), bStart);
                     buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
                     richTextContent.setText(buffer.toString());
-                    richTextContent.setSelection(buffer.toString().length());
+                    richTextContent.setSelection(buffer.length());
                 }
                 break;
             case R.id.rich_text_h3: //H3标签
@@ -227,7 +238,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                     buffer.insert(richTextContent.getSelectionStart(), bStart);
                     buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
                     richTextContent.setText(buffer.toString());
-                    richTextContent.setSelection(buffer.toString().length());
+                    richTextContent.setSelection(buffer.length());
                 }
                 break;
             case R.id.rich_text_h4: //H4标签
@@ -237,7 +248,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                     buffer.insert(richTextContent.getSelectionStart(), bStart);
                     buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
                     richTextContent.setText(buffer.toString());
-                    richTextContent.setSelection(buffer.toString().length());
+                    richTextContent.setSelection(buffer.length());
                 }
                 break;
             case R.id.rich_text_h5: //H5标签
@@ -247,7 +258,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                     buffer.insert(richTextContent.getSelectionStart(), bStart);
                     buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
                     richTextContent.setText(buffer.toString());
-                    richTextContent.setSelection(buffer.toString().length());
+                    richTextContent.setSelection(buffer.length());
                 }
                 break;
             case R.id.rich_text_h6: //H6标签
@@ -257,12 +268,27 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                     buffer.insert(richTextContent.getSelectionStart(), bStart);
                     buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
                     richTextContent.setText(buffer.toString());
-                    richTextContent.setSelection(buffer.toString().length());
+                    richTextContent.setSelection(buffer.length());
                 }
                 break;
             case R.id.rich_text_color: //文字颜色
                 if(isSelectText){
-                    showSelectColorDialog();
+                    //showSelectColorDialog();
+                    ColorSelectDialog dialog = new ColorSelectDialog(mContext);
+                    dialog.setItemSelectListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            String bStart = "<font color=\""+colors[position]+"\">";
+                            String bEnd = "</font>";
+                            RichTextEditText richTextContent = ((PushBlogActivity)getActivity()).richTextContent;
+                            StringBuffer buffer = new StringBuffer(richTextContent.getText().toString());
+                            buffer.insert(richTextContent.getSelectionStart(), bStart);
+                            buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
+                            richTextContent.setText(buffer.toString());
+                            richTextContent.setSelection(buffer.length());
+                        }
+                    });
+                    dialog.show();
                 }
                 break;
             case R.id.rich_text_indent: //缩进
@@ -281,7 +307,8 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
 
                 break;
             case R.id.rich_text_image: //图片
-
+                //弹出选择
+                showSelectItemMenuDialog();
                 break;
             case R.id.rich_text_link: //链接
 
@@ -289,12 +316,89 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-
     private Dialog mDialog;
+    /**
+     * 显示弹出自定义view
+     */
+    public void showSelectItemMenuDialog(){
+        //判断是否已经存在菜单，存在则把以前的记录取消
+        dismissSelectItemMenuDialog();
+
+        mDialog = new Dialog(mContext, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.mood_list_menu, null);
+
+        ListView listView = (ListView)view.findViewById(R.id.mood_list_menu_listview);
+        listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        List<String> menus = new ArrayList<>();
+
+        menus.add(BaseApplication.newInstance().getString(R.string.select_gallery));
+        menus.add(BaseApplication.newInstance().getString(R.string.img_link));
+        SimpleListAdapter adapter = new SimpleListAdapter(mContext, menus);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView textView = (TextView)view.findViewById(R.id.simple_listview_item);
+                //选择图库
+                if(textView.getText().toString().equalsIgnoreCase(BaseApplication.newInstance().getString(R.string.select_gallery))){
+                    ((PushBlogActivity)getActivity()).getSystemImage();
+                    //选择链接
+                }else if(textView.getText().toString().equalsIgnoreCase(BaseApplication.newInstance().getString(R.string.img_link))){
+                    final EditText inputServer = new EditText(mContext);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("请输入网络图片(大小最好不要超过500k)").setIcon(android.R.drawable.ic_dialog_info).setView(inputServer)
+                            .setNegativeButton("取消", null);
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+                            String text = inputServer.getText().toString();
+                            if (StringUtil.isNotNull(text)) {
+                                RichTextEditText richTextContent = ((PushBlogActivity)getActivity()).richTextContent;
+                                String currentText = richTextContent.getText().toString();
+                                StringBuffer buffer = new StringBuffer(currentText);
+                                float device_width_dp = DensityUtil.px2dip(mContext, BaseApplication.newInstance().getScreenWidthAndHeight()[0]) -10;
+                                text = "<img width=\""+device_width_dp+"px\" height=\""+ device_width_dp*0.6 +"px\" src=\"" + text+"\">";
+                                buffer.insert(richTextContent.getSelectionStart(), text);
+                                ((PushBlogActivity)getActivity()).preSelectToolId = 0;
+                                richTextContent.setText(buffer.toString());
+                                richTextContent.setSelection(buffer.length());
+                            }else{
+                                ToastUtil.failure(mContext, "请输入网络图片链接!");
+                            }
+                        }
+                    });
+                    builder.show();
+                }
+                dismissSelectItemMenuDialog();
+            }
+        });
+        mDialog.setTitle("选择");
+        mDialog.setCancelable(true);
+        mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dismissSelectItemMenuDialog();
+            }
+        });
+        //ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(800,(menus.size() +1) * 90 +20);
+        mDialog.setContentView(view);
+        mDialog.show();
+    }
 
     /**
-     * 显示选择颜色view
+     * 隐藏弹出自定义view
      */
+    public void dismissSelectItemMenuDialog(){
+        if(mDialog != null && mDialog.isShowing())
+            mDialog.dismiss();
+    }
+
+
+    /*private Dialog mDialog;
+
+    *//**
+     * 显示选择颜色view
+     *//*
     public void showSelectColorDialog(){
 
         //判断是否已经存在菜单，存在则把以前的记录取消
@@ -345,11 +449,11 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
         mDialog.show();
     }
 
-    /**
+    *//**
      * 隐藏弹出自定义view
-     */
+     *//*
     public void dismissSelectColorDialog(){
         if(mDialog != null && mDialog.isShowing())
             mDialog.dismiss();
-    }
+    }*/
 }
