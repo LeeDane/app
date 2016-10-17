@@ -48,7 +48,7 @@ public class BitmapUtil {
     }
 
     /**
-     * 根据路径获得图片并压缩，返回bitmap用于显示
+     * 根据路径获得图片并改变尺寸(不进行压缩)，返回bitmap用于显示
      * @param context
      * @param filePath
      * @param reqWidth
@@ -64,6 +64,42 @@ public class BitmapUtil {
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(filePath, options);
+    }
+
+    /**
+     * 根据路径获得图片并改变尺寸(进行压缩，只针对大于50K的文件进行压缩)，返回bitmap用于显示
+     * @param context
+     * @param filePath
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
+    public static Bitmap getSmallBitmap(Context context, String filePath, int reqWidth, int reqHeight, int quality) {
+        Bitmap bitmap =getSmallBitmap(context, filePath, reqWidth, reqHeight);
+        if(bitmap == null){
+            return  null;
+        }
+        ByteArrayOutputStream baos = null ;
+        try{
+            baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,  100 , baos);
+            int len = baos.toByteArray().length;
+            //只针对大于50K的文件进行压缩
+            if(quality > 0 && len /  1024 > 50){
+                baos.reset();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+            }
+        }/*catch (Exception e){
+            return null;
+        }*/finally{
+            try {
+                if(baos != null)
+                    baos.close() ;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return bitmap ;
     }
 
     /**

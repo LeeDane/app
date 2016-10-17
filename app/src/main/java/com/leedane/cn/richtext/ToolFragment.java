@@ -165,10 +165,13 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
         StringBuffer buffer = new StringBuffer(currentText);
         switch (v.getId()){
             case R.id.rich_text_undo: //撤销
+                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                mRootView.findViewById(R.id.rich_text_undo).setBackgroundColor(mContext.getResources().getColor(R.color.black));
                 ToastUtil.success(mContext, richTextContent.getSelectionStart() + "=====" + richTextContent.getSelectionEnd());
                 break;
             case R.id.rich_text_redo: //反撤销
-
+                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                mRootView.findViewById(R.id.rich_text_redo).setBackgroundColor(mContext.getResources().getColor(R.color.black));
                 break;
             case R.id.rich_text_bold: //粗体
                 if(isSelectText){
@@ -272,6 +275,8 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                 }
                 break;
             case R.id.rich_text_color: //文字颜色
+                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                mRootView.findViewById(R.id.rich_text_color).setBackgroundColor(mContext.getResources().getColor(R.color.black));
                 if(isSelectText){
                     //showSelectColorDialog();
                     ColorSelectDialog dialog = new ColorSelectDialog(mContext);
@@ -292,26 +297,34 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                 }
                 break;
             case R.id.rich_text_indent: //缩进
-
+                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                mRootView.findViewById(R.id.rich_text_indent).setBackgroundColor(mContext.getResources().getColor(R.color.black));
                 break;
             case R.id.rich_text_left: //左对齐
-
+                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                mRootView.findViewById(R.id.rich_text_left).setBackgroundColor(mContext.getResources().getColor(R.color.black));
                 break;
             case R.id.rich_text_center: //居中对齐
-
+                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                mRootView.findViewById(R.id.rich_text_center).setBackgroundColor(mContext.getResources().getColor(R.color.black));
                 break;
             case R.id.rich_text_right: //右对齐
-
+                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                mRootView.findViewById(R.id.rich_text_right).setBackgroundColor(mContext.getResources().getColor(R.color.black));
                 break;
             case R.id.rich_text_blockquote: //引用
-
+                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                mRootView.findViewById(R.id.rich_text_blockquote).setBackgroundColor(mContext.getResources().getColor(R.color.black));
                 break;
             case R.id.rich_text_image: //图片
+                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                mRootView.findViewById(R.id.rich_text_image).setBackgroundColor(mContext.getResources().getColor(R.color.black));
                 //弹出选择
                 showSelectItemMenuDialog();
                 break;
             case R.id.rich_text_link: //链接
-
+                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                mRootView.findViewById(R.id.rich_text_link).setBackgroundColor(mContext.getResources().getColor(R.color.black));
                 break;
         }
     }
@@ -357,7 +370,7 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                                 String currentText = richTextContent.getText().toString();
                                 StringBuffer buffer = new StringBuffer(currentText);
                                 float device_width_dp = DensityUtil.px2dip(mContext, BaseApplication.newInstance().getScreenWidthAndHeight()[0]) -10;
-                                text = "<img width=\""+device_width_dp+"px\" height=\""+ device_width_dp*0.6 +"px\" src=\"" + text+"\">";
+                                text = "<img width=\""+device_width_dp+"\" src=\"" + text+"\">";
                                 buffer.insert(richTextContent.getSelectionStart(), text);
                                 ((PushBlogActivity)getActivity()).preSelectToolId = 0;
                                 richTextContent.setText(buffer.toString());

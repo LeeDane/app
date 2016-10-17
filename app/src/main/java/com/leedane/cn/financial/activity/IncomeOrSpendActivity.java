@@ -894,7 +894,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
                     bitmap = BitmapUtil.getSmallBitmap(IncomeOrSpendActivity.this, mLocalPath, 600, 800);
                     mImg.setImageBitmap(bitmap);
                     //将图片进行压缩
-                    mLocalPath = FileUtil.getTempDir(getApplicationContext()) + File.separator + StringUtil.getFileName(mLocalPath);
+                    mLocalPath = FileUtil.getTempDir(getApplicationContext()) + File.separator + UUID.randomUUID().toString() + "_"+StringUtil.getFileName(mLocalPath);
                     BitmapUtil.bitmapToLocalPath(bitmap, mLocalPath);
                     CommonHandler.getQiniuTokenRequest(IncomeOrSpendActivity.this);
                     badge.show();

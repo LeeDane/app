@@ -79,12 +79,24 @@ public class DetailArticleFragment extends Fragment{
             mWebView = (WebView)mRootView.findViewById(R.id.detail_webview);
             mProgressBar = (ProgressBar)mRootView.findViewById(R.id.detail_progressbar);
             float device_width_dp = BaseApplication.newInstance().getScreenWidthAndHeight()[0];
-            mBlogUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/blog/getContent.action?blog_id=" + mBlogId+"&device_width="+ (DensityUtil.px2dip(mContext, device_width_dp) -10);
+            mBlogUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/blog/getContent.action?blog_id=" + mBlogId+"&device_width="+ (DensityUtil.px2dip(mContext, device_width_dp) -20);
             Log.i("blogDetail", "博客的地址：" + mBlogUrl);
             mWebView.loadUrl(mBlogUrl);
             //启用支持javascript
             mSettings = mWebView.getSettings();
             mSettings.setJavaScriptEnabled(true);
+            mSettings.setSupportZoom(false);
+
+//            LayoutAlgorithm是一个枚举，用来控制html的布局，总共有三种类型：
+//            NORMAL：正常显示，没有渲染变化。
+//            SINGLE_COLUMN：把所有内容放到WebView组件等宽的一列中。
+//            NARROW_COLUMNS：可能的话，使所有列的宽度不超过屏幕宽度。
+            mSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+
+            mSettings.setUseWideViewPort(true);
+            //mSettings.setLoadWithOverviewMode(true);
+
+
             mWebView.addJavascriptInterface(this, "webview");//对应js中的test.xxx
             //使用缓存模式缓存加载过的数据
 //            缓存模式(5种)
@@ -141,10 +153,10 @@ public class DetailArticleFragment extends Fragment{
             for(int i = 0; i< arrayImg.length; i++){
                 imageDetailBean = new ImageDetailBean();
                 imageDetailBean.setPath(arrayImg[i]);
-                if(maxWidth > 0 && maxHeight > 0){
+                /*if(maxWidth > 0 && maxHeight > 0){
                     imageDetailBean.setWidth(maxWidth);
                     imageDetailBean.setHeight(maxHeight);
-                }
+                }*/
                 list.add(imageDetailBean);
             }
             CommonHandler.startImageDetailActivity(mContext, list, index);

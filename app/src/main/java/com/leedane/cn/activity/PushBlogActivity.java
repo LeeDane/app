@@ -198,9 +198,9 @@ public class PushBlogActivity extends BaseActivity {
                             mImageProgressTip.setVisibility(View.GONE);
                             StringBuffer buffer = new StringBuffer(richTextContent.getText().toString());
 
-                            float device_width_dp = DensityUtil.px2dip(PushBlogActivity.this, BaseApplication.newInstance().getScreenWidthAndHeight()[0]) -10;
+                            float device_width_dp = DensityUtil.px2dip(PushBlogActivity.this, BaseApplication.newInstance().getScreenWidthAndHeight()[0]) -20;
                             buffer.insert(imgInertStart,
-                                    "<img width=\""+device_width_dp+"px\" height=\""+ device_width_dp*0.6 +"px\" src=\"" +ConstantsUtil.QINIU_CLOUD_SERVER + key+"\">");
+                                    "<img width=\""+device_width_dp+"\" src=\"" +ConstantsUtil.QINIU_CLOUD_SERVER + key+"\">");
                             add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.length());
@@ -236,12 +236,17 @@ public class PushBlogActivity extends BaseActivity {
                 mLocalImagePath = MediaUtil.getImageAbsolutePath(PushBlogActivity.this, data.getData());
                 Bitmap bitmap = null;
                 if(StringUtil.isNotNull(mLocalImagePath)){
-                    bitmap = BitmapUtil.getSmallBitmap(PushBlogActivity.this, mLocalImagePath, 600, 800);
+                    //缩放图片的大小最大为600x800，压缩质量为60
+                    bitmap = BitmapUtil.getSmallBitmap(PushBlogActivity.this, mLocalImagePath, 600, 800, 60);
                     CommonHandler.getQiniuTokenRequest(PushBlogActivity.this);
 
                     mLocalImagePath = FileUtil.getTempDir(getApplicationContext()) + File.separator + StringUtil.getFileName(mLocalImagePath);
                     BitmapUtil.bitmapToLocalPath(bitmap, mLocalImagePath);
 
+                    if(!bitmap.isRecycled()){
+                        bitmap.recycle();  //回收图片所占的内存
+                        System.gc();  //提醒系统及时回收
+                    }
                     isInsertImage = true;
                     imgInertStart = richTextContent.getSelectionStart();
                     add = false; //控制这次操作不触发EditText

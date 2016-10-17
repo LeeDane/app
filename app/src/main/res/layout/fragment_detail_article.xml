@@ -12,6 +12,10 @@
     <WebView
         android:id="@+id/detail_webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></WebView>
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:scrollbarSize="0dip"
+        android:layout_marginLeft="@dimen/default_10dp"
+        android:layout_marginRight="@dimen/default_10dp"></WebView>
 
 </LinearLayout>
