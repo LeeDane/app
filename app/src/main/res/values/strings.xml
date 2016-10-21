@@ -61,6 +61,8 @@
     <string name="tip_double_click_exit">再按一次退出程序</string>
     <string name="footer">我是有底线的</string>
     <string name="restore">恢复默认设置</string>
+    <string name="is_not_a_link">这格式似乎不是一个链接</string>
+    <string name="preview">预览</string>
 
     <!-- 异常相关 -->
     <string name="crash_file_path">"/crash"</string>
@@ -405,6 +407,8 @@
     <string name="push_blog_hint_title">请输入博客的标题</string>
     <string name="push_blog_hint_content">请输入博客的内容(支持html标签)</string>
     <string name="color_select_title">请选择颜色</string>
+    <string name="add_link_hint_text">请输入链接</string>
+    <string name="add_link_hint_desc">请输入链接描述信息</string>
 
     <string-array name="colors">
         <item>#CA4443</item>

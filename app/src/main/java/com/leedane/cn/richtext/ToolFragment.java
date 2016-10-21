@@ -139,8 +139,6 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
 
     }
 
-
-
     /**
      * 工具栏的点击事件
      * @param v
@@ -165,9 +163,15 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
         StringBuffer buffer = new StringBuffer(currentText);
         switch (v.getId()){
             case R.id.rich_text_undo: //撤销
-                ((PushBlogActivity)getActivity()).preSelectToolId = -1;
-                mRootView.findViewById(R.id.rich_text_undo).setBackgroundColor(mContext.getResources().getColor(R.color.black));
-                ToastUtil.success(mContext, richTextContent.getSelectionStart() + "=====" + richTextContent.getSelectionEnd());
+                if(((PushBlogActivity)getActivity()).isInsertImage){
+                    //((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                    mRootView.findViewById(R.id.rich_text_undo).setBackgroundColor(mContext.getResources().getColor(R.color.black));
+                    ToastUtil.success(mContext, "有图片未上传完成，无法进行此操作");
+                }else{
+                    //((PushBlogActivity)getActivity()).preSelectToolId = -1;
+                    mRootView.findViewById(R.id.rich_text_undo).setBackgroundColor(mContext.getResources().getColor(R.color.black));
+                    ((PushBlogActivity)getActivity()).removeOperateData();
+                }
                 break;
             case R.id.rich_text_redo: //反撤销
                 ((PushBlogActivity)getActivity()).preSelectToolId = -1;
@@ -294,6 +298,8 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                         }
                     });
                     dialog.show();
+                }else{
+                    ToastUtil.failure(mContext, "请先选中文字");
                 }
                 break;
             case R.id.rich_text_indent: //缩进
@@ -315,6 +321,16 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
             case R.id.rich_text_blockquote: //引用
                 ((PushBlogActivity)getActivity()).preSelectToolId = -1;
                 mRootView.findViewById(R.id.rich_text_blockquote).setBackgroundColor(mContext.getResources().getColor(R.color.black));
+                if(isSelectText){
+                    String bStart = "<blockquote>";
+                    String bEnd = "</blockquote>";
+                    buffer.insert(richTextContent.getSelectionStart(), bStart);
+                    buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
+                    richTextContent.setText(buffer.toString());
+                    richTextContent.setSelection(buffer.length());
+                }else{
+                    ToastUtil.failure(mContext, "请先选中文字");
+                }
                 break;
             case R.id.rich_text_image: //图片
                 ((PushBlogActivity)getActivity()).preSelectToolId = -1;
@@ -325,8 +341,44 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
             case R.id.rich_text_link: //链接
                 ((PushBlogActivity)getActivity()).preSelectToolId = -1;
                 mRootView.findViewById(R.id.rich_text_link).setBackgroundColor(mContext.getResources().getColor(R.color.black));
+                showAddLinkDialog();
                 break;
         }
+    }
+
+    /**
+     * 弹出添加链接的Dialog
+     */
+    private void showAddLinkDialog() {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.add_link_dialog, null);
+        final EditText inputServer = (EditText)view.findViewById(R.id.add_link_dialog_text);
+        final TextView inputDesc = (TextView)view.findViewById(R.id.add_link_dialog_desc);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("请输入链接").setIcon(R.drawable.ic_http_red_200_18dp).setView(view)
+                .setNegativeButton("取消", null);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                String text = inputServer.getText().toString();
+                if (StringUtil.isNotNull(text)) {
+                    if(StringUtil.isLink(text)){
+                        RichTextEditText richTextContent = ((PushBlogActivity)getActivity()).richTextContent;
+                        String currentText = richTextContent.getText().toString();
+                        StringBuffer buffer = new StringBuffer(currentText);
+                        text = "<a href=\""+text+"\">" + inputDesc.getText().toString() + "</a>";
+                        buffer.insert(richTextContent.getSelectionStart(), text);
+                        ((PushBlogActivity)getActivity()).preSelectToolId = 0;
+                        richTextContent.setText(buffer.toString());
+                        richTextContent.setSelection(buffer.length());
+                    }else{
+                        ToastUtil.failure(mContext, mContext.getString(R.string.is_not_a_link));
+                    }
+                }else{
+                    ToastUtil.failure(mContext, "请输入链接!");
+                }
+            }
+        });
+        builder.show();
     }
 
     private Dialog mDialog;
@@ -359,22 +411,26 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
                 }else if(textView.getText().toString().equalsIgnoreCase(BaseApplication.newInstance().getString(R.string.img_link))){
                     final EditText inputServer = new EditText(mContext);
                     AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle("请输入网络图片(大小最好不要超过500k)").setIcon(android.R.drawable.ic_dialog_info).setView(inputServer)
+                    builder.setTitle("请输入网络图片(大小最好不要超过500k)").setIcon(R.drawable.ic_http_red_200_18dp).setView(inputServer)
                             .setNegativeButton("取消", null);
                     builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int which) {
                             String text = inputServer.getText().toString();
                             if (StringUtil.isNotNull(text)) {
-                                RichTextEditText richTextContent = ((PushBlogActivity)getActivity()).richTextContent;
-                                String currentText = richTextContent.getText().toString();
-                                StringBuffer buffer = new StringBuffer(currentText);
-                                float device_width_dp = DensityUtil.px2dip(mContext, BaseApplication.newInstance().getScreenWidthAndHeight()[0]) -10;
-                                text = "<img width=\""+device_width_dp+"\" src=\"" + text+"\">";
-                                buffer.insert(richTextContent.getSelectionStart(), text);
-                                ((PushBlogActivity)getActivity()).preSelectToolId = 0;
-                                richTextContent.setText(buffer.toString());
-                                richTextContent.setSelection(buffer.length());
+                                if(StringUtil.isLink(text)){
+                                    RichTextEditText richTextContent = ((PushBlogActivity)getActivity()).richTextContent;
+                                    String currentText = richTextContent.getText().toString();
+                                    StringBuffer buffer = new StringBuffer(currentText);
+                                    float device_width_dp = DensityUtil.px2dip(mContext, BaseApplication.newInstance().getScreenWidthAndHeight()[0]) -10;
+                                    text = "<img width=\""+device_width_dp+"\" src=\"" + text+"\">";
+                                    buffer.insert(richTextContent.getSelectionStart(), text);
+                                    ((PushBlogActivity)getActivity()).preSelectToolId = 0;
+                                    richTextContent.setText(buffer.toString());
+                                    richTextContent.setSelection(buffer.length());
+                                }else{
+                                    ToastUtil.failure(mContext, mContext.getString(R.string.is_not_a_link));
+                                }
                             }else{
                                 ToastUtil.failure(mContext, "请输入网络图片链接!");
                             }
@@ -405,68 +461,4 @@ public class ToolFragment extends Fragment implements View.OnClickListener{
         if(mDialog != null && mDialog.isShowing())
             mDialog.dismiss();
     }
-
-
-    /*private Dialog mDialog;
-
-    *//**
-     * 显示选择颜色view
-     *//*
-    public void showSelectColorDialog(){
-
-        //判断是否已经存在菜单，存在则把以前的记录取消
-        dismissSelectColorDialog();
-
-        mDialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.mood_list_menu, null);
-
-        ListView listView = (ListView)view.findViewById(R.id.mood_list_menu_listview);
-        listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        List<String> menus = new ArrayList<>();
-
-        menus.add("#CA4443");
-        menus.add("#FF7850");
-        menus.add("#F8C461");
-        menus.add("#A5F862");
-        menus.add("#61AFF9");
-        menus.add("#4F637B");
-        menus.add("#B26EFF");
-
-        SimpleListAdapter adapter = new SimpleListAdapter(getActivity().getApplicationContext(), menus);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView textView = (TextView)view.findViewById(R.id.simple_listview_item);
-                String bStart = "<font color=\""+textView.getText()+"\">";
-                String bEnd = "</font>";
-                RichTextEditText richTextContent = ((PushBlogActivity)getActivity()).richTextContent;
-                StringBuffer buffer = new StringBuffer(richTextContent.getText().toString());
-                buffer.insert(richTextContent.getSelectionStart(), bStart);
-                buffer.insert(richTextContent.getSelectionEnd() + bStart.length(), bEnd);
-                richTextContent.setText(buffer.toString());
-                richTextContent.setSelection(buffer.toString().length());
-                dismissSelectColorDialog();
-            }
-        });
-        mDialog.setTitle("请选择颜色");
-        mDialog.setCancelable(true);
-        mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                dismissSelectColorDialog();
-            }
-        });
-        //ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(800,(menus.size() +1) * 90 +20);
-        mDialog.setContentView(view);
-        mDialog.show();
-    }
-
-    *//**
-     * 隐藏弹出自定义view
-     *//*
-    public void dismissSelectColorDialog(){
-        if(mDialog != null && mDialog.isShowing())
-            mDialog.dismiss();
-    }*/
 }

@@ -24,6 +24,7 @@
             android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="@null"
+            android:visibility="gone"
             android:src="@drawable/redo"/>
 
         <ImageButton
@@ -120,6 +121,7 @@
             android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="@null"
+            android:visibility="gone"
             android:src="@drawable/indent" />
 
         <ImageButton
@@ -128,6 +130,7 @@
             android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="@null"
+            android:visibility="gone"
             android:src="@drawable/justify_left" />
 
         <ImageButton
@@ -136,6 +139,7 @@
             android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="@null"
+            android:visibility="gone"
             android:src="@drawable/justify_center"/>
 
         <ImageButton
@@ -144,8 +148,18 @@
             android:layout_height="48dp"
             android:background="@null"
             android:contentDescription="@null"
+            android:visibility="gone"
             android:src="@drawable/justify_right" />
-
+        <TextView
+            android:id="@+id/rich_text_p"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:textSize="@dimen/default_18sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="P" />
         <ImageButton
             android:id="@+id/rich_text_blockquote"
             android:layout_width="48dp"

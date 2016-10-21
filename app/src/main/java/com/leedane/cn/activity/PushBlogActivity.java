@@ -37,7 +37,9 @@ import com.qiniu.android.storage.UploadOptions;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -51,6 +53,10 @@ public class PushBlogActivity extends BaseActivity {
     private TextView mImageProgressTip;
     public RichTextEditText richTextContent;
     public int preSelectToolId;  //当前选择的工具栏的标签的ID
+    private boolean addToList = true; //判断是否添加到List中，对于撤销状态，不添加进去
+
+    //保存全部的操作列表
+    public List<OperateObject> operateList = new ArrayList<>();
 
     /**
      * 发送的imageview
@@ -63,7 +69,7 @@ public class PushBlogActivity extends BaseActivity {
     private Button mRightPreView;
 
     //标记当前是否插入图片中
-    private boolean isInsertImage;
+    public boolean isInsertImage;
     private String mLocalImagePath;
     //标记图片插入的开始位置
     private int imgInertStart;
@@ -113,6 +119,7 @@ public class PushBlogActivity extends BaseActivity {
 
         //显示标题栏的预览按钮
         mRightPreView = (Button)findViewById(R.id.view_right_button);
+        mRightPreView.setText(getString(R.string.preview));
         mRightPreView.setVisibility(View.VISIBLE);
         mRightPreView.setOnClickListener(this);
 
@@ -125,7 +132,7 @@ public class PushBlogActivity extends BaseActivity {
             case R.id.view_right_img: //发送
                 showLoadingDialog("Blog", "try best to pushing...");
                 HashMap<String, Object> params = new HashMap<>();
-                params.put("has_img", false);
+                params.put("has_img", true);
                 params.put("title", mTitle.getText().toString());
                 params.put("content", richTextContent.getText().toString());
                 params.put("status", ConstantsUtil.STATUS_NORMAL);
@@ -262,15 +269,20 @@ public class PushBlogActivity extends BaseActivity {
     private TextWatcher textWatcher = new TextWatcher() {
 
         private CharSequence noChangeData;//未改变前的数据
+        private int beforeCurrorPosition;
         @Override
         public void afterTextChanged(Editable s) {
-
+            if(addToList)
+                operateList.add(new OperateObject(richTextContent.getText().toString(), beforeCurrorPosition));
+            else
+                addToList = true;
         }
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count,
                                       int after) {
             noChangeData = s;
+            beforeCurrorPosition = richTextContent.getSelectionStart();
         }
 
         @Override
@@ -288,17 +300,19 @@ public class PushBlogActivity extends BaseActivity {
                 return;
             }
 
+
             //非删除操作才会处理
             boolean isDelete = count == 0;
             //说明当前已经选择了一个tool
             if(preSelectToolId > 0 && !add && !isDelete){
-                add = true;
+
                 switch (preSelectToolId){
                     case R.id.rich_text_bold:
                         if(!StringUtil.foucsIsInTag(richTextContent.getText().toString(), richTextContent.getSelectionStart(), "<b>","</b>")){
                             String bStart = "<b>";
                             String bEnd = "</b>";
                             buffer.replace(start, start + count,  bStart + preString +bEnd);
+                            add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.toString().length());
                         }
@@ -308,6 +322,7 @@ public class PushBlogActivity extends BaseActivity {
                             String bStart = "<i>";
                             String bEnd = "</i>";
                             buffer.replace(start, start + count, bStart + preString + bEnd);
+                            add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.toString().length());
                         }
@@ -317,6 +332,7 @@ public class PushBlogActivity extends BaseActivity {
                             String bStart = "<u>";
                             String bEnd = "</u>";
                             buffer.replace(start, start + count, bStart + preString + bEnd);
+                            add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.toString().length());
                         }
@@ -326,6 +342,7 @@ public class PushBlogActivity extends BaseActivity {
                             String bStart = "<h1>";
                             String bEnd = "</h1>";
                             buffer.replace(start, start + count, bStart + preString + bEnd);
+                            add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.toString().length());
                         }
@@ -335,6 +352,7 @@ public class PushBlogActivity extends BaseActivity {
                             String bStart = "<h2>";
                             String bEnd = "</h2>";
                             buffer.replace(start, start + count, bStart + preString + bEnd);
+                            add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.toString().length());
                         }
@@ -344,6 +362,7 @@ public class PushBlogActivity extends BaseActivity {
                             String bStart = "<h3>";
                             String bEnd = "</h3>";
                             buffer.replace(start, start + count, bStart + preString + bEnd);
+                            add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.toString().length());
                         }
@@ -353,6 +372,7 @@ public class PushBlogActivity extends BaseActivity {
                             String bStart = "<h4>";
                             String bEnd = "</h4>";
                             buffer.replace(start, start + count, bStart + preString + bEnd);
+                            add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.toString().length());
                         }
@@ -362,6 +382,7 @@ public class PushBlogActivity extends BaseActivity {
                             String bStart = "<h5>";
                             String bEnd = "</h5>";
                             buffer.replace(start, start + count, bStart + preString + bEnd);
+                            add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.toString().length());
                         }
@@ -371,10 +392,10 @@ public class PushBlogActivity extends BaseActivity {
                             String bStart = "<h6>";
                             String bEnd = "</h6>";
                             buffer.replace(start, start + count,  bStart + preString +bEnd);
+                            add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.toString().length());
                         }
-
                         break;
 
                 }
@@ -384,5 +405,29 @@ public class PushBlogActivity extends BaseActivity {
             }
         }
     };
+
+    public synchronized void removeOperateData(){
+        add = true;
+        addToList = false;
+        if(operateList.size() > 0){
+            operateList.remove(operateList.size() - 1);
+            if(operateList.size() > 0){
+                richTextContent.setText(operateList.get(operateList.size() -1).text);
+                richTextContent.setSelection(operateList.get(operateList.size() -1).cursorPosition);
+            }else
+                richTextContent.setText("");
+        }else{
+            richTextContent.setText("");
+        }
+    }
+
+    class OperateObject{
+        String text; //当前文本信息
+        int cursorPosition;// 光标位置
+        OperateObject(String text, int cursorPosition){
+            this.text = text;
+            this.cursorPosition = cursorPosition;
+        }
+    }
 }
 

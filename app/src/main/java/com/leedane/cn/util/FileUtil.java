@@ -409,14 +409,19 @@ public class FileUtil {
                         //关闭输出流
                         b.put("message", "文件保存成功，路径是:"+StringUtil.getFileName(imgUrl));
                         b.put("isSuccess", true);
+                        b.put("path", saveFilePath.toString());
+                    }else{
+                        b.put("message", "文件下载异常");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     //如果图片未找到
-                    b.put("message", "文件下载异常");
+                    b.put("message", "该地址不是正确的图片路径");
                 }
             }else{
                 b.put("message", "文件已经存在");
+                b.put("isSuccess", true);
+                b.put("path", saveFilePath.toString());
             }
         }else{
             b.put("message", "文件链接为空");

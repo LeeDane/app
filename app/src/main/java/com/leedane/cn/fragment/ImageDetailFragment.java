@@ -279,7 +279,7 @@ public class ImageDetailFragment extends Fragment implements TaskListener {
                 }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.browser_imgage))){
                     CommonHandler.openLink(mContext, mImageDetailBean.getPath());
                 }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.gallery_add))){
-                    if(StringUtil.isLink(getImageUrl())){
+                    if(StringUtil.isLink(getImageUrl()) && getImageUrl().indexOf(ConstantsUtil.QINIU_CLOUD_SERVER) >= 0){
                         AlertDialog alertDialog = new AlertDialog.Builder(mContext).setTitle("添加图库")
                                 .setMessage("把该图片加入我的图库？")
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -301,7 +301,7 @@ public class ImageDetailFragment extends Fragment implements TaskListener {
                                 }).create(); // 创建对话框
                         alertDialog.show();
                     }else{
-                        ToastUtil.failure(mContext, "抱歉，当前的图片链接不符合要求，添加失败");
+                        ToastUtil.failure(mContext, "抱歉，当前的图片链接不是图片链接或者不是七牛服务器上的图片，添加失败");
                     }
 
                 }
@@ -354,8 +354,11 @@ public class ImageDetailFragment extends Fragment implements TaskListener {
             if(type == TaskType.ADD_GALLERY){
                 JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
                 if(jsonObject != null && jsonObject.has("isSuccess")){
-                    //隐藏掉添加的弹出框
-                    ToastUtil.success(mContext, "添加入图库成功");
+                    if(jsonObject.getBoolean("isSuccess"))
+                        //隐藏掉添加的弹出框
+                        ToastUtil.success(mContext, "添加入图库成功");
+                    else
+                        ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                 }else{
                     ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
                 }

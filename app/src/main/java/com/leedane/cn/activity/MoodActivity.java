@@ -699,15 +699,19 @@ public class MoodActivity extends BaseActivity {
                     }
                     final EditText inputServer = new EditText(MoodActivity.this);
                     AlertDialog.Builder builder = new AlertDialog.Builder(MoodActivity.this);
-                    builder.setTitle("请输入网络图片(大小最好不要超过500k)").setIcon(android.R.drawable.ic_dialog_info).setView(inputServer)
+                    builder.setTitle("请输入网络图片(大小最好不要超过500k)").setIcon(R.drawable.ic_http_red_200_18dp).setView(inputServer)
                             .setNegativeButton("取消", null);
                     builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int which) {
                             String text = inputServer.getText().toString();
                             if (StringUtil.isNotNull(text)) {
-                                mNetworkLinks.add(text);
-                                buildNetworkLinksShow();
+                                if(StringUtil.isLink(text)){
+                                    mNetworkLinks.add(text);
+                                    buildNetworkLinksShow();
+                                }else{
+                                    ToastUtil.failure(MoodActivity.this, MoodActivity.this.getString(R.string.is_not_a_link));
+                                }
                             }else{
                                 ToastUtil.failure(MoodActivity.this, "请输入网络图片链接!");
                             }

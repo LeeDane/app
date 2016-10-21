@@ -93,8 +93,9 @@ public class ColorSelectDialog {
                 }
                 else{
                     //convertView.findViewById(R.id.textview).setBackgroundResource(R.drawable.btn_login_phone_p);
-                    ((TextView)convertView.findViewById(R.id.textview)).setTextColor(Color.argb(255, 52, 52, 52));
-                    ((TextView)convertView.findViewById(R.id.textview)).setTextColor(Color.argb(255, 52, 52, 52));
+                    /*((TextView)convertView.findViewById(R.id.textview)).setTextColor(Color.argb(255, 52, 52, 52));
+                    ((TextView)convertView.findViewById(R.id.textview)).setTextColor(Color.argb(255, 52, 52, 52));*/
+                    ((TextView)convertView.findViewById(R.id.textview)).setTextColor( Color.parseColor(mVehicleArr[position]));
                 }
                 ((TextView)convertView.findViewById(R.id.textview)).setText(mVehicleArr[position]);
                 return convertView;

@@ -16,11 +16,9 @@
         android:hint="@string/comment_hint"/>
     <TextView
         android:id="@+id/show_text_dialog_submit"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="@dimen/default_10dp"
         android:background="@drawable/btn_setting_loginoutbg"
         android:clickable="true"
         android:minWidth="120dp"
