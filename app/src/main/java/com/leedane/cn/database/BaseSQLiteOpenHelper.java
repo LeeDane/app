@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.leedane.cn.financial.database.FinancialDataBase;
+import com.leedane.cn.financial.database.FinancialLocationDataBase;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.util.ConstantsUtil;
@@ -34,6 +35,8 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 	 * @param context
 	 */
 	private BaseSQLiteOpenHelper(Context context, String databaseName) {
+
+		//DB_VERSION：数据库的版本号
 		super(context, databaseName, null, ConstantsUtil.DB_VERSION);
 	}
 	/**
@@ -62,6 +65,7 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 		database.execSQL(MySettingDataBase.CREATE_MY_SETTING_TABLE);
 		database.execSQL(FileDataBase.CREATE_FILE_TABLE);
 		database.execSQL(FinancialDataBase.CREATE_FINANCIAL_TABLE);
+		database.execSQL(FinancialLocationDataBase.CREATE_FINANCIAL_LOCATION_TABLE);
 		database.execSQL(OneLevelCategoryDataBase.CREATE_ONE_LEVEL_CATEGORY_TABLE);
 		database.execSQL(TwoLevelCategoryDataBase.CREATE_TWO_LEVEL_CATEGORY_TABLE);
 		//插入初始化设置的SQL
@@ -72,7 +76,7 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 	 * 当传进去的版本比上一版本高时调用的方法
 	 */
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 		Log.i(TAG, "call update");
 		/** 开发阶段先不执行 **/
 		/*
@@ -87,7 +91,7 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 		 * this.onCreate(db); //执行创建操作!
 		 */
 		//db.execSQL("DROP TABLE IF EXISTS " + TABLE_FILE);
-
+		database.execSQL(FinancialLocationDataBase.CREATE_FINANCIAL_LOCATION_TABLE);
 	}
 
 	/**

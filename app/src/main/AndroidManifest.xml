@@ -326,6 +326,13 @@
         </activity>
 
         <activity
+            android:name="com.leedane.cn.financial.activity.LocationActivity"
+            android:label="@string/financial_location"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
             android:name="com.leedane.cn.financial.activity.IncomeOrSpendActivity"
             android:label="@string/financial_income"
             android:screenOrientation="portrait"

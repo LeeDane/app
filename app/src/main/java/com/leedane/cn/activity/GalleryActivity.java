@@ -260,9 +260,13 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
                     ToastUtil.failure(GalleryActivity.this, "图片上传失败");
                     break;
                 case LOAD_NETWORK_IMG_CODE:
-                    if(msg.getData().getBoolean("isSuccess"))
+                    if(msg.getData().getBoolean("isSuccess")) {
+                        //隐藏掉添加的弹出框
+                        if (mDialog != null && mDialog.isShowing()) {
+                            mDialog.dismiss();
+                        }
                         uploadImg(new File(StringUtil.changeNotNull(msg.getData().getString("path"))));
-                    else{
+                    }else{
                         ToastUtil.failure(GalleryActivity.this, "网络图片临时下载出错，原因是：" + StringUtil.changeNotNull(msg.getData().getString("message")));
                         dismissLoadingDialog();
                     }

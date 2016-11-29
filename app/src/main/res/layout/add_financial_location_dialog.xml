@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="700dp"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/default_8dp"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_8dp"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/financial_location_dialog_location"
+            android:hint="请添加位置信息"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:inputType="text"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/financial_location_dialog_position"
+            android:layout_width="@dimen/default_30dp"
+            android:layout_height="@dimen/default_30dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/location"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/financial_location_dialog_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/comment_hint"/>
+
+    <RadioGroup
+        android:id="@+id/financial_location_dialog_status_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/financial_location_dialog_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/normal"/>
+        <RadioButton
+            android:id="@+id/financial_location_dialog_disable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/disable"/>
+    </RadioGroup>
+    <TextView
+        android:id="@+id/financial_location_dialog_submit"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/default_10dp"
+        android:background="@drawable/btn_setting_loginoutbg"
+        android:clickable="true"
+        android:minWidth="120dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/submit"
+        android:textColor="#000"
+        android:textSize="@dimen/default_16sp" />
+</LinearLayout>

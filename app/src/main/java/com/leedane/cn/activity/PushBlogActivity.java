@@ -207,7 +207,7 @@ public class PushBlogActivity extends BaseActivity {
 
                             float device_width_dp = DensityUtil.px2dip(PushBlogActivity.this, BaseApplication.newInstance().getScreenWidthAndHeight()[0]) -20;
                             buffer.insert(imgInertStart,
-                                    "<img width=\""+device_width_dp+"\" src=\"" +ConstantsUtil.QINIU_CLOUD_SERVER + key+"\">");
+                                    "<p><img width=\""+device_width_dp+"\" src=\"" +ConstantsUtil.QINIU_CLOUD_SERVER + key+"\"></p>");
                             add = true;
                             richTextContent.setText(buffer.toString());
                             richTextContent.setSelection(buffer.length());

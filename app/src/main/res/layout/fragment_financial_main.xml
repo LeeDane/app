@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@drawable/ic_save_blue_a400_18dp"
         android:paddingLeft="@dimen/default_10dp"
         android:paddingRight="@dimen/default_10dp"
         android:paddingBottom="@dimen/default_10dp"

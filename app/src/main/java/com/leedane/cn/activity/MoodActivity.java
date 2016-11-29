@@ -428,7 +428,10 @@ public class MoodActivity extends BaseActivity {
                         //将字符串转换为StringBuffer
                         StringBuffer sb = new StringBuffer(mMoodContent.getText().toString().trim());
                         //将字符插入光标所在的位置
-                        sb = sb.insert(index, " #" + s + "# ");
+                        String tag = " #" + s + "# ";
+                        sb = sb.insert(index, tag);
+                        mMoodContent.setText(sb.toString());
+                        mMoodContent.setSelection(index + tag.length());
                     }else{
                         mMoodContent.setText(mMoodContent.getText().toString() + " #" + s + "# ");
                     }

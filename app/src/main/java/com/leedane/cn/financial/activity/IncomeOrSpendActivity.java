@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -34,9 +36,11 @@ import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.financial.bean.FinancialBean;
+import com.leedane.cn.financial.bean.FinancialLocationBean;
 import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.database.FinancialDataBase;
+import com.leedane.cn.financial.database.FinancialLocationDataBase;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.financial.handler.FinancialHandler;
@@ -123,6 +127,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
 
     private String mLocalPath;
 
+    private Spinner mLocation;
+    private int selectLocationPosition = 0;
+
     // 模块，1:收入；2：支出
     private int mModel;
 
@@ -136,7 +143,10 @@ public class IncomeOrSpendActivity extends BaseActivity {
     private FinancialDataBase financialDataBase;
     private OneLevelCategoryDataBase oneLevelCategoryDataBase;
     private TwoLevelCategoryDataBase twoLevelCategoryDataBase;
+    private FinancialLocationDataBase financialLocationDataBase;
     private FinancialBean editFinancialBean;
+
+    private List<FinancialLocationBean> mLocationBeans; //位置信息
 
     //是否编辑状态
     private boolean isEdit;
@@ -158,11 +168,26 @@ public class IncomeOrSpendActivity extends BaseActivity {
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         financialDataBase = new FinancialDataBase(IncomeOrSpendActivity.this);
 
+        mImg = (ImageView)findViewById(R.id.financial_income_or_spend_img);
+        mImg.setOnClickListener(IncomeOrSpendActivity.this);
+        badge = new BadgeView(this, mImg);
+        badge.setText("—");
+        badge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mImg.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.take_photo));
+                mPath = null;
+                mProgressBar.setVisibility(View.GONE);
+                badge.hide();
+            }
+        });
+
         initData();
         backLayoutVisible();
         findViewById(R.id.base_title_textview).setOnClickListener(this);
         oneLevelCategoryDataBase = new OneLevelCategoryDataBase(this);
         twoLevelCategoryDataBase = new TwoLevelCategoryDataBase(this);
+        financialLocationDataBase = new FinancialLocationDataBase(this);
 
         initView();
     }
@@ -229,21 +254,6 @@ public class IncomeOrSpendActivity extends BaseActivity {
      * 初始化视图控件
      */
     private void initView() {
-
-        mImg = (ImageView)findViewById(R.id.financial_income_or_spend_img);
-        mImg.setOnClickListener(IncomeOrSpendActivity.this);
-        badge = new BadgeView(this, mImg);
-        badge.setText("—");
-        badge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mImg.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.take_photo));
-                mPath = null;
-                mProgressBar.setVisibility(View.GONE);
-                badge.hide();
-            }
-        });
-
         mProgressBar = (ProgressBar)findViewById(R.id.financial_income_or_spend_img_progressbar);
 
         mMoney = (EditText)findViewById(R.id.financial_income_or_spend_money);
@@ -267,11 +277,37 @@ public class IncomeOrSpendActivity extends BaseActivity {
 
         mRemark = (EditText)findViewById(R.id.financial_income_or_spend_remark);
 
+        //位置信息
+        mLocation = (Spinner)findViewById(R.id.financial_income_or_spend_location);
+
+        mLocationBeans = financialLocationDataBase.query(" where status = 1 order by id desc ");
+        if(!CommonUtil.isEmpty(mLocationBeans)){
+            List<String> locations = new ArrayList<>();
+            locations.add("请选择记账的位置信息");
+            for(FinancialLocationBean financialLocationBean: mLocationBeans){
+                locations.add(financialLocationBean.getLocation());
+            }
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, locations);
+            mLocation.setAdapter(arrayAdapter);
+            mLocation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position > 0)
+                        selectLocationPosition = position;
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+            mLocation.setSelection(0, true);
+        }
         if(isEdit()){
             Drawable drawable= getResources().getDrawable(R.drawable.ic_delete_forever_blue_a400_18dp);
             /// 这一步必须要做,否则不会显示.
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            mDraft.setCompoundDrawables(drawable,null,null,null);
+            mDraft.setCompoundDrawables(drawable, null, null, null);
             mDraft.setText(R.string.delete);
             showTime = Calendar.getInstance();
             String addTime = editFinancialBean.getAdditionTime();
@@ -282,7 +318,12 @@ public class IncomeOrSpendActivity extends BaseActivity {
             mTwoLevel.setText(editFinancialBean.getTwoLevel());
             mMoney.setText(String.valueOf(editFinancialBean.getMoney()));
             mRemark.setText(StringUtil.changeNotNull(editFinancialBean.getFinancialDesc()));
-
+            String la = editFinancialBean.getLocation();
+            if(StringUtil.isNotNull(la)){
+                if(mLocationBeans.size() > 0){
+                    mLocation.setSelection(getLocationPosition(la), true);
+                }
+            }
             if(StringUtil.isNotNull(editFinancialBean.getPath())){
                 mPath = editFinancialBean.getPath();
                 ImageCacheManager.loadImage(mPath, mImg, 150, 150);
@@ -382,6 +423,10 @@ public class IncomeOrSpendActivity extends BaseActivity {
         editFinancialBean.setStatus(ConstantsUtil.STATUS_NORMAL);
         editFinancialBean.setMoney(Float.valueOf(money));
         editFinancialBean.setAdditionTime(date.trim() + " " + time.trim());
+
+        if(selectLocationPosition > 0)
+            editFinancialBean.setLocation(getLocationText(selectLocationPosition - 1));
+
         try{
             if(isEdit()){
                 financialDataBase.update(editFinancialBean);
@@ -404,6 +449,36 @@ public class IncomeOrSpendActivity extends BaseActivity {
         }
         //后台重新计算记账数据
         FinancialHandler.calculateFinancialData(IncomeOrSpendActivity.this);
+    }
+
+    /**
+     * 获取位置信息的选择的内容
+     * @param position
+     * @return
+     */
+    private String getLocationText(int position){
+        if(CommonUtil.isEmpty(mLocationBeans))
+            return null;
+        return mLocationBeans.get(position).getLocation();
+    }
+
+    /**
+     * 获取位置信息的选择的index
+     * @param text
+     * @return
+     */
+    private int getLocationPosition(String text){
+        if(StringUtil.isNull(text) || CommonUtil.isEmpty(mLocationBeans))
+            return 0;
+
+        int i = 0;
+        for(FinancialLocationBean bean: mLocationBeans){
+            if(text.equals(bean.getLocation())){
+                return i + 1;
+            }
+            i++;
+        }
+        return 0;
     }
 
     /**
@@ -467,6 +542,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
             return;
         }
 
+        if(selectLocationPosition > 0)
+            editFinancialBean.setLocation(getLocationText(selectLocationPosition - 1));
+
         editFinancialBean = new FinancialBean();
         editFinancialBean.setSynchronous(false);
         editFinancialBean.setFinancialDesc(StringUtil.changeNotNull(mRemark.getText().toString()));
@@ -506,6 +584,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
         financialDataBase.destroy();
         oneLevelCategoryDataBase.destroy();
         twoLevelCategoryDataBase.destroy();
+        financialLocationDataBase.destroy();
         super.onDestroy();
     }
 

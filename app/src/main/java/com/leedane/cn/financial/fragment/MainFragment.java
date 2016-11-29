@@ -24,6 +24,7 @@ import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.financial.activity.CloudActivity;
 import com.leedane.cn.financial.activity.HomeActivity;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
+import com.leedane.cn.financial.activity.LocationActivity;
 import com.leedane.cn.financial.activity.OneLevelOperationActivity;
 import com.leedane.cn.financial.activity.SettingActivity;
 import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
@@ -229,6 +230,14 @@ public class MainFragment extends FinancialBaseFragment{
                 startActivity(it);
             }
         });
+
+        mHeaderView.findViewById(R.id.financial_header_location).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(mContext,LocationActivity.class);
+                startActivity(it);
+            }
+        });
         mHeaderView.findViewById(R.id.financial_header_setting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -269,6 +278,7 @@ public class MainFragment extends FinancialBaseFragment{
             public void run() {
                 //后台计算记账数据
                 FinancialHandler.calculateFinancialData(mContext);
+                mFinancialBeans.clear();
                 mFinancialBeans = financialDataBase.query(" where status = "+ ConstantsUtil.STATUS_NORMAL+" order by datetime(addition_time) desc limit 15");
                 Message message = new Message();
                 message.what = INIT_DATA_SUCCESS;

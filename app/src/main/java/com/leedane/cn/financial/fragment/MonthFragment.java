@@ -2,6 +2,7 @@ package com.leedane.cn.financial.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.financial.bean.FinancialList;

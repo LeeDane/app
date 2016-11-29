@@ -207,6 +207,10 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
         return 0;
     }
 
+    public List<T> getmDatas() {
+        return mDatas;
+    }
+
     /**
      * item的单击事件
      */

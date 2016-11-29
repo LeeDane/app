@@ -43,6 +43,7 @@ public enum TaskType {
     ADD_CHAT, //发聊天信息
     ADD_TAG, //添加标签
     ADD_FINANCIAL, //新增记账
+    ADD_FINANCIAL_LOCATION, //新增记账位置
     PUBLISH_CHAT_BG, //发布聊天背景
     LOAD_COMMENT, //加载评论列表
     LOAD_TRANSMIT, //加载转发列表
@@ -62,6 +63,7 @@ public enum TaskType {
     LOAD_FILE, //加载文件列表
     LOAD_CHAT_BG_SELECT_WEB,//获取聊天背景的选择图片
     LOAD_TOPIC, //加载心情列表
+    LOAD_FINANCIAL_LOCATION, //加载记账位置列表
     DO_LOGIN_PHONE, //手机登录
     DO_GET_LOGIN_CODE, //获取手机登录的验证码
     GET_APP_VERSION, //检查APP版本
@@ -85,12 +87,14 @@ public enum TaskType {
     DELETE_FILE, //删除文件
     DELETE_NOTIFICATION, //删除通知
     DELETE_FINANCIAL, //删除记账记录
+    DELETE_FINANCIAL_LOCATION, //删除记账位置记录
     UPDATE_HANDER, //更新用户头像
     UPDATE_USER_BASE, //更新用户的基本信息
     UPDATE_LOGIN_PSW, //更新登录密码
     UPDATE_COMMENT_STATUS, //更新评论状态
     UPDATE_TRANSMIT_STATUS, //更新转发状态
     UPDATE_CHAT_READ_STATUS,//更新聊天信息为已读状态
+    UPDATE_FINANCIAL_LOCATION,//更新记账位置
     FANYI, //翻译
     QINIU_TOKEN, //七牛云存储token
     VERIFY_CHAT_BG, //校验聊天背景

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
+    card_view:cardMaxElevation="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="4dp"
+    android:clickable="true"
+    android:layout_marginTop="@dimen/default_5dp"
+    card_view:paddingStart="@dimen/default_10dp"
+    card_view:paddingEnd="@dimen/default_10dp"
+    android:foreground="?android:selectableItemBackground">
+    <!--  app:cardBackgroundColor 设置卡片的背景颜色-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/default_8dp"
+        android:paddingBottom="@dimen/default_8dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/location_list_index"
+            android:layout_width="@dimen/default_20dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="@dimen/default_12sp" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_10dp"
+            android:orientation="vertical">
+                <TextView
+                    android:id="@+id/location_list_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/default_16sp"
+                    android:text="@string/no_text"/>
+                <TextView
+                    android:id="@+id/location_list_createtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:layout_marginTop="@dimen/default_5dp"
+                    android:textSize="@dimen/default_12sp"
+                    android:text="@string/no_text"/>
+                <TextView
+                    android:id="@+id/location_list_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_5dp"
+                    android:textSize="@dimen/default_12sp"
+                    android:text="@string/no_text"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/location_list_status"
+            android:layout_width="@dimen/default_60dp"
+            android:layout_height="@dimen/default_60dp"
+            android:gravity="center_vertical"
+            android:text="状态"/>
+
+        <ImageView
+            android:id="@+id/location_list_right"
+            android:layout_width="@dimen/default_30dp"
+            android:layout_height="@dimen/default_30dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/right_sign"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

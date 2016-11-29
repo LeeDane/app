@@ -68,12 +68,12 @@ public abstract class BaseFragment extends FinancialBaseFragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 chartOrListButton.setSelected(isChecked);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager .beginTransaction();
-                transaction.remove(fragmentManager.findFragmentById(getFragmentContainerId()));
-                transaction.commit();
+                Fragment fragment = fragmentManager.findFragmentById(getFragmentContainerId());
+                if(fragment != null){
+                    fragmentManager .beginTransaction().remove(fragment).commit();
+                }
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(getFinancialListKey(), financialList);
-
                 if(isChecked){
                     getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), getListDataFragment(bundle)).commit();
                 }else{
@@ -102,5 +102,15 @@ public abstract class BaseFragment extends FinancialBaseFragment {
     @Override
     protected void sendLoadAgain(View view) {
 
+    }
+
+    @Override
+    public void calculate(FinancialList financialList, int model) {
+        super.calculate(financialList, model);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(getFragmentContainerId());
+        if(fragment != null){
+            fragmentManager.beginTransaction().remove(fragment).commit();
+        }
     }
 }

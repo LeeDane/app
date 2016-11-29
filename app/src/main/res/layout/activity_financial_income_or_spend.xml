@@ -107,6 +107,12 @@
             android:gravity="center"
             android:text="@string/default_two_level"/>
     </LinearLayout>
+    <Spinner
+        android:id="@+id/financial_income_or_spend_location"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_30dp"
+        android:layout_marginRight="@dimen/default_30dp"
+        android:spinnerMode="dropdown"></Spinner>
     <EditText
         android:id="@+id/financial_income_or_spend_remark"
         android:layout_width="match_parent"
