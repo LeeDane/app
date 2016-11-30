@@ -199,7 +199,7 @@ public final class ViewfinderView extends View {
 			paint.setTextSize(TEXT_SIZE * density);
 			paint.setAlpha(0x40);
 			paint.setTypeface(Typeface.create("System", Typeface.BOLD));
-			canvas.drawText(getResources().getString(R.string.scan_text), frame.left, (float) (frame.bottom + (float)TEXT_PADDING_TOP *density), paint);
+			canvas.drawText(getResources().getString(R.string.scan_text), frame.left +50, (float) (frame.bottom + (float)TEXT_PADDING_TOP *density), paint);
 
 
 
@@ -208,7 +208,7 @@ public final class ViewfinderView extends View {
 			if (currentPossible.isEmpty()) {
 				lastPossibleResultPoints = null;
 			} else {
-				possibleResultPoints = new HashSet<ResultPoint>(5);
+				possibleResultPoints = new HashSet<>(5);
 				lastPossibleResultPoints = currentPossible;
 				paint.setAlpha(OPAQUE);
 				paint.setColor(resultPointColor);

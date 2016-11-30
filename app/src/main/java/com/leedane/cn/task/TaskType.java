@@ -102,4 +102,6 @@ public enum TaskType {
     SYNCHRONOUS_FINANCIAL, //同步记账记录
     FORCE_ALL, //强制与云端同步
     SMART_ALL, //智能与云端同步
+    SCAN_LOGIN, //扫码登陆
+    CANCEL_SCAN_LOGIN, //取消二维码登录
 }

@@ -295,4 +295,36 @@ public class CommonHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.SEND_EMAIL, listener, requestBean);
     }
+
+    /**
+     * 二维码登录
+     * @param listener
+     * @param cid
+     */
+    public static void loginByQrCode(TaskListener listener, String cid){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("cid", cid);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/user/scan/login.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.SCAN_LOGIN, listener, requestBean);
+    }
+
+    /**
+     * 取消二维码登录
+     * @param listener
+     * @param cid
+     */
+    public static void CancelLoginByQrCode(TaskListener listener, String cid){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("cid", cid);
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/user/scan/cancel.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.CANCEL_SCAN_LOGIN, listener, requestBean);
+    }
 }

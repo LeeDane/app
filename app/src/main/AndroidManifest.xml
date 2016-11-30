@@ -403,6 +403,14 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity
+            android:name="com.leedane.cn.activity.LoginByQrCodeActivity"
+            android:label="@string/scan_login"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+
         <!--  Jpush  -->
         <!-- Required SDK核心功能-->
         <activity

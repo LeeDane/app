@@ -203,8 +203,25 @@ public class MipcaActivityCapture extends Activity implements Callback, TaskList
 		}else if(resultString.startsWith("http://") || resultString.startsWith("https://")){
 			CommonHandler.openLink(MipcaActivityCapture.this, resultString);
 			//无法打开的链接(提供文字复制功能，尝试网络打开链接的功能)
-		}else{
+		}else if(resultString.startsWith("scan_login:")){
+			//判断是否登录
+			if(!BaseApplication.isLogin()){
 
+				Intent it = new Intent(MipcaActivityCapture.this, LoginActivity.class);
+				//设置跳转的activity
+				it.putExtra("returnClass", "com.leedane.cn.activity.MipcaActivityCapture");
+				startActivity(it);
+				finish();
+				return;
+			}else{
+				String cid = resultString.substring("scan_login:".length(), resultString.length());
+				Intent it = new Intent(MipcaActivityCapture.this, LoginByQrCodeActivity.class);
+				//设置跳转的activity
+				it.putExtra("returnClass", "com.leedane.cn.activity.MipcaActivityCapture");
+				it.putExtra("cid", cid);
+				startActivity(it);
+				finish();
+			}
 		}
 	}
 
