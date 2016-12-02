@@ -44,6 +44,7 @@ import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.Base64Util;
+import com.leedane.cn.util.MediaUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.zxing.camera.CameraManager;
@@ -453,8 +454,8 @@ public class MipcaActivityCapture extends Activity implements Callback, TaskList
 
 					@Override
 					public void run() {
-						Result result = scanningImage(uri.getPath());
-
+						String imgPath = MediaUtil.getImageAbsolutePath(MipcaActivityCapture.this, uri);
+						Result result = scanningImage(imgPath);
 						if (result != null) {
 							String str = result.getText();
 							if (!str.equals("")) {
