@@ -21,6 +21,7 @@ import com.leedane.cn.fragment.search.SearchMoodFragment;
 import com.leedane.cn.fragment.search.SearchUserFragment;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.DateUtil;
+import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -39,7 +40,7 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
     private Spinner mSearchType;
     private EditText mSearchKey;
     private Button mSearchGo;
-    private List<String> types = new ArrayList<>();
+    private String[] searchTypes = new String[]{EnumUtil.SearchType.用户名.name(), EnumUtil.SearchType.博客.name(), EnumUtil.SearchType.心情.name()};
     private String selectType;
 
 
@@ -53,13 +54,11 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
         backLayoutVisible();
 
         if(BaseApplication.getLoginUserId() < 1){
-            types.add("博客");
+            searchTypes = new String[]{EnumUtil.SearchType.博客.name()};
         }else{
-            types.add("用户名");
-            types.add("博客");
-            types.add("心情");
+            searchTypes = new String[]{EnumUtil.SearchType.用户名.name(), EnumUtil.SearchType.博客.name(), EnumUtil.SearchType.心情.name()};
         }
-        selectType = types.get(0);
+        selectType = searchTypes[0];
         initData();
         initView();
     }
@@ -67,9 +66,25 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
      * 初始化数据
      */
     private void initData() {
-        SearchHistoryFragment searchHistoryFragment = SearchHistoryFragment.newInstance(new Bundle());
+        Bundle bundle = new Bundle();
+        bundle.putString("searchWhereSql", " where search_type in (" + getSqlTypeSql() + ") order by datetime(create_time) desc");
+        bundle.putStringArray("searchTypes", searchTypes);
+        SearchHistoryFragment searchHistoryFragment = SearchHistoryFragment.newInstance(bundle);
         searchHistoryFragment.setSearchHistorItemClickListener(this);//注册监听器
         getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchHistoryFragment).commit();
+    }
+
+    private String getSqlTypeSql(){
+        StringBuffer buffer = new StringBuffer();
+        if(searchTypes.length > 0){
+            for(int i = 0; i < searchTypes.length; i++){
+                if(i == searchTypes.length -1)
+                    buffer.append("'"+ searchTypes[i] +"'");
+                else
+                    buffer.append("'"+ searchTypes[i] +"',");
+            }
+        }
+        return buffer.toString();
     }
     /**
      * 初始化控件
@@ -90,17 +105,17 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
             }
         });
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, types);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, searchTypes);
         mSearchType.setAdapter(arrayAdapter);
         mSearchType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectType = types.get(position);
+                selectType = searchTypes[position];
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                selectType = types.get(0);
+                selectType = searchTypes[0];
             }
         });
     }
@@ -125,13 +140,13 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
         searchHistoryDataBase.destroy();
         Bundle bundle = new Bundle();
         bundle.putString("searchKey", key);
-        if(selectType.equalsIgnoreCase("用户名")){//搜索用户
+        if(selectType.equalsIgnoreCase(EnumUtil.SearchType.用户名.name())){//搜索用户
             SearchUserFragment searchUserFragment = SearchUserFragment.newInstance(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchUserFragment).commit();
-        }else if(selectType.equalsIgnoreCase("博客")){//搜索博客
+        }else if(selectType.equalsIgnoreCase(EnumUtil.SearchType.博客.name())){//搜索博客
             SearchBlogFragment searchBlogFragment = SearchBlogFragment.newInstance(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchBlogFragment).commit();
-        }else if(selectType.equalsIgnoreCase("心情")){//搜索心情
+        }else if(selectType.equalsIgnoreCase(EnumUtil.SearchType.心情.name())){//搜索心情
             SearchMoodFragment searchMoodFragment = SearchMoodFragment.newInstance(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchMoodFragment).commit();
         }
@@ -160,17 +175,17 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
     @Override
     public void itemClick(SearchHistoryBean searchHistoryBean) {
 
-        if(BaseApplication.getLoginUserId() < 1 && (searchHistoryBean.getSearchType().equalsIgnoreCase("用户名") || searchHistoryBean.getSearchType().equalsIgnoreCase("心情"))){
+        if(BaseApplication.getLoginUserId() < 1 && (EnumUtil.SearchType.用户名.name().equalsIgnoreCase(searchHistoryBean.getSearchType()) || EnumUtil.SearchType.心情.name().equalsIgnoreCase(searchHistoryBean.getSearchType()))){
             ToastUtil.failure(SearchActivity.this, "请先登录才能搜索该类型");
             return;
         }
 
-        if(BaseApplication.getLoginUserId() > 0 && types.size() == 3){
-            if(searchHistoryBean.getSearchType().equalsIgnoreCase("用户名")) {//搜索用户
+        if(BaseApplication.getLoginUserId() > 0 && searchTypes.length == 3){
+            if(searchHistoryBean.getSearchType().equalsIgnoreCase(EnumUtil.SearchType.用户名.name())) {//搜索用户
                 mSearchType.setSelection(0, true);
-            }else if(searchHistoryBean.getSearchType().equalsIgnoreCase("博客")) {//搜索博客
+            }else if(searchHistoryBean.getSearchType().equalsIgnoreCase(EnumUtil.SearchType.博客.name())) {//搜索博客
                 mSearchType.setSelection(1, true);
-            }else if(searchHistoryBean.getSearchType().equalsIgnoreCase("心情")) {//搜索心情
+            }else if(searchHistoryBean.getSearchType().equalsIgnoreCase(EnumUtil.SearchType.心情.name())) {//搜索心情
                 mSearchType.setSelection(2, true);
             }
         }
@@ -181,13 +196,13 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
         mSearchType.setPrompt(searchHistoryBean.getSearchType());
         Bundle bundle = new Bundle();
         bundle.putString("searchKey", searchHistoryBean.getSearchKey());
-        if(searchHistoryBean.getSearchType().equalsIgnoreCase("用户名")){//搜索用户
+        if(searchHistoryBean.getSearchType().equalsIgnoreCase(EnumUtil.SearchType.用户名.name())){//搜索用户
             SearchUserFragment searchUserFragment = SearchUserFragment.newInstance(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchUserFragment).commit();
-        }else if(searchHistoryBean.getSearchType().equalsIgnoreCase("博客")){//搜索博客
+        }else if(searchHistoryBean.getSearchType().equalsIgnoreCase(EnumUtil.SearchType.博客.name())){//搜索博客
             SearchBlogFragment searchBlogFragment = SearchBlogFragment.newInstance(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchBlogFragment).commit();
-        }else if(searchHistoryBean.getSearchType().equalsIgnoreCase("心情")){//搜索心情
+        }else if(searchHistoryBean.getSearchType().equalsIgnoreCase(EnumUtil.SearchType.心情.name())){//搜索心情
             SearchMoodFragment searchMoodFragment = SearchMoodFragment.newInstance(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchMoodFragment).commit();
         }

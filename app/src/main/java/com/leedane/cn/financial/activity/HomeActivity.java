@@ -34,6 +34,7 @@ import com.leedane.cn.financial.fragment.MonthFragment;
 import com.leedane.cn.financial.fragment.WeekFragment;
 import com.leedane.cn.financial.fragment.YearFragment;
 import com.leedane.cn.financial.fragment.YesterDayFragment;
+import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.util.DensityUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -45,9 +46,6 @@ import java.util.List;
  * Created by LeeDane on 2016/7/19.
  */
 public class HomeActivity extends BaseActivity {
-
-    //标记是否对记账对象进行编辑或者新增
-    public static final int IS_EDIT_OR_SAVE_FINANCIAL_CODE = 117;
     public static final String TAG = "HomeActivity";
 
     private int mPreTab = 0;//当上一个的Tab索引
@@ -341,7 +339,7 @@ public class HomeActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode){
-            case IS_EDIT_OR_SAVE_FINANCIAL_CODE:
+            case FlagUtil.IS_EDIT_OR_SAVE_FINANCIAL_CODE:
                 if(data == null)
                     return;
 

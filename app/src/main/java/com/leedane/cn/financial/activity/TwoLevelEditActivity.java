@@ -21,6 +21,7 @@ import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
+import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
@@ -214,7 +215,7 @@ public class TwoLevelEditActivity extends BaseActivity {
      */
     private void initView() {
         Intent it = new Intent(this, TwoLevelOperationActivity.class);
-        setResult(TwoLevelOperationActivity.TWO_LEVEL_CATEGORY_EDIT_CODE, it);
+        setResult(FlagUtil.TWO_LEVEL_CATEGORY_EDIT_CODE, it);
 
         mName = (EditText)findViewById(R.id.two_level_edit_name);
         mBudget = (EditText)findViewById(R.id.two_level_edit_budget);
@@ -350,7 +351,7 @@ public class TwoLevelEditActivity extends BaseActivity {
 
                     it.putExtra("twoLevelCategory", mTwoLevelCategory);
                     it.putExtra("clickPosition", clickPosition);//方便回传定位
-                    setResult(TwoLevelOperationActivity.TWO_LEVEL_CATEGORY_EDIT_CODE, it);
+                    setResult(FlagUtil.TWO_LEVEL_CATEGORY_EDIT_CODE, it);
                     finish();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -378,7 +379,7 @@ public class TwoLevelEditActivity extends BaseActivity {
                                         it.putExtra("type", "delete");
                                         it.putExtra("clickPosition", clickPosition);//方便回传定位
                                         refreshTwoLevelCache();
-                                        setResult(TwoLevelOperationActivity.TWO_LEVEL_CATEGORY_EDIT_CODE, it);
+                                        setResult(FlagUtil.TWO_LEVEL_CATEGORY_EDIT_CODE, it);
                                         finish();
                                         ToastUtil.success(TwoLevelEditActivity.this, "删除二级分类《" + mTwoLevelCategory.getValue() + "》成功。");
                                     } catch (Exception e) {

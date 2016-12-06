@@ -16,9 +16,11 @@ import com.leedane.cn.adapter.search.SearchHistoryAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.search.SearchHistoryBean;
 import com.leedane.cn.database.SearchHistoryDataBase;
+import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,6 +34,8 @@ public class SearchHistoryFragment extends Fragment implements View.OnClickListe
     private ListView mListView;
     private SearchHistoryAdapter mAdapter;
     private List<SearchHistoryBean> mSearchHistoryBeans = new ArrayList<>();
+
+    private String searchWhereSql = "";
 
     //搜索历史项的点击事件
     public interface SearchHistorItemClickListener{
@@ -49,6 +53,7 @@ public class SearchHistoryFragment extends Fragment implements View.OnClickListe
     protected TextView mListViewFooter;
     protected View viewFooter;
     private SearchHistoryDataBase searchHistoryDataBase;
+    private String[] searchTypes = new String[]{};
 
     public SearchHistoryFragment(){
     }
@@ -74,8 +79,14 @@ public class SearchHistoryFragment extends Fragment implements View.OnClickListe
         if(mContext == null)
             mContext = getActivity();
 
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            this.searchWhereSql = bundle.getString("searchWhereSql");
+            this.searchTypes = bundle.getStringArray("searchTypes");
+        }
+
         searchHistoryDataBase = new SearchHistoryDataBase(mContext);
-        mSearchHistoryBeans = searchHistoryDataBase.query(" order by datetime(create_time) desc");
+        mSearchHistoryBeans = searchHistoryDataBase.query(searchWhereSql);
 
         this.mListView = (ListView) mRootView.findViewById(R.id.no_swipe_refresh_listview);
         mAdapter = new SearchHistoryAdapter(mContext, mSearchHistoryBeans);
@@ -103,7 +114,7 @@ public class SearchHistoryFragment extends Fragment implements View.OnClickListe
                                 searchHistoryDataBase.delete(mSearchHistoryBeans.get(position).getId());
                                 searchHistoryDataBase.destroy();
                                 mSearchHistoryBeans.remove(position);
-                                List<SearchHistoryBean> temp = new ArrayList<SearchHistoryBean>();
+                                List<SearchHistoryBean> temp = new ArrayList<>();
                                 temp.addAll(mSearchHistoryBeans);
                                 mAdapter.refreshData(temp);
                                 dismissLoadingDialog();
@@ -144,7 +155,7 @@ public class SearchHistoryFragment extends Fragment implements View.OnClickListe
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 showLoadingDialog("Clear", "try best to clear all...");
                                 SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(mContext);
-                                searchHistoryDataBase.deleteAll();
+                                searchHistoryDataBase.deleteAll(Arrays.asList(searchTypes));
                                 searchHistoryDataBase.destroy();
                                 mAdapter.refreshData(new ArrayList<SearchHistoryBean>());
                                 dismissLoadingDialog();
@@ -194,7 +205,8 @@ public class SearchHistoryFragment extends Fragment implements View.OnClickListe
     }
     @Override
     public void onDestroy() {
-        searchHistoryDataBase.destroy();
+        if(searchHistoryDataBase != null)
+            searchHistoryDataBase.destroy();
         super.onDestroy();
     }
 }

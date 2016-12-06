@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -19,6 +21,7 @@ import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.bean.HttpResponseFinancialBean;
 import com.leedane.cn.financial.database.FinancialDataBase;
 import com.leedane.cn.financial.handler.FinancialHandler;
+import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.financial.util.SettingUtil;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
@@ -42,6 +45,22 @@ public class SettingActivity extends BaseActivity implements Switch.OnCheckedCha
     private LinearLayout mSmartAll; //智能云端拉取
     private LinearLayout mRecentLoad;  //最新展示数量
     private FinancialDataBase financialDataBase;
+    /**
+     * 初始化数据的handler
+     */
+    private Handler synchronizedHandler = new Handler(){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case FlagUtil.SYNCHRONIZED_FLAG:
+                    ToastUtil.success(SettingActivity.this, "数据同步完成");
+                    dismissLoadingDialog();
+                    //后台计算记账数据
+                    FinancialHandler.calculateFinancialData(SettingActivity.this);
+                    break;
+            }
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,10 +229,11 @@ public class SettingActivity extends BaseActivity implements Switch.OnCheckedCha
                                     dismissLoadingDialog();
                                 }
                             }
-                            ToastUtil.success(SettingActivity.this, "数据同步完成");
-                            dismissLoadingDialog();
-                            //后台计算记账数据
-                            FinancialHandler.calculateFinancialData(SettingActivity.this);
+                            Message msg = new Message();
+                            msg.what = FlagUtil.SYNCHRONIZED_FLAG;
+                            //55毫秒秒后进行
+                            synchronizedHandler.sendMessageDelayed(msg, 55);
+
                         }
                     }).start();
                 }
@@ -229,6 +249,8 @@ public class SettingActivity extends BaseActivity implements Switch.OnCheckedCha
     protected void onDestroy() {
         if(financialDataBase != null)
             financialDataBase.destroy();
+
+        synchronizedHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 

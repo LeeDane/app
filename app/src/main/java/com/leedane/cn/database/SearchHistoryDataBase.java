@@ -104,10 +104,21 @@ public class SearchHistoryDataBase {
     /**
      * 删掉全部记录
      */
+    public void deleteAll(List<String> searchTypes) {
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        for(String searchType: searchTypes ){
+            String sql = ("delete from " + SEARCH_TABLE_NAME + " where search_type=?");
+            sqlite.execSQL(sql, new String[]{searchType});
+        }
+        sqlite.close();
+    }
+
+    /**
+     * 删掉全部记录
+     */
     public void deleteAll() {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        String sql = ("delete from " + SEARCH_TABLE_NAME );
-        sqlite.execSQL(sql);
+        String sql = ("delete from " + SEARCH_TABLE_NAME);
         sqlite.close();
     }
 

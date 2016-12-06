@@ -34,6 +34,7 @@ import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.MD5Util;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
@@ -42,7 +43,9 @@ import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**

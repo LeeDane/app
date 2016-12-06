@@ -21,6 +21,7 @@ import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
+import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
@@ -188,7 +189,7 @@ public class OneLevelEditActivity extends BaseActivity {
      */
     private void initView() {
         Intent it = new Intent(OneLevelEditActivity.this, OneLevelOperationActivity.class);
-        setResult(OneLevelOperationActivity.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
+        setResult(FlagUtil.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
 
         mName = (EditText)findViewById(R.id.one_level_edit_name);
         mBudget = (TextView)findViewById(R.id.one_level_edit_budget);
@@ -279,7 +280,7 @@ public class OneLevelEditActivity extends BaseActivity {
                     refreshOneLevelCache();
                     it.putExtra("oneLevelCategory", mOneLevelCategory);
                     it.putExtra("clickPosition", clickPosition);//方便回传定位
-                    setResult(OneLevelOperationActivity.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
+                    setResult(FlagUtil.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
                     finish();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -308,7 +309,7 @@ public class OneLevelEditActivity extends BaseActivity {
                                         it.putExtra("clickPosition", clickPosition);//方便回传定位
                                         //缓存改变数据
                                         refreshOneLevelCache();
-                                        setResult(OneLevelOperationActivity.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
+                                        setResult(FlagUtil.ONE_LEVEL_CATEGORY_EDIT_CODE, it);
                                         finish();
                                         ToastUtil.success(OneLevelEditActivity.this, "删除一级分类《" + mOneLevelCategory.getValue() + "》成功。");
                                     } catch (Exception e) {

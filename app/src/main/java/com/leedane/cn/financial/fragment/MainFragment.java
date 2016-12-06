@@ -13,30 +13,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.bean.GalleryBean;
 import com.leedane.cn.customview.RecycleViewDivider;
 import com.leedane.cn.financial.activity.CloudActivity;
 import com.leedane.cn.financial.activity.HomeActivity;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.activity.LocationActivity;
 import com.leedane.cn.financial.activity.OneLevelOperationActivity;
+import com.leedane.cn.financial.activity.SearchActivity;
 import com.leedane.cn.financial.activity.SettingActivity;
 import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.financial.adapter.FinancialRecyclerViewAdapter;
 import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.bean.FinancialList;
-import com.leedane.cn.financial.bean.OneLevelCategory;
-import com.leedane.cn.financial.bean.TwoLevelCategory;
-import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.handler.FinancialHandler;
 import com.leedane.cn.financial.util.CalculateUtil;
 import com.leedane.cn.financial.util.EnumUtil;
+import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
@@ -54,8 +51,7 @@ import java.util.List;
  */
 public class MainFragment extends FinancialBaseFragment{
 
-    public static final int SYNCHRONIZED_CLOUD_CODE = 25;
-    private static final int INIT_DATA_SUCCESS = 19;
+
     public static final String TAG = "MainFragment";
     private RecyclerView mRecyclerView;
     private FinancialRecyclerViewAdapter mAdapter;
@@ -169,7 +165,7 @@ public class MainFragment extends FinancialBaseFragment{
             public void onItemClick(int position, Object data) {
                 Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
                 it.putExtra("local_id", mFinancialBeans.get(position).getLocalId());
-                getActivity().startActivityForResult(it, HomeActivity.IS_EDIT_OR_SAVE_FINANCIAL_CODE);
+                getActivity().startActivityForResult(it, FlagUtil.IS_EDIT_OR_SAVE_FINANCIAL_CODE);
                 /*Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
                 it.putExtra("financialBean", mFinancialBeans.get(position));
                 mContext.startActivity(it);
@@ -191,7 +187,7 @@ public class MainFragment extends FinancialBaseFragment{
     Handler firstHandler = new Handler(){
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case INIT_DATA_SUCCESS:
+                case FlagUtil.INIT_DATA_SUCCESS:
                     //更新数据
                     mAdapter.addDatas(mFinancialBeans);
                     break;
@@ -231,6 +227,14 @@ public class MainFragment extends FinancialBaseFragment{
             }
         });
 
+        mHeaderView.findViewById(R.id.financial_header_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(mContext, SearchActivity.class);
+                startActivity(it);
+            }
+        });
+
         mHeaderView.findViewById(R.id.financial_header_location).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,7 +253,7 @@ public class MainFragment extends FinancialBaseFragment{
             @Override
             public void onClick(View v) {
                 Intent it = new Intent(mContext, CloudActivity.class);
-                startActivityForResult(it, SYNCHRONIZED_CLOUD_CODE);
+                startActivityForResult(it, FlagUtil.SYNCHRONIZED_CLOUD_CODE);
             }
         });
     }
@@ -281,8 +285,8 @@ public class MainFragment extends FinancialBaseFragment{
                 mFinancialBeans.clear();
                 mFinancialBeans = financialDataBase.query(" where status = "+ ConstantsUtil.STATUS_NORMAL+" order by datetime(addition_time) desc limit 15");
                 Message message = new Message();
-                message.what = INIT_DATA_SUCCESS;
-                //5秒后进行
+                message.what = FlagUtil.INIT_DATA_SUCCESS;
+                //55毫秒秒后进行
                 firstHandler.sendMessageDelayed(message, 55);
 
             }
@@ -298,7 +302,7 @@ public class MainFragment extends FinancialBaseFragment{
                 break;
             case R.id.add_financial:
                 Intent intent = new Intent(mContext, IncomeOrSpendActivity.class);
-                getActivity().startActivityForResult(intent, HomeActivity.IS_EDIT_OR_SAVE_FINANCIAL_CODE);
+                getActivity().startActivityForResult(intent, FlagUtil.IS_EDIT_OR_SAVE_FINANCIAL_CODE);
                 break;
             /*case R.id.financial_refresh:
                 Intent it = new Intent(mContext, CloudActivity.class);
@@ -339,36 +343,35 @@ public class MainFragment extends FinancialBaseFragment{
     @Override
     public void onStart() {
         super.onStart();
-        Log.i(TAG, "onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.i(TAG, "onPause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.i(TAG, "onStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.i(TAG, "onDestroyView");
     }
 
     @Override
     public void onDestroy() {
+        if(firstHandler != null)
+            firstHandler.removeCallbacksAndMessages(null);
+
+        taskCanceled(TaskType.LOAD_ATTENTION);
+        taskCanceled(TaskType.DELETE_ATTENTION);
         super.onDestroy();
-        Log.i(TAG, "onDestroy");
     }
 }

@@ -30,6 +30,7 @@ import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategoryEdit;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
+import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.StringUtil;
@@ -46,8 +47,7 @@ import java.util.List;
 public class TwoLevelOperationActivity extends BaseActivity implements OnStartDragListener,
         BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnItemLongClickListener {
 
-    //二级分类编辑返回的code
-    public static final int TWO_LEVEL_CATEGORY_EDIT_CODE = 59;
+
 
     private TwoLevelCategoryDataBase twoLevelCategoryDataBase;
     private RecyclerView mRecyclerView;
@@ -195,7 +195,7 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
             case R.id.view_right_img://添加二级分类
                 Intent it = new Intent(this, TwoLevelEditActivity.class);
                 it.putExtra("oneLevelId", oneLevelId);
-                startActivityForResult(it, TWO_LEVEL_CATEGORY_EDIT_CODE);
+                startActivityForResult(it, FlagUtil.TWO_LEVEL_CATEGORY_EDIT_CODE);
                 break;
         }
     }
@@ -367,7 +367,7 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
         Intent it = new Intent(TwoLevelOperationActivity.this, TwoLevelEditActivity.class);
         it.putExtra("twoLevelCategoryId", mTwoLevelGategoryEdits.get(position).getId());
         it.putExtra("clickPosition", position);//方便回传定位
-        startActivityForResult(it, TWO_LEVEL_CATEGORY_EDIT_CODE);
+        startActivityForResult(it, FlagUtil.TWO_LEVEL_CATEGORY_EDIT_CODE);
     }
 
     @Override
@@ -380,7 +380,7 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode){
-            case TWO_LEVEL_CATEGORY_EDIT_CODE:
+            case FlagUtil.TWO_LEVEL_CATEGORY_EDIT_CODE:
                 if(data == null)
                     return;
 

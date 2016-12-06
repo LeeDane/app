@@ -12,6 +12,13 @@
         android:paddingBottom="@dimen/default_10dp"
         android:gravity="right">
         <ImageView
+            android:id="@+id/financial_header_search"
+            android:layout_width="@dimen/default_20dp"
+            android:layout_height="@dimen/default_20dp"
+            android:scaleType="fitXY"
+            android:layout_marginRight="@dimen/default_10dp"
+            android:src="@drawable/menu_search"/>
+        <ImageView
             android:id="@+id/financial_header_location"
             android:layout_width="@dimen/default_20dp"
             android:layout_height="@dimen/default_20dp"

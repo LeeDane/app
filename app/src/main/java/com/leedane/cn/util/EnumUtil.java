@@ -174,6 +174,23 @@ public class EnumUtil {
 	}
 
 	/**
+	 * 搜索类型
+	 *  @author LeeDane
+	 * 2016年12月6日 上午8:16:30
+	 * Version 1.0
+	 */
+	public enum SearchType {
+		用户名("user"), 心情("mood"), 博客("blog"), 记账("financial");
+
+		private SearchType(String value) {
+			this.value = value;
+		}
+
+		public final String value;
+
+	}
+
+	/**
 	 * 获取NotificationType列表
 	 * @return
 	 */

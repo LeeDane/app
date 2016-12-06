@@ -1087,6 +1087,8 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
      * 销毁数据库资源
      */
     public void destroy() {
+        if(handler != null)
+            handler.removeCallbacksAndMessages(null);
         if(galleryDataBase != null)
             galleryDataBase.destroy();
     }

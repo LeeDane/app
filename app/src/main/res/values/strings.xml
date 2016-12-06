@@ -304,6 +304,7 @@
 
     <!--  搜索   -->
     <string name="search_key_hint">请输入您要搜索的内容</string>
+    <string name="search_financial_key_hint">将搜索位置、内容、一级分类、二级分类</string>
     <string name="search_user_footer">最多显示最匹配的25个用户结果</string>
     <string name="search_mood_footer">最多显示最匹配的25个心情结果</string>
     <string name="search_blog_footer">最多显示最匹配的25个博客结果</string>

@@ -44,6 +44,7 @@ import com.leedane.cn.financial.database.FinancialLocationDataBase;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.financial.handler.FinancialHandler;
+import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.AppUtil;
@@ -81,9 +82,6 @@ import java.util.UUID;
  * Created by LeeDane on 2016/7/21.
  */
 public class IncomeOrSpendActivity extends BaseActivity {
-
-    public static final int GET_SYSTEM_IMAGE_CODE = 112;
-
     //model是添加收入
     public static final int FINANCIAL_MODEL_INCOME = 1;
     //model是添加支出
@@ -442,7 +440,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
             ToastUtil.success(IncomeOrSpendActivity.this, "数据已成功添加到本地!");
             Intent it = new Intent(this, HomeActivity.class);
             it.putExtra("hasUpdate", true);
-            setResult(HomeActivity.IS_EDIT_OR_SAVE_FINANCIAL_CODE, it);
+            setResult(FlagUtil.IS_EDIT_OR_SAVE_FINANCIAL_CODE, it);
         }catch (Exception e){
             e.printStackTrace();
             ToastUtil.failure(IncomeOrSpendActivity.this, "保存失败!" + e.toString());
@@ -500,7 +498,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
                             ToastUtil.success(IncomeOrSpendActivity.this, "记录删除成功!");
                             Intent it = new Intent(IncomeOrSpendActivity.this, HomeActivity.class);
                             it.putExtra("hasUpdate", true);
-                            setResult(HomeActivity.IS_EDIT_OR_SAVE_FINANCIAL_CODE, it);
+                            setResult(FlagUtil.IS_EDIT_OR_SAVE_FINANCIAL_CODE, it);
                             finish();
                         }
                     });
@@ -730,7 +728,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
                     intent.setType("image/*");
                     intent.putExtra("crop", true);
                     intent.putExtra("return-data", true);
-                    startActivityForResult(intent, GET_SYSTEM_IMAGE_CODE);
+                    startActivityForResult(intent, FlagUtil.GET_SYSTEM_IMAGE_CODE);
                     //选择链接
                 }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.img_link))){
 
@@ -966,7 +964,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             System.out.println("requestCode" + requestCode);
-            if (requestCode == GET_SYSTEM_IMAGE_CODE) {//图库返回
+            if (requestCode == FlagUtil.GET_SYSTEM_IMAGE_CODE) {//图库返回
                 mLocalPath = MediaUtil.getImageAbsolutePath(IncomeOrSpendActivity.this, data.getData());
                 Bitmap bitmap = null;
                 if(StringUtil.isNotNull(mLocalPath)){

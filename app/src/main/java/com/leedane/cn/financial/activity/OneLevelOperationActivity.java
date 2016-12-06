@@ -29,6 +29,7 @@ import com.leedane.cn.financial.adapter.OneLevelEditAdapter;
 import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.OneLevelCategoryEdit;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
+import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.StringUtil;
@@ -43,10 +44,6 @@ import java.util.List;
  */
 public class OneLevelOperationActivity extends BaseActivity implements OnStartDragListener,
         BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnItemLongClickListener {
-
-    //一级分类编辑返回的code
-    public static final int ONE_LEVEL_CATEGORY_EDIT_CODE = 57;
-
     private OneLevelCategoryDataBase oneLevelCategoryDataBase;
     private RecyclerView mRecyclerView;
     private OneLevelEditAdapter mAdapter;
@@ -152,7 +149,7 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
                 break;
             case R.id.view_right_img://添加一级分类
                 Intent it = new Intent(OneLevelOperationActivity.this, OneLevelEditActivity.class);
-                startActivityForResult(it, ONE_LEVEL_CATEGORY_EDIT_CODE);
+                startActivityForResult(it, FlagUtil.ONE_LEVEL_CATEGORY_EDIT_CODE);
                 break;
         }
     }
@@ -335,7 +332,7 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
         Intent it = new Intent(OneLevelOperationActivity.this, OneLevelEditActivity.class);
         it.putExtra("oneLevelCategoryId", mOneLevelGategoryEdits.get(position).getId());
         it.putExtra("clickPosition", position);//方便回传定位
-        startActivityForResult(it, ONE_LEVEL_CATEGORY_EDIT_CODE);
+        startActivityForResult(it, FlagUtil.ONE_LEVEL_CATEGORY_EDIT_CODE);
     }
 
     @Override
@@ -347,7 +344,7 @@ public class OneLevelOperationActivity extends BaseActivity implements OnStartDr
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode){
-            case ONE_LEVEL_CATEGORY_EDIT_CODE:
+            case FlagUtil.ONE_LEVEL_CATEGORY_EDIT_CODE:
                 if(data == null)
                     return;
 
