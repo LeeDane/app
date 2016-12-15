@@ -1,6 +1,7 @@
 package com.leedane.cn.financial.bean;
 
 import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.StringUtil;
@@ -39,7 +40,7 @@ public class TwoLevelCategory implements Serializable{
 	/**
 	 * 显示的图标
 	 */
-	private int icon;
+	private String iconName;
 
 	/**
 	 * 二级分类的预算
@@ -72,7 +73,7 @@ public class TwoLevelCategory implements Serializable{
 	
 	public TwoLevelCategory(){}
 	
-	public TwoLevelCategory(int oneLevelId, String value, boolean isDefault, int order){
+	public TwoLevelCategory(int oneLevelId, String value, boolean isDefault, int order, String iconName){
 		this.oneLevelId = oneLevelId;
 		this.value = value;
 		this.isDefault = isDefault;
@@ -80,7 +81,10 @@ public class TwoLevelCategory implements Serializable{
 		this.createUserId = BaseApplication.getLoginUserId();
 		this.createTime = DateUtil.DateToString(new Date());
 		this.status = ConstantsUtil.STATUS_NORMAL;
-		this.icon = DEFAULT_SUB_CATEGORY_ICON;
+		if(StringUtil.isNull(iconName))
+			this.iconName = EnumUtil.FinancialIcons.现金.value;
+		else
+			this.iconName = iconName;
 	}
 	
 	@Override
@@ -104,12 +108,12 @@ public class TwoLevelCategory implements Serializable{
 		this.id = id;
 	}
 
-	public int getIcon() {
-		return icon;
+	public String getIconName() {
+		return iconName;
 	}
 
-	public void setIcon(int icon) {
-		this.icon = icon;
+	public void setIconName(String iconName) {
+		this.iconName = iconName;
 	}
 
 	public float getBudget() {

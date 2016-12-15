@@ -214,7 +214,8 @@ public class MainFragment extends FinancialBaseFragment{
 
         //公式：支出总预算+收入-支出
         BigDecimal surplus = BaseApplication.getTotalBudget().add(incomeTotal).subtract(spendTotal);
-        budget.setText( Html.fromHtml(surplus.floatValue() > 0.0f ? "￥" + surplus.floatValue() : "￥" +"<font color='red'>"+String.valueOf(surplus.floatValue())+"</font>"));
+        float budgetValue = surplus.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue(); //四舍五入保留两位
+        budget.setText( Html.fromHtml(budgetValue > 0.0f ? "￥" + budgetValue : "￥" +"<font color='red'>"+String.valueOf(budgetValue)+"</font>"));
 
         mHeaderView.findViewById(R.id.financial_header_income_linearlayout).setOnClickListener(this);
         mHeaderView.findViewById(R.id.financial_header_spend_linearlayout).setOnClickListener(this);

@@ -24,6 +24,7 @@ import com.leedane.cn.financial.charts.pie.PieObject;
 import com.leedane.cn.financial.handler.MultipleBarHandler;
 import com.leedane.cn.financial.handler.PieHandler;
 import com.leedane.cn.financial.util.EnumUtil;
+import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.StringUtil;
 
 import java.math.BigDecimal;
@@ -102,6 +103,11 @@ public abstract class BaseChartDataFragment extends FinancialBaseFragment {
             Log.i("BaseChartData", "bundle为空");
 
         }
+
+        //数据为空将不继续操作
+        if(mFinancialList == null || CommonUtil.isEmpty(mFinancialList.getFinancialBeans()))
+            return;
+
         if(mContext == null)
             mContext = getActivity();
         Log.i("BaseChartData", "展示BaseChartData的");

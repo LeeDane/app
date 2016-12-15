@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.leedane.cn.app.R;
 import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.FinancialBean;
+import com.leedane.cn.financial.util.EnumUtil;
+import com.leedane.cn.financial.util.IconUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.StringUtil;
 
@@ -67,12 +69,13 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
             final int pos = getRealPosition(viewHolder);
             final FinancialBean data = mDatas.get(pos);
             ContentHolder holder = ((ContentHolder) viewHolder);
-            //收入
-            if(data.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME){
-                holder.model.setImageResource(R.drawable.ic_trending_up_blue_a200_18dp);
+            //处理图标
+            if(StringUtil.isNotNull(data.getTwoLevel()) && IconUtil.getInstance().getIcon(data.getTwoLevel()) > 0){
+                holder.model.setImageResource(IconUtil.getInstance().getIcon(data.getTwoLevel()));
             }else{
-                holder.model.setImageResource(R.drawable.ic_trending_down_pink_a200_18dp);
+                holder.model.setImageResource(IconUtil.getInstance().getIcon(EnumUtil.FinancialIcons.银行卡.value));
             }
+
             String category = "";
             if(StringUtil.isNotNull(data.getOneLevel())){
                 category = data.getOneLevel();

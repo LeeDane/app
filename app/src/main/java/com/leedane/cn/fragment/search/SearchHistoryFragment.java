@@ -93,7 +93,7 @@ public class SearchHistoryFragment extends Fragment implements View.OnClickListe
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ToastUtil.success(mContext, "点击item位置："+position);
+                //ToastUtil.success(mContext, "点击item位置："+position);
                 searchHistorItemClickListener.itemClick(mSearchHistoryBeans.get(position));
             }
         });

@@ -8,9 +8,9 @@ import android.util.Log;
 
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.database.BaseSQLiteOpenHelper;
-import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.bean.OneLevelCategory;
 import com.leedane.cn.financial.bean.TwoLevelCategory;
+import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.StringUtil;
@@ -34,7 +34,7 @@ public class TwoLevelCategoryDataBase {
             "order_ integer, " +  //分类的排序ID,从1开始
             "status integer, " + // 状态, 0禁用 1正常,
             "value varchar(20), " + // 展示的大类名称
-            "icon integer, "+ // 显示的图标
+            "icon varchar(10), "+ // 显示的图标
             "budget float, " + //一级分类的预算
             "is_default integer, " +//是否是默认的分类, 0：表示没有, 1表示有
             "create_user_id integer, " + // 创建人
@@ -51,99 +51,99 @@ public class TwoLevelCategoryDataBase {
     public static List<TwoLevelCategory> initData(){
         
         List<TwoLevelCategory> twoLevelCategories = new ArrayList<TwoLevelCategory>();
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "早餐", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "午餐", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "晚餐", true, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "夜宵", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "水果", false, 5));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "零食", false, 6));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "饮料", false, 7));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "买菜做饭", false, 8));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "请客吃饭", false, 9));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "早餐", false, 1, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "午餐", false, 2, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "晚餐", true, 3, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "夜宵", false, 4, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "水果", false, 5, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "零食", false, 6, EnumUtil.FinancialIcons.饮料.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "饮料", false, 7, EnumUtil.FinancialIcons.饮料.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "买菜做饭", false, 8, EnumUtil.FinancialIcons.买菜做饭.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("食品酒水"), "请客吃饭", false, 9, EnumUtil.FinancialIcons.支付.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "网上商城", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "超市", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "便利店", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "杂货店", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "地摊", false, 5));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "网上商城", false, 1, EnumUtil.FinancialIcons.购物车.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "超市", false, 2, EnumUtil.FinancialIcons.商店.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "便利店", false, 3, EnumUtil.FinancialIcons.购物.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "杂货店", false, 4, EnumUtil.FinancialIcons.购物.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("日常购物"), "地摊", false, 5, EnumUtil.FinancialIcons.购物.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("衣服饰品"), "衣服裤子", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("衣服饰品"), "鞋帽包包", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("衣服饰品"), "化妆饰品", false, 3));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("衣服饰品"), "衣服裤子", false, 1, EnumUtil.FinancialIcons.包包.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("衣服饰品"), "鞋帽包包", false, 2, EnumUtil.FinancialIcons.包包.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("衣服饰品"), "化妆饰品", false, 3, EnumUtil.FinancialIcons.支付.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("居家物业"), "日常用品", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("居家物业"), "水电煤气", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("居家物业"), "房租", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("居家物业"), "物业管理", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("居家物业"), "维修保养", false, 5));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("居家物业"), "日常用品", false, 1, EnumUtil.FinancialIcons.支出.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("居家物业"), "水电煤气", false, 2, EnumUtil.FinancialIcons.支出.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("居家物业"), "房租", false, 3, EnumUtil.FinancialIcons.住房.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("居家物业"), "物业管理", false, 4, EnumUtil.FinancialIcons.住房.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("居家物业"), "维修保养", false, 5, EnumUtil.FinancialIcons.支出.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "羊城通", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "公共车", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "地铁", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "出租车", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "滴滴出行", false, 5));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "Uber", false, 6));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "私家车", false, 7));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "其他车费", false, 8));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "羊城通", false, 1, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "公共车", false, 2, EnumUtil.FinancialIcons.地铁.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "地铁", false, 3, EnumUtil.FinancialIcons.地铁.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "出租车", false, 4, EnumUtil.FinancialIcons.出租车.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "滴滴出行", false, 5, EnumUtil.FinancialIcons.出租车.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "Uber", false, 6, EnumUtil.FinancialIcons.出租车.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "私家车", false, 7, EnumUtil.FinancialIcons.出租车.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("行车交通"), "其他车费", false, 8, EnumUtil.FinancialIcons.交通.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "手机", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "笔记本", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "话费充值", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "上网费", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "快递费", false, 5));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "其他电子", false, 6));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "手机", false, 1, EnumUtil.FinancialIcons.手机.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "笔记本", false, 2, EnumUtil.FinancialIcons.笔记本.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "话费充值", false, 3, EnumUtil.FinancialIcons.话费充值.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "上网费", false, 4, EnumUtil.FinancialIcons.上网费.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "快递费", false, 5, EnumUtil.FinancialIcons.快递.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("交流通讯"), "其他电子", false, 6, EnumUtil.FinancialIcons.上网费.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "景区门票", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "酒店住宿", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "运动健身", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "腐败聚会", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "休闲玩乐", false, 5));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "旅游度假", false, 6));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "宠物宝贝", false, 7));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "景区门票", false, 1, EnumUtil.FinancialIcons.支出.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "酒店住宿", false, 2, EnumUtil.FinancialIcons.旅店.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "运动健身", false, 3, EnumUtil.FinancialIcons.运动.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "腐败聚会", false, 4, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "休闲玩乐", false, 5, EnumUtil.FinancialIcons.蛋糕.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "旅游度假", false, 6, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("休闲娱乐"), "宠物宝贝", false, 7, EnumUtil.FinancialIcons.支付.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("学习进修"), "学习资料", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("学习进修"), "培训进修", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("学习进修"), "数码装备", false, 3));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("学习进修"), "学习资料", false, 1, EnumUtil.FinancialIcons.教育.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("学习进修"), "培训进修", false, 2, EnumUtil.FinancialIcons.教育.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("学习进修"), "数码装备", false, 3, EnumUtil.FinancialIcons.笔记本.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("人情往来"), "送礼请客", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("人情往来"), "孝敬长辈", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("人情往来"), "还人钱物", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("人情往来"), "慈善捐助", false, 4));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("人情往来"), "送礼请客", false, 1, EnumUtil.FinancialIcons.礼物.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("人情往来"), "孝敬长辈", false, 2, EnumUtil.FinancialIcons.支出.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("人情往来"), "还人钱物", false, 3, EnumUtil.FinancialIcons.支出.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("人情往来"), "慈善捐助", false, 4, EnumUtil.FinancialIcons.支出.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "信用卡", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "微信红包", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "支付宝红包", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "微信转账", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "支付宝转账", false, 5));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "银行手续", false, 6));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "投资亏损", false, 7));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "按揭还款", false, 8));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "消费税收", false, 9));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "利息支出", false, 10));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "赔偿罚款", false, 11));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "信用卡", false, 1, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "微信红包", false, 2, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "支付宝红包", false, 3, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "微信转账", false, 4, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "支付宝转账", false, 5, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "银行手续", false, 6, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "投资亏损", false, 7, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "按揭还款", false, 8, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "消费税收", false, 9, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "利息支出", false, 10, EnumUtil.FinancialIcons.支付.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("金融银行"), "赔偿罚款", false, 11, EnumUtil.FinancialIcons.支付.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("生活保健"), "药品费", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("生活保健"), "保健费", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("生活保健"), "美容费", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("生活保健"), "治疗费", false, 4));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("生活保健"), "药品费", false, 1, EnumUtil.FinancialIcons.支出.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("生活保健"), "保健费", false, 2, EnumUtil.FinancialIcons.支出.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("生活保健"), "美容费", false, 3, EnumUtil.FinancialIcons.支出.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("生活保健"), "治疗费", false, 4, EnumUtil.FinancialIcons.支出.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他杂项"), "其他支出", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他杂项"), "意外丢失", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他杂项"), "烂账丢失", false, 3));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他杂项"), "其他支出", false, 1, EnumUtil.FinancialIcons.支出.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他杂项"), "意外丢失", false, 2, EnumUtil.FinancialIcons.支出.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他杂项"), "烂账丢失", false, 3, EnumUtil.FinancialIcons.支出.value));
 
         //收入大类
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "工资收入", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "利息收入", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "加班收入", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "奖金收入", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "投资收入", false, 5));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "兼职收入", false, 6));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "工资收入", false, 1, EnumUtil.FinancialIcons.现金.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "利息收入", false, 2, EnumUtil.FinancialIcons.现金.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "加班收入", false, 3, EnumUtil.FinancialIcons.现金.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "奖金收入", false, 4, EnumUtil.FinancialIcons.收入.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "投资收入", false, 5, EnumUtil.FinancialIcons.收入.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("职业收入"), "兼职收入", false, 6, EnumUtil.FinancialIcons.收入.value));
 
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "礼金收入", false, 1));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "中奖收入", false, 2));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "意外来钱", false, 3));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "经营所得", false, 4));
-        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "借钱", false, 5));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "礼金收入", false, 1, EnumUtil.FinancialIcons.收入.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "中奖收入", false, 2, EnumUtil.FinancialIcons.收入.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "意外来钱", false, 3, EnumUtil.FinancialIcons.收入.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "经营所得", false, 4, EnumUtil.FinancialIcons.收入.value));
+        twoLevelCategories.add(new TwoLevelCategory(OneLevelCategoryDataBase.getOneLevelIdByValue("其他收入"), "借钱", false, 5, EnumUtil.FinancialIcons.收入.value));
 
         TwoLevelCategoryDataBase dataBase = new TwoLevelCategoryDataBase(BaseApplication.newInstance());
         for(TwoLevelCategory twoLevelCategory: twoLevelCategories){
@@ -175,7 +175,7 @@ public class TwoLevelCategoryDataBase {
         sqlite.beginTransaction();
         try{
             sqlite.execSQL(sql, new String[]{
-                    data.getOrder() + "", data.getOneLevelId() + "", data.getStatus() + "", data.getValue(), data.getIcon() + "", data.getBudget() + "",
+                    data.getOrder() + "", data.getOneLevelId() + "", data.getStatus() + "", data.getValue(), data.getIconName() + "", data.getBudget() + "",
                     StringUtil.changeTrueOrFalseToInt(data.isDefault()) + "", data.getCreateUserId() + "", data.getCreateTime()});
             sqlite.setTransactionSuccessful(); // 设置事务成功完成
         } catch (SQLException e) {
@@ -253,7 +253,7 @@ public class TwoLevelCategoryDataBase {
         String sql = ("update " + TWO_LEVEL_CATEGORY_TABLE_NAME + " set order_=?, one_level_id=?, status=?, value=?, icon=?" +
                 ", budget=?, is_default=?,create_user_id=?, create_time=? where id=?");
         sqlite.execSQL(sql, new String[]{
-                data.getOrder() + "", data.getOneLevelId() +"", data.getStatus() +"", data.getValue(), data.getIcon() +"", data.getBudget() + "",
+                data.getOrder() + "", data.getOneLevelId() +"", data.getStatus() +"", data.getValue(), data.getIconName() +"", data.getBudget() + "",
                 StringUtil.changeTrueOrFalseToInt(data.isDefault()) +"", data.getCreateUserId() +"", data.getCreateTime(), data.getId() +""});
         sqlite.close();
     }
@@ -280,7 +280,7 @@ public class TwoLevelCategoryDataBase {
             twoLevelCategory.setOneLevelId(cursor.getInt(2));
             twoLevelCategory.setStatus(cursor.getInt(3));
             twoLevelCategory.setValue(cursor.getString(4));
-            twoLevelCategory.setIcon(cursor.getInt(5));
+            twoLevelCategory.setIconName(cursor.getString(5));
             twoLevelCategory.setBudget(cursor.getFloat(6));
             twoLevelCategory.setIsDefault(StringUtil.changeIntToTrueOrFalse(cursor.getInt(7)));
             twoLevelCategory.setCreateUserId(cursor.getInt(8));

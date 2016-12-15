@@ -20,8 +20,10 @@ import com.leedane.cn.financial.Helper.ItemTouchHelperAdapter;
 import com.leedane.cn.financial.Helper.ItemTouchHelperViewHolder;
 import com.leedane.cn.financial.Helper.OnStartDragListener;
 import com.leedane.cn.financial.bean.TwoLevelCategoryEdit;
+import com.leedane.cn.financial.util.IconUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -53,8 +55,8 @@ public class TwoLevelEditAdapter extends BaseRecyclerViewAdapter<TwoLevelCategor
         if(viewHolder instanceof ContentHolder && !CommonUtil.isEmpty(mDatas)) {
             final ContentHolder holder = ((ContentHolder) viewHolder);
 
-            if(data.getIcon() > 0){
-                holder.icon.setImageResource(data.getIcon());
+            if(StringUtil.isNotNull(data.getIconName())){
+                holder.icon.setImageResource(IconUtil.getInstance().getIcon(data.getIconName()));
             }
 
             holder.name.setText(Html.fromHtml(data.getValue() + (data.isDefault() ? "   <font color='red'>默认</font>" : "")));

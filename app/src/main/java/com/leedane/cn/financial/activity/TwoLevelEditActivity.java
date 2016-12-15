@@ -22,6 +22,7 @@ import com.leedane.cn.financial.bean.TwoLevelCategory;
 import com.leedane.cn.financial.database.OneLevelCategoryDataBase;
 import com.leedane.cn.financial.database.TwoLevelCategoryDataBase;
 import com.leedane.cn.financial.util.FlagUtil;
+import com.leedane.cn.financial.util.IconUtil;
 import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
@@ -30,6 +31,7 @@ import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 二级分类的编辑界面的activity
@@ -38,10 +40,16 @@ import java.util.List;
 public class TwoLevelEditActivity extends BaseActivity {
 
     //默认图标数组
-    private static final int[] mIconValues = { R.drawable.ic_category_edit, R.drawable.ic_trending_up_blue_a200_18dp, R.drawable.ic_list_white_18dp,
-            R.drawable.ic_richpush_actionbar_back, R.drawable.ic_trending_down_pink_a200_18dp }; //定义数组
-    private static final String[] mIconKeys = {"请选择", "分类", "收入", "列表", "向左", "支出"}; //定义数组
+    private static final List<String> mIconKeys; //定义数组
 
+    static {
+        Map<String, Integer> mapIcons = IconUtil.getInstance().mapIcons;
+        mIconKeys = new ArrayList<>();
+        mIconKeys.add("请选择");
+        for(Map.Entry<String, Integer> entry: mapIcons.entrySet()){
+            mIconKeys.add(entry.getKey());
+        }
+    }
     private TwoLevelCategoryDataBase twoLevelCategoryDataBase;
     private OneLevelCategoryDataBase oneLevelCategoryDataBase;
     private TwoLevelCategory mTwoLevelCategory;
@@ -65,7 +73,7 @@ public class TwoLevelEditActivity extends BaseActivity {
     private int status = 1;
     private int oneLeveId;
     private boolean isDefault = false;
-    private int iconId;
+    private String iconName;
     private int clickPosition;//方便回传定位
     private List<OneLevelCategory> oneLevelCategories = new ArrayList<>();
     private List<String> oneLevelList = new ArrayList<>();
@@ -147,10 +155,10 @@ public class TwoLevelEditActivity extends BaseActivity {
             ((RadioButton)findViewById(R.id.two_level_edit_no_default)).setChecked(true);
         }
 
-        iconId = mTwoLevelCategory.getIcon();
-        mSpinner.setSelection(getIconSelection(mTwoLevelCategory.getIcon()));
-        if(mTwoLevelCategory.getIcon() > 0)
-            mIcon.setImageResource(mTwoLevelCategory.getIcon());
+        iconName = mTwoLevelCategory.getIconName();
+        mSpinner.setSelection(getIconSelection(mTwoLevelCategory.getIconName()));
+        if(StringUtil.isNotNull(mTwoLevelCategory.getIconName()))
+            mIcon.setImageResource(IconUtil.getInstance().getIcon(mTwoLevelCategory.getIconName()));
 
         mOneLevel.setSelection(getOneLevelSelection(oneLeveId));
 
@@ -182,13 +190,13 @@ public class TwoLevelEditActivity extends BaseActivity {
      * 获取图标的默认选项
      * @return
      */
-    private int getIconSelection(int icon){
+    private int getIconSelection(String icon){
         int p = 0;
-        if(icon == 0)
+        if(StringUtil.isNull(icon))
             return p;
-        for(int k: mIconValues ){
-            if(k == icon){
-                p = k;
+        for(int i = 1 ; i < mIconKeys.size(); i++ ){
+            if(mIconKeys.get(i).equals(icon)){
+                p = i;
                 break;
             }
         }
@@ -255,18 +263,18 @@ public class TwoLevelEditActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0){
-                    iconId = 0;
+                    iconName = "请选择";
                     mIcon.setVisibility(View.GONE);
                     return;
                 }
-                iconId = mIconValues[position];
-                mIcon.setImageResource(iconId);
+                iconName = mIconKeys.get(position);
+                mIcon.setImageResource(IconUtil.getInstance().getIcon(iconName));
                 mIcon.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                iconId = 0;
+                iconName = "请选择";
                 mIcon.setVisibility(View.GONE);
             }
         });
@@ -460,8 +468,8 @@ public class TwoLevelEditActivity extends BaseActivity {
         mTwoLevelCategory.setOneLevelId(oneLeveId);
 
         mTwoLevelCategory.setIsDefault(isDefault);
-
-        mTwoLevelCategory.setIcon(iconId);
+        if(!"请选择".equals(iconName))
+            mTwoLevelCategory.setIconName(iconName);
     }
 
     @Override

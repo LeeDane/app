@@ -65,6 +65,8 @@
     <string name="restore">恢复默认设置</string>
     <string name="is_not_a_link">这格式似乎不是一个链接</string>
     <string name="preview">预览</string>
+    <string name="search_condition">更多条件</string>
+    <string name="ok">确定</string>
 
     <!-- 异常相关 -->
     <string name="crash_file_path">"/crash"</string>
@@ -408,6 +410,14 @@
     <string name="cloud_smart_all_tip">注意：此操作不清空数据，增量比对后同步</string>
     <string name="recent_load_number">展示最近操作条数</string>
     <string name="financial_location">常用记账位置</string>
+    <!--   记账检索  -->
+    <string name="search_select_title">请选择条件</string>
+    <string name="search_start_time">开始时间：</string>
+    <string name="search_end_time">结束时间：</string>
+    <string name="search_hint_start_time">点击选择开始时间</string>
+    <string name="search_hint_end_time">点击选择结束时间</string>
+    <string name="search_level">请选择分类：</string>
+
 
     <!--  发布博客  -->
     <string name="push_blog">发布博客</string>

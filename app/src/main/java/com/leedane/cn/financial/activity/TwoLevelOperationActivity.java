@@ -319,7 +319,7 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
         twoLevelCategoryEdit.setBudget(twoLevelCategory.getBudget());
         twoLevelCategoryEdit.setCreateTime(twoLevelCategory.getCreateTime());
         twoLevelCategoryEdit.setCreateUserId(twoLevelCategory.getCreateUserId());
-        twoLevelCategoryEdit.setIcon(twoLevelCategory.getIcon());
+        twoLevelCategoryEdit.setIconName(twoLevelCategory.getIconName());
         twoLevelCategoryEdit.setId(twoLevelCategory.getId());
         twoLevelCategoryEdit.setOrder(twoLevelCategory.getOrder());
         twoLevelCategoryEdit.setIsDefault(twoLevelCategory.isDefault());
@@ -350,7 +350,7 @@ public class TwoLevelOperationActivity extends BaseActivity implements OnStartDr
         twoLevelCategory.setBudget(twoLevelCategoryEdit.getBudget());
         twoLevelCategory.setCreateTime(twoLevelCategoryEdit.getCreateTime());
         twoLevelCategory.setCreateUserId(twoLevelCategoryEdit.getCreateUserId());
-        twoLevelCategory.setIcon(twoLevelCategoryEdit.getIcon());
+        twoLevelCategory.setIconName(twoLevelCategoryEdit.getIconName());
         twoLevelCategory.setId(twoLevelCategoryEdit.getId());
         if(resetOrder)
             twoLevelCategory.setOrder(order);

@@ -11,7 +11,8 @@
         android:orientation="horizontal">
         <EditText
             android:id="@+id/search_key"
-            android:layout_width="240dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:singleLine="true"
             android:imeOptions="actionSearch"
@@ -21,7 +22,25 @@
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:text="@string/search"/>
+        <Button
+            android:id="@+id/show_condition"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="@string/search_condition"/>
     </LinearLayout>
+    <ToggleButton
+        android:id="@+id/chart_or_list_toggle_button"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/default_24dp"
+        android:background="#00000000"
+        style="@style/chart_or_list"
+        android:layout_margin="@dimen/default_5dp"
+        android:checked="true"
+        android:textOff="图表视图"
+        android:gravity="center"
+        android:layout_gravity="right"
+        android:textSize="@dimen/default_12sp"
+        android:textOn="列表视图"/>
     <FrameLayout
         android:id="@+id/search_container"
         android:layout_width="match_parent"
