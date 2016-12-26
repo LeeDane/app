@@ -76,6 +76,9 @@ dependencies {
     compile files('libs/togglebuttonlib.jar')
     compile files('libs/android-viewbadger.jar')
     compile 'jp.wasabeef:richeditor-android:1.2.1'
+
+    compile 'homhomlin.lib:sldinglayout:0.9.0'
+
     //引入okhttp模块
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile files('libs/jsoup-1.9.2.jar')

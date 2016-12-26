@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
@@ -26,6 +27,8 @@ import com.leedane.cn.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.homhomlib.design.SlidingLayout;
 
 /**
  * 全文的内容的fragment类
@@ -43,6 +46,7 @@ public class DetailArticleFragment extends Fragment{
     private WebSettings mSettings;
     private int mBlogId;
 
+    private SlidingLayout mSlidingLayout;
     /**
      * 内置浏览器webview对象
      */
@@ -77,9 +81,16 @@ public class DetailArticleFragment extends Fragment{
 
         if(isFirstLoading){
             mWebView = (WebView)mRootView.findViewById(R.id.detail_webview);
+            mSlidingLayout = (SlidingLayout)mRootView.findViewById(R.id.webview_background_view);
             mProgressBar = (ProgressBar)mRootView.findViewById(R.id.detail_progressbar);
+
+            String serverBasePath = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent();
+            if(mSlidingLayout.getBackgroundView() != null){
+                ((TextView)mSlidingLayout.getBackgroundView().findViewById(R.id.webview_backgroup_textview)).setText("网页由 "+serverBasePath +"提供\n\r   LeeDane官方提供技术支持");
+            }
+
             float device_width_dp = BaseApplication.newInstance().getScreenWidthAndHeight()[0];
-            mBlogUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/blog/getContent.action?blog_id=" + mBlogId+"&device_width="+ (DensityUtil.px2dip(mContext, device_width_dp) -20);
+            mBlogUrl = serverBasePath + "leedane/blog/getContent.action?blog_id=" + mBlogId+"&device_width="+ (DensityUtil.px2dip(mContext, device_width_dp) -20);
             Log.i("blogDetail", "博客的地址：" + mBlogUrl);
             mWebView.loadUrl(mBlogUrl);
             //启用支持javascript
