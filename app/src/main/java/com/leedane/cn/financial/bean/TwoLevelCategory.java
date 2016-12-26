@@ -1,5 +1,6 @@
 package com.leedane.cn.financial.bean;
 
+import com.bigkoo.pickerview.model.IPickerViewData;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.util.ConstantsUtil;
@@ -13,7 +14,7 @@ import java.util.Date;
  * 二级类bean实体类
  * Created by LeeDane on 2016/7/21.
  */
-public class TwoLevelCategory implements Serializable{
+public class TwoLevelCategory implements Serializable, IPickerViewData {
 	
 	public static int DEFAULT_SUB_CATEGORY_ICON = 0;//默认显示的图标
 
@@ -170,5 +171,10 @@ public class TwoLevelCategory implements Serializable{
 
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
+	}
+
+	@Override
+	public String getPickerViewText() {
+		return value;
 	}
 }

@@ -1,9 +1,6 @@
 package com.leedane.cn.financial.activity;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,23 +10,19 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
+import com.bigkoo.pickerview.OptionsPickerView;
+import com.bigkoo.pickerview.TimePickerView;
 import com.leedane.cn.activity.BaseActivity;
 import com.leedane.cn.activity.LoginActivity;
 import com.leedane.cn.adapter.SimpleListAdapter;
@@ -52,7 +45,6 @@ import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
-import com.leedane.cn.util.DensityUtil;
 import com.leedane.cn.util.FileUtil;
 import com.leedane.cn.util.MediaUtil;
 import com.leedane.cn.util.QiniuUploadManager;
@@ -96,11 +88,8 @@ public class IncomeOrSpendActivity extends BaseActivity {
     //金钱
     private EditText mMoney;
 
-    //选择日期
+    //选择日期时间
     private EditText mDate;
-
-    //选择时间
-    private EditText mTime;
 
     //附加图片
     private ImageView mImg;
@@ -148,6 +137,11 @@ public class IncomeOrSpendActivity extends BaseActivity {
 
     //是否编辑状态
     private boolean isEdit;
+
+    private OptionsPickerView pvCategoryOptions;//弹出分类选项
+    private ArrayList<OneLevelCategory> oneLevelCategories; //一级分类
+    private ArrayList<ArrayList<TwoLevelCategory>> twoLevelCategories; //二级分类
+    private TimePickerView pvTime; //时间选择器
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,6 +208,25 @@ public class IncomeOrSpendActivity extends BaseActivity {
         else
             setTitleViewText(getStringResource(R.string.financila_add_spend));
 
+        //选项选择器
+        pvCategoryOptions = new OptionsPickerView(this);
+        resetCategorys();
+        //设置选择的三级单位
+        //pvCategoryOptions.setLabels("一级分类", "二级分类");
+        pvCategoryOptions.setTitle("选择分类");
+        pvCategoryOptions.setCyclic(false, false, true);
+        pvCategoryOptions.setCancelable(true);
+        //设置默认选中的三级项目
+        //监听确定选择按钮
+        pvCategoryOptions.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+                mOneLevel.setText(oneLevelCategories.get(options1).getPickerViewText());
+                mTwoLevel.setText(twoLevelCategories.get(options1).get(option2).getPickerViewText());
+            }
+        });
+
         if(getIntent().getType() != null){
             if(getIntent().getType().startsWith("image/")){
                 List<String> images = AppUtil.getListPicPaths(IncomeOrSpendActivity.this);
@@ -241,6 +254,68 @@ public class IncomeOrSpendActivity extends BaseActivity {
     }
 
     /**
+     * 重置分类
+     */
+    private void resetCategorys(){
+        oneLevelCategories = getOneLevelCategorys();
+        twoLevelCategories = getTwoLevelCategorys(oneLevelCategories);
+        pvCategoryOptions.setPicker(oneLevelCategories, twoLevelCategories, true);
+        pvCategoryOptions.setSelectOptions(0, getTwoLevelCategorysDefaultIndex());
+    }
+
+    /**
+     * 获取展示的一级分类
+     * @return
+     */
+    private ArrayList<OneLevelCategory> getOneLevelCategorys(){
+        List<OneLevelCategory> oneLevelGategories = BaseApplication.oneLevelCategories;
+        ArrayList<OneLevelCategory> categories = new ArrayList<>();
+        if(oneLevelGategories.size() > 0 ){
+            for(OneLevelCategory oneLevelCategory : oneLevelGategories){
+                if(oneLevelCategory.getModel() == mModel)
+                    categories.add(oneLevelCategory);
+            }
+        }
+        return categories;
+    }
+
+    /**
+     * 获取展示的二级分类
+     * @param oneLevelCategories
+     * @return
+     */
+    private ArrayList<ArrayList<TwoLevelCategory>> getTwoLevelCategorys(ArrayList<OneLevelCategory> oneLevelCategories){
+        ArrayList<ArrayList<TwoLevelCategory>> categories = new ArrayList<>();
+        List<TwoLevelCategory> twoLevelCategories = BaseApplication.twoLevelCategories;
+        for(OneLevelCategory oneLevelCategory: oneLevelCategories){
+            ArrayList<TwoLevelCategory> twoLevelCategoryArrayList = new ArrayList<>();
+            for(TwoLevelCategory twoLevelCategory: twoLevelCategories){
+                if(twoLevelCategory.getOneLevelId() == oneLevelCategory.getId()){
+                    twoLevelCategoryArrayList.add(twoLevelCategory);
+                }
+            }
+            categories.add(twoLevelCategoryArrayList);
+        }
+        return categories;
+    }
+
+    /**
+     * 获取二级分类第一个展示的默认值
+     * @return
+     */
+    private int getTwoLevelCategorysDefaultIndex(){
+        int index = 0;
+        if(CommonUtil.isEmpty(twoLevelCategories.get(0)))
+            return index;
+        for(int i = 0; i < twoLevelCategories.get(0).size(); i++){
+            if(twoLevelCategories.get(0).get(i).isDefault()){
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+    /**
      * 判断当前是否是可以编辑的状态
      * @return
      */
@@ -253,15 +328,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
      */
     private void initView() {
         mProgressBar = (ProgressBar)findViewById(R.id.financial_income_or_spend_img_progressbar);
-
         mMoney = (EditText)findViewById(R.id.financial_income_or_spend_money);
-
-
         mDate = (EditText)findViewById(R.id.financial_income_or_spend_date);
-        mTime = (EditText)findViewById(R.id.financial_income_or_spend_time);
-
         mDate.setOnClickListener(IncomeOrSpendActivity.this);
-        mTime.setOnClickListener(IncomeOrSpendActivity.this);
 
         mOneLevel = (TextView)findViewById(R.id.financial_income_or_spend_one_level);
         mTwoLevel = (TextView)findViewById(R.id.financial_income_or_spend_two_level);
@@ -310,8 +379,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
             showTime = Calendar.getInstance();
             String addTime = editFinancialBean.getAdditionTime();
             showTime.setTime(DateUtil.stringToDate(addTime));
-            mDate.setText(addTime.substring(0, 10));
-            mTime.setText(addTime.substring(11, addTime.length()));
+            mDate.setText(addTime);
             mOneLevel.setText(editFinancialBean.getOneLevel());
             mTwoLevel.setText(editFinancialBean.getTwoLevel());
             mMoney.setText(String.valueOf(editFinancialBean.getMoney()));
@@ -332,42 +400,49 @@ public class IncomeOrSpendActivity extends BaseActivity {
             Date date = new Date();
             showTime = Calendar.getInstance();
             showTime.setTime(date);
-            mDate.setText(DateUtil.DateToString(date, "yyyy-MM-dd"));
-            mTime.setText(DateUtil.DateToString(date, "HH:mm:ss"));
-
-            resetOneLevel();
-            resetTwoLevel();
+            mDate.setText(DateUtil.DateToString(date));
+            mOneLevel.setText(getOneLevelDefaultValue());
+            mTwoLevel.setText(getTwoLevelDefaultValue());
         }
+
+        //时间选择器
+        pvTime = new TimePickerView(this, TimePickerView.Type.ALL);
+        //控制时间范围
+        Calendar calendar = Calendar.getInstance();
+        pvTime.setRange(calendar.get(Calendar.YEAR) - 20, calendar.get(Calendar.YEAR));//要在setTime 之前才有效果哦
+        pvTime.setTime(showTime.getTime());
+        pvTime.setCyclic(false);
+        pvTime.setCancelable(true);
+        //时间选择后回调
+        pvTime.setOnTimeSelectListener(new TimePickerView.OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date) {
+                mDate.setText(DateUtil.DateToString(date));
+            }
+        });
+
     }
 
     /**
-     * 重置一级分类
+     * 初始化一级分类值
+     * @return
      */
-    private void resetOneLevel(){
-        List<OneLevelCategory> oneLevelGategories = BaseApplication.oneLevelCategories;
-        if(!CommonUtil.isEmpty(oneLevelGategories)){
-            for(OneLevelCategory oneLevelCategory: oneLevelGategories){
-                if(oneLevelCategory.getStatus() == ConstantsUtil.STATUS_NORMAL && oneLevelCategory.isDefault() && mModel == oneLevelCategory.getModel()){
-                    mOneLevel.setText(oneLevelCategory.getValue());
-                    break;
-                }
-            }
-        }
+    private String getOneLevelDefaultValue(){
+        String value = "";
+        if(CommonUtil.isEmpty(oneLevelCategories))
+            return value;
+        return oneLevelCategories.get(0).getValue();
     }
 
     /**
-     * 重置二级分类
+     * 初始化二级分类值
+     * @return
      */
-    private void resetTwoLevel(){
-        List<TwoLevelCategory> twoLevelCategories = BaseApplication.twoLevelCategories;
-        if(!CommonUtil.isEmpty(twoLevelCategories)) {
-            for(TwoLevelCategory twoLevelCategory: twoLevelCategories){
-                if(twoLevelCategory.getStatus() == ConstantsUtil.STATUS_NORMAL && twoLevelCategory.isDefault() && mModel == TwoLevelCategoryDataBase.getModel(twoLevelCategory.getOneLevelId())){
-                    mTwoLevel.setText(twoLevelCategory.getValue());
-                    break;
-                }
-            }
-        }
+    private String getTwoLevelDefaultValue(){
+        String value = "";
+        if(CommonUtil.isEmpty(twoLevelCategories))
+            return value;
+        return twoLevelCategories.get(0).get(getTwoLevelCategorysDefaultIndex()).getValue();
     }
 
     /**
@@ -397,11 +472,6 @@ public class IncomeOrSpendActivity extends BaseActivity {
             ToastUtil.failure(this, "请先选择日期");
             return;
         }
-        String time = mTime.getText().toString();
-        if(StringUtil.isNull(time)){
-            ToastUtil.failure(this, "请先选择日期");
-            return;
-        }
 
         if(!isEdit()){
             editFinancialBean = new FinancialBean();
@@ -420,7 +490,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
         editFinancialBean.setTwoLevel(twoLevel);
         editFinancialBean.setStatus(ConstantsUtil.STATUS_NORMAL);
         editFinancialBean.setMoney(Float.valueOf(money));
-        editFinancialBean.setAdditionTime(date.trim() + " " + time.trim());
+        editFinancialBean.setAdditionTime(date.trim());
 
         if(selectLocationPosition > 0)
             editFinancialBean.setLocation(getLocationText(selectLocationPosition - 1));
@@ -541,11 +611,6 @@ public class IncomeOrSpendActivity extends BaseActivity {
             ToastUtil.failure(IncomeOrSpendActivity.this, "请先选择日期");
             return;
         }
-        String time = mTime.getText().toString();
-        if(StringUtil.isNull(time)){
-            ToastUtil.failure(IncomeOrSpendActivity.this, "请先选择日期");
-            return;
-        }
 
         if(selectLocationPosition > 0)
             editFinancialBean.setLocation(getLocationText(selectLocationPosition - 1));
@@ -564,13 +629,9 @@ public class IncomeOrSpendActivity extends BaseActivity {
         editFinancialBean.setTwoLevel(twoLevel);
         editFinancialBean.setStatus(ConstantsUtil.STATUS_DRAFT);
         editFinancialBean.setMoney(Float.valueOf(money));
-        editFinancialBean.setAdditionTime(date.trim() + " " + time.trim());
+        editFinancialBean.setAdditionTime(date.trim());
         try{
             financialDataBase.save(editFinancialBean);
-
-           /* Map<String, Object> data = new HashMap<>();
-            BeanUtil.convertBeanToMap(financialBean, data);
-            FinancialHandler.save(IncomeOrSpendActivity.this, data);*/
             ToastUtil.success(IncomeOrSpendActivity.this, "草稿数据已成功添加到本地!" );
             finish();
         }catch (Exception e){
@@ -586,10 +647,21 @@ public class IncomeOrSpendActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        financialDataBase.destroy();
-        oneLevelCategoryDataBase.destroy();
-        twoLevelCategoryDataBase.destroy();
-        financialLocationDataBase.destroy();
+        if(financialDataBase != null)
+            financialDataBase.destroy();
+        if(oneLevelCategoryDataBase != null)
+            oneLevelCategoryDataBase.destroy();
+        if(twoLevelCategoryDataBase != null)
+            twoLevelCategoryDataBase.destroy();
+        if(financialLocationDataBase != null)
+            financialLocationDataBase.destroy();
+        taskCanceled(TaskType.ADD_FINANCIAL);
+        taskCanceled(TaskType.QINIU_TOKEN);
+
+        if(pvCategoryOptions.isShowing()|| pvTime.isShowing()){
+            pvCategoryOptions.dismiss();
+            pvTime.dismiss();
+        }
         super.onDestroy();
     }
 
@@ -602,29 +674,15 @@ public class IncomeOrSpendActivity extends BaseActivity {
                 break;
 
             case  R.id.financial_income_or_spend_one_level: //选择一级分类
-                showLevelListItemMenuDialog(1, 0);
+                pvCategoryOptions.show();
                 break;
             case R.id.financial_income_or_spend_two_level: //选择二级分类
-                String oneLevel = mOneLevel.getText().toString();
-                if(StringUtil.isNull(oneLevel)){
-                    ToastUtil.failure(IncomeOrSpendActivity.this, "请先选择一级分类");
-                    return;
-                }
-                showLevelListItemMenuDialog(2, TwoLevelCategoryDataBase.getIndexByOneLevelCategory(oneLevel));
+                pvCategoryOptions.show();
                 break;
             case R.id.financial_income_or_spend_date: //选择日期
-                showDatePickerDialog();
-                break;
-            case R.id.financial_income_or_spend_time: //选择时间
-                showTimePickerDialog();
+                pvTime.show();
                 break;
             case R.id.base_title_textview:
-                //编辑状态不让选择类型
-                /*if(isEdit()){
-                    ToastUtil.failure(IncomeOrSpendActivity.this, "编辑状态不能选择类型");
-                    return;
-                }*/
-                //showPopwindow();
                 if(mModel == FINANCIAL_MODEL_INCOME){
                     mModel = FINANCIAL_MODEL_SPEND;
                     ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_spend));
@@ -632,10 +690,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
                     mModel = FINANCIAL_MODEL_INCOME;
                     ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_income));
                 }
-
-                //重置一级和二级分类
-                resetOneLevel();
-                resetTwoLevel();
+                resetCategorys();
                 break;
             case R.id.financial_income_or_spend_save: //保存操作
                 doSave();
@@ -646,64 +701,6 @@ public class IncomeOrSpendActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 显示popupWindow
-     */
-    private void showPopwindow() {
-        // 利用layoutInflater获得View
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.financial_income_or_spend_popwin, null);
-
-        // 下面是两种方法得到宽度和高度 getWindow().getDecorView().getWidth()
-
-        PopupWindow window = new PopupWindow(view,
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT);
-
-        // 设置popWindow弹出窗体可点击，这句话必须添加，并且是true
-        window.setFocusable(true);
-
-
-        // 实例化一个ColorDrawable颜色为半透明
-        //ColorDrawable dw = new ColorDrawable(0xb0000000);
-       // window.setBackgroundDrawable(dw);
-
-
-        // 设置popWindow的显示和消失动画
-        window.setAnimationStyle(R.style.mypopwindow_anim_style);
-        // 在底部显示
-        window.showAtLocation(IncomeOrSpendActivity.this.findViewById(R.id.financial_income_or_spend_root),
-                Gravity.TOP, 70, DensityUtil.dip2px(IncomeOrSpendActivity.this, 60));
-
-        // 这里检验popWindow里的button是否可以点击
-        Button first = (Button) view.findViewById(R.id.pop_btn_add_income);
-        first.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mModel = FINANCIAL_MODEL_INCOME;
-                ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_income));
-            }
-        });
-
-        Button second = (Button) view.findViewById(R.id.pop_btn_add_spend);
-        second.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mModel = FINANCIAL_MODEL_SPEND;
-                ((TextView)findViewById(R.id.base_title_textview)).setText(getStringResource(R.string.financila_add_spend));
-            }
-        });
-
-        //popWindow消失监听方法
-        window.setOnDismissListener(new PopupWindow.OnDismissListener() {
-
-            @Override
-            public void onDismiss() {
-                System.out.println("popWindow消失");
-            }
-        });
-
-    }
     private Dialog mDialog;
     /**
      * 显示弹出自定义view
@@ -785,120 +782,6 @@ public class IncomeOrSpendActivity extends BaseActivity {
     public void dismissSelectItemMenuDialog(){
         if(mDialog != null && mDialog.isShowing())
             mDialog.dismiss();
-    }
-
-    private Dialog mLevelDialog;
-
-    /**
-     * 显示弹出自定义view
-     * @param type type == 1,表示一级分类， type == 2 表示二级分类
-     * @param oneLevelId 当type == 2时， 一级菜单的ID
-     */
-    public void showLevelListItemMenuDialog(final int type, int oneLevelId){
-        //判断是否已经存在菜单，存在则把以前的记录取消
-        dismissLevelListItemMenuDialog();
-
-        mLevelDialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar);
-        View view = LayoutInflater.from(this).inflate(R.layout.mood_list_menu, null);
-
-        ListView listView = (ListView)view.findViewById(R.id.mood_list_menu_listview);
-        listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        List<String> menus = new ArrayList<>();
-
-        if(type == 1){
-            List<OneLevelCategory> oneLevelGategories = BaseApplication.oneLevelCategories;
-            if(oneLevelGategories.size() > 0 ){
-                for(OneLevelCategory oneLevelCategory : oneLevelGategories){
-                    if(oneLevelCategory.getModel() == mModel)
-                        menus.add(oneLevelCategory.getValue() + "   总预算("+ oneLevelCategory.getBudget() + ")" +(oneLevelCategory.isDefault() ? "   <font color='red'>默认</font>": ""));
-                }
-            }
-        }else if(type == 2 && oneLevelId > 0 ){
-            List<TwoLevelCategory> twoLevelCategories = BaseApplication.twoLevelCategories;
-            if(!CommonUtil.isEmpty(twoLevelCategories)){
-                for(TwoLevelCategory twoLevelCategory: twoLevelCategories){
-                    if(twoLevelCategory.getOneLevelId() == oneLevelId){
-                        menus.add(twoLevelCategory.getValue() + "   预算("+ twoLevelCategory.getBudget() + ") " +(twoLevelCategory.isDefault() ? "    <font color='red'>默认</font>": ""));
-                        continue;
-                    }
-                }
-            }
-        }
-
-        SimpleListAdapter adapter = new SimpleListAdapter(this.getApplicationContext(), menus);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String text = ((TextView)view.findViewById(R.id.simple_listview_item)).getText().toString();
-                if(StringUtil.isNotNull(text)){
-                    int i = text.indexOf(" ");
-                    if(i > 0 ){
-                        text  = text.substring(0, i).trim();
-                    }
-                    if(type == 1){
-                        mOneLevel.setText(text);
-                        mTwoLevel.setText("");
-                        showLevelListItemMenuDialog(2, TwoLevelCategoryDataBase.getIndexByOneLevelCategory(text));
-                    }else{
-                        mTwoLevel.setText(text);
-                        dismissLevelListItemMenuDialog();
-                    }
-                }
-            }
-        });
-        mLevelDialog.setTitle("操作");
-        mLevelDialog.setCancelable(true);
-        mLevelDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                dismissLevelListItemMenuDialog();
-            }
-        });
-        mLevelDialog.setContentView(view);
-        mLevelDialog.show();
-    }
-
-
-    public void showDatePickerDialog(){
-        DatePickerDialog dialog = new DatePickerDialog(this,new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker dp, int year,int month, int dayOfMonth) {
-                String m = (month + 1) > 9 ? (month + 1) +"" : "0" +(month + 1);
-                String d = dayOfMonth > 9 ? dayOfMonth +"": "0"+dayOfMonth;
-                mDate.setText(year + "-" + m + "-" + d + " ");
-                String date = mDate.getText().toString() + mTime.getText().toString();
-                showTime.setTime(DateUtil.stringToDate(date));
-                showTimePickerDialog();
-            }
-        }, showTime.get(Calendar.YEAR), // 传入年份
-                showTime.get(Calendar.MONTH), // 传入月份
-                showTime.get(Calendar.DAY_OF_MONTH) // 传入天数
-        );
-        dialog.show();
-    }
-
-    public void showTimePickerDialog(){
-        TimePickerDialog dialog = new TimePickerDialog(this,new TimePickerDialog.OnTimeSetListener() {
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                String h = hourOfDay > 9 ? hourOfDay +"" : "0" +hourOfDay;
-                String m = minute > 9 ? minute +"" : "0" + minute;
-                mTime.setText(h + ":" + m + ":" + "00");
-                String date = mDate.getText().toString() + " " + mTime.getText().toString();
-                showTime.setTime(DateUtil.stringToDate(date));
-            }
-        }, showTime.get(Calendar.HOUR_OF_DAY), // 传入小时
-                showTime.get(Calendar.MINUTE), // 传入分钟
-                true
-        );
-        dialog.show();
-    }
-
-    /**
-     * 隐藏弹出自定义view
-     */
-    public void dismissLevelListItemMenuDialog(){
-        if(mLevelDialog != null && mLevelDialog.isShowing())
-            mLevelDialog.dismiss();
     }
 
     @Override

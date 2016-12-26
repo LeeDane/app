@@ -1,5 +1,7 @@
 package com.leedane.cn.financial.bean;
 
+import com.bigkoo.pickerview.model.IPickerViewData;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -7,7 +9,7 @@ import java.util.List;
  * 一级类bean实体类
  * Created by LeeDane on 2016/7/21.
  */
-public class OneLevelCategory implements Serializable{
+public class OneLevelCategory implements Serializable, IPickerViewData {
 	public static int DEFAULT_PARENT_CATEGORY_ICON = 0;
 
 	/**
@@ -160,5 +162,10 @@ public class OneLevelCategory implements Serializable{
 
 	public void setModel(int model) {
 		this.model = model;
+	}
+
+	@Override
+	public String getPickerViewText() {
+		return value;
 	}
 }

@@ -50,31 +50,16 @@
                 android:textSize="@dimen/default_18sp"
                 android:background="@drawable/financial_text_edittext"
                 android:hint="@string/financial_money"/>
-            <LinearLayout
+            <EditText
+                android:id="@+id/financial_income_or_spend_date"
                 android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/default_10dp"
+                android:layout_marginRight="@dimen/default_10dp"
+                android:layout_marginBottom="@dimen/default_10dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <EditText
-                    android:id="@+id/financial_income_or_spend_date"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/default_3dp"
-                    android:layout_marginRight="@dimen/default_3dp"
-                    android:focusable="false"
-                    android:gravity="center"
-                    android:text="@string/default_date"/>
-                <EditText
-                    android:id="@+id/financial_income_or_spend_time"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/default_3dp"
-                    android:layout_marginRight="@dimen/default_3dp"
-                    android:focusable="false"
-                    android:gravity="center"
-                    android:text="@string/default_date"/>
-            </LinearLayout>
+                android:focusable="false"
+                android:gravity="center"
+                android:text="@string/default_date"/>
         </LinearLayout>
 
     </LinearLayout>
