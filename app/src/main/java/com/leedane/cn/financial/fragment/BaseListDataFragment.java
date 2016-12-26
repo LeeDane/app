@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.customview.RecycleViewDivider;
@@ -85,6 +86,11 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
         mRecyclerView.setAdapter(mAdapter);
 
         mFooterView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_footer, null);
+        View v = mFooterView.findViewById(R.id.financial_footer);
+        if(v != null && v instanceof TextView){
+            TextView tv = (TextView)v;
+            tv.setText(getStringResource(mContext, R.string.footer)+ "(一共"+ mFinancialList.getFinancialBeans().size()+"条记录)");
+        }
         mAdapter.setFooterView(mFooterView);
 
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {

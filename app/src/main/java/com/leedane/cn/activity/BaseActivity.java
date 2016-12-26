@@ -47,7 +47,7 @@ public class BaseActivity extends FragmentActivity implements TaskListener, View
     /**
      * 弹出加载ProgressDiaLog
      */
-    private ProgressDialog mProgressDialog;
+    protected ProgressDialog mProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

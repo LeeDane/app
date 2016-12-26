@@ -44,6 +44,7 @@ import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.Base64Util;
+import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.MediaUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -57,6 +58,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Vector;
 /**
  * 我的扫码activity
@@ -176,8 +178,70 @@ public class MipcaActivityCapture extends Activity implements Callback, TaskList
 	 * @param resultString
 	 */
 	private void dealScanResult(String resultString){
+		if(StringUtil.isLink(resultString)){
+			//内部链接
+			if(resultString.startsWith(ConstantsUtil.DEFAULT_SERVER_URL)){
+				String downloadLink = ConstantsUtil.DEFAULT_SERVER_URL + ConstantsUtil.WEB_APP_DOWNLOAD_PATH;
+				if(resultString.startsWith(downloadLink)){
+					Map<String, String> params = StringUtil.getUrlParams(resultString);
+					if(params.containsKey("leedaneapp")){
+						String value = params.get("leedaneapp");
+						if(StringUtil.isNotNull(value)){
+							try{
+								JSONObject jsonObject = new JSONObject(new String(Base64Util.decode(value.toCharArray())));
+								if(jsonObject.has("tableName") && jsonObject.has("tableId")){//打开详情
+									//启动详情的activity
+									CommonHandler.startDetailActivity(MipcaActivityCapture.this,jsonObject.getString("tableName"), jsonObject.getInt("tableId"), null );
+									//关闭当前的扫码页面
+									finish();
+								}else if(jsonObject.has("account") && jsonObject.has("id")){ //打开用户个人中心
+									showUserInfoDialog(jsonObject.getString("account"), jsonObject.getInt("id"));
+								}else{
+									ToastUtil.failure(MipcaActivityCapture.this, "暂时不支持的类型，请更新最新版本后尝试");
+									return;
+								}
+							}catch (JSONException e){
+								e.printStackTrace();
+								ToastUtil.failure(MipcaActivityCapture.this, "数据解析失败！");
+								return;
+							}
+						}
+					}else if(params.containsKey("scan_login")){
+						//判断是否登录
+						if(!BaseApplication.isLogin()){
+							Intent it = new Intent(MipcaActivityCapture.this, LoginActivity.class);
+							//设置跳转的activity
+							it.putExtra("returnClass", "com.leedane.cn.activity.MipcaActivityCapture");
+							startActivity(it);
+							finish();
+							return;
+						}else{
+							String cid = params.get("scan_login");;
+							Intent it = new Intent(MipcaActivityCapture.this, LoginByQrCodeActivity.class);
+							//设置跳转的activity
+							it.putExtra("returnClass", "com.leedane.cn.activity.MipcaActivityCapture");
+							it.putExtra("cid", cid);
+							startActivity(it);
+							finish();
+						}
+					}else{
+						//无法处理的内部链接，直接外部打开
+						CommonHandler.openLink(MipcaActivityCapture.this, downloadLink);
+					}
+				}else{
+					//无法处理的内部链接，直接外部打开
+					CommonHandler.openLink(MipcaActivityCapture.this, downloadLink);
+				}
+			}else{
+				//外部链接直接打开
+				CommonHandler.openLink(MipcaActivityCapture.this, resultString);
+			}
+		}else{
+			//非链接直接弹出数据
+			ToastUtil.success(MipcaActivityCapture.this, resultString);
+		}
 		//内部链接
-		if(resultString.startsWith("leedane:")){
+		/*if(resultString.startsWith("leedane:")){
 			resultString = resultString.substring("leedane:".length(), resultString.length());
 			if(StringUtil.isNotNull(resultString)){
 				try{
@@ -202,7 +266,7 @@ public class MipcaActivityCapture extends Activity implements Callback, TaskList
 			}
 			//网络链接
 		}else if(resultString.startsWith("http://") || resultString.startsWith("https://")){
-			CommonHandler.openLink(MipcaActivityCapture.this, resultString);
+
 			//无法打开的链接(提供文字复制功能，尝试网络打开链接的功能)
 		}else if(resultString.startsWith("scan_login:")){
 			//判断是否登录
@@ -223,7 +287,7 @@ public class MipcaActivityCapture extends Activity implements Callback, TaskList
 				startActivity(it);
 				finish();
 			}
-		}
+		}*/
 	}
 
 	private Dialog mUserInfoDialog;

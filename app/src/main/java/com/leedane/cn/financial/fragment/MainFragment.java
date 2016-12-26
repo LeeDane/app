@@ -96,7 +96,7 @@ public class MainFragment extends FinancialBaseFragment{
     }
     @Override
     public void taskFinished(TaskType type, Object result) {
-        isLoading = false;
+       /* isLoading = false;
         if(result instanceof Error){
             if((type == TaskType.LOAD_ATTENTION) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
             }
@@ -115,7 +115,7 @@ public class MainFragment extends FinancialBaseFragment{
             }
         }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
     }
 
     /**
@@ -190,6 +190,9 @@ public class MainFragment extends FinancialBaseFragment{
                 case FlagUtil.INIT_DATA_SUCCESS:
                     //更新数据
                     mAdapter.addDatas(mFinancialBeans);
+                    if(mListViewFooter != null){
+                        mListViewFooter.setText(getStringResource(mContext, R.string.footer)+ "(一共"+ mFinancialBeans.size()+"条记录)");
+                    }
                     break;
             }
 
@@ -271,6 +274,7 @@ public class MainFragment extends FinancialBaseFragment{
      */
     private void setFooter() {
         mAdapter.setFooterView(mFooterView);
+        mListViewFooter = (TextView)mFooterView.findViewById(R.id.financial_footer);
     }
 
     /**
@@ -371,8 +375,8 @@ public class MainFragment extends FinancialBaseFragment{
         if(firstHandler != null)
             firstHandler.removeCallbacksAndMessages(null);
 
-        taskCanceled(TaskType.LOAD_ATTENTION);
-        taskCanceled(TaskType.DELETE_ATTENTION);
+        /*taskCanceled(TaskType.LOAD_ATTENTION);
+        taskCanceled(TaskType.DELETE_ATTENTION);*/
         super.onDestroy();
     }
 }

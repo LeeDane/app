@@ -30,4 +30,7 @@ public final class FlagUtil {
     //记账查询的动作
     public static final int FINANCIAL_SEARCH_ACTION = 61;
 
+    //摇一摇的结果
+    public static final int YAOYIYAO_RESULT_HANDLER = 62;
+
 }

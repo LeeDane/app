@@ -24,6 +24,7 @@ import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
+import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
 import org.json.JSONObject;
@@ -270,7 +271,8 @@ public class NotificationFragment extends BaseFragment{
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //ToastUtil.success(mContext, "点击的位置是：" + position + ",内容：" + mNotificationBeans.get(position).getToUserAccount());
-                    CommonHandler.startDetailActivity(mContext, mNotificationBeans.get(position).getTableName(), mNotificationBeans.get(position).getTableId(), null);
+                    if(StringUtil.isNotNull(mNotificationBeans.get(position).getTableName()) && mNotificationBeans.get(position).getTableId() > 0)
+                        CommonHandler.startDetailActivity(mContext, mNotificationBeans.get(position).getTableName(), mNotificationBeans.get(position).getTableId(), null);
                 }
             });
 

@@ -204,7 +204,7 @@ public class CommonHandler {
         }else if(tableName.equalsIgnoreCase("t_blog")){
             clazz = DetailActivity.class;
         }else{
-            ToastUtil.failure(context, "未知的表类型，无法触发详情的点击事件");
+            //ToastUtil.failure(context, "未知的表类型，无法触发详情的点击事件");
             return;
         }
         Intent it = new Intent(context, clazz);
@@ -241,7 +241,7 @@ public class CommonHandler {
      */
     public static String encodeQrCodeStr(String sourceStr){
         if(StringUtil.isNotNull(sourceStr)){
-            sourceStr = "leedane:"+ new String(Base64Util.encode(sourceStr.getBytes()));
+            sourceStr = new String(Base64Util.encode(sourceStr.getBytes()));
         }
         return sourceStr;
     }

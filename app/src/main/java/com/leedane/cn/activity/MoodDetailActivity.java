@@ -19,6 +19,7 @@ import com.leedane.cn.fragment.SendToolbarFragment;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.EncodingHandler;
 import com.leedane.cn.util.BitmapUtil;
+import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -111,7 +112,7 @@ public class MoodDetailActivity extends BaseActivity implements MoodDetailFragme
         String contentString = null;
         try{
             String str = "{'tableName':'t_mood','tableId':"+mid+"}";
-            contentString = new JSONObject(str).toString();
+            contentString = ConstantsUtil.DEFAULT_SERVER_URL + ConstantsUtil.WEB_APP_DOWNLOAD_PATH + "?leedaneapp=" +new JSONObject(str).toString();
         }catch (JSONException e){
             e.printStackTrace();
         }

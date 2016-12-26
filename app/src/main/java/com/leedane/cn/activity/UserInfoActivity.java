@@ -27,6 +27,7 @@ import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.EncodingHandler;
 import com.leedane.cn.service.LoadUserInfoDataService;
 import com.leedane.cn.util.BitmapUtil;
+import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -203,7 +204,7 @@ public class UserInfoActivity extends BaseActivity implements UserInfoDataReceiv
 
         if (StringUtil.isNotNull(contentString)) {
             //根据字符串生成二维码图片并显示在界面上，第二个参数为图片的大小（350*350）
-            contentString =  CommonHandler.encodeQrCodeStr(contentString);
+            contentString =  ConstantsUtil.DEFAULT_SERVER_URL + ConstantsUtil.WEB_APP_DOWNLOAD_PATH + "?leedaneapp=" +CommonHandler.encodeQrCodeStr(contentString);
             ToastUtil.failure(UserInfoActivity.this, "二维码创建成功，长按保存到本地", Toast.LENGTH_SHORT);
             try {
                 qrCodeBitmap = EncodingHandler.createQRCode(contentString, 720);

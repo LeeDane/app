@@ -493,8 +493,15 @@ public class IncomeOrSpendActivity extends BaseActivity {
             builder.setPositiveButton("删除",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            editFinancialBean.setStatus(ConstantsUtil.STATUS_DELETE);
-                            financialDataBase.update(editFinancialBean);
+
+                            //对于已经提交到服务器上的做标记删除操作
+                            if(editFinancialBean.getId() > 0){
+                                editFinancialBean.setStatus(ConstantsUtil.STATUS_DELETE);
+                                financialDataBase.update(editFinancialBean);
+                            }else{
+                                //对还没有提交到服务器的，做直接删除操作
+                                financialDataBase.delete(editFinancialBean.getLocalId());
+                            }
                             ToastUtil.success(IncomeOrSpendActivity.this, "记录删除成功!");
                             Intent it = new Intent(IncomeOrSpendActivity.this, HomeActivity.class);
                             it.putExtra("hasUpdate", true);

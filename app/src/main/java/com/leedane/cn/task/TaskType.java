@@ -60,6 +60,9 @@ public enum TaskType {
     LOAD_SEARCH_USER, //加载搜索用户列表
     LOAD_SEARCH_BLOG, //加载搜索博客列表
     LOAD_SEARCH_MOOD, //加载搜索心情列表
+    LOAD_SHAKE_USER, //加载摇一摇用户
+    LOAD_SHAKE_BLOG, //加载摇一摇博客
+    LOAD_SHAKE_MOOD, //加载摇一摇心情
     LOAD_FILE, //加载文件列表
     LOAD_CHAT_BG_SELECT_WEB,//获取聊天背景的选择图片
     LOAD_TOPIC, //加载心情列表

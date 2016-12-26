@@ -89,6 +89,10 @@ public class FindActivity extends BaseActivity implements FindAdapter.OnRecycler
             Intent intent = new Intent();
             intent.setClass(FindActivity.this, ChatActivity.class);
             startActivity(intent);
+        }else if(title.equalsIgnoreCase(getStringResource(R.string.yao_yi_yao))){//摇一摇
+            Intent intent = new Intent();
+            intent.setClass(FindActivity.this, ShakeActivity.class);
+            startActivity(intent);
         }
     }
 

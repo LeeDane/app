@@ -431,6 +431,11 @@
     <string name="scan_login">扫码登录</string>
     <string name="scan_login_confim">确认登录</string>
 
+    <!--  摇一摇 -->
+    <string name="yaoyiyao_tip">请拿起您的手机摇一摇</string>
+    <string name="countdown_default">今天您还可以免费摇5次！</string>
+    <string name="yaoyiyao_result">摇一摇结果</string>
+
     <string-array name="colors">
         <item>#CA4443</item>
         <item>#FF7850</item>

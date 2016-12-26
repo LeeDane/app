@@ -38,11 +38,11 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
         if(mHeaderView != null && viewType == TYPE_HEADER)
             return new ContentHolder(mHeaderView);
         else if(mFooterView != null && viewType == TYPE_FOOTER){
-            View v = mFooterView.findViewById(R.id.financial_footer);
+            /*View v = mFooterView.findViewById(R.id.financial_footer);
             if(v != null && v instanceof TextView){
                 TextView tv = (TextView)v;
                 tv.setText(tv.getText().toString() + "(一共"+ mDatas.size()+"条记录)");
-            }
+            }*/
             return new ContentHolder(mFooterView);
         }else{
             View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_financila_list_recyclerview, parent, false);
@@ -55,13 +55,13 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
         if(viewType == TYPE_HEADER)
             return;
         if(viewType == TYPE_FOOTER){
-            if(position == mDatas.size() -3){
+            /*if(position == mDatas.size() -3){
                 View v = mFooterView.findViewById(R.id.financial_footer);
                 if(v != null && v instanceof TextView){
                     TextView tv = (TextView)v;
                     tv.setText(tv.getText().toString() + "(一共"+ mDatas.size()+"条记录)");
                 }
-            }
+            }*/
             return;
         }
         if(viewHolder instanceof ContentHolder && !CommonUtil.isEmpty(mDatas)) {
