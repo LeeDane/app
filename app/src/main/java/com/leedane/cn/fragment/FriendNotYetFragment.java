@@ -267,7 +267,7 @@ public class FriendNotYetFragment extends BaseFragment{
         mFirstId = 0;
         mLastId = 0;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
+        params.put("pageSize", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
         taskCanceled(TaskType.LOAD_NOT_YET_FRIENDS_PAGING);
         FriendHandler.sendNotYetFriendsPaging(FriendNotYetFragment.this, params);
@@ -286,7 +286,7 @@ public class FriendNotYetFragment extends BaseFragment{
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
@@ -311,8 +311,8 @@ public class FriendNotYetFragment extends BaseFragment{
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         taskCanceled(TaskType.LOAD_NOT_YET_FRIENDS_PAGING);
@@ -331,8 +331,8 @@ public class FriendNotYetFragment extends BaseFragment{
         }
         ToastUtil.success(mContext, "请求重新加载", Toast.LENGTH_SHORT);
         isLoading = true;
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad() : MySettingConfigUtil.getOtherLoad());
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load : MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);

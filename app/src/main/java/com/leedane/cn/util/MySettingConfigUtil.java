@@ -18,19 +18,20 @@ public class MySettingConfigUtil {
     public static final String TAG = "MySettingConfigUtil";
     private static MySettingConfigUtil instance = null;
 
-    private static boolean load_image = true;
-    private static boolean no_notification = false;
-    private static int first_load = 10;
-    private static int other_load = 5;
-    private static boolean double_click_out = false;
-    private static boolean cache_blog = true;
-    private static boolean cache_mood = true;
-    private static int chat_text_size = 16;
-    private static int chat_delete = 0; //0只删除本地，1：删除本地和数据库
-    private static boolean chat_send_enter = true;
-    private static boolean cache_gallery = true;
-    private static boolean cache_file = true;
-    private static String cache_chat_bg_path = "";
+    public static boolean load_image = true;
+    public static boolean no_notification = false;
+    public static int first_load = 10;
+    public static int other_load = 5;
+    public static boolean double_click_out = false;
+    public static boolean share_location = true;
+    public static boolean cache_blog = true;
+    public static boolean cache_mood = true;
+    public static int chat_text_size = 16;
+    public static int chat_delete = 0; //0只删除本地，1：删除本地和数据库
+    public static boolean chat_send_enter = true;
+    public static boolean cache_gallery = true;
+    public static boolean cache_file = true;
+    public static String cache_chat_bg_path = "";
 
     public static synchronized MySettingConfigUtil getInstance() {
         if (instance == null) {
@@ -69,6 +70,11 @@ public class MySettingConfigUtil {
                     setDoubleClickOut(true);
                 else
                     setDoubleClickOut(false);
+            }else if("share_location".equals(mySetting.getKey())){
+                if(mySetting.getValue().equals("1"))
+                    setShareLocation(true);
+                else
+                    setShareLocation(false);
             }else if("cache_blog".equals(mySetting.getKey())){
                 if(mySetting.getValue().equals("1"))
                     setCacheBlog(true);
@@ -118,95 +124,51 @@ public class MySettingConfigUtil {
         MySettingConfigUtil.no_notification = no_notification;
     }
 
-    public static boolean getNoNotification() {
-        return no_notification;
-    }
-
     public static void setFirstLoad(int first_load) {
         MySettingConfigUtil.first_load = first_load;
-    }
-
-    public static int getFirstLoad() {
-        return first_load;
     }
 
     public static void setOtherLoad(int other_load) {
         MySettingConfigUtil.other_load = other_load;
     }
 
-    public static int getOtherLoad() {
-        return other_load;
-    }
-
     public static void setDoubleClickOut(boolean double_click_out) {
         MySettingConfigUtil.double_click_out = double_click_out;
     }
 
-    public static boolean getDoubleClickOut() {
-        return double_click_out;
+    public static void setShareLocation(boolean share_location) {
+        MySettingConfigUtil.share_location = share_location;
     }
 
     public static void setCacheBlog(boolean cache_blog) {
         MySettingConfigUtil.cache_blog = cache_blog;
     }
 
-    public static boolean getCacheBlog() {
-        return cache_blog;
-    }
-
     public static void setCacheMood(boolean cache_mood) {
         MySettingConfigUtil.cache_mood = cache_mood;
-    }
-
-    public static boolean getCacheMood() {
-        return cache_mood;
     }
 
     public static void setChatTextSize(int chat_text_size) {
         MySettingConfigUtil.chat_text_size = chat_text_size;
     }
 
-    public static int getChatTextSize() {
-        return chat_text_size;
-    }
-
     public static void setChatDelete(int chat_delete) {
         MySettingConfigUtil.chat_delete = chat_delete;
-    }
-
-    public static int getChatDelete() {
-        return chat_delete;
     }
 
     public static void setChatSendEnter(boolean chat_send_enter) {
         MySettingConfigUtil.chat_send_enter = chat_send_enter;
     }
 
-    public static boolean getChatSendEnter() {
-        return chat_send_enter;
-    }
-
     public static void setCacheGallery(boolean cache_gallery) {
         MySettingConfigUtil.cache_gallery = cache_gallery;
-    }
-
-    public static boolean getCacheGallery() {
-        return cache_gallery;
     }
 
     public static void setCacheFile(boolean cache_file) {
         MySettingConfigUtil.cache_file = cache_file;
     }
 
-    public static boolean getCacheFile() {
-        return cache_file;
-    }
-
     public static void setCacheChatBgPath(String cache_chat_bg_path) {
         MySettingConfigUtil.cache_chat_bg_path = cache_chat_bg_path;
-    }
-
-    public static String getCacheChatBgPath() {
-        return cache_chat_bg_path;
     }
 }

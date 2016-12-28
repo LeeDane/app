@@ -8,6 +8,12 @@ android {
             storeFile file('D:/soft/keystore/leedaneapp.keystore')
             storePassword '123456'
         }
+        leedaneapp {
+            keyAlias 'leedaneapp'
+            keyPassword '123456'
+            storeFile file('D:/ldx/keystore/leedaneapp.jks')
+            storePassword '123456'
+        }
     }
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
@@ -22,10 +28,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.leedane
+            signingConfig signingConfigs.leedaneapp
         }
         debug {
-            signingConfig signingConfigs.leedane
+            signingConfig signingConfigs.leedaneapp
         }
     }
     sourceSets {
@@ -76,9 +82,7 @@ dependencies {
     compile files('libs/togglebuttonlib.jar')
     compile files('libs/android-viewbadger.jar')
     compile 'jp.wasabeef:richeditor-android:1.2.1'
-
     compile 'homhomlin.lib:sldinglayout:0.9.0'
-
     compile 'com.bigkoo:pickerview:2.1.1'
     //引入okhttp模块
     compile 'com.squareup.okhttp3:okhttp:3.4.1'

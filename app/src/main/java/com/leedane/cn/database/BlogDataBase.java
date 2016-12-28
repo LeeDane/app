@@ -254,7 +254,7 @@ public class BlogDataBase {
             SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
             // 删除全部
             sqlite.execSQL("delete from " + BLOG_TABLE_NAME);
-            if(MySettingConfigUtil.getCacheBlog()) {
+            if(MySettingConfigUtil.cache_blog) {
                 // 重新添加
                 for (BlogBean data : datas) {
                     insert(data);
@@ -273,7 +273,7 @@ public class BlogDataBase {
         if (datas != null && !datas.isEmpty()) {
             update(data);
         } else {
-            if(MySettingConfigUtil.getCacheBlog()) {
+            if(MySettingConfigUtil.cache_blog) {
                 insert(data);
             }
         }

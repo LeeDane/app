@@ -393,9 +393,9 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
         HashMap<String, Object> params = new HashMap<>();
         params.put("method", method);
         if(method.equalsIgnoreCase("firstloading")){
-            params.put("pageSize", MySettingConfigUtil.getFirstLoad());
+            params.put("pageSize", MySettingConfigUtil.first_load);
         }else{
-            params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+            params.put("pageSize", MySettingConfigUtil.other_load);
         }
         params.put("last_id", last_id);
         params.put("first_id", first_id);
@@ -462,7 +462,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                                     e.printStackTrace();
                                 }
                             }
-                            if(MySettingConfigUtil.getCacheGallery()){
+                            if(MySettingConfigUtil.cache_gallery){
                                 for(GalleryBean gb: mBeans){
                                     galleryDataBase.insert(gb);
                                 }

@@ -223,7 +223,7 @@ public class FileDataBase {
             SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
             // 删除全部
             sqlite.execSQL("delete from " + FILE_TABLE_NAME);
-            if(MySettingConfigUtil.getCacheFile()) {
+            if(MySettingConfigUtil.cache_file) {
                 // 重新添加
                 for (FileBean data : datas) {
                     insert(data);
@@ -242,7 +242,7 @@ public class FileDataBase {
         if (datas != null && !datas.isEmpty()) {
             update(data);
         } else {
-            if(MySettingConfigUtil.getCacheFile()) {
+            if(MySettingConfigUtil.cache_file) {
                 insert(data);
             }
         }

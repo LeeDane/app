@@ -50,6 +50,7 @@ public class MySettingDataBase {
         MySettingBean mySettingBean11 = new MySettingBean(11, "cache_gallery", "1");
         MySettingBean mySettingBean12 = new MySettingBean(12, "cache_file", "1");
         MySettingBean mySettingBean13 = new MySettingBean(13, "cache_chat_bg_path", "");
+        MySettingBean mySettingBean14 = new MySettingBean(14, "share_location", "1");
 
         mySettingBeans.add(mySettingBean1);
         mySettingBeans.add(mySettingBean2);
@@ -64,6 +65,7 @@ public class MySettingDataBase {
         mySettingBeans.add(mySettingBean11);
         mySettingBeans.add(mySettingBean12);
         mySettingBeans.add(mySettingBean13);
+        mySettingBeans.add(mySettingBean14);
         MySettingDataBase mySettingDataBase = new MySettingDataBase(BaseApplication.newInstance());
         for(MySettingBean mySettingBean: mySettingBeans){
             mySettingDataBase.insert(mySettingBean);

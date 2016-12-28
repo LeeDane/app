@@ -203,10 +203,10 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
             }
         });
 
-        if(StringUtil.isNotNull(MySettingConfigUtil.getCacheChatBgPath())){
+        if(StringUtil.isNotNull(MySettingConfigUtil.cache_chat_bg_path)){
             RelativeLayout mainLayout = (RelativeLayout)mRootView.findViewById(R.id.chat_detail_main);
             try{
-                BitmapDrawable drawable = BitmapUtil.getImageDrawable(getChatBgDir(mContext) + File.separator + MySettingConfigUtil.getCacheChatBgPath());
+                BitmapDrawable drawable = BitmapUtil.getImageDrawable(getChatBgDir(mContext) + File.separator + MySettingConfigUtil.cache_chat_bg_path);
                 if(drawable != null)
                     mainLayout.setBackground(drawable);
                 else
@@ -400,7 +400,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         mFirstId = 0;
         mLastId = 0;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
+        params.put("pageSize", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
         params.put("toUserId", toUserId);
         taskCanceled(TaskType.LOAD_CHAT);
@@ -427,7 +427,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
@@ -489,7 +489,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         taskCanceled(TaskType.LOAD_CHAT);
         isLoading = true;
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad() : MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load : MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);

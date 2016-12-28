@@ -331,6 +331,7 @@
     <string name="my_setting_first_other_default">5条</string>
     <string name="my_setting_no_notification">勿扰模式</string>
     <string name="my_setting_double_click_out">双击退出</string>
+    <string name="my_setting_share_location">共享位置</string>
     <string name="my_setting_cache">缓存数据</string>
     <string name="my_setting_cache_blog">缓存博客数据</string>
     <string name="my_setting_cache_gallery">缓存图库数据</string>
@@ -435,6 +436,9 @@
     <string name="yaoyiyao_tip">请拿起您的手机摇一摇</string>
     <string name="countdown_default">今天您还可以免费摇5次！</string>
     <string name="yaoyiyao_result">摇一摇结果</string>
+
+    <!--   附近人  -->
+    <string name="nearby">附近</string>
 
     <string-array name="colors">
         <item>#CA4443</item>

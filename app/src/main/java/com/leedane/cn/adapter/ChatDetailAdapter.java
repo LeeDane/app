@@ -47,7 +47,7 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail_listview_left, null);
                 viewHolder = new ViewHolder();
                 TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
-                tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
+                tContent.setTextSize(MySettingConfigUtil.chat_text_size);
                 viewHolder.content = tContent;
                 viewHolder.userPicPath = (CircularImageView) view.findViewById(R.id.chat_detail_user_pic);
                 viewHolder.time = (TextView)view.findViewById(R.id.chat_detail_time);
@@ -58,7 +58,7 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail_listview_left, null);
                 viewHolder = new ViewHolder();
                 TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
-                tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
+                tContent.setTextSize(MySettingConfigUtil.chat_text_size);
                 viewHolder.content = tContent;
                 viewHolder.userPicPath = (CircularImageView) view.findViewById(R.id.chat_detail_user_pic);
                 viewHolder.time = (TextView) view.findViewById(R.id.chat_detail_time);
@@ -86,7 +86,7 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail_listview_right, null);
                 viewHolder = new ViewHolder();
                 TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
-                tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
+                tContent.setTextSize(MySettingConfigUtil.chat_text_size);
                 viewHolder.content = tContent;
                 viewHolder.userPicPath = (CircularImageView) view.findViewById(R.id.chat_detail_user_pic);
                 viewHolder.time = (TextView) view.findViewById(R.id.chat_detail_time);
@@ -97,7 +97,7 @@ public class ChatDetailAdapter extends BaseListAdapter<ChatDetailBean>{
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_chat_detail_listview_right, null);
                 viewHolder = new ViewHolder();
                 TextView tContent = (TextView) view.findViewById(R.id.chat_detail_content);
-                tContent.setTextSize(MySettingConfigUtil.getChatTextSize());
+                tContent.setTextSize(MySettingConfigUtil.chat_text_size);
                 viewHolder.content = tContent;
                 viewHolder.userPicPath = (CircularImageView) view.findViewById(R.id.chat_detail_user_pic);
                 viewHolder.time = (TextView) view.findViewById(R.id.chat_detail_time);

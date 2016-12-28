@@ -279,7 +279,7 @@ public class TopicActivity extends BaseActivity implements BaseRecyclerViewAdapt
         mLastId = 0;
         //HttpRequestBean requestBean = new HttpRequestBean();
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
+        params.put("pageSize", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
         params.put("topic", topic);
         TopicHandler.paging(this, params);
@@ -305,7 +305,7 @@ public class TopicActivity extends BaseActivity implements BaseRecyclerViewAdapt
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
@@ -332,7 +332,7 @@ public class TopicActivity extends BaseActivity implements BaseRecyclerViewAdapt
         isLoading = true;
 
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("topic", topic);
@@ -352,7 +352,7 @@ public class TopicActivity extends BaseActivity implements BaseRecyclerViewAdapt
         taskCanceled(TaskType.LOAD_TOPIC);
         isLoading = true;
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);

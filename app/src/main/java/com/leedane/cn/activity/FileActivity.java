@@ -216,7 +216,7 @@ public class FileActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mListView.setSelection(0);
                         }
-                        if(MySettingConfigUtil.getCacheMood()){
+                        if(MySettingConfigUtil.cache_mood){
                             for(FileBean fb: fileBeans){
                                 fileDataBase.insert(fb);
                             }
@@ -298,7 +298,7 @@ public class FileActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mLastId = 0;
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
+        params.put("pageSize", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
         FileHandler.getFilesRequest(this, params);
     }
@@ -317,7 +317,7 @@ public class FileActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("method",mPreLoadMethod );
         FileHandler.getFilesRequest(this, params);
@@ -341,7 +341,7 @@ public class FileActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         isLoading = true;
 
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         FileHandler.getFilesRequest(this, params);
@@ -423,7 +423,7 @@ public class FileActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             taskCanceled(TaskType.LOAD_FILE);
             isLoading = true;
             HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);

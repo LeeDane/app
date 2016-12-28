@@ -256,7 +256,7 @@ public class MoodDataBase {
             SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
             // 删除全部
             sqlite.execSQL("delete from " + MOOD_TABLE_NAME);
-            if(MySettingConfigUtil.getCacheMood()) {
+            if(MySettingConfigUtil.cache_mood) {
                 // 重新添加
                 for (MoodBean data : datas) {
                     insert(data);
@@ -275,7 +275,7 @@ public class MoodDataBase {
         if (datas != null && !datas.isEmpty()) {
             update(data);
         } else {
-            if(MySettingConfigUtil.getCacheMood()) {
+            if(MySettingConfigUtil.cache_mood) {
                 insert(data);
             }
         }

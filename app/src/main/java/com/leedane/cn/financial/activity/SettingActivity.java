@@ -181,7 +181,7 @@ public class SettingActivity extends BaseActivity implements Switch.OnCheckedCha
                 NumberPicker mPicker1 = new NumberPicker(this);
                 mPicker1.setMinValue(10);
                 mPicker1.setMaxValue(20);
-                mPicker1.setValue(MySettingConfigUtil.getOtherLoad());
+                mPicker1.setValue(MySettingConfigUtil.other_load);
                 mPicker1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
                     @Override

@@ -238,7 +238,7 @@ public class GalleryDataBase {
             SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
             // 删除全部
             sqlite.execSQL("delete from " + GALLERY_TABLE_NAME);
-            if (MySettingConfigUtil.getCacheGallery()){
+            if (MySettingConfigUtil.cache_gallery){
                 // 重新添加
                 for (GalleryBean data : datas) {
                     insert(data);
@@ -257,7 +257,7 @@ public class GalleryDataBase {
         if (datas != null && !datas.isEmpty()) {
             update(data);
         } else {
-            if (MySettingConfigUtil.getCacheGallery()) {
+            if (MySettingConfigUtil.cache_gallery) {
                 insert(data);
             }
         }

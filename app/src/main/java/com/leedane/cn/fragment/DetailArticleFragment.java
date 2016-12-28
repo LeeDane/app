@@ -2,8 +2,11 @@ package com.leedane.cn.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,12 +100,22 @@ public class DetailArticleFragment extends Fragment{
             mSettings = mWebView.getSettings();
             mSettings.setJavaScriptEnabled(true);
             mSettings.setSupportZoom(false);
+            mWebView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
+                        handler.sendEmptyMessage(1);
+                        return true;
+                    }
+                    return false;
+                }
+            });
 
 //            LayoutAlgorithm是一个枚举，用来控制html的布局，总共有三种类型：
 //            NORMAL：正常显示，没有渲染变化。
 //            SINGLE_COLUMN：把所有内容放到WebView组件等宽的一列中。
 //            NARROW_COLUMNS：可能的话，使所有列的宽度不超过屏幕宽度。
-            mSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            mSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
 
             mSettings.setUseWideViewPort(true);
             //mSettings.setLoadWithOverviewMode(true);
@@ -146,6 +159,22 @@ public class DetailArticleFragment extends Fragment{
         return mRootView;
     }
 
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message message) {
+            switch (message.what) {
+                case 1: {
+                    webViewGoBack();
+                }
+                break;
+            }
+        }
+    };
+
+    private void webViewGoBack() {
+        mWebView.goBack();
+    }
+
     /**
      * 图片的点击事件
      * @param imgs
@@ -154,14 +183,14 @@ public class DetailArticleFragment extends Fragment{
      * @param maxHeight
      */
     @JavascriptInterface
-    public void clickImg(String imgs, int index, int maxWidth, int maxHeight){//对应js中xxx.hello("")
+    public void clickImg(String imgs, int index, int maxWidth, int maxHeight) {//对应js中xxx.hello("")
         Log.e("webview", "hello");
         String[] arrayImg = imgs.split(";");
 
-        if(arrayImg.length > 0 && index >= 0 && arrayImg.length > index){
+        if (arrayImg.length > 0 && index >= 0 && arrayImg.length > index) {
             List<ImageDetailBean> list = new ArrayList<>();
             ImageDetailBean imageDetailBean = null;
-            for(int i = 0; i< arrayImg.length; i++){
+            for (int i = 0; i < arrayImg.length; i++) {
                 imageDetailBean = new ImageDetailBean();
                 imageDetailBean.setPath(arrayImg[i]);
                 /*if(maxWidth > 0 && maxHeight > 0){
@@ -174,6 +203,15 @@ public class DetailArticleFragment extends Fragment{
         }
 
 
+    }
+
+    @Override
+    public void onDestroy() {
+        if(mWebView != null)
+            mWebView.destroy();
+        if(handler != null)
+            handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 
     @Override

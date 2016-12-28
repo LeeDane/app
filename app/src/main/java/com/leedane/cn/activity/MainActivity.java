@@ -552,7 +552,7 @@ public class MainActivity extends NavigationActivity
                             //mlistViewBlogs.smoothScrollToPosition(0);
                             //mlistViewBlogs.setSelection(0);
                         }
-                        if(MySettingConfigUtil.getCacheBlog()) {
+                        if(MySettingConfigUtil.cache_blog) {
                             //把获取到的数据全部加载到博客数据库中
                             for (BlogBean bb : mBlogs) {
                                 blogDataBase.insert(bb);
@@ -632,7 +632,7 @@ public class MainActivity extends NavigationActivity
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             // return true;//返回真表示返回键被屏蔽掉
-            if(MySettingConfigUtil.getDoubleClickOut()){
+            if(MySettingConfigUtil.double_click_out){
                 return mDoubleClickExit.onKeyDown(keyCode, event);
             }else{
                 createLeaveAlertDialog();
@@ -652,7 +652,7 @@ public class MainActivity extends NavigationActivity
         mLastId = 0;
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
+        params.put("pageSize", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
         BlogHandler.getBlogsRequest(this, params);
     }
@@ -671,7 +671,7 @@ public class MainActivity extends NavigationActivity
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("method",mPreLoadMethod );
         BlogHandler.getBlogsRequest(this, params);
@@ -695,7 +695,7 @@ public class MainActivity extends NavigationActivity
         isLoading = true;
 
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         BlogHandler.getBlogsRequest(this, params);
@@ -744,7 +744,7 @@ public class MainActivity extends NavigationActivity
         taskCanceled(TaskType.HOME_LOADBLOGS);
         isLoading = true;
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);

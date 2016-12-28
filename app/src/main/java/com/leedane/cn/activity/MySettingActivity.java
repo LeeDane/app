@@ -41,6 +41,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
     private TextView mFirstLoad; //首次加载的条数
     private TextView mOtherLoad; //其他次加载的条数
     private Switch mDoubleClickOut; //双击退出
+    private Switch mShareLocation; //共享位置信息
     private Switch mCacheBlog;  //缓存博客
     private TextView mClearBlog;  //清除缓存的博客
     private TextView mClearBlogShow; //目前缓存博客的数量
@@ -104,6 +105,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         mFirstLoad = (TextView)findViewById(R.id.my_setting_first_load);
         mOtherLoad = (TextView)findViewById(R.id.my_setting_other_load);
         mDoubleClickOut = (Switch)findViewById(R.id.my_setting_double_click_out);
+        mShareLocation = (Switch)findViewById(R.id.my_setting_share_location);
         mCacheBlog = (Switch)findViewById(R.id.my_setting_cache_blog);
         mClearBlog = (TextView)findViewById(R.id.my_setting_cache_clear_blog);
         mClearBlogShow = (TextView)findViewById(R.id.my_setting_cache_clear_blog_show);
@@ -124,6 +126,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         mLoadImage.setOnCheckedChangeListener(this);
         mNoNotification.setOnCheckedChangeListener(this);
         mDoubleClickOut.setOnCheckedChangeListener(this);
+        mShareLocation.setOnCheckedChangeListener(this);
         mCacheBlog.setOnCheckedChangeListener(this);
         mCacheMood.setOnCheckedChangeListener(this);
         mChatSendEnter.setOnCheckedChangeListener(this);
@@ -170,52 +173,53 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
         });
         mLoadImage.setChecked(MySettingConfigUtil.getLoadImage());
 
-        mNoNotification.setChecked(MySettingConfigUtil.getNoNotification());
+        mNoNotification.setChecked(MySettingConfigUtil.no_notification);
 
-        mFirstLoad.setText(MySettingConfigUtil.getFirstLoad() + "条");
+        mFirstLoad.setText(MySettingConfigUtil.first_load + "条");
 
-        mOtherLoad.setText(MySettingConfigUtil.getOtherLoad() + "条");
+        mOtherLoad.setText(MySettingConfigUtil.other_load + "条");
 
-        mDoubleClickOut.setChecked(MySettingConfigUtil.getDoubleClickOut());
+        mDoubleClickOut.setChecked(MySettingConfigUtil.double_click_out);
 
+        mShareLocation.setChecked(MySettingConfigUtil.share_location);
 
-        mCacheBlog.setChecked(MySettingConfigUtil.getCacheBlog());
-        mClearBlog.setEnabled(MySettingConfigUtil.getCacheBlog());
-        mClearBlogShow.setEnabled(MySettingConfigUtil.getCacheBlog());
-        if(MySettingConfigUtil.getCacheBlog()){
+        mCacheBlog.setChecked(MySettingConfigUtil.cache_blog);
+        mClearBlog.setEnabled(MySettingConfigUtil.cache_blog);
+        mClearBlogShow.setEnabled(MySettingConfigUtil.cache_blog);
+        if(MySettingConfigUtil.cache_blog){
             BlogDataBase blogDataBase = new BlogDataBase(this);
             mClearBlogShow.setText(blogDataBase.getTotal() + "条");
             blogDataBase.destroy();
         }
 
-        mCacheMood.setChecked(MySettingConfigUtil.getCacheMood());
-        mClearMood.setEnabled(MySettingConfigUtil.getCacheMood());
-        mClearMoodShow.setEnabled(MySettingConfigUtil.getCacheMood());
-        if(MySettingConfigUtil.getCacheMood()){
+        mCacheMood.setChecked(MySettingConfigUtil.cache_mood);
+        mClearMood.setEnabled(MySettingConfigUtil.cache_mood);
+        mClearMoodShow.setEnabled(MySettingConfigUtil.cache_mood);
+        if(MySettingConfigUtil.cache_mood){
             MoodDataBase moodDataBase = new MoodDataBase(this);
             mClearMoodShow.setText(moodDataBase.getTotal() + "条");
             moodDataBase.destroy();
         }
 
-        mChatTextSize.setText(MySettingConfigUtil.getChatTextSize() + "");
+        mChatTextSize.setText(MySettingConfigUtil.chat_text_size + "");
 
-        mChatDelete.setSelection(MySettingConfigUtil.getChatDelete(), true);
+        mChatDelete.setSelection(MySettingConfigUtil.chat_delete, true);
 
-        mChatSendEnter.setChecked(MySettingConfigUtil.getChatSendEnter());
+        mChatSendEnter.setChecked(MySettingConfigUtil.chat_send_enter);
 
-        mCacheGallery.setChecked(MySettingConfigUtil.getCacheGallery());
-        mClearGallery.setEnabled(MySettingConfigUtil.getCacheGallery());
-        mClearGalleryShow.setEnabled(MySettingConfigUtil.getCacheGallery());
-        if(MySettingConfigUtil.getCacheGallery()){
+        mCacheGallery.setChecked(MySettingConfigUtil.cache_gallery);
+        mClearGallery.setEnabled(MySettingConfigUtil.cache_gallery);
+        mClearGalleryShow.setEnabled(MySettingConfigUtil.cache_gallery);
+        if(MySettingConfigUtil.cache_gallery){
             GalleryDataBase galleryDataBase = new GalleryDataBase(this);
             mClearGalleryShow.setText(galleryDataBase.getTotal() + "条");
             galleryDataBase.destroy();
         }
 
-        mCacheFile.setChecked(MySettingConfigUtil.getCacheFile());
-        mClearFile.setEnabled(MySettingConfigUtil.getCacheFile());
-        mClearFileShow.setEnabled(MySettingConfigUtil.getCacheFile());
-        if(MySettingConfigUtil.getCacheFile()){
+        mCacheFile.setChecked(MySettingConfigUtil.cache_file);
+        mClearFile.setEnabled(MySettingConfigUtil.cache_file);
+        mClearFileShow.setEnabled(MySettingConfigUtil.cache_file);
+        if(MySettingConfigUtil.cache_file){
             FileDataBase fileDataBase = new FileDataBase(this);
             mClearFileShow.setText(fileDataBase.getTotal() + "条");
             fileDataBase.destroy();
@@ -278,7 +282,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 NumberPicker mPicker = new NumberPicker(this);
                 mPicker.setMinValue(15);
                 mPicker.setMaxValue(28);
-                mPicker.setValue(MySettingConfigUtil.getFirstLoad());
+                mPicker.setValue(MySettingConfigUtil.first_load);
                 mPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
                     @Override
@@ -301,7 +305,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 NumberPicker mPicker1 = new NumberPicker(this);
                 mPicker1.setMinValue(8);
                 mPicker1.setMaxValue(18);
-                mPicker1.setValue(MySettingConfigUtil.getOtherLoad());
+                mPicker1.setValue(MySettingConfigUtil.other_load);
                 mPicker1.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
                     @Override
@@ -324,7 +328,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 NumberPicker mPicker2 = new NumberPicker(this);
                 mPicker2.setMinValue(12);
                 mPicker2.setMaxValue(30);
-                mPicker2.setValue(MySettingConfigUtil.getChatTextSize());
+                mPicker2.setValue(MySettingConfigUtil.chat_text_size);
                 mPicker2.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
 
                     @Override
@@ -377,6 +381,10 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 mySettingBean.setId(5);
                 MySettingConfigUtil.setDoubleClickOut(isChecked);
                 break;
+            case R.id.my_setting_share_location:
+                mySettingBean.setId(14);
+                MySettingConfigUtil.setShareLocation(isChecked);
+                break;
             case R.id.my_setting_cache_blog:
                 mySettingBean.setId(6);
                 MySettingConfigUtil.setCacheBlog(isChecked);
@@ -426,7 +434,7 @@ public class MySettingActivity extends BaseActivity implements Switch.OnCheckedC
                 }
                 break;
             case R.id.my_setting_cache_file:
-                mySettingBean.setId(11);
+                mySettingBean.setId(12);
                 MySettingConfigUtil.setCacheFile(isChecked);
                 if(isChecked){
                     mClearFile.setEnabled(true);

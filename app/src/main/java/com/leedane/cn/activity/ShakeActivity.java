@@ -184,12 +184,16 @@ public class ShakeActivity extends BaseActivity{
 
     @Override
     public void taskFinished(TaskType type, Object result) {
-        super.taskFinished(type, result);
+        canYao = true;
+        countNumber ++;
+        if(result instanceof Error){
+            ToastUtil.failure(getBaseContext(), ((Error) result).getMessage(), Toast.LENGTH_SHORT);
+            dismissLoadingDialog();
+            return;
+        }
         try {
             dismissLoadingDialog();
             JSONObject jsonObject = new JSONObject(String.valueOf(result));
-            canYao = true;
-            countNumber ++;
             ((TextView)findViewById(R.id.countdown)).setText("今天您还可以免费摇"+ (6 - countNumber)+"次！");
             if(TaskType.LOAD_SHAKE_BLOG == type && jsonObject != null){
                 if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){

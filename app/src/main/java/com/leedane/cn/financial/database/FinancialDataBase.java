@@ -70,7 +70,8 @@ public class FinancialDataBase {
                 data.getOneLevel(), data.getTwoLevel(), StringUtil.changeTrueOrFalseToInt(data.isHasImg()) +"", data.getPath()
                 , data.getLocation(), data.getLongitude() +"", data.getLatitude() +"",
                 data.getFinancialDesc(), StringUtil.changeTrueOrFalseToInt(data.isSynchronous()) +"", data.getCreateUserId() +"", data.getCreateTime(), data.getAdditionTime() });
-        sqlite.close();
+        if(sqlite.isOpen())
+            sqlite.close();
 
         Log.i(TAG, "数据插入成功:" + data.getId());
         return true;
@@ -86,13 +87,16 @@ public class FinancialDataBase {
         int id = 0;
         Cursor cursor = sqlite.rawQuery("select local_id from "
                 + FINANCIAL_TABLE_NAME + " where local_id = ?", new String[]{localId + ""});
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            id = cursor.getInt(0);
-        }
+        if(!cursor.isClosed())
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                id = cursor.getInt(0);
+            }
         if (!cursor.isClosed()) {
             cursor.close();
         }
-        sqlite.close();
+        if(sqlite.isOpen())
+            if(sqlite.isOpen())
+                sqlite.close();
         return id > 0 ;
     }
 
@@ -114,12 +118,13 @@ public class FinancialDataBase {
         sql += "(id, status, model, money, one_level, two_level, has_img, path,location, longitude,latitude,financial_desc,synchronous,create_user_id, create_time, addition_time) " +
                 "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        sqlite.execSQL(sql, new String[] {
-                data.getId() + "", data.getStatus() +"", data.getModel() +"", data.getMoney() +"",
-                data.getOneLevel(), data.getTwoLevel(), StringUtil.changeTrueOrFalseToInt(data.isHasImg()) +"", data.getPath()
-                , data.getLocation(), data.getLongitude() +"", data.getLatitude() +"",
-                data.getFinancialDesc(), StringUtil.changeTrueOrFalseToInt(data.isSynchronous()) +"", data.getCreateUserId() +"", data.getCreateTime(), data.getAdditionTime() });
-        sqlite.close();
+        sqlite.execSQL(sql, new String[]{
+                data.getId() + "", data.getStatus() + "", data.getModel() + "", data.getMoney() + "",
+                data.getOneLevel(), data.getTwoLevel(), StringUtil.changeTrueOrFalseToInt(data.isHasImg()) + "", data.getPath()
+                , data.getLocation(), data.getLongitude() + "", data.getLatitude() + "",
+                data.getFinancialDesc(), StringUtil.changeTrueOrFalseToInt(data.isSynchronous()) + "", data.getCreateUserId() + "", data.getCreateTime(), data.getAdditionTime()});
+        if(sqlite.isOpen())
+            sqlite.close();
 
         Log.i(TAG, "数据插入成功:" + data.getId());
         return true;
@@ -135,13 +140,15 @@ public class FinancialDataBase {
         int i = 0;
         Cursor cursor = sqlite.rawQuery("select local_id from "
                 + FINANCIAL_TABLE_NAME + " where id = ?", new String[]{id + ""});
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            i = cursor.getInt(0);
-        }
+        if(!cursor.isClosed())
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                i = cursor.getInt(0);
+            }
         if (!cursor.isClosed()) {
             cursor.close();
         }
-        sqlite.close();
+        if(sqlite.isOpen())
+            sqlite.close();
         return i > 0 ;
     }
 
@@ -154,7 +161,8 @@ public class FinancialDataBase {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("delete from " + FINANCIAL_TABLE_NAME + " where local_id=?");
         sqlite.execSQL(sql, new Integer[]{localId});
-        sqlite.close();
+        if(sqlite.isOpen())
+            sqlite.close();
     }
 
     /**
@@ -165,7 +173,8 @@ public class FinancialDataBase {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("delete from " + FINANCIAL_TABLE_NAME + " where create_user_id=?");
         sqlite.execSQL(sql, new Integer[]{userId});
-        sqlite.close();
+        if(sqlite.isOpen())
+            sqlite.close();
     }
 
     /**
@@ -175,7 +184,8 @@ public class FinancialDataBase {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("delete from " + FINANCIAL_TABLE_NAME );
         sqlite.execSQL(sql);
-        sqlite.close();
+        if(sqlite.isOpen())
+            sqlite.close();
     }
 
     /**
@@ -192,7 +202,8 @@ public class FinancialDataBase {
                 , data.getLocation(), data.getLongitude() + "", data.getLatitude() + "",
                 data.getFinancialDesc(), StringUtil.changeTrueOrFalseToInt(data.isSynchronous()) + "",
                 data.getCreateUserId() + "", data.getCreateTime(), data.getAdditionTime(), data.getLocalId()});
-        sqlite.close();
+        if(sqlite.isOpen())
+            sqlite.close();
     }
 
     /**
@@ -205,7 +216,8 @@ public class FinancialDataBase {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("update " + FINANCIAL_TABLE_NAME + " set synchronous=?, id=? where local_id=?");
         sqlite.execSQL(sql, new Object[]{status , id, localId});
-        sqlite.close();
+        if(sqlite.isOpen())
+            sqlite.close();
     }
 
     /**
@@ -215,7 +227,8 @@ public class FinancialDataBase {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("update " + FINANCIAL_TABLE_NAME + " set synchronous=0, id=0");
         sqlite.execSQL(sql);
-        sqlite.close();
+        if(sqlite.isOpen())
+            sqlite.close();
     }
 
     public List<FinancialBean> query() {
@@ -234,31 +247,33 @@ public class FinancialDataBase {
         Cursor cursor = sqlite.rawQuery("select local_id, id, status, model, money, one_level, two_level, has_img, path, " +
                 "location, longitude, latitude, financial_desc, synchronous, create_user_id, create_time, addition_time  from "
                 + FINANCIAL_TABLE_NAME + where, null);
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            FinancialBean financialBean = new FinancialBean();
-            financialBean.setLocalId(cursor.getInt(0));
-            financialBean.setId(cursor.getInt(1));
-            financialBean.setStatus(cursor.getInt(2));
-            financialBean.setModel(cursor.getInt(3));
-            financialBean.setMoney(cursor.getFloat(4));
-            financialBean.setOneLevel(cursor.getString(5));
-            financialBean.setTwoLevel(cursor.getString(6));
-            financialBean.setHasImg(StringUtil.changeIntToTrueOrFalse(cursor.getInt(7)));
-            financialBean.setPath(cursor.getString(8));
-            financialBean.setLocation(cursor.getString(9));
-            financialBean.setLongitude(cursor.getLong(10));
-            financialBean.setLatitude(cursor.getLong(11));
-            financialBean.setFinancialDesc(cursor.getString(12));
-            financialBean.setSynchronous(StringUtil.changeIntToTrueOrFalse(cursor.getInt(13)));
-            financialBean.setCreateUserId(cursor.getInt(14));
-            financialBean.setCreateTime(cursor.getString(15));
-            financialBean.setAdditionTime(cursor.getString(16));
-            data.add(financialBean);
-        }
+        if(!cursor.isClosed())
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                FinancialBean financialBean = new FinancialBean();
+                financialBean.setLocalId(cursor.getInt(0));
+                financialBean.setId(cursor.getInt(1));
+                financialBean.setStatus(cursor.getInt(2));
+                financialBean.setModel(cursor.getInt(3));
+                financialBean.setMoney(cursor.getFloat(4));
+                financialBean.setOneLevel(cursor.getString(5));
+                financialBean.setTwoLevel(cursor.getString(6));
+                financialBean.setHasImg(StringUtil.changeIntToTrueOrFalse(cursor.getInt(7)));
+                financialBean.setPath(cursor.getString(8));
+                financialBean.setLocation(cursor.getString(9));
+                financialBean.setLongitude(cursor.getLong(10));
+                financialBean.setLatitude(cursor.getLong(11));
+                financialBean.setFinancialDesc(cursor.getString(12));
+                financialBean.setSynchronous(StringUtil.changeIntToTrueOrFalse(cursor.getInt(13)));
+                financialBean.setCreateUserId(cursor.getInt(14));
+                financialBean.setCreateTime(cursor.getString(15));
+                financialBean.setAdditionTime(cursor.getString(16));
+                data.add(financialBean);
+            }
         if (!cursor.isClosed()) {
             cursor.close();
         }
-        sqlite.close();
+        if(sqlite.isOpen())
+            sqlite.close();
 
         return data;
     }
@@ -279,7 +294,8 @@ public class FinancialDataBase {
             for (FinancialBean data : datas) {
                 insert(data);
             }
-            sqlite.close();
+            if(sqlite.isOpen())
+                sqlite.close();
         }
     }
 

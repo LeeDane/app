@@ -728,7 +728,7 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
         HashMap<String, Object> params = new HashMap<>();
         params.put("table_name", "t_mood");
         params.put("table_id", mid);
-        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
+        params.put("pageSize", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
         params.put("showUserInfo", true);
         //params.putAll(BaseApplication.newInstance().getBaseRequestParams());
@@ -771,7 +771,7 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
         HashMap<String, Object> params = new HashMap<>();
         params.put("table_name", "t_mood");
         params.put("table_id", mid);
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
@@ -804,7 +804,7 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("table_name", "t_mood");
         params.put("table_id", mid);
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("showUserInfo", true);
@@ -846,7 +846,7 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("table_name", "t_mood");
         params.put("table_id", mid);
-        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);

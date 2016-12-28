@@ -149,7 +149,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
                             mRecyclerView.smoothScrollToPosition(0);
                         }
-                        if(MySettingConfigUtil.getCacheMood()){
+                        if(MySettingConfigUtil.cache_mood){
                             for(MoodBean mb: moodBeans){
                                 moodDataBase.insert(mb);
                             }
@@ -526,7 +526,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         //HttpRequestBean requestBean = new HttpRequestBean();
         HashMap<String, Object> params = new HashMap<>();
         params.put("toUserId", mPreUid);
-        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
+        params.put("pageSize", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
         MoodHandler.sendMood(this, params);
     }
@@ -552,7 +552,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("toUserId", mPreUid);
@@ -579,8 +579,8 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("toUserId", mPreUid);
@@ -602,7 +602,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         isLoading = true;
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("toUserId", mPreUid);
-        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);

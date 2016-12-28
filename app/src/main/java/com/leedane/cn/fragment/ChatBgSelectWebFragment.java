@@ -201,7 +201,7 @@ public class ChatBgSelectWebFragment extends BaseFragment{
         mFirstId = 0;
         mLastId = 0;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getFirstLoad());
+        params.put("pageSize", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
         params.put("type", type);
         //第一次操作取消全部数据
@@ -222,7 +222,7 @@ public class ChatBgSelectWebFragment extends BaseFragment{
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
@@ -249,8 +249,8 @@ public class ChatBgSelectWebFragment extends BaseFragment{
         mPreLoadMethod = "lowloading";
         isLoading = true;
 
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", MySettingConfigUtil.getOtherLoad());
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pageSize", MySettingConfigUtil.other_load);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("type", type);
@@ -269,8 +269,8 @@ public class ChatBgSelectWebFragment extends BaseFragment{
          //       || getStringResource(mContext, R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
 
             isLoading = true;
-            HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.getFirstLoad(): MySettingConfigUtil.getOtherLoad());
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
             params.put("first_id", mFirstId);
             params.put("last_id", mLastId);
             params.put("method", mPreLoadMethod);
