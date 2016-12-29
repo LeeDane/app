@@ -112,14 +112,13 @@ public class MoodDetailActivity extends BaseActivity implements MoodDetailFragme
         String contentString = null;
         try{
             String str = "{'tableName':'t_mood','tableId':"+mid+"}";
-            contentString = ConstantsUtil.DEFAULT_SERVER_URL + ConstantsUtil.WEB_APP_DOWNLOAD_PATH + "?leedaneapp=" +new JSONObject(str).toString();
+            contentString = ConstantsUtil.DEFAULT_SERVER_URL + ConstantsUtil.WEB_APP_DOWNLOAD_PATH + "?leedaneapp=" + CommonHandler.encodeQrCodeStr(new JSONObject(str).toString());
         }catch (JSONException e){
             e.printStackTrace();
         }
 
         if (StringUtil.isNotNull(contentString)) {
             //根据字符串生成二维码图片并显示在界面上，第二个参数为图片的大小（350*350）
-            contentString =  CommonHandler.encodeQrCodeStr(contentString);
             ToastUtil.failure(MoodDetailActivity.this, "二维码创建成功，长按保存到本地", Toast.LENGTH_SHORT);
             try {
                 qrCodeBitmap = EncodingHandler.createQRCode(contentString, 720);

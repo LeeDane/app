@@ -45,6 +45,7 @@ import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.Base64Util;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.DesUtils;
 import com.leedane.cn.util.MediaUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -188,7 +189,8 @@ public class MipcaActivityCapture extends Activity implements Callback, TaskList
 						String value = params.get("leedaneapp");
 						if(StringUtil.isNotNull(value)){
 							try{
-								JSONObject jsonObject = new JSONObject(new String(Base64Util.decode(value.toCharArray())));
+								DesUtils desUtils = new DesUtils();
+								JSONObject jsonObject = new JSONObject(new String(desUtils.decrypt(value)));
 								if(jsonObject.has("tableName") && jsonObject.has("tableId")){//打开详情
 									//启动详情的activity
 									CommonHandler.startDetailActivity(MipcaActivityCapture.this,jsonObject.getString("tableName"), jsonObject.getInt("tableId"), null );
@@ -200,7 +202,7 @@ public class MipcaActivityCapture extends Activity implements Callback, TaskList
 									ToastUtil.failure(MipcaActivityCapture.this, "暂时不支持的类型，请更新最新版本后尝试");
 									return;
 								}
-							}catch (JSONException e){
+							}catch (Exception e){
 								e.printStackTrace();
 								ToastUtil.failure(MipcaActivityCapture.this, "数据解析失败！");
 								return;

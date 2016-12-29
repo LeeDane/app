@@ -422,7 +422,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-
+        <activity
+            android:name="com.leedane.cn.activity.NearbyActivity"
+            android:label="@string/nearby"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
         <!--  Jpush  -->
         <!-- Required SDK核心功能-->
@@ -534,7 +539,7 @@
         <!--  百度地图 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="ZWvyW58f607GYMyPKXWy03tK4WKXcHAD" />
+            android:value="dAbLfte770Ylcqgiuupcj4jfDTpCGupm" />
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
         </service>
 

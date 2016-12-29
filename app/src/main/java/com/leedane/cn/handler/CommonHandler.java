@@ -3,14 +3,17 @@ package com.leedane.cn.handler;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.leedane.cn.activity.ChatDetailActivity;
 import com.leedane.cn.activity.DetailActivity;
 import com.leedane.cn.activity.ImageDetailActivity;
+import com.leedane.cn.activity.MipcaActivityCapture;
 import com.leedane.cn.activity.MoodDetailActivity;
 import com.leedane.cn.activity.MySettingActivity;
+import com.leedane.cn.activity.NearbyActivity;
 import com.leedane.cn.activity.NotificationActivity;
 import com.leedane.cn.activity.PersonalActivity;
 import com.leedane.cn.activity.TopicActivity;
@@ -27,6 +30,7 @@ import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.Base64Util;
 import com.leedane.cn.util.ConstantsUtil;
+import com.leedane.cn.util.DesUtils;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -224,6 +228,26 @@ public class CommonHandler {
     }
 
     /**
+     * 触发扫一扫的activity
+     * @param context
+     */
+    public static void startMipcaActivityCapture(Context context){
+        Intent intent = new Intent();
+        intent.setClass(context, MipcaActivityCapture.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
+
+    /**
+     * 触发附近人的activity
+     * @param context
+     */
+    public static void startNearByActivity(Context context){
+        Intent it = new Intent(context, NearbyActivity.class);
+        context.startActivity(it);
+    }
+
+    /**
      * 调用系统浏览器打开网络链接
      * @param context
      * @param networkLink
@@ -241,7 +265,14 @@ public class CommonHandler {
      */
     public static String encodeQrCodeStr(String sourceStr){
         if(StringUtil.isNotNull(sourceStr)){
-            sourceStr = new String(Base64Util.encode(sourceStr.getBytes()));
+            try {
+                DesUtils des = new DesUtils();
+                sourceStr = des.encrypt(sourceStr);
+            }catch (Exception e){
+                Log.i("CommonHandler", "字符串转成DES码失败，字符串是："+sourceStr);
+            }
+
+            //sourceStr = new String(Base64Util.encode(sourceStr.getBytes()));
         }
         return sourceStr;
     }
