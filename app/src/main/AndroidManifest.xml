@@ -426,7 +426,7 @@
             android:name="com.leedane.cn.activity.NearbyActivity"
             android:label="@string/nearby"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme2">
         </activity>
 
         <!--  Jpush  -->

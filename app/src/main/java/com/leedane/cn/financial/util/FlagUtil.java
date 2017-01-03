@@ -33,4 +33,10 @@ public final class FlagUtil {
     //摇一摇的结果
     public static final int YAOYIYAO_RESULT_HANDLER = 62;
 
+    //附近上传位置信息
+    public static final int NEARBY_UPLOAD_LOCATION = 63;
+
+    //f附近人的结果集的查询
+    public static final int DO_NEARBY_SEARCH = 65;
+
 }

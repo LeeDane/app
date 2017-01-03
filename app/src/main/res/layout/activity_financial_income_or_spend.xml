@@ -125,7 +125,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/save"
-            android:textColor="#000"
+            android:textColor="#fff"
             android:drawableLeft="@drawable/ic_save_blue_a400_18dp"
             android:textSize="@dimen/default_16sp" />
         <TextView
@@ -140,7 +140,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/draft"
-            android:textColor="#000"
+            android:textColor="#fff"
             android:drawableLeft="@drawable/ic_drafts_blue_a400_18dp"
             android:textSize="@dimen/default_16sp" />
     </LinearLayout>

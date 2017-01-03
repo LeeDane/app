@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,15 +22,22 @@ import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.ChatBean;
+import com.leedane.cn.bean.ChatDetailBean;
+import com.leedane.cn.bean.HttpResponseChatDetailBean;
 import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.handler.ChatHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.CommonUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +82,8 @@ public class ChatHomeFragment extends Fragment implements TaskListener
     private Context mContext;
 
     private ChatDataBase database;
+
+    private HttpResponseMyFriendsBean model;
     /**
      * List存放页面上的评论对象列表
      */
@@ -94,7 +104,6 @@ public class ChatHomeFragment extends Fragment implements TaskListener
                              Bundle savedInstanceState) {
 
         if(mRootView == null){
-
             mRootView = inflater.inflate(R.layout.fragment_chat_home, container,
                     false);
         }
@@ -148,14 +157,8 @@ public class ChatHomeFragment extends Fragment implements TaskListener
         if(StringUtil.isNotNull(tempData)){
             try {
                 Gson gson = new GsonBuilder().create();
-                HttpResponseMyFriendsBean model = gson.fromJson(tempData, HttpResponseMyFriendsBean.class);
-                mChatBeans = new ArrayList<>();
-                if(model != null && model.getMessage() != null && model.getMessage().size() > 0){
-                    mChatBeans.addAll(database.queryChatHome(mContext, model.getMessage()));
-                    List<ChatBean> tempChatBeans = new ArrayList<>();
-                    tempChatBeans.addAll(mChatBeans);
-                    mAdapter.refreshData(tempChatBeans);
-                }
+                model = gson.fromJson(tempData, HttpResponseMyFriendsBean.class);
+                notifyDataChange();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -163,6 +166,21 @@ public class ChatHomeFragment extends Fragment implements TaskListener
 
         //进入这个页面都会去加载、检查好友信息
         loadMyFriends();
+    }
+
+    /**
+     * 数据更新的时候
+     */
+    private void notifyDataChange(){
+        mChatBeans = new ArrayList<>();
+        if(model != null && model.getMessage() != null && model.getMessage().size() > 0){
+            mChatBeans.addAll(database.queryChatHome(mContext, model.getMessage()));
+        }else{
+            mChatBeans.addAll(database.queryChatHome(mContext, null));
+        }
+        List<ChatBean> tempChatBeans = new ArrayList<>();
+        tempChatBeans.addAll(mChatBeans);
+        mAdapter.refreshData(tempChatBeans);
     }
 
     private void loadMyFriends(){
@@ -275,6 +293,32 @@ public class ChatHomeFragment extends Fragment implements TaskListener
     }
     @Override
     public void taskFinished(TaskType type, Object result) {
+        if(result instanceof Error){
+            ToastUtil.failure(mContext, ((Error) result).getMessage(), Toast.LENGTH_SHORT);
+            mSwipeLayout.setRefreshing(false);
+            return;
+        }
+        try {
+            JSONObject jsonObject = new JSONObject(String.valueOf(result));
+            if(TaskType.LOAD_ONE_CHAT_BY_ALL_USER == type && jsonObject != null){
+                HttpResponseChatDetailBean responseFanBean = BeanConvertUtil.strConvertToChatDetailBeans(String.valueOf(result));
+                if(responseFanBean != null && responseFanBean.isSuccess()){
+                    List<ChatDetailBean> chatDetailBeans = responseFanBean.getMessage();
+                    if(CommonUtil.isNotEmpty(chatDetailBeans)){
+                        for(ChatDetailBean bean: chatDetailBeans)
+                            database.insert(bean);
+                    }
+                    notifyDataChange();
+                    mSwipeLayout.setRefreshing(false);
+                }
+            }else{
+                ToastUtil.failure(mContext, JsonUtil.getErrorMessage(result));
+                mSwipeLayout.setRefreshing(false);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -289,11 +333,14 @@ public class ChatHomeFragment extends Fragment implements TaskListener
     public void onDestroy() {
         if(database != null)
             database.destroy();
+
+        taskCanceled(TaskType.LOAD_ONE_CHAT_BY_ALL_USER);
         super.onDestroy();
     }
 
     @Override
     public void onRefresh() {
+        ChatHandler.getOneChatByAllUser(this);
     }
     @Override
     public void onClick(View v) {

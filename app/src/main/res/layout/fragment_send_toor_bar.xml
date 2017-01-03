@@ -12,11 +12,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:orientation="horizontal">
             <com.leedane.cn.customview.RightImgClickEditText
                 android:id="@+id/mood_detail_comment_or_transmit_text"
                 android:layout_width="0dp"
-                android:layout_weight="9"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:hint="@string/comment_hint"
@@ -26,13 +28,12 @@
                 android:drawablePadding="@dimen/default_5dp"/>
             <ImageView
                 android:id="@+id/mood_detail_comment_or_transmit_send"
-                android:layout_width="25dp"
-                android:layout_gravity="center"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center|center_vertical"
                 android:scaleType="fitXY"
-                android:src="@drawable/send"
-                android:layout_marginRight="@dimen/default_3dp"
-                android:layout_marginBottom="@dimen/default_3dp"
-                android:layout_height="25dp" />
+                android:background="@drawable/ic_send_indigo_a200_18dp"
+                android:layout_marginRight="@dimen/default_3dp" />
         </LinearLayout>
         <android.support.v4.view.ViewPager
             android:id="@+id/emoji_viewpager"

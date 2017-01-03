@@ -67,6 +67,7 @@
     <string name="preview">预览</string>
     <string name="search_condition">更多条件</string>
     <string name="ok">确定</string>
+    <string name="close">关闭</string>
 
     <!-- 异常相关 -->
     <string name="crash_file_path">"/crash"</string>

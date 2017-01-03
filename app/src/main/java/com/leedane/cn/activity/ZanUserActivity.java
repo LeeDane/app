@@ -15,6 +15,7 @@ import com.leedane.cn.bean.ZanUserBean;
 import com.leedane.cn.handler.PraiseHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -121,7 +122,7 @@ public class ZanUserActivity extends BaseActivity implements SwipeRefreshLayout.
                         mListViewFooter.setText(getResources().getString(R.string.no_load_more));
                     }
                 }else{
-                    mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                    mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
                 }
                 return;
             }

@@ -20,6 +20,7 @@ import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.FanHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -84,7 +85,7 @@ public class FanFragment extends BaseFragment{
                 HttpResponseFanBean responseFanBean = BeanConvertUtil.strConvertToFanBeans(String.valueOf(result));
                 if(responseFanBean != null && responseFanBean.isSuccess()){
                     List<FanBean> fanBeans =  responseFanBean.getMessage();
-                    if(fanBeans != null && fanBeans.size() > 0){
+                    if(CommonUtil.isNotEmpty(fanBeans)){
                         //临时list
                         List<FanBean> temList = new ArrayList<>();
                         if(mPreLoadMethod.equalsIgnoreCase("firstloading")){

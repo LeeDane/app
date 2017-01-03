@@ -138,8 +138,8 @@ public class ChatContactFragment extends Fragment implements View.OnClickListene
         ToastUtil.success(mContext, "您还没有好友");
         //后台去获取用户的好友信息
         CommonHandler.startUserFreidnsService(BaseApplication.newInstance(), false);
-        mActivity.finish();
-        return;
+        //mActivity.finish();
+        //return;
     }
     private void setUI() {
 
@@ -213,7 +213,7 @@ public class ChatContactFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onItemClick(int position) {
-        ((ChatActivity)getActivity()).startForChatDetailActivity(mAllLists.get(position).getId(), mAllLists.get(position).getAccount(), 1);
+       CommonHandler.startChatDetailActivity(mContext, mAllLists.get(position).getId(), mAllLists.get(position).getAccount(), 1);
         //CommonHandler.startChatDetailActivity(mContext, mAllLists.get(position).getId(), mAllLists.get(position).getAccount());
     }
 }

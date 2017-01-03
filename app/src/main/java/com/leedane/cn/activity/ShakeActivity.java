@@ -146,7 +146,7 @@ public class ShakeActivity extends BaseActivity{
             lastZ = z;
             double speed = (Math.sqrt(deltaX * deltaX + deltaY * deltaY
                     + deltaZ * deltaZ) / timeInterval) * 100;
-            if (speed >= SPEED_SHRESHOLD && canYao && countNumber < 6) {
+            if (speed >= SPEED_SHRESHOLD && speed <= 10000 && canYao && countNumber < 6) {
                 canYao = false;
                 AppUtil.vibrate(ShakeActivity.this, 50);
                 showLoadingDialog("获取信息", "加载中。。。", true);

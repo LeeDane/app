@@ -225,6 +225,7 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
 
     @Override
     public void taskFinished(TaskType type, Object result) {
+        ((ChatDetailActivity)getActivity()).dismissLoadingDialog();
         if(result instanceof Error){
             ToastUtil.failure(mContext, ((Error) result).getMessage(), Toast.LENGTH_SHORT);
             return;

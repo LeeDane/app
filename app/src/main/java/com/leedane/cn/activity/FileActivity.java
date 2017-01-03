@@ -26,6 +26,7 @@ import com.leedane.cn.database.FileDataBase;
 import com.leedane.cn.handler.FileHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -244,7 +245,7 @@ public class FileActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
-                        mListViewFooter.setText(getStringResource(R.string.load_more_error));
+                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
                         mListViewFooter.setOnClickListener(this);
                     }else{
                         ToastUtil.failure(FileActivity.this, "获取文件列表失败啦");
@@ -417,20 +418,25 @@ public class FileActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      * @param view
      */
     public void sendLoadAgain(View view){
-        //只有在加载失败或者点击加载更多的情况下点击才有效
-        if(getStringResource(R.string.load_more_error).equalsIgnoreCase(mListViewFooter.getText().toString())
-                || getStringResource(R.string.load_more).equalsIgnoreCase(mListViewFooter.getText().toString())){
-            taskCanceled(TaskType.LOAD_FILE);
-            isLoading = true;
-            HashMap<String, Object> params = new HashMap<String, Object>();
-            params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
-            params.put("first_id", mFirstId);
-            params.put("last_id", mLastId);
-            params.put("method", mPreLoadMethod);
-            mListViewFooter.setText(getStringResource(R.string.loading));
-            FileHandler.getFilesRequest(this, params);
+        //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
+        if(getStringResource(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
+            return;
         }
 
+        //没有lastID时当作第一次请求加载
+        if(mLastId == 0){
+            sendFirstLoading();
+            return;
+        }
+        taskCanceled(TaskType.LOAD_FILE);
+        isLoading = true;
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
+        params.put("first_id", mFirstId);
+        params.put("last_id", mLastId);
+        params.put("method", mPreLoadMethod);
+        mListViewFooter.setText(getStringResource(R.string.loading));
+        FileHandler.getFilesRequest(this, params);
     }
 
     @Override

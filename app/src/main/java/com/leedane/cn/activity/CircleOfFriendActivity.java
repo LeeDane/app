@@ -19,6 +19,7 @@ import com.leedane.cn.handler.CircleOfFriendHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -166,7 +167,7 @@ public class CircleOfFriendActivity  extends BaseActivity implements SwipeRefres
                         }
                         mListView.removeFooterView(viewFooter);
                         mListView.addFooterView(viewFooter, null, false);
-                        mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource( R.string.click_to_load));
                     }else{
                         ToastUtil.failure(CircleOfFriendActivity.this);
                     }
@@ -217,7 +218,7 @@ public class CircleOfFriendActivity  extends BaseActivity implements SwipeRefres
      */
     private void sendLowLoading(){
         //向下刷新时，只有当不是暂无数据的时候才进行下一步的操作
-        if(getResources().getString(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString())) {
+        if(getStringResource(R.string.no_load_more).equalsIgnoreCase(mListViewFooter.getText().toString()) || isLoading) {
             return;
         }
         //没有lastID时当作第一次请求加载

@@ -118,7 +118,6 @@ public class JPushReceiver extends BroadcastReceiver {
 		String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
 		String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
 		if(StringUtil.isNotNull(extras)){//自定义消息
-
 			try{
 				JSONObject jsonObject = new JSONObject(extras);
 
@@ -146,8 +145,10 @@ public class JPushReceiver extends BroadcastReceiver {
 						if(dataBase.insert(chatDetailBean)){
 							String friendAccount = FriendHandler.getFriendAccout(chatDetailBean.getCreateUserId());
 							int notificationId = ChatActivity.BASE_USER_CHAT_DETAIL_CODE + chatDetailBean.getCreateUserId();
-							if(StringUtil.isNotNull(friendAccount))
-								new NotificationUtil(notificationId, context).sendActionNotification("与"+friendAccount +"聊天", friendAccount +":" +chatDetailBean.getContent(), "聊天", 1, 0, ChatActivity.class);
+							if(StringUtil.isNull(friendAccount))
+								friendAccount = chatDetailBean.getCreateUserName();
+
+							new NotificationUtil(notificationId, context).sendActionNotification("与"+friendAccount +"聊天中", /*friendAccount +":" +*/chatDetailBean.getContent(), "聊天", dataBase.queryNoRead(chatDetailBean.getCreateUserId()), 0, ChatActivity.class);
 						}
 					}
 				}

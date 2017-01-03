@@ -13,6 +13,7 @@ import com.leedane.cn.bean.ChatDetailBean;
 import com.leedane.cn.bean.HttpResponseMyFriendsBean;
 import com.leedane.cn.bean.MyFriendsBean;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
@@ -40,6 +41,7 @@ public class ChatDataBase {
             "to_user_id integer, " + // 接收聊天信息的用户ID
             //"accout varchar(20), " + // 接收聊天信息的用户名称
             "create_user_id integer, " + // 创建人
+            "create_user_name varchar(255), " + // 创建人名称
             "read integer, " + // 是否读取, 0：表示未读， 1表示已经读取
             "code integer, " + // 与当前用户聊天的人的ID
             "create_time varchar(25)" + // 创建时间
@@ -69,7 +71,7 @@ public class ChatDataBase {
         }
         String sql = "insert into " + CHAT_TABLE_NAME;
 
-        sql += "(cid, content, _type, to_user_id, create_user_id, create_time, code, read) values(?, ?, ?, ?, ?, ?, ?, ?)";
+        sql += "(cid, content, _type, to_user_id, create_user_id, create_time, code, read, create_user_name) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         int read = 0;
         if(data.isRead()){
@@ -78,7 +80,7 @@ public class ChatDataBase {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         sqlite.execSQL(sql, new String[] {
                 data.getId() + "", data.getContent() + "", data.getType() +"",
-                data.getToUserId() +"", data.getCreateUserId() +"", data.getCreateTime(), code +"", read +"" });
+                data.getToUserId() +"", data.getCreateUserId() +"", data.getCreateTime(), code +"", read +"", data.getCreateUserName() });
         sqlite.close();
 
         Log.i(TAG, "数据插入成功:" + data.getId());
@@ -110,7 +112,7 @@ public class ChatDataBase {
     public void delete(int id) {
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         String sql = ("delete from " + CHAT_TABLE_NAME + " where cid=?");
-        sqlite.execSQL(sql, new Integer[] { id });
+        sqlite.execSQL(sql, new Integer[]{id});
         sqlite.close();
     }
 
@@ -147,11 +149,11 @@ public class ChatDataBase {
         }
         data.setContent("呵呵");
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
-        String sql = ("update " + CHAT_TABLE_NAME + " set cid=?, content=?, _type=?, to_user_id=?, create_user_id=?, create_time=?, code=?, read=? where cid=?");
+        String sql = ("update " + CHAT_TABLE_NAME + " set cid=?, content=?, _type=?, to_user_id=?, create_user_id=?, create_time=?, code=?, read=?, create_user_name=? where cid=?");
         sqlite.execSQL(sql,
                 new Object[] { data.getId(), data.getContent() + "",
                         data.getType() +"", data.getToUserId() +"",
-                        data.getCreateUserId() +"", data.getCreateTime(), data.getCode(), read, data.getId() });
+                        data.getCreateUserId() +"", data.getCreateTime(), data.getCode(), read, data.getCreateUserName(), data.getId() });
         sqlite.close();
 
         /*List<ChatDetailBean> ss = query(" where cid=" +data.getId());
@@ -164,7 +166,7 @@ public class ChatDataBase {
      */
     public void updateAllForRead(int toUserId) {
 
-        List<ChatDetailBean> chatDetailBeans = query(" where read='0' and code ="+String.valueOf(toUserId));
+        List<ChatDetailBean> chatDetailBeans = query(" where read='0' and code =" + String.valueOf(toUserId));
         if(chatDetailBeans != null && chatDetailBeans.size() > 0){
             for(ChatDetailBean chatDetailBean: chatDetailBeans){
                 chatDetailBean.setRead(true);
@@ -179,7 +181,6 @@ public class ChatDataBase {
 
     /**
      * 查
-     *
      * @param where
      * @return
      */
@@ -187,7 +188,7 @@ public class ChatDataBase {
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
         ArrayList<ChatDetailBean> data = null;
         data = new ArrayList<ChatDetailBean>();
-        Cursor cursor = sqlite.rawQuery("select cid, content, _type, to_user_id, create_user_id, create_time, code, read  from "
+        Cursor cursor = sqlite.rawQuery("select cid, content, _type, to_user_id, create_user_id, create_time, code, read, create_user_name  from "
                 + CHAT_TABLE_NAME + where, null);
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             ChatDetailBean chatDetailBean = new ChatDetailBean();
@@ -199,6 +200,7 @@ public class ChatDataBase {
             chatDetailBean.setCreateTime(cursor.getString(5));
             chatDetailBean.setCode(cursor.getInt(6));
             chatDetailBean.setRead(false);
+            chatDetailBean.setCreateUserName(cursor.getString(8));
             int read = cursor.getInt(7);
             if(read == 1){
                 chatDetailBean.setRead(true);
@@ -214,16 +216,37 @@ public class ChatDataBase {
     }
 
     /**
+     * 获取某个用户的未读聊天个数
+     * @param fromUserId
+     * @return
+     */
+    public int queryNoRead(int fromUserId) {
+        SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
+        Cursor cursor = sqlite.rawQuery("select count(*) count from "+ChatDataBase.CHAT_TABLE_NAME + " where create_user_id="
+                + fromUserId + " and read=0", null);
+        int count = 0;
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            count = cursor.getInt(0);
+        }
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        sqlite.close();
+        return count;
+    }
+
+
+    /**
      * 查聊天首页信息的展示
      * @param context
      * @param myFriendsBeans
      * @return
      */
     public List<ChatBean> queryChatHome(Context context, List<MyFriendsBean> myFriendsBeans) {
-        ArrayList<ChatBean> data = new ArrayList<ChatBean>();
-        if(myFriendsBeans != null && myFriendsBeans.size() > 0) {
-            String sql = "select cid, content, _type, to_user_id, create_user_id, create_time, code, " +
-                    "(SELECT count(*) from " + CHAT_TABLE_NAME + " where code = o.code and read = 0) no_read_number " +
+        ArrayList<ChatBean> data = new ArrayList<>();
+        //if(myFriendsBeans != null && myFriendsBeans.size() > 0) {
+            String sql = "select cid, content, _type, to_user_id, create_user_id, create_time, code," +
+                    "(SELECT count(*) from " + CHAT_TABLE_NAME + " where code = o.code and read = 0) no_read_number, create_user_name " +
                     "from " + CHAT_TABLE_NAME + " o  " +
                     "where not EXISTS(" +
                     "select 0 from " + CHAT_TABLE_NAME + " o1  where o1.code = o.code and o1.cid > o.cid" +
@@ -233,7 +256,7 @@ public class ChatDataBase {
             Cursor cursor = sqlite.rawQuery(sql, null);
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 ChatBean chatBean = new ChatBean();
-                chatBean.setAccount(getAccountByFriend(myFriendsBeans, cursor.getInt(6)));
+                chatBean.setAccount(getAccountByFriend(myFriendsBeans, cursor.getInt(6), cursor.getString(8)));
                 chatBean.setCreateTime(cursor.getString(5));
                 chatBean.setContent(cursor.getString(1));
                 chatBean.setToUserId(cursor.getInt(6));
@@ -248,12 +271,19 @@ public class ChatDataBase {
                 cursor.close();
             }
             sqlite.close();
-        }
+        //}
         return data;
     }
 
-    private String getAccountByFriend(List<MyFriendsBean> friendsBeans, int userId){
-        if(friendsBeans != null && friendsBeans.size() > 0){
+    /**
+     * 获取称呼
+     * @param friendsBeans
+     * @param userId
+     * @param account
+     * @return
+     */
+    private String getAccountByFriend(List<MyFriendsBean> friendsBeans, int userId, String account){
+        if(!CommonUtil.isEmpty(friendsBeans)){
             for(MyFriendsBean myFriendsBean: friendsBeans){
 
                 if(myFriendsBean.getId() == userId){
@@ -261,11 +291,11 @@ public class ChatDataBase {
                 }
             }
         }
-        return null;
+        return StringUtil.changeNotNull(account);
     }
 
     private String getUserPicPathByFriend(List<MyFriendsBean> friendsBeans, int userId){
-        if(friendsBeans != null && friendsBeans.size() > 0){
+        if(!CommonUtil.isEmpty(friendsBeans)){
             for(MyFriendsBean myFriendsBean: friendsBeans){
 
                 if(myFriendsBean.getId() == userId){

@@ -91,7 +91,8 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper {
 		 * this.onCreate(db); //执行创建操作!
 		 */
 		//db.execSQL("DROP TABLE IF EXISTS " + TABLE_FILE);
-		database.execSQL(FinancialLocationDataBase.CREATE_FINANCIAL_LOCATION_TABLE);
+		database.execSQL("DROP TABLE IF EXISTS " + ChatDataBase.CHAT_TABLE_NAME);
+		database.execSQL(ChatDataBase.CREATE_CHAT_TABLE);
 	}
 
 	/**

@@ -503,7 +503,7 @@ public class MainActivity extends NavigationActivity
                     if(mPreLoadMethod.equalsIgnoreCase("lowloading")){
                         mlistViewBlogs.removeFooterView(viewFooter);
                         mlistViewBlogs.addFooterView(viewFooter, null, false);
-                        mListViewFooter.setText(getStringResource(R.string.load_more_error));
+                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
                         mListViewFooter.setOnClickListener(this);
                     }
                     e.printStackTrace();
@@ -580,7 +580,7 @@ public class MainActivity extends NavigationActivity
                         }
                         mlistViewBlogs.removeFooterView(viewFooter);
                         mlistViewBlogs.addFooterView(viewFooter, null, false);
-                        mListViewFooter.setText(getStringResource(R.string.load_more_error));
+                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
                     }else{
                         ToastUtil.failure(MainActivity.this);
                     }

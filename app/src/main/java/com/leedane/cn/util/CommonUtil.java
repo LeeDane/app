@@ -25,4 +25,13 @@ public class CommonUtil {
         }
         return false;
     }
+
+    /**
+     * 判断数组是否为空
+     * @param array
+     * @return
+     */
+    public static boolean isNotEmpty(List<?> array){
+        return !isEmpty(array);
+    }
 }

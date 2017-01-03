@@ -237,7 +237,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         isLoading = false;
         if(result instanceof Error){
             if(type == TaskType.LOAD_CHAT ){
-                mListViewHeader.setText(getStringResource(R.string.load_more_error));
+                mListViewHeader.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
             }
         }
         try{

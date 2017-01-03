@@ -51,11 +51,13 @@ public class CommonHandler {
      * @param context
      * @param toUserId
      * @param toUserAccount
+     * @param model 0:首页， 1：联系人列表，2:未知
      */
-    public static void startChatDetailActivity(Context context, int toUserId, String toUserAccount){
+    public static void startChatDetailActivity(Context context, int toUserId, String toUserAccount, int model){
         Intent it = new Intent(context, ChatDetailActivity.class);
         it.putExtra("toUserId", toUserId);
         it.putExtra("toUserAccount", toUserAccount);
+        it.putExtra("model", model);
         context.startActivity(it);
     }
 
@@ -226,6 +228,8 @@ public class CommonHandler {
         }
         context.startActivity(it);
     }
+
+
 
     /**
      * 触发扫一扫的activity

@@ -248,24 +248,8 @@ public class ChatActivity extends BaseActivity implements ChatHomeFragment.OnIte
         }else{
             toUserId = chatBean.getCreateUserId();
         }
-        startForChatDetailActivity(toUserId, chatBean.getAccount(), 0);
+        CommonHandler.startChatDetailActivity(ChatActivity.this, toUserId, chatBean.getAccount(), 0);
 
-    }
-
-    /**
-     *
-     * @param toUserId
-     * @param account
-     * @param model 0:首页， 1：联系人列表，2:未知
-     */
-    public void startForChatDetailActivity(int toUserId, String account, int model){
-        Intent it = new Intent(ChatActivity.this, ChatDetailActivity.class);
-        it.putExtra("toUserId", toUserId);
-        it.putExtra("toUserAccount", account);
-        it.putExtra("model", model);
-        startActivityForResult(it, START_CHAT_DETAIL_CODE);
-        //context.startActivity(it);
-        //CommonHandler.startChatDetailActivity(ChatActivity.this, toUserId, chatBean.getAccount());
     }
 
     @Override

@@ -78,4 +78,19 @@ public class ChatHandler {
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_NO_READ_CHAT, listener, requestBean);
     }
+
+    /**
+     * 获取登录用户的全部与其有过聊天记录的用户的最新一条聊天信息
+     * @param listener
+     * @return
+     */
+    public static void getOneChatByAllUser(TaskListener listener){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("leedane/chat/getOneChatByAllUser.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_ONE_CHAT_BY_ALL_USER, listener, requestBean);
+    }
 }

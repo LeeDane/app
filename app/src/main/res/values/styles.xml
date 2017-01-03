@@ -14,6 +14,9 @@
     <style name="AppTheme1" parent="android:Theme.Holo.Light">
         <item name="android:actionMenuTextColor">@android:color/white</item>
     </style>
+    <style name="AppTheme2" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionMenuTextColor">@color/blueAccountLink</item>
+    </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <style name="push_style">

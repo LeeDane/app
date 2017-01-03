@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.leedane.cn.adapter.search.SearchMoodAdapter;
 import com.leedane.cn.app.R;
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.search.HttpResponseSearchMoodBean;
 import com.leedane.cn.bean.search.SearchMoodBean;
 import com.leedane.cn.handler.CommonHandler;
@@ -19,6 +20,7 @@ import com.leedane.cn.handler.SearchHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 
@@ -142,13 +144,25 @@ public class SearchMoodFragment extends Fragment implements TaskListener{
                     if(jsonObject.has("isSuccess") && jsonObject.has("message")){
                         mListViewFooter.setText(jsonObject.getString("message"));
                     }else{
-                        mListViewFooter.setText(getResources().getString(R.string.load_more_error));
+                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
                     }
                 }
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 统一获取string资源的值
+     * @param resourceId
+     * @return
+     */
+    public String getStringResource(int resourceId){
+        if(mContext == null){
+            return BaseApplication.newInstance().getResources().getString(resourceId);
+        }
+        return mContext.getResources().getString(resourceId);
     }
 
     @Override

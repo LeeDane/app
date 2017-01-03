@@ -1,6 +1,7 @@
 package com.leedane.cn.financial.activity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -674,12 +676,15 @@ public class IncomeOrSpendActivity extends BaseActivity {
                 break;
 
             case  R.id.financial_income_or_spend_one_level: //选择一级分类
+                closeInputMethod();
                 pvCategoryOptions.show();
                 break;
             case R.id.financial_income_or_spend_two_level: //选择二级分类
+                closeInputMethod();
                 pvCategoryOptions.show();
                 break;
             case R.id.financial_income_or_spend_date: //选择日期
+                closeInputMethod();
                 pvTime.show();
                 break;
             case R.id.base_title_textview:
@@ -699,6 +704,21 @@ public class IncomeOrSpendActivity extends BaseActivity {
                 doDraft();
                 break;
         }
+    }
+
+
+    /**
+     * 隐藏输入法
+     */
+    private void closeInputMethod() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        boolean isOpen = imm.isActive();
+        if (isOpen) {
+            // imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);//没有显示则显示
+            imm.hideSoftInputFromWindow(mMoney.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+        }
+
     }
 
     private Dialog mDialog;

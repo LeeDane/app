@@ -20,6 +20,12 @@ public class ChatDetailBean extends IdBean {
 	 */
 	@SerializedName("create_user_id")
 	private int createUserId;
+
+	/**
+	 * 接收消息的用户的名称
+	 */
+	@SerializedName("create_user_name")
+	private String createUserName;
 	/**
 	 * 接收消息的用户ID
 	 */
@@ -122,5 +128,13 @@ public class ChatDetailBean extends IdBean {
 
 	public void setCode(int code) {
 		this.code = code;
+	}
+
+	public String getCreateUserName() {
+		return createUserName;
+	}
+
+	public void setCreateUserName(String createUserName) {
+		this.createUserName = createUserName;
 	}
 }
