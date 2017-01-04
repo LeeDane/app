@@ -1,14 +1,19 @@
 package com.leedane.cn.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -50,6 +55,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.financial.util.FlagUtil;
+import com.leedane.cn.handler.AppVersionHandler;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
@@ -68,7 +74,7 @@ import java.util.Map;
  * 附近activity
  * Created by LeeDane on 2016/12/27.
  */
-public class NearbyActivity extends Activity implements
+public class NearbyActivity extends ActionBarActivity implements
         OnGetGeoCoderResultListener, RadarSearchListener, BaiduMap.OnMapClickListener, BaiduMap.OnMarkerClickListener{
 
     private  LatLng prePoint; //当前的定位信息
@@ -76,7 +82,18 @@ public class NearbyActivity extends Activity implements
     private MapView mMapView = null;
     private BaiduMap mBaiduMap = null;
     private GeoCoder mSearch = null;
-    RadarSearchManager mManager = null;
+    private RadarSearchManager mManager = null;
+
+    // 定位相关
+    private LocationClient mLocClient;
+    private MyLocationListenner myListener = new MyLocationListenner();
+    private LocationClientOption.LocationMode mCurrentMode;
+    private boolean isFirstLoc = true;
+
+    /**
+     * 弹出加载ProgressDiaLog
+     */
+    protected ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,14 +109,57 @@ public class NearbyActivity extends Activity implements
         //显示整个顶部的导航栏
        // backLayoutVisible();
         //创建地图对象
+
+        ActionBar mActionBar = getSupportActionBar();
+        mActionBar.setHomeButtonEnabled(true);
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setTitle(getString(R.string.nearby));
         init();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.nearby_menu, menu);
         return true;
+    }
+
+    /**
+     *
+     * 返回菜单的关闭操作
+     * @return
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Message message = new Message();
+        switch(item.getItemId()){
+            case R.id.nearby_menu_refresh:
+                message.what = FlagUtil.DO_NEARBY_SEARCH;
+                dealHandler.sendMessageDelayed(message, 50);
+                return true;
+            case R.id.nearby_menu_woman:
+                ToastUtil.failure(NearbyActivity.this, "只看女生");
+                return true;
+            case R.id.nearby_menu_man:
+                ToastUtil.failure(NearbyActivity.this, "只看男生");
+                return true;
+            case R.id.nearby_menu_all:
+                ToastUtil.failure(NearbyActivity.this, "查看全部");
+                return true;
+            case R.id.nearby_menu_out: //清除位置退出
+                showLoadingDialog("清除位置退出", "正在清除位置。", false);
+                message.what = FlagUtil.NEARBY_CLEAR_LOCATION;
+                dealHandler.sendMessage(message);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -111,7 +171,7 @@ public class NearbyActivity extends Activity implements
         option.pageCapacity(100);    // 每页包含的结果数
         option.pageNum(0);  // 当前需要查询的页码index，从0开始
         option.timeRange(DateUtil.stringToDate("2017-01-03 10:28:00"), new Date());
-        option.radius(100000);    // 搜索半径
+        option.radius(30000);    // 搜索半径
         //发起查询请求
         mManager.nearbyInfoRequest(option);
     }
@@ -219,12 +279,6 @@ public class NearbyActivity extends Activity implements
         super.onDestroy();
     }
 
-    // 定位相关
-    LocationClient mLocClient;
-    public MyLocationListenner myListener = new MyLocationListenner();
-    private LocationClientOption.LocationMode mCurrentMode;
-    private boolean isFirstLoc = true;
-
     private Handler dealHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -234,12 +288,12 @@ public class NearbyActivity extends Activity implements
                     mManager.setUserID("" + BaseApplication.getLoginUserId());
                     //上传位置
                     RadarUploadInfo info = new RadarUploadInfo();
-
                     try {
                         DesUtils desUtils = new DesUtils();
                         Map<String, Object> infoMap = new HashMap<>();
                         infoMap.put("account", BaseApplication.getLoginUserName());
                         infoMap.put("id", BaseApplication.getLoginUserId());
+                        infoMap.put("sex", BaseApplication.getLoginUserSex());
                         String path = BaseApplication.getLoginUserPicPath();
                         String comments = desUtils.encrypt(new JSONObject(infoMap).toString()) + "leedaneapp" + (StringUtil.isNull(path) ? "" : path.substring(ConstantsUtil.QINIU_CLOUD_SERVER.length(), path.length()));
                         if (comments.length() > 255){
@@ -254,19 +308,37 @@ public class NearbyActivity extends Activity implements
                     mManager.uploadInfoRequest(info);
                     break;
                 case FlagUtil.DO_NEARBY_SEARCH:
+                    if(prePoint == null){
+                        ToastUtil.failure(NearbyActivity.this, "无法获取您当前所在的位置！");
+                        break;
+                    }
                     doNearBySearch();
+                    break;
+                case FlagUtil.NEARBY_CLEAR_LOCATION:
+                    gotoClearLocation();
                     break;
             }
         }
     };
 
+    /**
+     * 清除位置退出
+     */
+    private void gotoClearLocation(){
+        if(mManager != null){
+            mManager.clearUserInfo();
+        }else{
+            ToastUtil.failure(NearbyActivity.this, "地图管理对象已经失效，请重试！");
+        }
+    }
+
     @Override
     public void onGetNearbyInfoList(RadarNearbyResult radarNearbyResult, RadarSearchError error) {
         if (error == RadarSearchError.RADAR_NO_ERROR) {
-            Toast.makeText(NearbyActivity.this, "查询周边成功", Toast.LENGTH_LONG)
-                    .show();
+            ToastUtil.success(NearbyActivity.this, "查询周边成功", Toast.LENGTH_LONG);
             try {
                 DesUtils desUtils = new DesUtils();
+                mBaiduMap.clear();
                 for(RadarNearbyInfo info: radarNearbyResult.infoList){
                     String[] comments = info.comments.split("leedaneapp");
                     JSONObject object = new JSONObject(desUtils.decrypt(comments[0]));
@@ -303,7 +375,6 @@ public class NearbyActivity extends Activity implements
 
                     //在地图上添加Marker，并显示
                     mBaiduMap.addOverlay(option);
-                    //Marker mMarkerD =   (Marker) mBaiduMap.addOverlay(option);
                 }
                 //获取成功，处理数据
             } catch (Exception e) {
@@ -311,28 +382,30 @@ public class NearbyActivity extends Activity implements
             }
         } else {
             //获取失败
-            Toast.makeText(NearbyActivity.this, "查询周边失败", Toast.LENGTH_LONG)
-                    .show();
+            ToastUtil.failure(NearbyActivity.this, "查询周边失败", Toast.LENGTH_LONG);
         }
     }
 
     @Override
     public void onGetUploadState(RadarSearchError error) {
-        // TODO Auto-generated method stub
         if (error == RadarSearchError.RADAR_NO_ERROR) {
             //上传成功
-            Toast.makeText(NearbyActivity.this, "单次上传位置成功", Toast.LENGTH_LONG)
-                    .show();
+            ToastUtil.success(NearbyActivity.this, "单次上传位置成功", Toast.LENGTH_SHORT);
         } else {
             //上传失败
-            Toast.makeText(NearbyActivity.this, "单次上传位置失败", Toast.LENGTH_LONG)
-                    .show();
+            ToastUtil.success(NearbyActivity.this, "单次上传位置失败", Toast.LENGTH_SHORT);
         }
     }
 
     @Override
     public void onGetClearInfoState(RadarSearchError radarSearchError) {
-
+        dismissLoadingDialog();
+        if (radarSearchError == RadarSearchError.RADAR_NO_ERROR) {
+            ToastUtil.failure(NearbyActivity.this, "清除位置信息成功");
+            finish();
+        } else {
+            ToastUtil.failure(NearbyActivity.this, "清除位置信息失败！");
+        }
     }
 
     @Override
@@ -348,8 +421,8 @@ public class NearbyActivity extends Activity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Bundle bundle = marker.getExtraInfo();
-        ToastUtil.success(NearbyActivity.this, "id："+bundle.getInt("id")+",账号是："+ bundle.getString("account"));
+        //Bundle bundle = marker.getExtraInfo();
+        //ToastUtil.success(NearbyActivity.this, "id："+bundle.getInt("id")+",账号是："+ bundle.getString("account"));
         showMakerDetail(marker);
         //ToastUtil.success(NearbyActivity.this, "onMarkerClick");
         return true;
@@ -368,9 +441,6 @@ public class NearbyActivity extends Activity implements
         String path = bundle.getString("path");
         final String account = bundle.getString("account");
         final int createUserId = bundle.getInt("id");
-        //double latitude, longitude;
-        //latitude = marker.getPosition().latitude;
-        //longitude = marker.getPosition().longitude;
 
         View view = LayoutInflater.from(this).inflate(R.layout.baidumap_maker_infowindow, null); //自定义气泡形状
         TextView accountTV = (TextView) view.findViewById(R.id.maker_account);
@@ -442,19 +512,9 @@ public class NearbyActivity extends Activity implements
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
             }
-
-            String addr = location.getAddrStr();
-            if (addr != null) {
-                Log.i("Test", addr);
-            } else {
-                Log.i("Test","error");
-            }
-
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
             if (longitude > 0 && latitude > 0) {
-                Log.i("Test",String.format("纬度:%f 经度:%f", latitude,longitude));
-
                 LatLng ptCenter = new LatLng(latitude,longitude);
                 // 反Geo搜索
                 mSearch.reverseGeoCode(new ReverseGeoCodeOption()
@@ -511,6 +571,26 @@ public class NearbyActivity extends Activity implements
         String city = result.getAddressDetail().city;
         if (province != null && city != null) {
 
+        }
+    }
+
+    /**
+     * 显示加载Dialog
+     * @param title  标题
+     * @param main  内容
+     * @param cancelable 是否可以取消
+     */
+    protected void showLoadingDialog(String title, String main, boolean cancelable){
+        dismissLoadingDialog();
+        mProgressDialog = ProgressDialog.show(NearbyActivity.this, title, main, true, cancelable);
+    }
+
+    /**
+     * 隐藏加载Dialog
+     */
+    protected void dismissLoadingDialog(){
+        if(mProgressDialog != null && mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
         }
     }
 }

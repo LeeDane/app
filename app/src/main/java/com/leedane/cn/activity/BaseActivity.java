@@ -149,13 +149,7 @@ public class BaseActivity extends FragmentActivity implements TaskListener, View
         dismissLoadingDialog();
         mProgressDialog = ProgressDialog.show(BaseActivity.this, title, main, true, cancelable);
     }
-    /**
-     * 获取服务器端地址
-     * @return
-     */
-    protected String getBaseServerUrl(){
-        return SharedPreferenceUtil.getSettingBean(getBaseContext(), ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent();
-    }
+
     /**
      * 隐藏加载Dialog
      */
@@ -163,6 +157,14 @@ public class BaseActivity extends FragmentActivity implements TaskListener, View
         if(mProgressDialog != null && mProgressDialog.isShowing()){
             mProgressDialog.dismiss();
         }
+    }
+
+    /**
+     * 获取服务器端地址
+     * @return
+     */
+    protected String getBaseServerUrl(){
+        return SharedPreferenceUtil.getSettingBean(getBaseContext(), ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent();
     }
 
     /**

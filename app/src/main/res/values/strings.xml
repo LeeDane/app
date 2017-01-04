@@ -440,6 +440,11 @@
 
     <!--   附近人  -->
     <string name="nearby">附近</string>
+    <string name="nearby_out">清除位置退出</string>
+    <string name="nearby_refresh">刷新</string>
+    <string name="nearby_woman">只看女生</string>
+    <string name="nearby_man">只看男生</string>
+    <string name="nearby_all">查看全部</string>
 
     <string-array name="colors">
         <item>#CA4443</item>

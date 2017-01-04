@@ -300,6 +300,23 @@ public class BaseApplication extends Application {
     }
 
     /**
+     * 获取登录的用户性别
+     * @return
+     */
+    public static String getLoginUserSex(){
+        String sex = "";
+        try {
+            JSONObject jsonObject = getLoginUserInfo();
+            if(jsonObject != null && jsonObject.has("id")) {
+                sex = jsonObject.getString("sex");
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return sex;
+    }
+
+    /**
      * 获取登录的用户头像路径
      * @return
      */

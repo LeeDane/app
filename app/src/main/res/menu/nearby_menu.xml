@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".NearbyActivity">
+
+    <item
+        android:id="@+id/nearby_menu_refresh"
+        android:icon="@drawable/refresh01"
+        app:showAsAction="always"
+        android:title="@string/nearby_refresh"/>
+    <item
+        android:id="@+id/nearby_menu_woman"
+        app:showAsAction="never"
+        android:title="@string/nearby_woman"/>
+    <item
+        android:id="@+id/nearby_menu_man"
+        app:showAsAction="never"
+        android:title="@string/nearby_man"/>
+    <item
+        android:id="@+id/nearby_menu_all"
+        app:showAsAction="never"
+        android:title="@string/nearby_all"/>
+    <item
+        android:id="@+id/nearby_menu_out"
+        app:showAsAction="never"
+        android:title="@string/nearby_out"/>
+</menu>

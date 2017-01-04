@@ -36,7 +36,10 @@ public final class FlagUtil {
     //附近上传位置信息
     public static final int NEARBY_UPLOAD_LOCATION = 63;
 
-    //f附近人的结果集的查询
+    //附近人的结果集的查询
     public static final int DO_NEARBY_SEARCH = 65;
+
+    //附近人的清除位置退出
+    public static final int NEARBY_CLEAR_LOCATION = 66;
 
 }
