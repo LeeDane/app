@@ -2,77 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical">
-    <RadioGroup
-        android:id="@+id/financial_tabs"
+    <net.lucode.hackware.magicindicator.MagicIndicator
+        android:id="@+id/magic_indicator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:orientation="horizontal">
-        <com.leedane.cn.customview.RightBorderTextView
-            android:id="@+id/financial_home"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="30dp"
-            android:clickable="true"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:onClick="tabClick"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/financial_home"/>
-        <com.leedane.cn.customview.RightBorderTextView
-            android:id="@+id/financial_yesterday"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="30dp"
-            android:clickable="true"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:onClick="tabClick"
-            android:textColor="@color/default_font"
-            android:text="@string/financial_yesterday"/>
-        <com.leedane.cn.customview.RightBorderTextView
-            android:id="@+id/financial_week"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="30dp"
-            android:clickable="true"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:onClick="tabClick"
-            android:textColor="@color/default_font"
-            android:text="@string/financial_week"/>
-        <com.leedane.cn.customview.RightBorderTextView
-            android:id="@+id/financial_month"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="30dp"
-            android:clickable="true"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:onClick="tabClick"
-            android:textColor="@color/default_font"
-            android:text="@string/financial_month"/>
-        <com.leedane.cn.customview.RightBorderTextView
-            android:id="@+id/financial_year"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="30dp"
-            android:clickable="true"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:onClick="tabClick"
-            android:textColor="@color/default_font"
-            android:text="@string/financial_year"/>
-    </RadioGroup>
-    <ImageView
-        android:id="@+id/financial_line"
-        android:layout_width="50dp"
-        android:layout_height="3dp"
-        android:scaleType="matrix"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/line"/>
+        android:layout_height="@dimen/default_40dp"
+        android:background="@color/default_bg_color" />
     <android.support.v4.view.ViewPager
         android:id="@+id/financial_viewpager"
         android:layout_width="match_parent"

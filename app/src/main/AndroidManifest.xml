@@ -175,6 +175,7 @@
             android:label="@string/settings"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
+
         </activity>
 
         <activity
@@ -322,7 +323,7 @@
             android:name="com.leedane.cn.financial.activity.HomeActivity"
             android:label="@string/financial"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity

@@ -74,99 +74,11 @@
                 android:text="@string/personal_fans"/>
         </LinearLayout>
     </LinearLayout>
-    <HorizontalScrollView
-        android:id="@+id/personal_scrollview"
+    <net.lucode.hackware.magicindicator.MagicIndicator
+        android:id="@+id/magic_indicator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none">
-        <RadioGroup
-            android:id="@+id/personal_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="horizontal">
-            <com.leedane.cn.customview.RightBorderTextView
-                android:id="@+id/personal_mood"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:onClick="tabClick"
-                android:textColor="@color/colorPrimary"
-                android:text="@string/personal_mood"/>
-            <com.leedane.cn.customview.RightBorderTextView
-                android:id="@+id/personal_comment"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:onClick="tabClick"
-                android:textColor="@color/default_font"
-                android:text="@string/personal_comment"/>
-            <com.leedane.cn.customview.RightBorderTextView
-                android:id="@+id/personal_transmit"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:onClick="tabClick"
-                android:textColor="@color/default_font"
-                android:text="@string/personal_transmit"/>
-            <com.leedane.cn.customview.RightBorderTextView
-                android:id="@+id/personal_praise"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:onClick="tabClick"
-                android:textColor="@color/default_font"
-                android:text="@string/personal_praise"/>
-            <com.leedane.cn.customview.RightBorderTextView
-                android:id="@+id/personal_attention"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:onClick="tabClick"
-                android:textColor="@color/default_font"
-                android:text="@string/personal_attention"/>
-            <com.leedane.cn.customview.RightBorderTextView
-                android:id="@+id/personal_collection"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:onClick="tabClick"
-                android:textColor="@color/default_font"
-                android:text="@string/personal_collection"/>
-            <com.leedane.cn.customview.RightBorderTextView
-                android:id="@+id/personal_login_history"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:onClick="tabClick"
-                android:textColor="@color/default_font"
-                android:text="@string/personal_login_history"/>
-            <com.leedane.cn.customview.RightBorderTextView
-                android:id="@+id/personal_sign_in_history"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:onClick="tabClick"
-                android:textColor="@color/default_font"
-                android:text="@string/personal_score"/>
-        </RadioGroup>
-    </HorizontalScrollView >
+        android:layout_height="@dimen/default_40dp"
+        android:background="@color/default_bg_color" />
     <android.support.v4.view.ViewPager
         android:id="@+id/personal_viewpager"
         android:layout_width="match_parent"

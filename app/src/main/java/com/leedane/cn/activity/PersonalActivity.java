@@ -1,8 +1,10 @@
 package com.leedane.cn.activity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -43,6 +45,15 @@ import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 
+import net.lucode.hackware.magicindicator.MagicIndicator;
+import net.lucode.hackware.magicindicator.ViewPagerHelper;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,42 +71,14 @@ public class PersonalActivity extends BaseActivity {
     public static final int MOOD_UPDATE_REQUEST_CODE = 180;
 
     /**
-     * 水平滑动的view
-     */
-    private HorizontalScrollView mScrollview;
-
-    /**
-     * 水平滑动的单选按钮组view
-     */
-    private RadioGroup mRadioGroup;
-
-    /**
      * 页面切换的ViewPager对象
      */
     private ViewPager mViewPager;
 
     /**
-     *  标签的总数
-     */
-    private int mTotalTabs = 5;
-
-    /**
-     * 当上一个的Tab索引
-     */
-    private int mPreTab = 0;
-    /**
-     * 当前的Tab索引
-     */
-    private int mCurrentTab = 0;
-
-    /**
      * 标签的所有Fragment
      */
     private List<Fragment> mFragments = new ArrayList<>();
-    /**
-     * tab的宽度
-     */
-    private int mTabWidth;
 
     /**
      * 当前个人中心的用户
@@ -131,6 +114,10 @@ public class PersonalActivity extends BaseActivity {
     private Intent currentIntent;
     private boolean isCheckFanOrSignIn = true;
     private int type = 0;
+
+    private int mCurrentTab = 0;
+    private List<String> mTitleList = null;
+    private MagicIndicator magicIndicator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,9 +195,6 @@ public class PersonalActivity extends BaseActivity {
      */
     private void initView() throws Exception{
         mViewPager = (ViewPager) findViewById(R.id.personal_viewpager);
-        mScrollview = (HorizontalScrollView)findViewById(R.id.personal_scrollview);
-        mRadioGroup = (RadioGroup) findViewById(R.id.personal_tabs);
-        mRadioGroup.setVisibility(View.VISIBLE);
         mPersonalPic = (CircularImageView)findViewById(R.id.personal_pic);
         final String headPath = mUserInfo.getString("user_pic_path");
         if(StringUtil.isNotNull(headPath)){
@@ -243,52 +227,41 @@ public class PersonalActivity extends BaseActivity {
             setTitleViewText(mUserInfo.getString("account"));
         }
 
-        if(mCurrentTab > 0 ){
-            //将第一个的背景颜色变成默认的
-            TextView preTextView = (TextView) mRadioGroup.getChildAt(0);
-            preTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.default_font));
-        }
-
-
-        //将当前tab的背景颜色变成默认的
-        TextView currentTextView = (TextView) mRadioGroup.getChildAt(mCurrentTab);
-        currentTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
-
-        //获取当前点击tab的索引
-        mCurrentTab = getTabPosition(currentTextView);
-
-        //获得当前tab的坐标
-        getCurrentTabCoordinate(currentTextView);
-
-        new Handler().postDelayed((new Runnable() {
-            @Override
-            public void run() {
-                mScrollview.scrollTo(mTabWidth * mCurrentTab, 0);
-            }
-        }), 5);
-
         isCheckFanOrSignIn = true;
+        int size = 0;
+        mTitleList = new ArrayList<>();
         if(mIsLoginUser){
-            mTotalTabs = mRadioGroup.getChildCount();
+            size = 8;
+            mTitleList.add(getStringResource(R.string.personal_mood));
+            mTitleList.add(getStringResource(R.string.personal_comment));
+            mTitleList.add(getStringResource(R.string.personal_transmit));
+            mTitleList.add(getStringResource(R.string.personal_praise));
+            mTitleList.add(getStringResource(R.string.personal_attention));
+            mTitleList.add(getStringResource(R.string.personal_collection));
+            mTitleList.add(getStringResource(R.string.personal_login_history));
+            mTitleList.add(getStringResource(R.string.personal_score));
+
             //当前的个人中心是登录用户，异步执行判断是否当天已经登录
             mPersonalSignIn.setVisibility(View.VISIBLE);
             mPersonalFan.setVisibility(View.GONE);
             SignInHandler.isSignIn(PersonalActivity.this);
-        }else{
+        }else {
             //ToastUtil.success(PersonalActivity.this, "非登录用户");
             //把关注，收藏,私信隐藏掉
-            mRadioGroup.removeViewsInLayout(4, 4);
-            mTotalTabs = mRadioGroup.getChildCount();//获取当前剩下的标签数量
+            size = 4;
+            mTitleList.add(getStringResource(R.string.personal_mood));
+            mTitleList.add(getStringResource(R.string.personal_comment));
+            mTitleList.add(getStringResource(R.string.personal_transmit));
+            mTitleList.add(getStringResource(R.string.personal_praise));
             //当前不是登录用户，即是查看别人的个人中心，异步判断和登录用户是否是好友
             mPersonalSignIn.setVisibility(View.GONE);
             mPersonalFan.setVisibility(View.VISIBLE);
             FanHandler.isFan(PersonalActivity.this, mUserId);
         }
 
-
         String tabText;
-        for(int i = 0; i < mRadioGroup.getChildCount(); i++){
-            tabText = ((RightBorderTextView)mRadioGroup.getChildAt(i)).getText().toString();
+        for(int i = 0; i < mTitleList.size(); i++){
+            tabText = mTitleList.get(i);
             if(tabText.equalsIgnoreCase(getStringResource(R.string.personal_mood))){//心情
                 Bundle bundle = new Bundle();
                 bundle.putInt("toUserId", mUserId);
@@ -342,63 +315,66 @@ public class PersonalActivity extends BaseActivity {
             }
         }
 
-        mViewPager.setAdapter(new PersonalFragmentPagerAdapter(getSupportFragmentManager(), getBaseContext(), mFragments));
-        mViewPager.setCurrentItem(mCurrentTab);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        magicIndicator = (MagicIndicator) findViewById(R.id.magic_indicator);
+        CommonNavigator commonNavigator = new CommonNavigator(this);
+        commonNavigator.setAdapter(new CommonNavigatorAdapter() {
+
             @Override
-            public void onPageSelected(int position) {
-
-                //将上一个tab的背景颜色变成默认的
-                TextView preTextView = (TextView) mRadioGroup.getChildAt(mCurrentTab);
-                preTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.default_font));
-                //preTextView.setBackground(ContextCompat.getDrawable(PersonalActivity.this, R.drawable.btn_default_no_seletorbg));
-
-                mPreTab = mCurrentTab;
-                mCurrentTab = position;
-                Log.i(TAG, "上一个位置是：" + mPreTab + ",当前的位置是：" + mCurrentTab);
-                TextView currentTextView = (TextView) mRadioGroup.getChildAt(position);
-                //获得当前tab的坐标
-                getCurrentTabCoordinate(currentTextView);
-                currentTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
-                //currentTextView.setBackground(ContextCompat.getDrawable(PersonalActivity.this, R.drawable.btn_default_seletorbg));
-
-                //设置tab的切换
-                //mScrollview.smoothScrollTo(80, 0);
-                new Handler().postDelayed((new Runnable() {
-                    @Override
-                    public void run() {
-                        mScrollview.scrollTo(mTabWidth * mCurrentTab, 0);
-                    }
-                }), 5);
-
+            public int getCount() {
+                return mTitleList == null ? 0 : mTitleList.size();
             }
 
             @Override
+            public IPagerTitleView getTitleView(Context context, final int index) {
+                ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
+                colorTransitionPagerTitleView.setNormalColor(getColor(R.color.colorPrimary));
+                colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
+                colorTransitionPagerTitleView.setText(mTitleList.get(index));
+                colorTransitionPagerTitleView.setMinWidth(100);
+                colorTransitionPagerTitleView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mViewPager.setCurrentItem(index);
+                    }
+                });
+                return colorTransitionPagerTitleView;
+            }
+
+            @Override
+            public IPagerIndicator getIndicator(Context context) {
+                LinePagerIndicator indicator = new LinePagerIndicator(context);
+                indicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
+                return indicator;
+            }
+        });
+        magicIndicator.setNavigator(commonNavigator);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.i(TAG, "onPageScrolled-->position: " + position + ", positionOffset:" + positionOffset + ", positionOffsetPixels:" + positionOffsetPixels);
+                magicIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                magicIndicator.onPageSelected(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                Log.i(TAG, "onPageScrollStateChanged:" + state);
+                magicIndicator.onPageScrollStateChanged(state);
             }
         });
+        mViewPager.setOffscreenPageLimit(0);
+        mViewPager.setAdapter(new PersonalFragmentPagerAdapter(getSupportFragmentManager(), getBaseContext(), mFragments));
+        mViewPager.setCurrentItem(mCurrentTab);
+        ViewPagerHelper.bind(magicIndicator, mViewPager);
 
         mPersonalSignIn.setOnClickListener(this);
         mPersonalFan.setOnClickListener(this);
         mPersonalInfo.setOnClickListener(this);
         dismissLoadingDialog();
-    }
-
-    /**
-     * 获取当前tab的坐标
-     */
-    private void getCurrentTabCoordinate(TextView tabView) {
-        if(tabView == null){
-            ToastUtil.success(PersonalActivity.this, "TextView为空，无法计算X,Y坐标");
-            return;
-        }
-        mTabWidth = tabView.getLayoutParams().width;
     }
 
     /**
@@ -416,42 +392,6 @@ public class PersonalActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    /**
-     * Tab的点击事件
-     * @param view
-     */
-    public void tabClick(View view){
-        TextView currentTextView = (TextView)view;
-        currentTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
-
-        mPreTab = mCurrentTab;
-
-        //获取当前点击tab的索引
-        mCurrentTab = getTabPosition(currentTextView);
-
-        if(mPreTab == mCurrentTab){
-            smoothScrollToTop(view);
-            return;
-        }
-        //设置上一个tab的字体背景为灰色
-        TextView preTextView = (TextView)mRadioGroup.getChildAt(mPreTab);
-        preTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.default_font));
-
-        //获得当前tab的坐标
-        getCurrentTabCoordinate(currentTextView);
-
-        //设置tab的切换
-        new Handler().postDelayed((new Runnable() {
-            @Override
-            public void run() {
-                mScrollview.scrollTo(mTabWidth * mCurrentTab, 0);
-                mViewPager.setCurrentItem(mCurrentTab);
-            }
-        }), 5);
-
-
     }
 
     /**
@@ -485,49 +425,6 @@ public class PersonalActivity extends BaseActivity {
                 ((ScoreFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
                 break;
         }
-    }
-
-    /**
-     * 发送第一次加载的请求
-     * @param view
-     */
-    private void sendFirstLoading(View view){
-        switch (view.getId()){
-            case R.id.personal_mood:  //心情
-                ((PersonalMoodFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
-                break;
-            case R.id.personal_comment: //评论
-                ((CommentOrTransmitFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
-                break;
-            case R.id.personal_transmit: //转发
-                ((CommentOrTransmitFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
-                break;
-            case R.id.personal_praise: //赞
-                ((ZanFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
-                break;
-            case R.id.personal_attention: //关注
-                ((AttentionFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
-                break;
-            case R.id.personal_collection: //收藏
-                ((CollectionFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
-                break;
-            case R.id.personal_login_history: //登录历史
-                ((LoginHistoryFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
-                break;
-            case R.id.personal_sign_in_history: //积分
-                ((ScoreFragment)mFragments.get(mCurrentTab)).sendFirstLoading();
-                break;
-        }
-    }
-
-    /**
-     * 获取当前点击tab的索引
-     * @param view
-     * @return
-     */
-    private int getTabPosition(TextView view) {
-
-        return mRadioGroup != null ? mRadioGroup.indexOfChild(view) : 0;
     }
 
     @Override

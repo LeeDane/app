@@ -33,4 +33,6 @@
     <color name="material_light">#C5CAE9</color>
     <color name="material_default">#3F51B5</color>
     <color name="material_deep">#303F9F</color>
+
+    <color name="default_bg_color">#f5f5f5</color>
 </resources>

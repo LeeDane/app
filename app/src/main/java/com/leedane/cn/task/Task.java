@@ -2,44 +2,28 @@ package com.leedane.cn.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import com.google.gson.JsonObject;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.DownloadBean;
 import com.leedane.cn.bean.HttpRequestBean;
-import com.leedane.cn.bean.HttpResponseBlogBean;
-import com.leedane.cn.bean.SettingBean;
-import com.leedane.cn.task.*;
-import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.uploadfile.PortUpload;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.ConstantsUtil;
-import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.http.AppUploadAndDownloadUtil;
 import com.leedane.cn.util.http.HttpConnectionUtil;
 
-import org.jivesoftware.smack.util.Base64;
-import org.json.JSONObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
@@ -249,7 +233,9 @@ public class Task extends AsyncTask{
                     public void onResponse(Call call, Response response) throws IOException {
                         if (response.isSuccessful()) {
                             try {
-                                InputStream is = response.body().byteStream();
+                                byte[] data = response.body().bytes();
+                                mTaskResult = new String(data);
+                                /*InputStream is = response.body().byteStream();
                                 if (is != null) {
                                     BufferedReader reader = new BufferedReader(new InputStreamReader(is));
                                     //存储单行文本的数据
@@ -262,8 +248,8 @@ public class Task extends AsyncTask{
                                     //关闭相关的流
                                     if (is != null) is.close();
                                     if (reader != null) reader.close();
-                                    mTaskResult = buffer.toString();
-                                }
+                                    mTaskResult = new String(buffer.toString().getBytes("utf-8"), "gb2312");
+                                }*/
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

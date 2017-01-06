@@ -62,7 +62,11 @@ public class ZanAdapter extends BaseRecyclerViewAdapter<ZanBean> {
             holder.time.setTypeface(typeface);
             holder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(zanBean.getCreateTime())));
 
-            holder.content.setText(StringUtil.changeNotNull(zanBean.getContent()));
+            if(StringUtil.isNull(zanBean.getContent())){
+                holder.content.setVisibility(View.GONE);
+            }else{
+                holder.content.setText(zanBean.getContent());
+            }
             if(StringUtil.isNotNull(zanBean.getSource())){
                 holder.source.setVisibility(View.VISIBLE);
                 Spannable spannable= AppUtil.textviewShowImg(mContext, zanBean.getSource());

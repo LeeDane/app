@@ -74,7 +74,7 @@ import java.util.Map;
  * 附近activity
  * Created by LeeDane on 2016/12/27.
  */
-public class NearbyActivity extends ActionBarActivity implements
+public class NearbyActivity extends ActionBarBaseActivity implements
         OnGetGeoCoderResultListener, RadarSearchListener, BaiduMap.OnMapClickListener, BaiduMap.OnMarkerClickListener{
 
     private  LatLng prePoint; //当前的定位信息
@@ -90,31 +90,23 @@ public class NearbyActivity extends ActionBarActivity implements
     private LocationClientOption.LocationMode mCurrentMode;
     private boolean isFirstLoc = true;
 
-    /**
-     * 弹出加载ProgressDiaLog
-     */
-    protected ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         // SDK初始化
         SDKInitializer.initialize(getApplicationContext());
-
-        //当前视图
-        setContentView(R.layout.activity_nearby);
-        //setImmerseLayout(findViewById(R.id.baeselayout_navbar));
-        //标题
-        //setTitleViewText(getStringResource(R.string.nearby));
-        //显示整个顶部的导航栏
-       // backLayoutVisible();
-        //创建地图对象
-
-        ActionBar mActionBar = getSupportActionBar();
-        mActionBar.setHomeButtonEnabled(true);
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setTitle(getString(R.string.nearby));
+        super.onCreate(savedInstanceState);
         init();
+    }
+
+    @Override
+    protected int getContentViewId() {
+        return R.layout.activity_nearby;
+    }
+
+    @Override
+    protected String getLabel() {
+        return getStringResource(R.string.nearby);
     }
 
     @Override
@@ -122,17 +114,6 @@ public class NearbyActivity extends ActionBarActivity implements
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.nearby_menu, menu);
         return true;
-    }
-
-    /**
-     *
-     * 返回菜单的关闭操作
-     * @return
-     */
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return super.onSupportNavigateUp();
     }
 
     @Override
@@ -257,7 +238,6 @@ public class NearbyActivity extends ActionBarActivity implements
 
     @Override
     protected void onDestroy() {
-
         if(dealHandler != null)
             dealHandler.removeCallbacksAndMessages(null);
 
@@ -461,6 +441,7 @@ public class NearbyActivity extends ActionBarActivity implements
             @Override
             public void onClick(View v) {
                 CommonHandler.startChatDetailActivity(NearbyActivity.this, createUserId, account, 0);
+                mBaiduMap.hideInfoWindow();
             }
         });
         closeTV.setOnClickListener(new View.OnClickListener() {
@@ -574,23 +555,4 @@ public class NearbyActivity extends ActionBarActivity implements
         }
     }
 
-    /**
-     * 显示加载Dialog
-     * @param title  标题
-     * @param main  内容
-     * @param cancelable 是否可以取消
-     */
-    protected void showLoadingDialog(String title, String main, boolean cancelable){
-        dismissLoadingDialog();
-        mProgressDialog = ProgressDialog.show(NearbyActivity.this, title, main, true, cancelable);
-    }
-
-    /**
-     * 隐藏加载Dialog
-     */
-    protected void dismissLoadingDialog(){
-        if(mProgressDialog != null && mProgressDialog.isShowing()){
-            mProgressDialog.dismiss();
-        }
-    }
 }

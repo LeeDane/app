@@ -4,13 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@color/white"
-    card_view:cardMaxElevation="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="4dp"
     android:clickable="true"
-    android:layout_marginTop="@dimen/default_5dp"
     card_view:paddingStart="@dimen/default_10dp"
     card_view:paddingEnd="@dimen/default_10dp"
     android:foreground="?android:selectableItemBackground">
@@ -49,29 +45,31 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_10dp">
+                android:layout_marginTop="@dimen/default_8dp">
                 <TextView
                     android:id="@+id/personal_mood_froms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:text="来自：android客户端"
+                    android:textSize="@dimen/default_12sp"
                     android:clickable="false"
                     android:layout_alignParentLeft="true"/>
                 <TextView
                     android:id="@+id/personal_mood_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="22dp"
                     android:clickable="false"
                     android:text="@string/default_time"
+                    android:textSize="@dimen/default_12sp"
                     android:layout_alignParentRight="true"/>
                 <ImageView
                     android:id="@+id/personal_mood_more"
                     android:layout_width="20dp"
                     android:layout_height="13dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginTop="@dimen/default_3dp"
                     android:src="@mipmap/pop_more_down"
                     android:visibility="gone"
                     android:layout_alignParentRight="true"/>

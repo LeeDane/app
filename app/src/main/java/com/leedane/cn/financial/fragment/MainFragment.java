@@ -223,43 +223,6 @@ public class MainFragment extends FinancialBaseFragment{
         mHeaderView.findViewById(R.id.financial_header_income_linearlayout).setOnClickListener(this);
         mHeaderView.findViewById(R.id.financial_header_spend_linearlayout).setOnClickListener(this);
         mHeaderView.findViewById(R.id.financial_header_budget_linearlayout).setOnClickListener(this);
-        mHeaderView.findViewById(R.id.financial_header_edit_one_level).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(mContext, OneLevelOperationActivity.class);
-                startActivity(it);
-            }
-        });
-
-        mHeaderView.findViewById(R.id.financial_header_search).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(mContext, SearchActivity.class);
-                startActivity(it);
-            }
-        });
-
-        mHeaderView.findViewById(R.id.financial_header_location).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(mContext,LocationActivity.class);
-                startActivity(it);
-            }
-        });
-        mHeaderView.findViewById(R.id.financial_header_setting).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(mContext, SettingActivity.class);
-                startActivity(it);
-            }
-        });
-        mHeaderView.findViewById(R.id.financial_header_cloud).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(mContext, CloudActivity.class);
-                startActivityForResult(it, FlagUtil.SYNCHRONIZED_CLOUD_CODE);
-            }
-        });
     }
 
     /**

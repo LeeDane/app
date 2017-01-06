@@ -1,16 +1,25 @@
 package com.leedane.cn.financial.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -22,8 +31,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leedane.cn.activity.ActionBarBaseActivity;
 import com.leedane.cn.activity.BaseActivity;
 import com.leedane.cn.activity.LoginActivity;
+import com.leedane.cn.adapter.PersonalFragmentPagerAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.customview.RightBorderTextView;
@@ -35,8 +46,19 @@ import com.leedane.cn.financial.fragment.WeekFragment;
 import com.leedane.cn.financial.fragment.YearFragment;
 import com.leedane.cn.financial.fragment.YesterDayFragment;
 import com.leedane.cn.financial.util.FlagUtil;
+import com.leedane.cn.task.TaskListener;
+import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.DensityUtil;
 import com.leedane.cn.util.ToastUtil;
+
+import net.lucode.hackware.magicindicator.MagicIndicator;
+import net.lucode.hackware.magicindicator.ViewPagerHelper;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,44 +67,22 @@ import java.util.List;
  * 记账首页activity
  * Created by LeeDane on 2016/7/19.
  */
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends ActionBarBaseActivity {
     public static final String TAG = "HomeActivity";
-
-    private int mPreTab = 0;//当上一个的Tab索引
     private int mCurrentTab;  //标记当前tab位置
-    private int mTotalTabs = 5;//标签的总数
-
-    /**
-     * 水平滑动的单选按钮组view
-     */
-    private RadioGroup mRadioGroup;
-
     private ViewPager mViewPager;
 
-    /**
-     * tab的宽度
-     */
-    private int mTabWidth;
+    private MagicIndicator magicIndicator;
 
-    /**
-     * 线性的图像
-     */
-    private ImageView mImageViewLine;
-    //线的宽度
-    private int mLineWidth;
-    private int tabWidth;
+    private List<String> mTitleList = null;
 
-    //偏移量
-    private int mOffset;
-
+    private int screenWidth = 0;
     /**
      * 标签的所有Fragment
      */
     private List<Fragment> mFragments = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         //检查是否登录
         if(!checkedIsLogin()){
             Intent it = new Intent(HomeActivity.this, LoginActivity.class);
@@ -93,48 +93,65 @@ public class HomeActivity extends BaseActivity {
             finish();
             return;
         }
-        setContentView(R.layout.activity_financial_home);
-        setImmerseLayout(findViewById(R.id.baeselayout_navbar));
-        setTitleViewText(getStringResource(R.string.financial));
-        backLayoutVisible();
+        super.onCreate(savedInstanceState);
         init();
         initView();
+    }
+
+    @Override
+    protected int getContentViewId() {
+        return R.layout.activity_financial_home;
+    }
+
+    @Override
+    protected String getLabel() {
+        return getString(R.string.financial);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.financial_home_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Message message = new Message();
+        switch(item.getItemId()){
+            case R.id.financial_header_search://搜索
+                Intent it_search = new Intent(HomeActivity.this, SearchActivity.class);
+                startActivity(it_search);
+                return true;
+            case R.id.financial_header_location://地址
+                Intent it_location = new Intent(HomeActivity.this, LocationActivity.class);
+                startActivity(it_location);
+                return true;
+            case R.id.financial_header_category: //分类
+                Intent it_category = new Intent(HomeActivity.this, OneLevelOperationActivity.class);
+                startActivity(it_category);
+                return true;
+            case R.id.financial_header_setting: //设置
+                Intent it_setting = new Intent(HomeActivity.this, SettingActivity.class);
+                startActivity(it_setting);
+                return true;
+            case R.id.financial_header_cloud: //云端同步
+                Intent it_cloud = new Intent(HomeActivity.this, CloudActivity.class);
+                startActivityForResult(it_cloud, FlagUtil.SYNCHRONIZED_CLOUD_CODE);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
      * 初始化试图控件
      */
     private void initView() {
-        mRadioGroup = (RadioGroup) findViewById(R.id.financial_tabs);
         mViewPager = (ViewPager)findViewById(R.id.financial_viewpager);
-        mRadioGroup.setVisibility(View.VISIBLE);
-        mImageViewLine = (ImageView)findViewById(R.id.financial_line);
-
-        //初始化线图像
-        initImageView();
-
-        if(mCurrentTab > 0 ){
-            //将第一个的背景颜色变成默认的
-            TextView preTextView = (TextView) mRadioGroup.getChildAt(0);
-            preTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.default_font));
-        }
-
-
-        //将当前tab的背景颜色变成默认的
-        TextView currentTextView = (TextView) mRadioGroup.getChildAt(mCurrentTab);
-        currentTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
-
-        //获取当前点击tab的索引
-        mCurrentTab = getTabPosition(currentTextView);
-
-        //获得当前tab的坐标
-        getCurrentTabCoordinate(currentTextView);
-
-        mTotalTabs = mRadioGroup.getChildCount();
-
         String tabText;
-        for(int i = 0; i < mRadioGroup.getChildCount(); i++){
-            tabText = ((RightBorderTextView)mRadioGroup.getChildAt(i)).getText().toString();
+        for(int i = 0; i < mTitleList.size(); i++){
+            tabText = mTitleList.get(i);
             if(tabText.equalsIgnoreCase(getStringResource(R.string.financial_home))){//首页
                 Bundle bundle = new Bundle();
                 mFragments.add(MainFragment.newInstance(bundle));
@@ -153,88 +170,64 @@ public class HomeActivity extends BaseActivity {
             }
         }
 
-        mViewPager.setOffscreenPageLimit(5);
-        mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(), getBaseContext(), mFragments));
-        mViewPager.setCurrentItem(mCurrentTab);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            float positionOffsetOld;
+        magicIndicator = (MagicIndicator) findViewById(R.id.magic_indicator);
+        CommonNavigator commonNavigator = new CommonNavigator(this);
+        commonNavigator.setAdapter(new CommonNavigatorAdapter() {
+
             @Override
-            public void onPageSelected(int position) {
-
-                //将上一个tab的背景颜色变成默认的
-                TextView preTextView = (TextView) mRadioGroup.getChildAt(mCurrentTab);
-                preTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.default_font));
-                //preTextView.setBackground(ContextCompat.getDrawable(PersonalActivity.this, R.drawable.btn_default_no_seletorbg));
-
-                mPreTab = mCurrentTab;
-                mCurrentTab = position;
-                Log.i(TAG, "上一个位置是：" + mPreTab + ",当前的位置是：" + mCurrentTab);
-                TextView currentTextView = (TextView) mRadioGroup.getChildAt(position);
-                //获得当前tab的坐标
-                getCurrentTabCoordinate(currentTextView);
-                currentTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
-                //currentTextView.setBackground(ContextCompat.getDrawable(PersonalActivity.this, R.drawable.btn_default_seletorbg));
-
-                //设置tab的切换
-                //mScrollview.smoothScrollTo(80, 0);
-                new Handler().postDelayed((new Runnable() {
-                    @Override
-                    public void run() {
-                        TextView textView = (TextView)mRadioGroup.getChildAt(mCurrentTab);
-                        int[] wah = new int[2];
-                        textView.getLocationOnScreen(wah);
-                        //ToastUtil.success(HomeActivity.this, "呵呵-->" + wah[0]);
-
-                        Animation animation = new TranslateAnimation(mPreTab * tabWidth, mCurrentTab* tabWidth, 0, 0);
-                        animation.setFillAfter(true);
-                        animation.setDuration(20);
-                        mImageViewLine.startAnimation(animation);
-                        //获取当前tab的位置
-                    }
-                }), 5);
-
+            public int getCount() {
+                return mTitleList == null ? 0 : mTitleList.size();
             }
 
             @Override
+            public IPagerTitleView getTitleView(Context context, final int index) {
+                ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
+                colorTransitionPagerTitleView.setNormalColor(getColor(R.color.colorPrimary));
+                colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
+                colorTransitionPagerTitleView.setText(mTitleList.get(index));
+                colorTransitionPagerTitleView.setMinWidth(screenWidth / mTitleList.size());
+                colorTransitionPagerTitleView.setTextSize(14);
+                colorTransitionPagerTitleView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mViewPager.setCurrentItem(index);
+                    }
+                });
+                return colorTransitionPagerTitleView;
+            }
+
+            @Override
+            public IPagerIndicator getIndicator(Context context) {
+                LinePagerIndicator indicator = new LinePagerIndicator(context);
+                indicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
+                return indicator;
+            }
+        });
+        magicIndicator.setNavigator(commonNavigator);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (positionOffset == 0.00 || positionOffset == 1.00 || positionOffset == 2.00 || positionOffset == 3.00 || positionOffset == 4.00 || positionOffset == 5.00) {
-                    return;
-                }
-                Animation animation = new TranslateAnimation((position + positionOffsetOld) * tabWidth, (position + positionOffset) * tabWidth, 0, 0);
-                animation.setFillAfter(true);
-                animation.setDuration(20);
-                mImageViewLine.startAnimation(animation);
-                positionOffsetOld = positionOffset;
+                magicIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                magicIndicator.onPageSelected(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                Log.i(TAG, "onPageScrollStateChanged:" + state);
+                magicIndicator.onPageScrollStateChanged(state);
             }
         });
+        mViewPager.setOffscreenPageLimit(5);
+        mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(), getBaseContext(), mFragments));
+        mViewPager.setCurrentItem(mCurrentTab);
+        ViewPagerHelper.bind(magicIndicator, mViewPager);
     }
 
-    /**
-     * 初始化创建线的图像
-     */
-    private void initImageView() {
-        //获得当前设备的屏幕宽度
-        int screenWidth = BaseApplication.newInstance().getScreenWidthAndHeight()[0];
-        tabWidth = screenWidth / 5;
-
-        //设置线性的图像的宽度为1/3的屏幕宽度
-        ViewGroup.LayoutParams params = mImageViewLine.getLayoutParams();
-        params.width = tabWidth;
-
-        //获取图片宽度
-        mLineWidth = BitmapFactory.decodeResource(getResources(), R.drawable.line).getWidth();
-        //Toast.makeText(DetailActivity.this, "后来线的宽度:"+ mLineWidth, Toast.LENGTH_SHORT).show();
-        Matrix matrix = new Matrix();
-        mOffset = (int) ((screenWidth/(float)5 - mLineWidth)/2);
-        matrix.postTranslate(mOffset, 0);
-        //设置初始位置
-        mImageViewLine.setImageMatrix(matrix);
-    }
     /**
      * 列表滚动到顶部
      * @param view
@@ -258,30 +251,31 @@ public class HomeActivity extends BaseActivity {
                 break;
         }
     }
+
+    /**
+     * 初始化参数
+     */
+    private void init() {
+        mCurrentTab = getIntent().getIntExtra("currentTab", 0);
+        mTitleList = new ArrayList<>();
+        mTitleList.add(getStringResource(R.string.financial_home));
+        mTitleList.add(getStringResource(R.string.financial_yesterday));
+        mTitleList.add(getStringResource(R.string.financial_week));
+        mTitleList.add(getStringResource(R.string.financial_month));
+        mTitleList.add(getStringResource(R.string.financial_year));
+        screenWidth = BaseApplication.newInstance().getScreenWidthAndHeight()[0];
+    }
+
     /**
      * Tab的点击事件
-     * @param view
+     * @param index
      */
-    public void tabClick(View view){
-        TextView currentTextView = (TextView)view;
-        currentTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary));
+    public void tabClick(int index){
+        mCurrentTab = index;
 
-        mPreTab = mCurrentTab;
-
-        //获取当前点击tab的索引
-        mCurrentTab = getTabPosition(currentTextView);
-
-        if(mPreTab == mCurrentTab){
-            smoothScrollToTop(view);
+        if(index == mCurrentTab){
             return;
         }
-        //设置上一个tab的字体背景为灰色
-        TextView preTextView = (TextView)mRadioGroup.getChildAt(mPreTab);
-        preTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.default_font));
-
-        //获得当前tab的坐标
-        getCurrentTabCoordinate(currentTextView);
-
         //设置tab的切换
         new Handler().postDelayed((new Runnable() {
             @Override
@@ -290,51 +284,6 @@ public class HomeActivity extends BaseActivity {
             }
         }), 5);
     }
-
-    /**
-     * Tab的点击事件
-     * @param childIndex
-     */
-    public void tabClick(int childIndex){
-        tabClick(mRadioGroup.getChildAt(childIndex));
-    }
-    /**
-     * 获取当前点击tab的索引
-     * @param view
-     * @return
-     */
-    private int getTabPosition(TextView view) {
-        return mRadioGroup != null ? mRadioGroup.indexOfChild(view) : 0;
-    }
-
-    /**
-     * 获取当前tab的坐标
-     */
-    private void getCurrentTabCoordinate(TextView tabView) {
-        if(tabView == null){
-            ToastUtil.success(HomeActivity.this, "TextView为空，无法计算X,Y坐标");
-            return;
-        }
-        mTabWidth = tabView.getLayoutParams().width;
-    }
-
-    /**
-     * 初始化参数
-     */
-    private void init() {
-        mCurrentTab = getIntent().getIntExtra("currentTab", 0);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onClick(View v) {
-        super.onClick(v);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -356,4 +305,5 @@ public class HomeActivity extends BaseActivity {
                 break;
         }
     }
+
 }

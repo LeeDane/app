@@ -87,13 +87,13 @@ public class PersonalMoodListViewAdapter extends BaseRecyclerViewAdapter<MoodBea
             //spannable = InputHelper.displayEmoji(mContext.getResources(), spannable);
             holder.content.setText(AppUtil.textParsing(mContext, content));
 
-            holder.froms.setTypeface(typeface);
+            //holder.froms.setTypeface(typeface);
             holder.froms.setText("来自：" + moodBean.getFroms());
             String createTime = moodBean.getCreateTime();
             if(StringUtil.isNull(createTime)){
                 holder.time.setText("");
             }else{
-                holder.time.setTypeface(typeface);
+                //holder.time.setTypeface(typeface);
                 holder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
             }
 
