@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".NearbyActivity">
+
+    <item
+        android:id="@+id/financial_header_search"
+        android:icon="@drawable/menu_search"
+        app:showAsAction="always"
+        android:title="@string/financial_menu_search"/>
+    <item
+        android:id="@+id/financial_header_location"
+        android:icon="@mipmap/location"
+        app:showAsAction="never"
+        android:title="@string/financial_menu_location"/>
+    <item
+        android:id="@+id/financial_header_category"
+        android:icon="@drawable/ic_category_edit"
+        app:showAsAction="never"
+        android:title="@string/financial_menu_category"/>
+    <item
+        android:id="@+id/financial_header_setting"
+        android:icon="@drawable/ic_settings_purple_400_18dp"
+        app:showAsAction="never"
+        android:title="@string/financial_menu_settings"/>
+    <item
+        android:id="@+id/financial_header_cloud"
+        android:icon="@drawable/ic_backup_deep_purple_300_18dp"
+        app:showAsAction="never"
+        android:title="@string/financial_menu_cloud"/>
+</menu>
