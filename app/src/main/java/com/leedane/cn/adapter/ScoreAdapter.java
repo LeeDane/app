@@ -57,7 +57,7 @@ public class ScoreAdapter extends BaseRecyclerViewAdapter<ScoreBean> {
             holder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(scoreBean.getCreateTime())));
             holder.desc.setText("描述:" + scoreBean.getDesc());
             holder.number.setText("当/总:" + scoreBean.getScore() + "/" + scoreBean.getTotalScore());
-            holder.status.setText("状态:" + getStatusText(scoreBean.getStatus()));
+            holder.status.setText(getStatusText(scoreBean.getStatus()));
         }
     }
 

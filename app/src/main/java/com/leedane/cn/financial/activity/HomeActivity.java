@@ -58,7 +58,9 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.WrapPagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,6 +174,7 @@ public class HomeActivity extends ActionBarBaseActivity {
 
         magicIndicator = (MagicIndicator) findViewById(R.id.magic_indicator);
         CommonNavigator commonNavigator = new CommonNavigator(this);
+        commonNavigator.setScrollPivotX(0.35f);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
 
             @Override
@@ -181,25 +184,44 @@ public class HomeActivity extends ActionBarBaseActivity {
 
             @Override
             public IPagerTitleView getTitleView(Context context, final int index) {
-                ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
-                colorTransitionPagerTitleView.setNormalColor(getColor(R.color.colorPrimary));
-                colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
+               /* ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
+                colorTransitionPagerTitleView.setNormalColor(Color.BLACK);
+                colorTransitionPagerTitleView.setSelectedColor(getResources().getColor(R.color.colorPrimary));
                 colorTransitionPagerTitleView.setText(mTitleList.get(index));
                 colorTransitionPagerTitleView.setMinWidth(screenWidth / mTitleList.size());
                 colorTransitionPagerTitleView.setTextSize(14);
+                simplePagerTitleView.setNormalColor(Color.parseColor("#333333"));
+                simplePagerTitleView.setSelectedColor(Color.parseColor("#e94220"));
                 colorTransitionPagerTitleView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mViewPager.setCurrentItem(index);
                     }
                 });
-                return colorTransitionPagerTitleView;
+                return colorTransitionPagerTitleView;*/
+                SimplePagerTitleView simplePagerTitleView = new SimplePagerTitleView(context);
+                simplePagerTitleView.setText(mTitleList.get(index));
+                simplePagerTitleView.setNormalColor(Color.parseColor("#333333"));
+                simplePagerTitleView.setSelectedColor(getResources().getColor(R.color.colorPrimary));
+                simplePagerTitleView.setMinWidth(screenWidth / mTitleList.size());
+                simplePagerTitleView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mViewPager.setCurrentItem(index);
+                    }
+                });
+                return simplePagerTitleView;
             }
 
             @Override
             public IPagerIndicator getIndicator(Context context) {
-                LinePagerIndicator indicator = new LinePagerIndicator(context);
+                /*LinePagerIndicator indicator = new LinePagerIndicator(context);
                 indicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
+                indicator.setColors(R.color.black, R.color.bluePrimary, R.color.red);
+                indicator.setBackgroundColor(Color.YELLOW);
+                return indicator;*/
+                WrapPagerIndicator indicator = new WrapPagerIndicator(context);
+                indicator.setFillColor(Color.parseColor("#ebe4e3"));
                 return indicator;
             }
         });

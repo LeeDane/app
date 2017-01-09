@@ -145,7 +145,7 @@ public class UpdateUserHeaderActivity extends BaseActivity {
 
         fileName = file.getName();
         String tempFilePath = getTempDir(getApplicationContext()) + File.separator+ fileName;
-        Toast.makeText(getApplicationContext(), "临时文件路径：" +tempFilePath, Toast.LENGTH_LONG).show();
+        ToastUtil.success(getApplicationContext(), "临时文件路径：" + tempFilePath);
         file = new File(tempFilePath);
         if (file.exists()) {
             file.delete();

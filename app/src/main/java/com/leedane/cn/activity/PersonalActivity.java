@@ -118,6 +118,8 @@ public class PersonalActivity extends BaseActivity {
     private int mCurrentTab = 0;
     private List<String> mTitleList = null;
     private MagicIndicator magicIndicator;
+
+    private int screenWidth = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +133,7 @@ public class PersonalActivity extends BaseActivity {
             finish();
             return;
         }
-
+        screenWidth = BaseApplication.newInstance().getScreenWidthAndHeight()[0];
         setContentView(R.layout.activity_personal);
         currentIntent = getIntent();
         //初始化数据
@@ -317,6 +319,8 @@ public class PersonalActivity extends BaseActivity {
 
         magicIndicator = (MagicIndicator) findViewById(R.id.magic_indicator);
         CommonNavigator commonNavigator = new CommonNavigator(this);
+        commonNavigator.setIndicatorOnTop(true);
+        //commonNavigator.setAdjustMode(true);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
 
             @Override
@@ -327,10 +331,10 @@ public class PersonalActivity extends BaseActivity {
             @Override
             public IPagerTitleView getTitleView(Context context, final int index) {
                 ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
-                colorTransitionPagerTitleView.setNormalColor(getColor(R.color.colorPrimary));
-                colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
+                colorTransitionPagerTitleView.setNormalColor(Color.BLACK);
+                colorTransitionPagerTitleView.setSelectedColor(getResources().getColor(R.color.colorPrimary));
                 colorTransitionPagerTitleView.setText(mTitleList.get(index));
-                colorTransitionPagerTitleView.setMinWidth(100);
+                colorTransitionPagerTitleView.setMinWidth(mTitleList.size() < 5 ? screenWidth / mTitleList.size(): 200);
                 colorTransitionPagerTitleView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

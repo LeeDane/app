@@ -210,7 +210,6 @@ public class SettingActivity extends BaseActivity implements Switch.OnCheckedCha
         }
         try{
             if(type == TaskType.FORCE_ALL || type == TaskType.SMART_ALL){
-
                 final HttpResponseFinancialBean responseFinancialBean = BeanConvertUtil.strConvertToFinancialBeanBeans(String.valueOf(result));
                 if(responseFinancialBean != null && !CommonUtil.isEmpty(responseFinancialBean.getMessage())){
                     if(type ==  TaskType.FORCE_ALL){
@@ -236,6 +235,9 @@ public class SettingActivity extends BaseActivity implements Switch.OnCheckedCha
 
                         }
                     }).start();
+                }else{
+                    ToastUtil.failure(SettingActivity.this, "获取不到记账记录！");
+                    dismissLoadingDialog();
                 }
                 //ToastUtil.failure(this, JsonUtil.getTipMessage(result));
             }

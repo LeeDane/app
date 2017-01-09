@@ -366,6 +366,17 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 格式化距离
+     * @param distance 单位为米
+     * @return
+     */
+    public static String formatDistance(int distance){
+        if(distance < 1)
+            return "1米左右";
+        return ((distance/1000) > 0 ? (distance/1000)+ "公里": "") +  ((distance%1000) > 0 ? (distance%1000) +"米": "");
+    }
+
     public static void main(String[] args) {
         //System.out.println(StringUtil.changeNotNullAndUtf8("赵本山代表作被指\"丑化\"农民 丢弃农村传统底蕴"));
         System.out.println(StringUtil.isNumeric("-5.00"));

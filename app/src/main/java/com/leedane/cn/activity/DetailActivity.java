@@ -29,7 +29,6 @@ import com.leedane.cn.util.StringUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 /**
  * 查看详情activity
  * Created by LeeDane on 2015/10/17.

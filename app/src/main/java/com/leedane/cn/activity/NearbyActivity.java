@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -57,9 +58,11 @@ import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.handler.AppVersionHandler;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.DesUtils;
+import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
@@ -123,6 +126,9 @@ public class NearbyActivity extends ActionBarBaseActivity implements
             case R.id.nearby_menu_refresh:
                 message.what = FlagUtil.DO_NEARBY_SEARCH;
                 dealHandler.sendMessageDelayed(message, 50);
+                return true;
+            case R.id.nearby_menu_list:
+                ToastUtil.failure(NearbyActivity.this, "列表");
                 return true;
             case R.id.nearby_menu_woman:
                 ToastUtil.failure(NearbyActivity.this, "只看女生");
@@ -315,7 +321,7 @@ public class NearbyActivity extends ActionBarBaseActivity implements
     @Override
     public void onGetNearbyInfoList(RadarNearbyResult radarNearbyResult, RadarSearchError error) {
         if (error == RadarSearchError.RADAR_NO_ERROR) {
-            ToastUtil.success(NearbyActivity.this, "查询周边成功", Toast.LENGTH_LONG);
+            //ToastUtil.success(NearbyActivity.this, "查询周边成功", Toast.LENGTH_LONG);
             try {
                 DesUtils desUtils = new DesUtils();
                 mBaiduMap.clear();
@@ -332,8 +338,7 @@ public class NearbyActivity extends ActionBarBaseActivity implements
                     BitmapDescriptor bitmap = null;
                     if(StringUtil.isNotNull(path)){
                         path = ConstantsUtil.QINIU_CLOUD_SERVER + path;
-                        Bitmap b  = ImageCacheManager.loadImage(path, 100, 100);
-                        bitmap = BitmapDescriptorFactory.fromBitmap(b);
+                        bitmap = BitmapDescriptorFactory.fromBitmap(ImageCacheManager.loadImage(path, 100, 100));
                     }else{
                         bitmap = BitmapDescriptorFactory
                                 .fromResource(R.drawable.no_pic);
@@ -343,6 +348,8 @@ public class NearbyActivity extends ActionBarBaseActivity implements
                     extraInfo.putInt("id", createUserId);
                     extraInfo.putString("account", account);
                     extraInfo.putString("path", path);
+                    extraInfo.putInt("distance", info.distance);
+                    extraInfo.putString("time", RelativeDateFormat.format(info.timeStamp));
 
                     //构建MarkerOption，用于在地图上添加Marker
                     MarkerOptions option = new MarkerOptions()
@@ -370,7 +377,7 @@ public class NearbyActivity extends ActionBarBaseActivity implements
     public void onGetUploadState(RadarSearchError error) {
         if (error == RadarSearchError.RADAR_NO_ERROR) {
             //上传成功
-            ToastUtil.success(NearbyActivity.this, "单次上传位置成功", Toast.LENGTH_SHORT);
+            //ToastUtil.success(NearbyActivity.this, "单次上传位置成功", Toast.LENGTH_SHORT);
         } else {
             //上传失败
             ToastUtil.success(NearbyActivity.this, "单次上传位置失败", Toast.LENGTH_SHORT);
@@ -421,6 +428,7 @@ public class NearbyActivity extends ActionBarBaseActivity implements
         String path = bundle.getString("path");
         final String account = bundle.getString("account");
         final int createUserId = bundle.getInt("id");
+        final int distance = bundle.getInt("distance");
 
         View view = LayoutInflater.from(this).inflate(R.layout.baidumap_maker_infowindow, null); //自定义气泡形状
         TextView accountTV = (TextView) view.findViewById(R.id.maker_account);
@@ -428,6 +436,14 @@ public class NearbyActivity extends ActionBarBaseActivity implements
         TextView sendMessageTV = (TextView)view.findViewById(R.id.maker_send_message);
         TextView closeTV = (TextView) view.findViewById(R.id.maker_close);
         ImageView imageIV = (ImageView)view.findViewById(R.id.maker_image);
+        TextView distanceTV = (TextView)view.findViewById(R.id.maker_distance);
+        TextView timeTV = (TextView)view.findViewById(R.id.maker_time);
+
+        //显示距离
+        distanceTV.setText(" 距离我：" +StringUtil.formatDistance(distance));
+
+        //显示时间
+        timeTV.setText(" 最近时间："+bundle.getString("time"));
 
         doTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -453,7 +469,7 @@ public class NearbyActivity extends ActionBarBaseActivity implements
         //pt = new LatLng(latitude + 0.0004, longitude + 0.00005);
         accountTV.setText(account);
 
-        if(StringUtil.isNotNull(path)){
+        if(StringUtil.isNotNull(path)) {
             imageIV.setImageBitmap(ImageCacheManager.loadImage(path, 100, 100));
         }
         // 定义用于显示该InfoWindow的坐标点
@@ -516,8 +532,11 @@ public class NearbyActivity extends ActionBarBaseActivity implements
 
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);//打开gps
+        option.setAddrType("all");//返回的定位结果包含地址信息
         option.setCoorType("bd09ll"); //设置坐标类型
-        option.setScanSpan(5000); //定位时间间隔
+        option.setScanSpan(5000); //设置发起定位请求的间隔时间为5000ms
+        option.setPriority(LocationClientOption.GpsFirst); // 设置GPS优先
+        option.disableCache(false);//禁止启用缓存定位
         mLocClient.setLocOption(option);
         mLocClient.start();
     }

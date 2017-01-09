@@ -74,7 +74,7 @@ public class LoginHistotyAdapter extends BaseRecyclerViewAdapter<LoginHistoryBea
             holder.method.setText(loginHistoryBean.getMethod());
             holder.ip.setText(loginHistoryBean.getIp());
             holder.browser.setText(loginHistoryBean.getBrowser());
-            holder.status.setText("状态:" + getStatusText(loginHistoryBean.getStatus()));
+            holder.status.setText(getStatusText(loginHistoryBean.getStatus()));
         }
     }
 
