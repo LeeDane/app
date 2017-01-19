@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/one_user_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/default_padding"
@@ -12,12 +13,12 @@
         android:layout_marginRight="3dp"
         android:orientation="vertical">
         <com.leedane.cn.customview.CircularImageView
-            android:id="@+id/search_user_pic"
+            android:id="@+id/one_user_pic"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:src="@drawable/no_pic"/>
         <TextView
-            android:id="@+id/search_user_time"
+            android:id="@+id/one_user_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
@@ -31,7 +32,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/search_user_name"
+            android:id="@+id/one_user_name"
             android:layout_width="wrap_content"
             android:textSize="@dimen/default_account_text_size"
             android:layout_height="wrap_content"
@@ -42,7 +43,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/search_user_introduction"
+                android:id="@+id/one_user_introduction"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -53,7 +54,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/search_user_birth_day"
+                android:id="@+id/one_user_birth_day"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -64,7 +65,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:text="@string/no_text"/>
             <TextView
-                android:id="@+id/search_user_phone"
+                android:id="@+id/one_user_phone"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -80,13 +81,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/search_user_sex"
+                android:id="@+id/one_user_sex"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:text="@string/no_text"/>
             <TextView
-                android:id="@+id/search_user_email"
+                android:id="@+id/one_user_email"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -102,7 +103,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/search_user_qq"
+                android:id="@+id/one_user_qq"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -119,7 +120,7 @@
             android:orientation="horizontal"
             android:gravity="center">
             <TextView
-                android:id="@+id/search_user_friend"
+                android:id="@+id/one_user_friend"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
                 android:gravity="center"
@@ -128,7 +129,7 @@
                 android:background="@drawable/btn_setting_loginoutbg"
                 android:text="@string/personal_add_friend"/>
             <TextView
-                android:id="@+id/search_user_fan"
+                android:id="@+id/one_user_fan"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
                 android:gravity="center"

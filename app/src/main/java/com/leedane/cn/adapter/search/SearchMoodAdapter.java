@@ -6,11 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.search.SearchMoodBean;
 import com.leedane.cn.util.DateUtil;
+import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.volley.ImageCacheManager;
@@ -59,14 +61,14 @@ public class SearchMoodAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         MyHolder myHolder;
         if(convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_search_mood_listview, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.one_mood_layout, null);
             myHolder = new MyHolder();
-            myHolder.setmCreateTime((TextView) convertView.findViewById(R.id.search_mood_time));
-            myHolder.setmAccount((TextView) convertView.findViewById(R.id.search_mood_user_name));
-            myHolder.setmPicPath((ImageView) convertView.findViewById(R.id.search_mood_user_pic));
-            myHolder.setmFroms((TextView) convertView.findViewById(R.id.search_mood_froms));
-            myHolder.setmContent((TextView) convertView.findViewById(R.id.search_mood_content));
-            myHolder.setmMainImg((ImageView) convertView.findViewById(R.id.search_mood_img_main));
+            myHolder.createTime = (TextView) convertView.findViewById(R.id.one_mood_time);
+            myHolder.account = (TextView) convertView.findViewById(R.id.one_mood_user_name);
+            myHolder.picPath = (ImageView) convertView.findViewById(R.id.one_mood_user_pic);
+            myHolder.froms = (TextView) convertView.findViewById(R.id.one_mood_froms);
+            myHolder.content = (TextView) convertView.findViewById(R.id.one_mood_content);
+            myHolder.imgContainer = (LinearLayout) convertView.findViewById(R.id.one_mood_img_container);
             convertView.setTag(myHolder);
         }else{
             myHolder = (MyHolder)convertView.getTag();
@@ -75,21 +77,21 @@ public class SearchMoodAdapter extends BaseAdapter{
 
         String createTime = searchMoodBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
-            myHolder.getmCreateTime().setText("");
+            myHolder.createTime.setText("");
         }else{
-            myHolder.getmCreateTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
+            myHolder.createTime.setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 
-        myHolder.getmAccount().setText(StringUtil.changeNotNull(searchMoodBean.getAccount()));
+        myHolder.account.setText(StringUtil.changeNotNull(searchMoodBean.getAccount()));
         if(StringUtil.isNotNull(searchMoodBean.getUserPicPath()))
-            ImageCacheManager.loadImage(searchMoodBean.getUserPicPath(), myHolder.getmPicPath(), 45, 45);
-        myHolder.getmFroms().setText("来自："+StringUtil.changeNotNull(searchMoodBean.getFroms()));
-        myHolder.getmContent().setText(StringUtil.changeNotNull(searchMoodBean.getContent()));
+            ImageCacheManager.loadImage(searchMoodBean.getUserPicPath(), myHolder.picPath, 45, 45);
+        myHolder.froms.setText("来自：" + StringUtil.changeNotNull(searchMoodBean.getFroms()));
+        myHolder.content.setText(StringUtil.changeNotNull(searchMoodBean.getContent()));
         if(StringUtil.isNotNull(searchMoodBean.getImgs())){
-            myHolder.getmMainImg().setVisibility(View.VISIBLE);
-            ImageCacheManager.loadImage(searchMoodBean.getImgs(), myHolder.getmMainImg(), 100, 50);
+            myHolder.imgContainer.setVisibility(View.VISIBLE);
+            ImageUtil.addImages(mContext, searchMoodBean.getImgs(), myHolder.imgContainer);
         }else{
-            myHolder.getmMainImg().setVisibility(View.GONE);
+            myHolder.imgContainer.setVisibility(View.GONE);
         }
         return convertView;
     }
@@ -98,79 +100,31 @@ public class SearchMoodAdapter extends BaseAdapter{
         /**
          * 搜索心情的用户的账号
          */
-        private TextView mAccount;
+        private TextView account;
 
         /**
          * 搜索心情的用户的头像路径
          */
-        private ImageView mPicPath;
+        private ImageView picPath;
 
         /**
          * 搜索心情的来自
          */
-        private TextView mFroms;
+        private TextView froms;
 
         /**
          * 搜索心情的创建时间
          */
-        private TextView mCreateTime;
+        private TextView createTime;
 
         /**
          * 心情的内容
          */
-        private TextView mContent;
+        private TextView content;
 
         /**
          * 搜索心情的主图
          */
-        private ImageView mMainImg;
-
-        public TextView getmCreateTime() {
-            return mCreateTime;
-        }
-
-        public void setmCreateTime(TextView mCreateTime) {
-            this.mCreateTime = mCreateTime;
-        }
-
-        public ImageView getmPicPath() {
-            return mPicPath;
-        }
-
-        public void setmPicPath(ImageView mPicPath) {
-            this.mPicPath = mPicPath;
-        }
-
-        public TextView getmAccount() {
-            return mAccount;
-        }
-
-        public void setmAccount(TextView mAccount) {
-            this.mAccount = mAccount;
-        }
-
-        public TextView getmContent() {
-            return mContent;
-        }
-
-        public void setmContent(TextView mContent) {
-            this.mContent = mContent;
-        }
-
-        public TextView getmFroms() {
-            return mFroms;
-        }
-
-        public void setmFroms(TextView mFroms) {
-            this.mFroms = mFroms;
-        }
-
-        public ImageView getmMainImg() {
-            return mMainImg;
-        }
-
-        public void setmMainImg(ImageView mMainImg) {
-            this.mMainImg = mMainImg;
-        }
+        private LinearLayout imgContainer;
     }
 }

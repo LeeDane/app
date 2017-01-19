@@ -1,55 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     <android.support.v4.view.ViewPager
         android:id="@+id/detail_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="43dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical">
     </android.support.v4.view.ViewPager>
 
-    <ImageView
-        android:id="@+id/detail_line_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="3dp"
-        android:scaleType="matrix"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/line"/>
-    <LinearLayout
-        android:id="@+id/detail_bottom"
+    <net.lucode.hackware.magicindicator.MagicIndicator
+        android:id="@+id/detail_magic_indicator"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-        <com.leedane.cn.customview.RightBorderTextView
-            android:id="@+id/detail_article_btn"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:onClick="tabMainClick"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/article"/>
-        <com.leedane.cn.customview.RightBorderTextView
-            android:id="@+id/detail_comment_btn"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:onClick="tabCommentClick"
-            android:textColor="@color/gray"
-            android:text="@string/comment"/>
-        <com.leedane.cn.customview.RightBorderTextView
-            android:id="@+id/detail_transmit_btn"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:onClick="tabTransmitClick"
-            android:textColor="@color/gray"
-            android:text="@string/transmit"/>
-    </LinearLayout>
-</RelativeLayout>
+        android:layout_height="@dimen/default_50dp"
+        android:background="@color/default_bg_color" />
+</LinearLayout>

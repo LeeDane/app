@@ -7,47 +7,49 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.leedane.cn.adapter.search.SearchBlogAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.bean.BlogBean;
 import com.leedane.cn.bean.search.HttpResponseSearchBlogBean;
 import com.leedane.cn.bean.search.SearchBlogBean;
+import com.leedane.cn.customview.CircularImageView;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.SearchHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.AppUtil;
 import com.leedane.cn.util.BeanConvertUtil;
+import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.JsonUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
+import com.leedane.cn.volley.ImageCacheManager;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 摇一摇博客的fragment类
  * Created by LeeDane on 2016/12/21.
  */
-public class ShakeBlogFragment extends Fragment implements TaskListener{
+public class ShakeBlogFragment extends Fragment{
 
     public static final String TAG = "ShakeBlogFragment";
     private Context mContext;
-    private ListView mListView;
-    private SearchBlogAdapter mAdapter;
-    private List<SearchBlogBean> mSearchBlogBeans = new ArrayList<>();
-
     private View mRootView;
 
-    protected TextView mListViewFooter;
-    protected View viewFooter;
-
-    private String searchKey;
-
+    private String data;
     public ShakeBlogFragment(){
     }
 
@@ -61,7 +63,7 @@ public class ShakeBlogFragment extends Fragment implements TaskListener{
                              Bundle savedInstanceState) {
 
         if(mRootView == null)
-            mRootView = inflater.inflate(R.layout.fragment_no_swipe_refresh_listview, container,
+            mRootView = inflater.inflate(R.layout.one_blog_layout, container,
                     false);
         return mRootView;
     }
@@ -74,81 +76,65 @@ public class ShakeBlogFragment extends Fragment implements TaskListener{
 
         Bundle bundle = getArguments();
         if(bundle != null){
-            this.searchKey = bundle.getString("searchKey");
+            this.data = bundle.getString("data");
         }
 
-        if(StringUtil.isNull(searchKey)){
-            ToastUtil.failure(mContext, "输入的搜索内容为空");
-            return;
-        }
+        if(StringUtil.isNotNull(data)){
+            try {
+                final BlogBean blogBean = BeanConvertUtil.strBlogBean(data);
+                CircularImageView userPic = (CircularImageView)mRootView.findViewById(R.id.one_blog_user_pic);
+                if(StringUtil.isNotNull(blogBean.getUserPicPath())){
+                    ImageCacheManager.loadImage(blogBean.getUserPicPath(), userPic);
+                }
+                if(StringUtil.isNotNull(blogBean.getTitle())){
+                    ((TextView)mRootView.findViewById(R.id.one_blog_title)).setText(blogBean.getTitle());
+                }else{
+                    mRootView.findViewById(R.id.one_blog_title).setVisibility(View.GONE);
+                }
 
-        SearchHandler.getSearchBlogRequest(ShakeBlogFragment.this, searchKey);
+                if(StringUtil.isNotNull(blogBean.getDigest())){
+                    ((TextView)mRootView.findViewById(R.id.one_blog_digest)).setText(blogBean.getDigest());
+                }else{
+                    mRootView.findViewById(R.id.one_blog_digest).setVisibility(View.GONE);
+                }
 
-        this.mListView = (ListView) mRootView.findViewById(R.id.no_swipe_refresh_listview);
-        mAdapter = new SearchBlogAdapter(mContext, mSearchBlogBeans);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CommonHandler.startDetailActivity(mContext, "t_blog", mSearchBlogBeans.get(position).getId(), null);
+                if(StringUtil.isNotNull(blogBean.getAccount())){
+                    ((TextView)mRootView.findViewById(R.id.one_blog_user_name)).setText(AppUtil.textParsing(mContext, blogBean.getAccount()));
+                }
+
+                if(blogBean.isHasImg() && StringUtil.isNotNull(blogBean.getImgUrl())){
+                    mRootView.findViewById(R.id.one_blog_img_container).setVisibility(View.VISIBLE);
+                    ImageUtil.addImages(mContext, blogBean.getImgUrl(), ((LinearLayout) mRootView.findViewById(R.id.one_blog_img_container)));
+                }else{
+                    mRootView.findViewById(R.id.one_blog_img_container).setVisibility(View.GONE);
+                }
+
+                if(blogBean.getId() > 0){
+                    mRootView.findViewById(R.id.one_blog_root).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Map<String, Object> params = new HashMap<>();
+                            params.put("title", blogBean.getTitle());
+                            CommonHandler.startDetailActivity(mContext, "t_blog", blogBean.getId(), params);
+                        }
+                    });
+                }
+
+                //隐藏没有必要的
+                mRootView.findViewById(R.id.one_blog_source).setVisibility(View.GONE);
+            }catch (Exception e){
+                e.printStackTrace();
+                ToastUtil.failure(mContext, "摇到博客数据有误："+e.getMessage());
             }
-        });
-        //listview下方的显示
-        viewFooter = LayoutInflater.from(mContext).inflate(R.layout.listview_footer_item, null);
-        mListView.addFooterView(viewFooter, null, false);
-        mListViewFooter = (TextView)mRootView.findViewById(R.id.listview_footer_reLoad);
-        mListViewFooter.setText(getResources().getString(R.string.search_blog_footer));
-        mListView.setAdapter(mAdapter);
+        }else{
+            ToastUtil.failure(mContext, "没有摇到博客");
+        }
     }
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void taskStarted(TaskType type) {
-
-    }
-
-    @Override
-    public void taskFinished(TaskType type, Object result) {
-        if(result instanceof Error){
-            ToastUtil.failure(mContext, "网络连接失败，请稍后重试");
-            return;
-        }
-        try{
-            if(type == TaskType.LOAD_SEARCH_BLOG){
-                HttpResponseSearchBlogBean httpResponseSearchBlogBean = BeanConvertUtil.strConvertToSearchBlogBeans(String.valueOf(result));
-                if(httpResponseSearchBlogBean != null && httpResponseSearchBlogBean.isSuccess()){
-                    List<SearchBlogBean> searchBlogBeans = httpResponseSearchBlogBean.getMessage();
-                    if(searchBlogBeans != null && searchBlogBeans.size() > 0){
-                        //临时list
-                        List<SearchBlogBean> temList = new ArrayList<>();
-                        mSearchBlogBeans.clear();
-                        temList.addAll(searchBlogBeans);
-
-                        if(mAdapter == null) {
-                            mAdapter = new SearchBlogAdapter(mContext, mSearchBlogBeans);
-                            mListView.setAdapter(mAdapter);
-                        }
-                        mAdapter.refreshData(temList);
-                    }else{
-                            mSearchBlogBeans.clear();
-                            mAdapter.refreshData(new ArrayList<SearchBlogBean>());
-                    }
-                }else{
-                    JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                    if(jsonObject.has("isSuccess") && jsonObject.has("message")){
-                        mListViewFooter.setText(jsonObject.getString("message"));
-                    }else{
-                        mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
-                    }
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -161,10 +147,5 @@ public class ShakeBlogFragment extends Fragment implements TaskListener{
             return BaseApplication.newInstance().getResources().getString(resourceId);
         }
         return mContext.getResources().getString(resourceId);
-    }
-
-    @Override
-    public void taskCanceled(TaskType type) {
-
     }
 }

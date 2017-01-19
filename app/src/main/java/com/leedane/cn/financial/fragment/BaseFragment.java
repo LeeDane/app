@@ -85,26 +85,6 @@ public abstract class BaseFragment extends FinancialBaseFragment {
     }
 
     @Override
-    protected void sendFirstLoading() {
-
-    }
-
-    @Override
-    protected void sendUpLoading() {
-
-    }
-
-    @Override
-    protected void sendLowLoading() {
-
-    }
-
-    @Override
-    protected void sendLoadAgain(View view) {
-
-    }
-
-    @Override
     public void calculate(FinancialList financialList, int model) {
         super.calculate(financialList, model);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

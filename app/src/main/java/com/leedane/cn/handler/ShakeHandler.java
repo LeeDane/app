@@ -29,7 +29,7 @@ public class ShakeHandler {
         requestBean.setRequestTimeOut(60000);
         requestBean.setResponseTimeOut(60000);
         requestBean.setServerMethod("leedane/shake/user.action");
-        TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SEARCH_USER, listener, requestBean);
+        TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SHAKE_USER, listener, requestBean);
     }
 
     /**

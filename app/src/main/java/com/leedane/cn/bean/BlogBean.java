@@ -127,6 +127,14 @@ public class BlogBean extends StatusBean{
      */
     @SerializedName("create_user_id")
     private int createUserId;
+
+    /**
+     * 用户的头像图片
+     */
+    @SerializedName("user_pic_path")
+    private String userPicPath;
+
+
     /**
      * 用户的账号
      */
@@ -282,5 +290,13 @@ public class BlogBean extends StatusBean{
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getUserPicPath() {
+        return userPicPath;
+    }
+
+    public void setUserPicPath(String userPicPath) {
+        this.userPicPath = userPicPath;
     }
 }

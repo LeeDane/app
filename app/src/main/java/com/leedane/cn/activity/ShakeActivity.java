@@ -67,18 +67,17 @@ public class ShakeActivity extends BaseActivity{
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case FlagUtil.YAOYIYAO_RESULT_HANDLER:
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("data", msg.getData().getString("data"));
+                    String type = msg.getData().getString("type");
                     Fragment fragment = null;
                     switch (selectType){
                         case "博客":
-                            fragment = ShakeBlogFragment.newInstance(bundle);
+                            fragment = ShakeBlogFragment.newInstance(msg.getData());
                             break;
                         case "用户":
-                            fragment = ShakeUserFragment.newInstance(bundle);
+                            fragment = ShakeUserFragment.newInstance(msg.getData());
                             break;
                         case "心情":
-                            fragment = ShakeMoodFragment.newInstance(bundle);
+                            fragment = ShakeMoodFragment.newInstance(msg.getData());
                             break;
                     }
                     ShakeActivity.this.getSupportFragmentManager().beginTransaction().replace(R.id.yaoyiyao_container, fragment).commit();
@@ -195,29 +194,21 @@ public class ShakeActivity extends BaseActivity{
             JSONObject jsonObject = new JSONObject(String.valueOf(result));
             countNumber ++;
             ((TextView)findViewById(R.id.countdown)).setText("今天您还可以免费摇"+ (6 - countNumber)+"次！");
-            if(TaskType.LOAD_SHAKE_BLOG == type && jsonObject != null){
+            if((TaskType.LOAD_SHAKE_BLOG == type || TaskType.LOAD_SHAKE_USER == type ||  TaskType.LOAD_SHAKE_MOOD == type )&& jsonObject != null){
                 if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
-                    ToastUtil.success(ShakeActivity.this, jsonObject);
-                }else{
-                    ToastUtil.failure(ShakeActivity.this, JsonUtil.getErrorMessage(result), Toast.LENGTH_SHORT);
-                }
-                return;
-            }else if(TaskType.LOAD_SHAKE_USER == type && jsonObject != null){
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
-                    ToastUtil.success(ShakeActivity.this, jsonObject);
-                }else{
-                    ToastUtil.failure(ShakeActivity.this, JsonUtil.getErrorMessage(result), Toast.LENGTH_SHORT);
-                }
-                return;
-            }else if(TaskType.LOAD_SHAKE_MOOD == type && jsonObject != null){
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
-                    ToastUtil.success(ShakeActivity.this, jsonObject);
+                    //ToastUtil.success(ShakeActivity.this, jsonObject);
+                    Message message = new Message();
+                    message.what = FlagUtil.YAOYIYAO_RESULT_HANDLER;
+                    Bundle bundle = new Bundle();
+                    bundle.putString("data", jsonObject.getString("message"));
+                    bundle.putString("type", TaskType.LOAD_SHAKE_BLOG.toString());
+                    message.setData(bundle);
+                    resultHandler.sendMessage(message);
                 }else{
                     ToastUtil.failure(ShakeActivity.this, JsonUtil.getErrorMessage(result), Toast.LENGTH_SHORT);
                 }
                 return;
             }
-
         } catch (Exception e) {
             Toast.makeText(ShakeActivity.this, "服务器处理异常", Toast.LENGTH_SHORT).show();
             e.printStackTrace();

@@ -1,22 +1,13 @@
 package com.leedane.cn.activity;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,12 +44,20 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.route.BikingRouteResult;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
+import com.baidu.mapapi.search.route.PlanNode;
+import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
+import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
+import com.leedane.cn.baidumap.overlayutil.DrivingRouteOverlay;
+import com.leedane.cn.baidumap.overlayutil.WalkingRouteOverlay;
 import com.leedane.cn.financial.util.FlagUtil;
-import com.leedane.cn.handler.AppVersionHandler;
 import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.util.BitmapUtil;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.DesUtils;
@@ -78,7 +77,8 @@ import java.util.Map;
  * Created by LeeDane on 2016/12/27.
  */
 public class NearbyActivity extends ActionBarBaseActivity implements
-        OnGetGeoCoderResultListener, RadarSearchListener, BaiduMap.OnMapClickListener, BaiduMap.OnMarkerClickListener{
+        OnGetGeoCoderResultListener, RadarSearchListener, BaiduMap.OnMapClickListener,
+        BaiduMap.OnMarkerClickListener, OnGetRoutePlanResultListener {
 
     private  LatLng prePoint; //当前的定位信息
 
@@ -188,7 +188,6 @@ public class NearbyActivity extends ActionBarBaseActivity implements
 
         //设置maker的点击事件的监听
         mBaiduMap.setOnMarkerClickListener(this);
-
 
         //定义Maker坐标点
        /* LatLng point = new LatLng(39.963175, 116.400244);
@@ -411,7 +410,6 @@ public class NearbyActivity extends ActionBarBaseActivity implements
         //Bundle bundle = marker.getExtraInfo();
         //ToastUtil.success(NearbyActivity.this, "id："+bundle.getInt("id")+",账号是："+ bundle.getString("account"));
         showMakerDetail(marker);
-        //ToastUtil.success(NearbyActivity.this, "onMarkerClick");
         return true;
     }
 
@@ -425,64 +423,120 @@ public class NearbyActivity extends ActionBarBaseActivity implements
 
         LatLng pt = marker.getPosition();
         Bundle bundle = marker.getExtraInfo();
-        String path = bundle.getString("path");
-        final String account = bundle.getString("account");
-        final int createUserId = bundle.getInt("id");
-        final int distance = bundle.getInt("distance");
+        if(bundle != null && bundle.getInt("id") > 0){
+            String path = bundle.getString("path");
+            final String account = bundle.getString("account");
+            final int createUserId = bundle.getInt("id");
+            final int distance = bundle.getInt("distance");
 
-        View view = LayoutInflater.from(this).inflate(R.layout.baidumap_maker_infowindow, null); //自定义气泡形状
-        TextView accountTV = (TextView) view.findViewById(R.id.maker_account);
-        TextView doTV = (TextView) view.findViewById(R.id.maker_do);
-        TextView sendMessageTV = (TextView)view.findViewById(R.id.maker_send_message);
-        TextView closeTV = (TextView) view.findViewById(R.id.maker_close);
-        ImageView imageIV = (ImageView)view.findViewById(R.id.maker_image);
-        TextView distanceTV = (TextView)view.findViewById(R.id.maker_distance);
-        TextView timeTV = (TextView)view.findViewById(R.id.maker_time);
+            View view = LayoutInflater.from(this).inflate(R.layout.baidumap_maker_infowindow, null); //自定义气泡形状
+            TextView accountTV = (TextView) view.findViewById(R.id.maker_account);
+            TextView doTV = (TextView) view.findViewById(R.id.maker_do);
+            TextView sendMessageTV = (TextView)view.findViewById(R.id.maker_send_message);
+            TextView closeTV = (TextView) view.findViewById(R.id.maker_close);
+            TextView routeTV = (TextView)view.findViewById(R.id.maker_route);
+            ImageView imageIV = (ImageView)view.findViewById(R.id.maker_image);
+            TextView distanceTV = (TextView)view.findViewById(R.id.maker_distance);
+            TextView timeTV = (TextView)view.findViewById(R.id.maker_time);
 
-        //显示距离
-        distanceTV.setText(" 距离我：" +StringUtil.formatDistance(distance));
+            //显示距离
+            distanceTV.setText(" 距离我：" +StringUtil.formatDistance(distance));
 
-        //显示时间
-        timeTV.setText(" 最近时间："+bundle.getString("time"));
+            //显示时间
+            timeTV.setText(" 最近时间："+bundle.getString("time"));
 
-        doTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CommonHandler.startPersonalActivity(NearbyActivity.this, createUserId);
-                mBaiduMap.hideInfoWindow();
+            doTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommonHandler.startPersonalActivity(NearbyActivity.this, createUserId);
+                    mBaiduMap.hideInfoWindow();
+                }
+            });
+
+            sendMessageTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommonHandler.startChatDetailActivity(NearbyActivity.this, createUserId, account, 0);
+                    mBaiduMap.hideInfoWindow();
+                }
+            });
+
+            routeTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RoutePlanSearch routePlanSearch = RoutePlanSearch.newInstance();
+                /*
+                开车路线
+                PlanNode from = PlanNode.withLocation(prePoint);
+                PlanNode to = PlanNode.withLocation(marker.getPosition());
+                routePlanSearch.drivingSearch(new DrivingRoutePlanOption().from(from).to(to));
+                */
+                    PlanNode from = PlanNode.withLocation(prePoint);
+                    PlanNode to = PlanNode.withLocation(marker.getPosition());
+                    routePlanSearch.walkingSearch(new WalkingRoutePlanOption().from(from).to(to));
+                    routePlanSearch.setOnGetRoutePlanResultListener(NearbyActivity.this);
+                }
+            });
+            closeTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBaiduMap.hideInfoWindow();
+                }
+            });
+            //pt = new LatLng(latitude + 0.0004, longitude + 0.00005);
+            accountTV.setText(account);
+
+            if(StringUtil.isNotNull(path)) {
+                imageIV.setImageBitmap(ImageCacheManager.loadImage(path, 100, 100));
             }
-        });
+            // 定义用于显示该InfoWindow的坐标点
+            // 创建InfoWindow的点击事件监听者
+            InfoWindow.OnInfoWindowClickListener listener = new InfoWindow.OnInfoWindowClickListener() {
+                public void onInfoWindowClick() {
+                    mBaiduMap.hideInfoWindow();//影藏气泡
 
-        sendMessageTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CommonHandler.startChatDetailActivity(NearbyActivity.this, createUserId, account, 0);
-                mBaiduMap.hideInfoWindow();
-            }
-        });
-        closeTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBaiduMap.hideInfoWindow();
-            }
-        });
-        //pt = new LatLng(latitude + 0.0004, longitude + 0.00005);
-        accountTV.setText(account);
-
-        if(StringUtil.isNotNull(path)) {
-            imageIV.setImageBitmap(ImageCacheManager.loadImage(path, 100, 100));
+                }
+            };
+            // 创建InfoWindow
+            mInfoWindow = new InfoWindow(view, pt, 0);
+            mBaiduMap.showInfoWindow(mInfoWindow); //显示气泡
         }
-        // 定义用于显示该InfoWindow的坐标点
-        // 创建InfoWindow的点击事件监听者
-        InfoWindow.OnInfoWindowClickListener listener = new InfoWindow.OnInfoWindowClickListener() {
-            public void onInfoWindowClick() {
-                mBaiduMap.hideInfoWindow();//影藏气泡
+    }
 
-            }
-        };
-        // 创建InfoWindow
-        mInfoWindow = new InfoWindow(view, pt, 0);
-        mBaiduMap.showInfoWindow(mInfoWindow); //显示气泡
+    @Override
+    public void onGetWalkingRouteResult(WalkingRouteResult walkingRouteResult) {
+        if (walkingRouteResult != null && walkingRouteResult.error == SearchResult.ERRORNO.NO_ERROR) {
+            mBaiduMap.clear();
+            WalkingRouteOverlay walkingRouteOverlay = new WalkingRouteOverlay(mBaiduMap);
+            walkingRouteOverlay.setData(walkingRouteResult.getRouteLines().get(0));
+            mBaiduMap.addOverlays(walkingRouteOverlay.getOverlayOptions());
+
+        }else{
+            ToastUtil.success(NearbyActivity.this, "走路路线查询失败！");
+        }
+    }
+
+    @Override
+    public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
+
+    }
+
+    @Override
+    public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
+        if (drivingRouteResult != null && drivingRouteResult.error == SearchResult.ERRORNO.NO_ERROR) {
+            mBaiduMap.clear();
+            DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(mBaiduMap);
+            drivingRouteOverlay.setFocus(true);
+            drivingRouteOverlay.setData(drivingRouteResult.getRouteLines().get(0));
+            mBaiduMap.addOverlays(drivingRouteOverlay.getOverlayOptions());
+
+        }else{
+            ToastUtil.success(NearbyActivity.this, "驾车路线查询失败！");
+        }
+    }
+
+    @Override
+    public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
 
     }
 

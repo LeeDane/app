@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp" >
+    android:padding="@dimen/default_5dp" >
         <ListView
             android:id="@+id/no_swipe_refresh_listview"
             android:layout_width="match_parent"

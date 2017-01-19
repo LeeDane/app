@@ -73,29 +73,29 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
     public View getView(int position, View convertView, ViewGroup parent) {
         MyHolder myHolder;
         if(convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_search_user_listview, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.one_user_layout, null);
             myHolder = new MyHolder();
-            TextView time = (TextView) convertView.findViewById(R.id.search_user_time);
+            TextView time = (TextView) convertView.findViewById(R.id.one_user_time);
             time.setSelected(true);
-            myHolder.setmCreateTime(time);
-            myHolder.setmIntroduction((TextView) convertView.findViewById(R.id.search_user_introduction));
-            myHolder.setmPicPath((ImageView) convertView.findViewById(R.id.search_user_pic));
-            myHolder.setmAccount((TextView) convertView.findViewById(R.id.search_user_name));
-            TextView birthDay = (TextView) convertView.findViewById(R.id.search_user_birth_day);
+            myHolder.createTime = time;
+            myHolder.introduction = (TextView) convertView.findViewById(R.id.one_user_introduction);
+            myHolder.picPath = (ImageView) convertView.findViewById(R.id.one_user_pic);
+            myHolder.account = (TextView) convertView.findViewById(R.id.one_user_name);
+            TextView birthDay = (TextView) convertView.findViewById(R.id.one_user_birth_day);
             birthDay.setSelected(true);
-            myHolder.setmBirthDay(birthDay);
-            TextView email = (TextView) convertView.findViewById(R.id.search_user_email);
+            myHolder.birthDay = birthDay;
+            TextView email = (TextView) convertView.findViewById(R.id.one_user_email);
             email.setSelected(true);
-            myHolder.setmEmail(email);
-            TextView phone = (TextView) convertView.findViewById(R.id.search_user_phone);
+            myHolder.email = email;
+            TextView phone = (TextView) convertView.findViewById(R.id.one_user_phone);
             phone.setSelected(true);
-            myHolder.setmPhone(phone);
-            TextView qq = (TextView) convertView.findViewById(R.id.search_user_qq);
+            myHolder.phone = phone;
+            TextView qq = (TextView) convertView.findViewById(R.id.one_user_qq);
             qq.setSelected(true);
-            myHolder.setmQq(qq);
-            myHolder.setmSex((TextView) convertView.findViewById(R.id.search_user_sex));
-            myHolder.setmFan((TextView) convertView.findViewById(R.id.search_user_fan));
-            myHolder.setmFriend((TextView) convertView.findViewById(R.id.search_user_friend));
+            myHolder.qq = qq;
+            myHolder.sex = (TextView) convertView.findViewById(R.id.one_user_sex);
+            myHolder.fan = (TextView) convertView.findViewById(R.id.one_user_fan);
+            myHolder.friend = (TextView) convertView.findViewById(R.id.one_user_friend);
             convertView.setTag(myHolder);
         }else{
             myHolder = (MyHolder)convertView.getTag();
@@ -103,17 +103,17 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
         final SearchUserBean searchUserBean = mSearchUserBeans.get(position);
 
         if(searchUserBean.getId() == loginUserId){
-            myHolder.getmFan().setVisibility(View.GONE);
-            myHolder.getmFriend().setVisibility(View.GONE);
+            myHolder.fan.setVisibility(View.GONE);
+            myHolder.friend.setVisibility(View.GONE);
         }else{
-            myHolder.getmFan().setVisibility(View.VISIBLE);
-            myHolder.getmFriend().setVisibility(View.VISIBLE);
+            myHolder.fan.setVisibility(View.VISIBLE);
+            myHolder.friend.setVisibility(View.VISIBLE);
             if(searchUserBean.isFan()){//已经是粉丝
-                myHolder.getmFan().setText(mContext.getResources().getString(R.string.personal_is_fan));
+                myHolder.fan.setText(mContext.getResources().getString(R.string.personal_is_fan));
             }else{//未关注
-                myHolder.getmFan().setText(mContext.getResources().getString(R.string.personal_add_fan));
+                myHolder.fan.setText(mContext.getResources().getString(R.string.personal_add_fan));
             }
-            myHolder.getmFan().setOnClickListener(new View.OnClickListener() {
+            myHolder.fan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //关注TA
@@ -127,11 +127,11 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
             });
 
             if(searchUserBean.isFriend()){//已经是好友
-                myHolder.getmFriend().setText(mContext.getResources().getString(R.string.personal_is_friend));
+                myHolder.friend.setText(mContext.getResources().getString(R.string.personal_is_friend));
             }else{//未添加好友
-                myHolder.getmFriend().setText(mContext.getResources().getString(R.string.personal_add_friend));
+                myHolder.friend.setText(mContext.getResources().getString(R.string.personal_add_friend));
             }
-            myHolder.getmFriend().setOnClickListener(new View.OnClickListener() {
+            myHolder.friend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //加他为好友
@@ -148,23 +148,23 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
 
         String createTime = searchUserBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
-            myHolder.getmCreateTime().setText("");
+            myHolder.createTime.setText("");
         }else{
-            myHolder.getmCreateTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
+            myHolder.createTime.setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 
-        myHolder.getmIntroduction().setText("简介:"+StringUtil.changeNotNull(searchUserBean.getIntroduction()));
-        myHolder.getmAccount().setText(StringUtil.changeNotNull(searchUserBean.getAccount()));
-        myHolder.getmBirthDay().setText("生日:" +StringUtil.changeNotNull(searchUserBean.getBirthDay()));
-        myHolder.getmEmail().setText("邮件:"+StringUtil.changeNotNull(searchUserBean.getEmail()));
-        myHolder.getmPhone().setText("手机:"+ StringUtil.changeNotNull(searchUserBean.getPhone()));
+        myHolder.introduction.setText("简介:"+StringUtil.changeNotNull(searchUserBean.getIntroduction()));
+        myHolder.account.setText(StringUtil.changeNotNull(searchUserBean.getAccount()));
+        myHolder.birthDay.setText("生日:" +StringUtil.changeNotNull(searchUserBean.getBirthDay()));
+        myHolder.email.setText("邮件:"+StringUtil.changeNotNull(searchUserBean.getEmail()));
+        myHolder.phone.setText("手机:"+ StringUtil.changeNotNull(searchUserBean.getPhone()));
         if(StringUtil.isNotNull(searchUserBean.getUserPicPath())){
-            ImageCacheManager.loadImage(searchUserBean.getUserPicPath(), myHolder.getmPicPath(), 45, 45);
+            ImageCacheManager.loadImage(searchUserBean.getUserPicPath(), myHolder.picPath, 45, 45);
         }
-        myHolder.getmQq().setText("QQ:"+StringUtil.changeNotNull(searchUserBean.getQq()));
-        myHolder.getmSex().setText("性别:"+StringUtil.changeNotNull(searchUserBean.getSex()));
+        myHolder.qq.setText("QQ:"+StringUtil.changeNotNull(searchUserBean.getQq()));
+        myHolder.sex.setText("性别:"+StringUtil.changeNotNull(searchUserBean.getSex()));
 
-        myHolder.getmPicPath().setOnClickListener(new View.OnClickListener() {
+        myHolder.picPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommonHandler.startPersonalActivity(mContext, searchUserBean.getId());
@@ -256,120 +256,32 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
         /**
          * 搜索用户的账号
          */
-        private TextView mAccount;
+        private TextView account;
 
         /**
          * 搜索用户的头像路径
          */
-        private ImageView mPicPath;
+        private ImageView picPath;
 
         /**
          * 搜索用户的创建时间
          */
-        private TextView mCreateTime;
+        private TextView createTime;
 
-        private TextView mIntroduction;
+        private TextView introduction;
 
-        private TextView mBirthDay;
+        private TextView birthDay;
 
-        private TextView mPhone;
+        private TextView phone;
 
-        private TextView mSex;
+        private TextView sex;
 
-        private TextView mEmail;
+        private TextView email;
 
-        private TextView mQq;
+        private TextView qq;
 
-        private TextView mFan;
+        private TextView fan;
 
-        private TextView mFriend;
-
-        public TextView getmCreateTime() {
-            return mCreateTime;
-        }
-
-        public void setmCreateTime(TextView mCreateTime) {
-            this.mCreateTime = mCreateTime;
-        }
-
-        public ImageView getmPicPath() {
-            return mPicPath;
-        }
-
-        public void setmPicPath(ImageView mPicPath) {
-            this.mPicPath = mPicPath;
-        }
-
-        public TextView getmAccount() {
-            return mAccount;
-        }
-
-        public void setmAccount(TextView mAccount) {
-            this.mAccount = mAccount;
-        }
-
-        public TextView getmBirthDay() {
-            return mBirthDay;
-        }
-
-        public void setmBirthDay(TextView mBirthDay) {
-            this.mBirthDay = mBirthDay;
-        }
-
-        public TextView getmEmail() {
-            return mEmail;
-        }
-
-        public void setmEmail(TextView mEmail) {
-            this.mEmail = mEmail;
-        }
-
-        public TextView getmIntroduction() {
-            return mIntroduction;
-        }
-
-        public void setmIntroduction(TextView mIntroduction) {
-            this.mIntroduction = mIntroduction;
-        }
-
-        public TextView getmPhone() {
-            return mPhone;
-        }
-
-        public void setmPhone(TextView mPhone) {
-            this.mPhone = mPhone;
-        }
-
-        public TextView getmQq() {
-            return mQq;
-        }
-
-        public void setmQq(TextView mQq) {
-            this.mQq = mQq;
-        }
-
-        public TextView getmSex() {
-            return mSex;
-        }
-
-        public void setmSex(TextView mSex) {
-            this.mSex = mSex;
-        }
-
-        public TextView getmFan() {
-            return mFan;
-        }
-
-        public void setmFan(TextView mFan) {
-            this.mFan = mFan;
-        }
-
-        public TextView getmFriend() {
-            return mFriend;
-        }
-
-        public void setmFriend(TextView mFriend) {
-            this.mFriend = mFriend;
-        }
+        private TextView friend;
     }
 }

@@ -87,5 +87,20 @@
             android:text="@string/personal_chat"
             android:textColor="#fff"
             android:textSize="@dimen/default_16sp" />
+        <TextView
+            android:id="@+id/maker_route"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="35dp"
+            android:layout_marginLeft="@dimen/default_10dp"
+            android:layout_marginRight="@dimen/default_10dp"
+            android:background="@drawable/default_btn_seletorbg"
+            android:clickable="true"
+            android:minWidth="@dimen/default_80dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/route"
+            android:textColor="#fff"
+            android:textSize="@dimen/default_16sp" />
     </LinearLayout>
 </LinearLayout>

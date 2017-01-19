@@ -6,12 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.search.SearchBlogBean;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.util.DateUtil;
+import com.leedane.cn.util.ImageUtil;
 import com.leedane.cn.util.RelativeDateFormat;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.volley.ImageCacheManager;
@@ -60,15 +62,15 @@ public class SearchBlogAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         MyHolder myHolder;
         if(convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_search_blog_listview, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.one_blog_layout, null);
             myHolder = new MyHolder();
-            myHolder.setmCreateTime((TextView) convertView.findViewById(R.id.search_blog_time));
-            myHolder.setmAccount((TextView) convertView.findViewById(R.id.search_blog_user_name));
-            myHolder.setmPicPath((ImageView) convertView.findViewById(R.id.search_blog_user_pic));
-            myHolder.setmSource((TextView) convertView.findViewById(R.id.search_blog_source));
-            myHolder.setmTitle((TextView) convertView.findViewById(R.id.search_blog_title));
-            myHolder.setmDigest((TextView) convertView.findViewById(R.id.search_blog_digest));
-            myHolder.setmMainImg((ImageView) convertView.findViewById(R.id.search_blog_img_main));
+            myHolder.createTime = (TextView) convertView.findViewById(R.id.one_blog_time);
+            myHolder.account = (TextView) convertView.findViewById(R.id.one_blog_user_name);
+            myHolder.picPath = (ImageView) convertView.findViewById(R.id.one_blog_user_pic);
+            myHolder.source = (TextView) convertView.findViewById(R.id.one_blog_source);
+            myHolder.title = (TextView) convertView.findViewById(R.id.one_blog_title);
+            myHolder.digest = (TextView) convertView.findViewById(R.id.one_blog_digest);
+            myHolder.imgContainer = (LinearLayout) convertView.findViewById(R.id.one_blog_img_container);
             convertView.setTag(myHolder);
         }else{
             myHolder = (MyHolder)convertView.getTag();
@@ -77,29 +79,29 @@ public class SearchBlogAdapter extends BaseAdapter{
 
         String createTime = searchBlogBean.getCreateTime();
         if(StringUtil.isNull(createTime)){
-            myHolder.getmCreateTime().setText("");
+            myHolder.createTime.setText("");
         }else{
-            myHolder.getmCreateTime().setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
+            myHolder.createTime.setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 
-        myHolder.getmAccount().setText(StringUtil.changeNotNull(searchBlogBean.getAccount()));
+        myHolder.account.setText(StringUtil.changeNotNull(searchBlogBean.getAccount()));
         if(StringUtil.isNotNull(searchBlogBean.getUserPicPath()))
-            ImageCacheManager.loadImage(searchBlogBean.getUserPicPath(), myHolder.getmPicPath(), 45, 45);
+            ImageCacheManager.loadImage(searchBlogBean.getUserPicPath(), myHolder.picPath, 45, 45);
 
-        myHolder.getmPicPath().setOnClickListener(new View.OnClickListener() {
+        myHolder.picPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommonHandler.startPersonalActivity(mContext, searchBlogBean.getCreateUserId());
             }
         });
-        myHolder.getmSource().setText(StringUtil.changeNotNull(searchBlogBean.getSource()));
-        myHolder.getmTitle().setText(StringUtil.changeNotNull(searchBlogBean.getTitle()));
-        myHolder.getmDigest().setText(StringUtil.changeNotNull(searchBlogBean.getDigest()) +"...");
+        myHolder.source.setText(StringUtil.changeNotNull(searchBlogBean.getSource()));
+        myHolder.title.setText(StringUtil.changeNotNull(searchBlogBean.getTitle()));
+        myHolder.digest.setText(StringUtil.changeNotNull(searchBlogBean.getDigest()) + "...");
         if(StringUtil.isNotNull(searchBlogBean.getImgUrl())){
-            myHolder.getmMainImg().setVisibility(View.VISIBLE);
-            ImageCacheManager.loadImage(searchBlogBean.getImgUrl(), myHolder.getmMainImg(), 100, 50);
+            myHolder.imgContainer.setVisibility(View.VISIBLE);
+            ImageUtil.addImages(mContext, searchBlogBean.getImgUrl(), myHolder.imgContainer);
         }else{
-            myHolder.getmMainImg().setVisibility(View.GONE);
+            myHolder.imgContainer.setVisibility(View.GONE);
         }
         return convertView;
     }
@@ -108,92 +110,36 @@ public class SearchBlogAdapter extends BaseAdapter{
         /**
          * 搜索博客的用户的账号
          */
-        private TextView mAccount;
+        private TextView account;
 
         /**
          * 搜索心情的用户的头像路径
          */
-        private ImageView mPicPath;
+        private ImageView picPath;
 
         /**
          * 搜索博客的来自
          */
-        private TextView mSource;
+        private TextView source;
 
         /**
          * 搜索博客的创建时间
          */
-        private TextView mCreateTime;
+        private TextView createTime;
 
         /**
          * 博客的标题
          */
-        private TextView mTitle;
+        private TextView title;
 
         /**
          * 博客的内容
          */
-        private TextView mDigest;
+        private TextView digest;
 
         /**
          * 搜索博客的主图
          */
-        private ImageView mMainImg;
-
-        public TextView getmCreateTime() {
-            return mCreateTime;
-        }
-
-        public void setmCreateTime(TextView mCreateTime) {
-            this.mCreateTime = mCreateTime;
-        }
-
-        public ImageView getmPicPath() {
-            return mPicPath;
-        }
-
-        public void setmPicPath(ImageView mPicPath) {
-            this.mPicPath = mPicPath;
-        }
-
-        public TextView getmAccount() {
-            return mAccount;
-        }
-
-        public void setmAccount(TextView mAccount) {
-            this.mAccount = mAccount;
-        }
-
-        public TextView getmDigest() {
-            return mDigest;
-        }
-
-        public void setmDigest(TextView mDigest) {
-            this.mDigest = mDigest;
-        }
-
-        public TextView getmSource() {
-            return mSource;
-        }
-
-        public void setmSource(TextView mSource) {
-            this.mSource = mSource;
-        }
-
-        public ImageView getmMainImg() {
-            return mMainImg;
-        }
-
-        public void setmMainImg(ImageView mMainImg) {
-            this.mMainImg = mMainImg;
-        }
-
-        public TextView getmTitle() {
-            return mTitle;
-        }
-
-        public void setmTitle(TextView mTitle) {
-            this.mTitle = mTitle;
-        }
+        private LinearLayout imgContainer;
     }
 }

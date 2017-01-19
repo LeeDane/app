@@ -83,13 +83,13 @@ public class DetailNewActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+       /* switch (v.getId()){
             case R.id.detail_article_btn:
                 break;
             case R.id.detail_comment_btn:
                 break;
             case R.id.detail_transmit_btn:
                 break;
-        }
+        }*/
     }
 }

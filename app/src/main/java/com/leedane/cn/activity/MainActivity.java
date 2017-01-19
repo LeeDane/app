@@ -153,9 +153,6 @@ public class MainActivity extends NavigationActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkedIsLogin();
-
-        //registerMessageReceiver();
-        //Toast.makeText(MainActivity.this, "宽："+ BaseApplication.newInstance().getScreenWidthAndHeight()[0]+",高："+BaseApplication.newInstance().getScreenWidthAndHeight()[1], Toast.LENGTH_LONG).show();
         //初始化控件
         initView();
     }
@@ -407,12 +404,10 @@ public class MainActivity extends NavigationActivity
     public void taskFinished(TaskType type, Object result) {
         if(type == TaskType.HOME_LOADBLOGS){
             isLoading = false;
-            if(mySwipeRefreshLayout !=null && mySwipeRefreshLayout.isRefreshing())
-                mySwipeRefreshLayout.setRefreshing(false);//下拉刷新组件停止刷新
+            if(mySwipeRefreshLayout !=null && mySwipeRefreshLayout.isRefreshing());
         }
         dismissLoadingDialog();
-        if(result instanceof Error){
-            Toast.makeText(MainActivity.this, ((Error) result).getMessage(), Toast.LENGTH_SHORT).show();
+        if(result == null || result instanceof Error){
             if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
                 //mListViewFooter.setText(getStringResource(R.string.load_more_error));
                 mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
@@ -541,7 +536,6 @@ public class MainActivity extends NavigationActivity
                         mAdapter.refreshData(temList);
                         //Log.i(TAG, "后来的大小：" + mBlogs.size());
 
-                        //Toast.makeText(MainActivity.this, "成功加载"+ blogBeans.size() + "条数据,总数是："+mBlogs.size(), Toast.LENGTH_SHORT).show();
                         int size = mBlogs.size();
                         if(size > 0){
                             mFirstId = mBlogs.get(0).getId();
@@ -759,7 +753,6 @@ public class MainActivity extends NavigationActivity
             case MainActivity.LOGIN_REQUEST_CODE:
                 updateShowUserinfo();
                 initJPush();
-                //Toast.makeText(MainActivity.this, "登录返回成功", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -824,7 +817,7 @@ public class MainActivity extends NavigationActivity
                 showTextDialog(2, notice.toString());
                 break;
             case 8: //不喜欢
-                Toast.makeText(MainActivity.this, mClickPosition + "-----"+ item.getTitle(), Toast.LENGTH_LONG).show();
+                ToastUtil.success(MainActivity.this, mClickPosition + "-----" + item.getTitle());
                 break;
         }
         return super.onContextItemSelected(item);

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.leedane.cn.bean.BlogBean;
 import com.leedane.cn.bean.HttpResponseAttentionBean;
 import com.leedane.cn.bean.HttpResponseBlogBean;
 import com.leedane.cn.bean.HttpResponseChatBgSelectWebBean;
@@ -24,6 +25,8 @@ import com.leedane.cn.bean.HttpResponseNotificationBean;
 import com.leedane.cn.bean.HttpResponseScoreBean;
 import com.leedane.cn.bean.HttpResponseZanBean;
 import com.leedane.cn.bean.HttpResponseZanUserBean;
+import com.leedane.cn.bean.MoodBean;
+import com.leedane.cn.bean.UserBean;
 import com.leedane.cn.bean.search.HttpResponseSearchBlogBean;
 import com.leedane.cn.bean.search.HttpResponseSearchMoodBean;
 import com.leedane.cn.bean.search.HttpResponseSearchUserBean;
@@ -442,6 +445,54 @@ public class BeanConvertUtil {
             return gson.fromJson(str, HttpResponseSearchMoodBean.class);
         }catch (Exception e){
             Log.d(TAG, "响应HttpResponseSearchMoodBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将响应请求的字符串转化成MoodBean对象
+     * @param str
+     * @return
+     */
+    public static MoodBean strMoodBean(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应MoodBean对象开始转换。。。");
+            return gson.fromJson(str, MoodBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应MoodBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将响应请求的字符串转化成BlogBean对象
+     * @param str
+     * @return
+     */
+    public static BlogBean strBlogBean(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应BlogBean对象开始转换。。。");
+            return gson.fromJson(str, BlogBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应BlogBean对象转换失败");
+        }
+        return null;
+    }
+
+    /**
+     * 将响应请求的字符串转化成UserBean对象
+     * @param str
+     * @return
+     */
+    public static UserBean strUserBean(String str){
+        if(StringUtil.isNull(str)) return null;
+        try{
+            Log.d(TAG, "响应UserBean对象开始转换。。。");
+            return gson.fromJson(str, UserBean.class);
+        }catch (Exception e){
+            Log.d(TAG, "响应UserBean对象转换失败");
         }
         return null;
     }
