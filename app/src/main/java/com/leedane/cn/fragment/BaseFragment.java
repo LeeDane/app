@@ -168,7 +168,7 @@ public abstract class BaseFragment extends Fragment implements TaskListener, Vie
         }
     }
 
-    protected class RecyclerViewOnScrollListener extends RecyclerView.OnScrollListener{
+    public class RecyclerViewOnScrollListener extends RecyclerView.OnScrollListener{
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);

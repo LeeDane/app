@@ -372,8 +372,8 @@ public class StringUtil {
      * @return
      */
     public static String formatDistance(int distance){
-        if(distance < 1)
-            return "1米左右";
+        if(distance <= 10)
+            return "10米内";
         return ((distance/1000) > 0 ? (distance/1000)+ "公里": "") +  ((distance%1000) > 0 ? (distance%1000) +"米": "");
     }
 

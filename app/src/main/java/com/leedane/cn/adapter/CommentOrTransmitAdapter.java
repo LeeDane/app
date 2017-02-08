@@ -100,7 +100,7 @@ public class CommentOrTransmitAdapter extends BaseRecyclerViewAdapter<CommentOrT
                 });
                 holder.userInfo.setVisibility(View.VISIBLE);
                 holder.userName.setText(commentOrTransmitBean.getAccount());
-                if(commentOrTransmitBean.getUserPicPath() != null)
+                if(StringUtil.isNotNull(commentOrTransmitBean.getUserPicPath()))
                     ImageCacheManager.loadImage(commentOrTransmitBean.getUserPicPath(), holder.userPic, 30, 30);
                 else
                     holder.userPic.setImageResource(R.drawable.no_pic);

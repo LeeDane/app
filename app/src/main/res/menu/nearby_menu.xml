@@ -8,22 +8,6 @@
         app:showAsAction="always"
         android:title="@string/nearby_refresh"/>
     <item
-        android:id="@+id/nearby_menu_list"
-        app:showAsAction="never"
-        android:title="@string/nearby_list"/>
-    <item
-        android:id="@+id/nearby_menu_woman"
-        app:showAsAction="never"
-        android:title="@string/nearby_woman"/>
-    <item
-        android:id="@+id/nearby_menu_man"
-        app:showAsAction="never"
-        android:title="@string/nearby_man"/>
-    <item
-        android:id="@+id/nearby_menu_all"
-        app:showAsAction="never"
-        android:title="@string/nearby_all"/>
-    <item
         android:id="@+id/nearby_menu_out"
         app:showAsAction="never"
         android:title="@string/nearby_out"/>

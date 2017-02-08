@@ -328,4 +328,8 @@ public class HomeActivity extends ActionBarBaseActivity {
         }
     }
 
+    @Override
+    public void onRefresh() {
+        mSwipeLayout.setRefreshing(false);
+    }
 }

@@ -355,6 +355,8 @@ public class MainActivity extends NavigationActivity
 
                 if(mUserInfo.has("user_pic_path") && !StringUtil.isNull(mUserInfo.getString("user_pic_path"))){
                     ImageCacheManager.loadImage(mUserInfo.getString("user_pic_path"), mHeadPortraitImageView );
+                }else{
+                    mHeadPortraitImageView.setImageResource(R.drawable.no_pic);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

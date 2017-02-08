@@ -83,30 +83,44 @@ public class ShakeUserFragment extends Fragment{
                 }
                 if(StringUtil.isNotNull(userBean.getPersonalIntroduction())){
                     ((TextView)mRootView.findViewById(R.id.one_user_introduction)).setText(userBean.getPersonalIntroduction());
+                }else{
+                    mRootView.findViewById(R.id.one_user_introduction).setVisibility(View.GONE);
                 }
 
                 if(StringUtil.isNotNull(userBean.getAccount())){
                     ((TextView)mRootView.findViewById(R.id.one_user_name)).setText(userBean.getAccount());
+                }else{
+                    mRootView.findViewById(R.id.one_user_name).setVisibility(View.GONE);
                 }
 
                 if(StringUtil.isNotNull(userBean.getBirthDay())){
-                    ((TextView)mRootView.findViewById(R.id.one_user_birth_day)).setText(userBean.getBirthDay());
+                    ((TextView)mRootView.findViewById(R.id.one_user_birth_day)).setText("出生日："+ userBean.getBirthDay());
+                }else{
+                    mRootView.findViewById(R.id.one_user_birth_day).setVisibility(View.GONE);
                 }
 
                 if(StringUtil.isNotNull(userBean.getMobilePhone())){
-                    ((TextView)mRootView.findViewById(R.id.one_user_phone)).setText(userBean.getMobilePhone());
+                    ((TextView)mRootView.findViewById(R.id.one_user_phone)).setText("电话："+ userBean.getMobilePhone());
+                }else{
+                    mRootView.findViewById(R.id.one_user_phone).setVisibility(View.GONE);
                 }
 
                 if(StringUtil.isNotNull(userBean.getSex())){
-                    ((TextView)mRootView.findViewById(R.id.one_user_sex)).setText(userBean.getSex());
+                    ((TextView)mRootView.findViewById(R.id.one_user_sex)).setText("性别："+ userBean.getSex());
+                }else{
+                    mRootView.findViewById(R.id.one_user_sex).setVisibility(View.GONE);
                 }
 
                 if(StringUtil.isNotNull(userBean.getEmail())){
-                    ((TextView)mRootView.findViewById(R.id.one_user_email)).setText(userBean.getEmail());
+                    ((TextView)mRootView.findViewById(R.id.one_user_email)).setText("邮箱："+ userBean.getEmail());
+                }else{
+                    mRootView.findViewById(R.id.one_user_email).setVisibility(View.GONE);
                 }
 
                 if(StringUtil.isNotNull(userBean.getQq())){
-                    ((TextView)mRootView.findViewById(R.id.one_user_qq)).setText(userBean.getQq());
+                    ((TextView)mRootView.findViewById(R.id.one_user_qq)).setText("QQ："+ userBean.getQq());
+                }else{
+                    mRootView.findViewById(R.id.one_user_qq).setVisibility(View.GONE);
                 }
 
                 if(userBean.getId() > 0){
