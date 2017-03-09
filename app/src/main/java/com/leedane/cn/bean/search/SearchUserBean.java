@@ -11,18 +11,15 @@ public class SearchUserBean extends IdBean {
 
     private String account;
 
-    private String introduction;
+    private String personalIntroduction;
 
-    @SerializedName("is_fan")
     private boolean isFan;
 
-    @SerializedName("is_friend")
     private boolean isFriend;
 
-    @SerializedName("birth_day")
     private String birthDay;
 
-    private String phone;
+    private String mobilePhone;
 
     private String sex;
 
@@ -33,7 +30,7 @@ public class SearchUserBean extends IdBean {
     @SerializedName("user_pic_path")
     private String userPicPath;
 
-    @SerializedName("create_time")
+    @SerializedName("registerTime")
     private String createTime; //用户创建时间
 
     public String getAccount() {
@@ -76,22 +73,6 @@ public class SearchUserBean extends IdBean {
         this.email = email;
     }
 
-    public String getIntroduction() {
-        return introduction;
-    }
-
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getQq() {
         return qq;
     }
@@ -122,5 +103,21 @@ public class SearchUserBean extends IdBean {
 
     public void setIsFriend(boolean isFriend) {
         this.isFriend = isFriend;
+    }
+
+    public String getPersonalIntroduction() {
+        return personalIntroduction;
+    }
+
+    public void setPersonalIntroduction(String personalIntroduction) {
+        this.personalIntroduction = personalIntroduction;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 }

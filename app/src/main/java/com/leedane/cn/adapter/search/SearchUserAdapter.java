@@ -153,11 +153,11 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
             myHolder.createTime.setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
         }
 
-        myHolder.introduction.setText("简介:"+StringUtil.changeNotNull(searchUserBean.getIntroduction()));
+        myHolder.introduction.setText("简介:"+StringUtil.changeNotNull(searchUserBean.getPersonalIntroduction()));
         myHolder.account.setText(StringUtil.changeNotNull(searchUserBean.getAccount()));
         myHolder.birthDay.setText("生日:" +StringUtil.changeNotNull(searchUserBean.getBirthDay()));
         myHolder.email.setText("邮件:"+StringUtil.changeNotNull(searchUserBean.getEmail()));
-        myHolder.phone.setText("手机:"+ StringUtil.changeNotNull(searchUserBean.getPhone()));
+        myHolder.phone.setText("手机:"+ StringUtil.changeNotNull(searchUserBean.getMobilePhone()));
         if(StringUtil.isNotNull(searchUserBean.getUserPicPath())){
             ImageCacheManager.loadImage(searchUserBean.getUserPicPath(), myHolder.picPath, 45, 45);
         }

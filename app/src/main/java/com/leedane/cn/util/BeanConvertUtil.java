@@ -30,8 +30,16 @@ import com.leedane.cn.bean.UserBean;
 import com.leedane.cn.bean.search.HttpResponseSearchBlogBean;
 import com.leedane.cn.bean.search.HttpResponseSearchMoodBean;
 import com.leedane.cn.bean.search.HttpResponseSearchUserBean;
+import com.leedane.cn.bean.search.SearchUserBean;
 import com.leedane.cn.financial.bean.HttpResponseFinancialBean;
 import com.leedane.cn.financial.bean.HttpResponseLocationBean;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Bean转化工具类
@@ -409,8 +417,19 @@ public class BeanConvertUtil {
     public static HttpResponseSearchUserBean strConvertToSearchUserBeans(String str){
         if(StringUtil.isNull(str)) return null;
         try{
+            HttpResponseSearchUserBean httpResponseSearchUserBean = null;
+            JSONObject jsonObject = new JSONObject(str);
+            boolean isSuccess = jsonObject.getBoolean("isSuccess");
+            if(isSuccess){
+                JSONObject object = jsonObject.getJSONObject("message");
+                JSONArray array = object.getJSONArray(ConstantsUtil.SEARCH_TYPE_USER + "");
+                Map<String, Object> map = new HashMap<>();
+                map.put("message", array.toString());
+                map.put("isSuccess", isSuccess);
+                httpResponseSearchUserBean = gson.fromJson(map.toString(), HttpResponseSearchUserBean.class);
+            }
             Log.d(TAG, "响应HttpResponseSearchUserBean对象开始转换。。。");
-            return gson.fromJson(str, HttpResponseSearchUserBean.class);
+            return httpResponseSearchUserBean;
         }catch (Exception e){
             Log.d(TAG, "响应HttpResponseSearchUserBean对象转换失败");
         }
