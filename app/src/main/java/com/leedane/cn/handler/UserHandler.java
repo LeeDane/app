@@ -16,21 +16,6 @@ import java.util.Map;
  * Created by LeeDane on 2016/4/19.
  */
 public class UserHandler {
-
-    /**
-     * 更新用户头像
-     * @param listener
-     * @param params
-     */
-    public static void updateHander(TaskListener listener, Map<String, Object> params){
-        HttpRequestBean requestBean = new HttpRequestBean();
-        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user/paging.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_HANDER, listener, requestBean);
-    }
-
     /**
      * 获取当前用户的最新头像的路径
      * @param listener
@@ -40,8 +25,8 @@ public class UserHandler {
         HashMap<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user/getHeadPath.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("us/head/path");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_HEAD_PATH, listener, requestBean);
     }
 
@@ -54,8 +39,8 @@ public class UserHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user/searchUserByUserIdOrAccount.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("us/searchByIdOrAccount");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_USER_INFO, listener, requestBean);
     }
 
@@ -68,8 +53,8 @@ public class UserHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user/updateUserBase.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("us/user/base");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_PUT);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_USER_BASE, listener, requestBean);
     }
 
@@ -86,8 +71,50 @@ public class UserHandler {
         params.put("new_password", MD5Util.compute(newPassword));
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user/updatePassword.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("us/user/pwd");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_PUT);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_LOGIN_PSW, listener, requestBean);
+    }
+
+    /**
+     * 手机号码登陆
+     * @param listener
+     * @param params
+     */
+    public static void loginByPhone(TaskListener listener, Map<String, Object> params){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("us/phone/login");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.DO_LOGIN_PHONE, listener, requestBean);
+    }
+
+    /**
+     * 获取登登录码
+     * @param listener
+     * @param params
+     */
+    public static void getPhoneLoginCode(TaskListener listener, Map<String, Object> params){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("us/phone/login/code");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
+        TaskLoader.getInstance().startTaskForResult(TaskType.DO_GET_LOGIN_CODE, listener, requestBean);
+    }
+
+    /**
+     * 获取登登录码
+     * @param listener
+     * @param params
+     */
+    public static void registerByPhoneNoValidate(TaskListener listener, Map<String, Object> params){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("us/phone/register/noValidate");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.REGISTER_DO, listener, requestBean);
     }
 }

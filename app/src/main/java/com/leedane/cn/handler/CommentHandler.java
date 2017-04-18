@@ -53,8 +53,8 @@ public class CommentHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/comment/paging.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
+        requestBean.setServerMethod("cm/comments");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_COMMENT, listener, requestBean);
     }
 
@@ -70,7 +70,7 @@ public class CommentHandler {
             params.put("content", "评论了这条信息");
         }
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/comment/add.action");
+        requestBean.setServerMethod("cm/comment");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_COMMENT, listener, requestBean);
     }
@@ -86,10 +86,10 @@ public class CommentHandler {
         HashMap<String, Object> params = new HashMap<>();
         params.put("cid",commentId);
         params.put("create_user_id", createUserId);
-        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        //params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/comment/delete.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("cm/comment");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_COMMENT, listener, requestBean);
     }
 
@@ -108,8 +108,8 @@ public class CommentHandler {
         params.put("can_comment", canComment);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/comment/updateCommentStatus.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("cm/comment");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_PUT);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_COMMENT_STATUS, listener, requestBean);
     }
 }

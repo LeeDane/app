@@ -262,8 +262,16 @@ public class UserBaseActivity extends BaseActivity{
             JSONObject resultObject = new JSONObject(String.valueOf(result));
             if(TaskType.UPDATE_USER_BASE == type && resultObject != null){
                 if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                    String userinfo = resultObject.getString("userinfo");
+                    //获取旧的值
+                    JSONObject json = SharedPreferenceUtil.getUserInfo(getApplicationContext());
+                    if(json.has("token") && !resultObject.has("token")){
+                        JSONObject jsonObject = new JSONObject(userinfo);
+                        jsonObject.put("token", json.getString("token"));
+                        userinfo = jsonObject.toString();
+                    }
                     //获取新的基本信息
-                    SharedPreferenceUtil.saveUserInfo(getApplicationContext(), resultObject.getString("userinfo"));
+                    SharedPreferenceUtil.saveUserInfo(getApplicationContext(), userinfo);
                     ToastUtil.success(UserBaseActivity.this, getStringResource(R.string.user_base_update_success));
                     mRight.setText(getStringResource(R.string.edit));//将文字设置成编辑状态
                     disabledAllView();//将所有视图设置为不可编辑状态

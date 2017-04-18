@@ -31,6 +31,7 @@ import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.bean.LocationBean;
 import com.leedane.cn.bean.MoodBean;
 import com.leedane.cn.handler.CommentHandler;
+import com.leedane.cn.handler.MoodHandler;
 import com.leedane.cn.handler.TransmitHandler;
 import com.leedane.cn.service.SendMoodService;
 import com.leedane.cn.task.TaskLoader;
@@ -448,7 +449,6 @@ public class MoodActivity extends BaseActivity {
      */
     private void simplePublish(String content){
         //简单的发送
-        HttpRequestBean requestBean = new HttpRequestBean();
         HashMap<String, Object> params = new HashMap<>();
         params.put("content", content);
         params.put("can_comment", mCanComment.isChecked());
@@ -458,18 +458,13 @@ public class MoodActivity extends BaseActivity {
             params.put("longitude", locationBean.getLongitude());
             params.put("latitude", locationBean.getLatitude());
         }
-
         if(mNetworkLinks.size() > 0){
-            requestBean.setServerMethod("leedane/mood/sendWordAndLink.action");
             params.put("links", mMoodNetworkShow.getText().toString());
+            MoodHandler.sendWordAndLink(MoodActivity.this, params);
         }else {
-            requestBean.setServerMethod("leedane/mood/sendWord.action");
+            MoodHandler.sendWord(MoodActivity.this, params);
         }
-        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setParams(params);
 
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_NORMAL, MoodActivity.this, requestBean);
         showLoadingDialog("发表心情", "正在发表，请稍等...");
     }
 

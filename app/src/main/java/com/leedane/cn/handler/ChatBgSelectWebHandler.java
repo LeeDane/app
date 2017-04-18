@@ -32,7 +32,7 @@ public class ChatBgSelectWebHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/chatBg/publish.action");
+        requestBean.setServerMethod("ctb/bg");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.PUBLISH_CHAT_BG, listener, requestBean);
     }
@@ -46,8 +46,8 @@ public class ChatBgSelectWebHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/chatBg/paging.action");
+        requestBean.setServerMethod("ctb/bgs");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_CHAT_BG_SELECT_WEB, listener, requestBean);
     }
 
@@ -62,8 +62,8 @@ public class ChatBgSelectWebHandler {
         params.put("cid", cid);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
+        requestBean.setServerMethod("ctb/bg/verify");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/chatBg/verifyChatBg.action");
         TaskLoader.getInstance().startTaskForResult(TaskType.VERIFY_CHAT_BG, listener, requestBean);
     }
 }

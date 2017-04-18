@@ -5,6 +5,7 @@ import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.ConstantsUtil;
 
 import java.util.Map;
 
@@ -22,9 +23,8 @@ public class CircleOfFriendHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/circleOfFriend/paging.action");
-
+        requestBean.setServerMethod("cof/circleOfFriends");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_CIRCLEOFFRIEND, listener, requestBean);
     }
 }

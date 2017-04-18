@@ -54,7 +54,7 @@ public class DetailNewActivity extends BaseActivity {
      * 初始化参数
      */
     private void init() {
-        mBlogUrl =  getBaseServerUrl()+ "leedane/blog/getContent.action?blog_id=" + mBlogId;
+        mBlogUrl =  getBaseServerUrl()+ "/content?blog_id=" + mBlogId;
 
         /*new FinestWebView.Builder(this)
                 .theme(R.style.FinestWebViewTheme)

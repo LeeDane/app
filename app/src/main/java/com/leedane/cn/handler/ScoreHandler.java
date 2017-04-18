@@ -5,6 +5,7 @@ import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.ConstantsUtil;
 
 import java.util.Map;
 
@@ -22,8 +23,8 @@ public class ScoreHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/score/paging.action");
+        requestBean.setServerMethod("sc/scores");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SCORE, listener, requestBean);
     }
 }

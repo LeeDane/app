@@ -24,7 +24,7 @@ public class BlogHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/blog/releaseBlog.action");
+        requestBean.setServerMethod("bg/blog");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_BLOG, listener, requestBean);
     }
@@ -38,8 +38,8 @@ public class BlogHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/blog/paging.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("bg/blogs");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.HOME_LOADBLOGS, listener, requestBean);
     }
 
@@ -52,8 +52,8 @@ public class BlogHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/blog/deleteBlog.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("bg/blog");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_BLOG, listener, requestBean);
     }
 
@@ -70,7 +70,7 @@ public class BlogHandler {
         params.put("tag", tag);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/blog/addTag.action");
+        requestBean.setServerMethod("bg/tag");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_TAG, listener, requestBean);
     }

@@ -107,6 +107,7 @@ public class CloudActivity extends BaseActivity{
     }
 
     private void loadInitData(){
+        //financialDataBase.updateNo();
         //获取非同步却状态不是草稿的数据列表
         mFinancialBeans = financialDataBase.query(" where (id = 0 or synchronous = "+ ConstantsUtil.STATUS_DISABLE +") and status !="+ ConstantsUtil.STATUS_DRAFT +" order by datetime(addition_time) asc");
         mAdapter.addDatas(mFinancialBeans);

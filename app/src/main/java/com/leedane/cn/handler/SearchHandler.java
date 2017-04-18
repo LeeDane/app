@@ -29,10 +29,10 @@ public class SearchHandler {
         params.put("type", ConstantsUtil.SEARCH_TYPE_USER);//type=3表示只搜索用户
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setRequestTimeOut(60000);
         requestBean.setResponseTimeOut(60000);
-        requestBean.setServerMethod("leedane/search/get.action");
+        requestBean.setServerMethod("s/s");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SEARCH_USER, listener, requestBean);
     }
 
@@ -49,10 +49,10 @@ public class SearchHandler {
         params.put("type", ConstantsUtil.SEARCH_TYPE_BLOG);//type=1表示只搜索博客
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setRequestTimeOut(60000);
         requestBean.setResponseTimeOut(60000);
-        requestBean.setServerMethod("leedane/search/get.action");
+        requestBean.setServerMethod("s/s");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SEARCH_BLOG, listener, requestBean);
     }
 
@@ -69,10 +69,10 @@ public class SearchHandler {
         params.put("type", ConstantsUtil.SEARCH_TYPE_MOOD);//type=2表示只搜索心情
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setRequestTimeOut(60000);
         requestBean.setResponseTimeOut(60000);
-        requestBean.setServerMethod("leedane/search/get.action");
+        requestBean.setServerMethod("s/s");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SEARCH_MOOD, listener, requestBean);
     }
 }

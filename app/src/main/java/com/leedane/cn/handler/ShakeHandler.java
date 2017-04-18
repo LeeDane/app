@@ -25,10 +25,10 @@ public class ShakeHandler {
         Map<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setRequestTimeOut(60000);
         requestBean.setResponseTimeOut(60000);
-        requestBean.setServerMethod("leedane/shake/user.action");
+        requestBean.setServerMethod("sh/user");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SHAKE_USER, listener, requestBean);
     }
 
@@ -41,10 +41,10 @@ public class ShakeHandler {
         Map<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setRequestTimeOut(60000);
         requestBean.setResponseTimeOut(60000);
-        requestBean.setServerMethod("leedane/shake/blog.action");
+        requestBean.setServerMethod("sh/blog");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SHAKE_BLOG, listener, requestBean);
     }
 
@@ -57,10 +57,10 @@ public class ShakeHandler {
         Map<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         requestBean.setRequestTimeOut(60000);
         requestBean.setResponseTimeOut(60000);
-        requestBean.setServerMethod("leedane/shake/mood.action");
+        requestBean.setServerMethod("sh/mood");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_SHAKE_MOOD, listener, requestBean);
     }
 }

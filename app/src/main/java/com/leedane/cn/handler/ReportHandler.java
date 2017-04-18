@@ -24,7 +24,7 @@ public class ReportHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         requestBean.setParams(params);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setServerMethod("leedane/report/add.action");
+        requestBean.setServerMethod("rp/report");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_REPORT, listener, requestBean);
     }

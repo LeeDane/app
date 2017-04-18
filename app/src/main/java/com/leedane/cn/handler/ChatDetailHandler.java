@@ -25,8 +25,8 @@ public class ChatDetailHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/chat/paging.action");
+        requestBean.setServerMethod("ct/chats");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_CHAT, listener, requestBean);
     }
 
@@ -39,7 +39,7 @@ public class ChatDetailHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/chat/send.action");
+        requestBean.setServerMethod("ct/chat");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_CHAT, listener, requestBean);
     }
@@ -55,8 +55,8 @@ public class ChatDetailHandler {
         params.put("cid",chatDetialId);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/chat/delete.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("ct/chat");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_CHAT, listener, requestBean);
     }
 
@@ -71,8 +71,8 @@ public class ChatDetailHandler {
         params.put("cids", chatIds);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/chat/updateRead.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("ct/chat");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_PUT);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_CHAT_READ_STATUS, listener, requestBean);
     }
 }

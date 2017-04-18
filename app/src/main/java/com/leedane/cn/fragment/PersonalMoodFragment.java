@@ -528,7 +528,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         params.put("toUserId", mPreUid);
         params.put("pageSize", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
-        MoodHandler.sendMood(this, params);
+        MoodHandler.getMoods(this, params);
     }
 
     /**
@@ -557,7 +557,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         params.put("last_id", mLastId);
         params.put("toUserId", mPreUid);
         params.put("method", mPreLoadMethod);
-        MoodHandler.sendMood(this, params);
+        MoodHandler.getMoods(this, params);
     }
     /**
      * 发送向下刷新的任务
@@ -584,7 +584,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         params.put("toUserId", mPreUid);
-        MoodHandler.sendMood(this, params);
+        MoodHandler.getMoods(this, params);
     }
 
     /**
@@ -607,7 +607,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         mRecyclerViewFooter.setText(getStringResource(mContext, R.string.loading));
-        MoodHandler.sendMood(this, params);
+        MoodHandler.getMoods(this, params);
     }
 
     @Override

@@ -235,6 +235,20 @@ public class FinancialDataBase {
         return query(" ");
     }
 
+    /*public void updateNo(){
+        SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
+        String sql = ("update " + FINANCIAL_TABLE_NAME + " set synchronous=? where addition_time > '2017-03-11 00:00:00'");
+        sqlite.execSQL(sql, new Object[]{0});
+        if(sqlite.isOpen())
+            sqlite.close();
+
+        SQLiteDatabase sqlite1 = dbHelper.getWritableDatabase();
+        String sql1 = ("update " + FINANCIAL_TABLE_NAME + " set synchronous=? where addition_time < '2017-03-11 00:00:00'");
+        sqlite1.execSQL(sql1, new Object[]{1});
+        if(sqlite1.isOpen())
+            sqlite1.close();
+    }*/
+
     /**
      * 查
      *

@@ -19,11 +19,14 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.DownloadBean;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.FileUtil;
 import com.leedane.cn.util.StringUtil;
+
+import org.json.JSONObject;
 
 /**
  * Created by LeeDnae on 2015/10/7.
@@ -65,7 +68,35 @@ public class HttpConnectionUtil {
      * @throws IOException
      */
     public static String sendGetRequest(String serverPath, int requestTimeOut, int responseTimeOut) throws IOException {
-        InputStream is = getGetRequestInputStream(serverPath, requestTimeOut, responseTimeOut);
+        InputStream is = getGetOrDeleteRequestInputStream(ConstantsUtil.REQUEST_METHOD_GET, serverPath, requestTimeOut, responseTimeOut);
+        if(is != null){
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            //存储单行文本的数据
+            String line;
+            //保存请求返回的所有文本数据
+            StringBuffer buffer = new StringBuffer();
+            while ((line = reader.readLine())!= null){
+                buffer.append(line);
+            }
+
+            //关闭相关的流
+            if(is != null) is.close();
+            if(reader != null) reader.close();
+            return buffer.toString();
+        }
+        return null;
+    }
+
+    /**
+     * 发送delete请求
+     * @param serverPath
+     * @param requestTimeOut
+     * @param responseTimeOut
+     * @return
+     * @throws IOException
+     */
+    public static String sendDeleteRequest(String serverPath, int requestTimeOut, int responseTimeOut) throws IOException {
+        InputStream is = getGetOrDeleteRequestInputStream(ConstantsUtil.REQUEST_METHOD_DELETE, serverPath, requestTimeOut, responseTimeOut);
         if(is != null){
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             //存储单行文本的数据
@@ -92,7 +123,7 @@ public class HttpConnectionUtil {
      * @return
      * @throws IOException
      */
-    public static InputStream getGetRequestInputStream(String serverPath, int requestTimeOut, int responseTimeOut) throws IOException {
+    public static InputStream getGetOrDeleteRequestInputStream(String method, String serverPath, int requestTimeOut, int responseTimeOut) throws IOException {
         URL url = new URL(serverPath);
         //打开对服务器的连接
         HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
@@ -103,12 +134,35 @@ public class HttpConnectionUtil {
 
         //设置允许输入，输出
         urlConnection.setDoInput(true);
-        urlConnection.setDoOutput(true);
+        //urlConnection.setDoOutput(true);
+
+        // 设置字符集
+        urlConnection.setRequestProperty("Charset", "UTF-8");
+        // 设置文件类型
+        urlConnection.setRequestProperty("Content-Type", "text/xml; charset=UTF-8");
+        //设置平台是android
+        urlConnection.setRequestProperty("platform", "android");
+
+        urlConnection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+
+        //设置头部信息
+        try{
+            JSONObject userInfo = BaseApplication.getLoginUserInfo();
+            if(userInfo != null){
+                if(userInfo.has("token"))
+                    urlConnection.setRequestProperty("token", userInfo.getString("token"));
+                if(userInfo.has("id"))
+                    urlConnection.setRequestProperty("userid", userInfo.getString("id"));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         //设置请求模式为GET
-        urlConnection.setRequestMethod("GET");
+        urlConnection.setRequestMethod(method);
         //连接服务器
         urlConnection.connect();
+        Log.i("uuuuu", urlConnection.getRequestMethod());
         InputStream is = null;
         //响应成功
         if(urlConnection.getResponseCode() == com.leedane.cn.util.ConstantsUtil.RESPONSE_CODE_SUCCESS){
@@ -158,7 +212,35 @@ public class HttpConnectionUtil {
      * @throws IOException
      */
     public static String sendPostRequest(String serverPath, Map<String, Object> params, int requestTimeOut, int responseTimeOut) throws IOException {
-        InputStream is =  getPostRequestInputStream(serverPath, params, requestTimeOut, responseTimeOut);
+        InputStream is =  getPostOrPutRequestInputStream(ConstantsUtil.REQUEST_METHOD_POST, serverPath, params, requestTimeOut, responseTimeOut);
+        if(is != null){
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            //存储单行文本的数据
+            String line;
+            //保存请求返回的所有文本数据
+            StringBuffer buffer = new StringBuffer();
+            while ((line = reader.readLine())!= null){
+                buffer.append(line);
+            }
+            //关闭相关的流
+            if(is != null) is.close();
+            if(reader != null) reader.close();
+            return buffer.toString();
+        }
+        return null;
+    }
+
+    /**
+     * 发送PUT请求
+     * @param serverPath
+     * @param params
+     * @param requestTimeOut
+     * @param responseTimeOut
+     * @return
+     * @throws IOException
+     */
+    public static String sendPutRequest(String serverPath, Map<String, Object> params, int requestTimeOut, int responseTimeOut) throws IOException {
+        InputStream is =  getPostOrPutRequestInputStream(ConstantsUtil.REQUEST_METHOD_PUT,serverPath, params, requestTimeOut, responseTimeOut);
         if(is != null){
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             //存储单行文本的数据
@@ -185,7 +267,7 @@ public class HttpConnectionUtil {
      * @return
      * @throws IOException
      */
-    public static InputStream getPostRequestInputStream(String serverPath, Map<String, Object> params, int requestTimeOut, int responseTimeOut) throws IOException {
+    public static InputStream getPostOrPutRequestInputStream(String method, String serverPath, Map<String, Object> params, int requestTimeOut, int responseTimeOut) throws IOException {
         URL url = new URL(serverPath);
         //打开对服务器的连接
         HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
@@ -198,17 +280,33 @@ public class HttpConnectionUtil {
         urlConnection.setDoInput(true);
         urlConnection.setDoOutput(true);
 
+        //设置平台是android
+        urlConnection.setRequestProperty("platform", "android");
+
+        //设置请求类型
+        urlConnection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+
         //设置头部信息
-        urlConnection.setRequestProperty("headerdata", "leedaneheader");
+        try{
+            JSONObject userInfo = BaseApplication.getLoginUserInfo();
+            if(userInfo != null){
+                if(userInfo.has("token"))
+                    urlConnection.setRequestProperty("token", userInfo.getString("token"));
+                if(userInfo.has("id"))
+                    urlConnection.setRequestProperty("userid", userInfo.getString("id"));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         //一定要设置 Content-Type 要不然服务端接收不到参数
         urlConnection.setRequestProperty("Content-Type", "application/Json; charset=UTF-8");
 
         //设置请求模式为GET
-        urlConnection.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        urlConnection.setRequestMethod(method);
 
         //post不能缓存用户数据，所有动态设置
         urlConnection.setUseCaches(false);
-
+        Log.i("getPostOrPut", "请求方式："+urlConnection.getRequestMethod());
         urlConnection
                 .setRequestProperty(
                         "User-Agent",

@@ -13,6 +13,7 @@ import com.leedane.cn.activity.MoodActivity;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.handler.MoodHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
@@ -108,7 +109,6 @@ public class SendMoodService extends Service implements TaskListener {
                     if(successNumber == totalImg){
                         new NotificationUtil(SEND_MOOD_NOTIFICATION_ID, SendMoodService.this).sendTipNotification("信息提示", "图片上传完成", "测试", 1, 0);
                         //简单的发送
-                        HttpRequestBean requestBean = new HttpRequestBean();
                         HashMap<String, Object> params = new HashMap<>();
                         params.put("content", content);
                         String location = currentIntent.getStringExtra("location");
@@ -122,11 +122,7 @@ public class SendMoodService extends Service implements TaskListener {
                         params.put("links", getLinksStr());
                         params.put("can_comment", currentIntent.getBooleanExtra("can_comment", true));
                         params.put("can_transmit", currentIntent.getBooleanExtra("can_transmit", true));
-                        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-                        requestBean.setParams(params);
-                        requestBean.setServerMethod("leedane/mood/sendWordAndLink.action");
-                        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-                        TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_NORMAL, SendMoodService.this, requestBean);
+                        MoodHandler.sendWordAndLink(SendMoodService.this, params);
                     }else
                         new NotificationUtil(SEND_MOOD_NOTIFICATION_ID, SendMoodService.this).sendTipNotification("图片上传中", "上传成功"+successNumber+"/"+totalImg +"...", "测试", 1, 0);
                     break;
@@ -263,7 +259,6 @@ public class SendMoodService extends Service implements TaskListener {
                     }else{
                         //没有文件上传，直接发表
                         //简单的发送
-                        HttpRequestBean requestBean = new HttpRequestBean();
                         HashMap<String, Object> params = new HashMap<>();
                         params.put("content", content);
                         String location = currentIntent.getStringExtra("location");
@@ -277,13 +272,7 @@ public class SendMoodService extends Service implements TaskListener {
 
                         params.put("can_comment", currentIntent.getBooleanExtra("can_comment", true));
                         params.put("can_transmit", currentIntent.getBooleanExtra("can_transmit", true));
-                        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-                        requestBean.setParams(params);
-                        requestBean.setServerMethod("leedane/mood/sendWord.action");
-                        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-                        requestBean.setRequestTimeOut(60000);
-                        requestBean.setResponseTimeOut(60000);
-                        TaskLoader.getInstance().startTaskForResult(TaskType.SEND_MOOD_NORMAL, SendMoodService.this, requestBean);
+                        MoodHandler.sendWord(SendMoodService.this, params);
                     }
                 }else{
                     new NotificationUtil(SEND_MOOD_NOTIFICATION_ID, SendMoodService.this).sendActionNotification("心情发表失败", "上传图片的凭证获取失败", "测试", 1, 0, MoodActivity.class);

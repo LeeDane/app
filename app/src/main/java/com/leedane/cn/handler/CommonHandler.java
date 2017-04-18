@@ -292,8 +292,8 @@ public class CommonHandler {
         params.put("content", content);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/tool/fanyi.action");
+        requestBean.setServerMethod("tl/fanyi");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.FANYI, listener, requestBean);
     }
 
@@ -306,8 +306,8 @@ public class CommonHandler {
         HashMap<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/tool/getQiNiuToken.action");
+        requestBean.setServerMethod("tl/qiNiuToken");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.QINIU_TOKEN, listener, requestBean);
     }
 
@@ -326,8 +326,8 @@ public class CommonHandler {
         params.put("object", object);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/tool/sendEmail.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("tl/sendEmail");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.SEND_EMAIL, listener, requestBean);
     }
 
@@ -342,7 +342,7 @@ public class CommonHandler {
         params.put("cid", cid);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user/scan/login.action");
+        requestBean.setServerMethod("/us/scan/login");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.SCAN_LOGIN, listener, requestBean);
     }
@@ -358,8 +358,8 @@ public class CommonHandler {
         params.put("cid", cid);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/user/scan/cancel.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("us/scan/cancel");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.CANCEL_SCAN_LOGIN, listener, requestBean);
     }
 }

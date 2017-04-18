@@ -25,8 +25,8 @@ public class FileHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/filepath/paging.action");
+        requestBean.setServerMethod("fp/paths");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_FILE, listener, requestBean);
     }
 
@@ -40,8 +40,40 @@ public class FileHandler {
         params.put("fid",id);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/filepath/delete.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        //requestBean.setServerMethod("fp/portFile");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_FILE, listener, requestBean);
+    }
+
+    /**
+     * 合并文件
+     * @param listener
+     * @param params
+     */
+    public static void mergePortFile(TaskListener listener, Map<String, Object> params){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setResponseTimeOut(60000);
+        requestBean.setRequestTimeOut(60000);
+        requestBean.setServerMethod("fp/mergePortFile");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        TaskLoader.getInstance().startTaskForResult(TaskType.MERGE_PORT_FILE, listener, requestBean);
+    }
+
+    /**
+     * 删除断点文件
+     * @param listener
+     * @param params
+     */
+    public static void deletePortFile(TaskListener listener, Map<String, Object> params){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setResponseTimeOut(60000);
+        requestBean.setRequestTimeOut(60000);
+        requestBean.setServerMethod("fp/portFile");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
+        TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_PORT_FILE, listener, requestBean);
     }
 }

@@ -31,9 +31,11 @@ import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.database.MySettingDataBase;
 import com.leedane.cn.database.SearchHistoryDataBase;
 import com.leedane.cn.handler.CommonHandler;
+import com.leedane.cn.handler.UserHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
+import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.MD5Util;
 import com.leedane.cn.util.SharedPreferenceUtil;
@@ -124,9 +126,10 @@ public class LoginActivity extends Activity implements TaskListener {
 
                 HashMap<String, Object> params = new HashMap<String, Object>();
                 params.put("account", username);
-                params.put("password", MD5Util.compute(password));
+                params.put("pwd", MD5Util.compute(password));
                 requestBean.setParams(params);
-                requestBean.setServerMethod("leedane/user/login.action");
+                requestBean.setServerMethod("us/login");
+                requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
                 showLoadingDialog("Login", "Try to login now...");
                 TaskLoader.getInstance().startTaskForResult(TaskType.LOGIN_DO, LoginActivity.this, requestBean);
 
@@ -353,14 +356,11 @@ public class LoginActivity extends Activity implements TaskListener {
         }
 
         showLoadingDialog("Logining", "try to login, please wait...");
-        HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("/leedane/user/loginByPhone.action");
 
         Map<String, Object> params = new HashMap<>();
         params.put("mobilePhone", phoneNumber);
         params.put("validationCode", validationCode);
-        requestBean.setParams(params);
-        TaskLoader.getInstance().startTaskForResult(TaskType.DO_LOGIN_PHONE, this, requestBean);
+        UserHandler.loginByPhone(this, params);
     }
 
     /**
@@ -375,14 +375,10 @@ public class LoginActivity extends Activity implements TaskListener {
             return;
         }
 
-        HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("/leedane/user/getPhoneLoginCode.action");
         Map<String, Object> params = new HashMap<>();
         params.put("mobilePhone", phoneNumber);
-        requestBean.setParams(params);
-        TaskLoader.getInstance().startTaskForResult(TaskType.DO_GET_LOGIN_CODE, this, requestBean);
         //loginPhoneSendMessage.setBackgroundResource(R.drawable.btn_disable_setting_loginoutbg);
-
+        UserHandler.getPhoneLoginCode(this, params);
     }
 
 

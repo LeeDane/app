@@ -74,8 +74,8 @@ public class ChatHandler {
         HashMap<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/chat/noReadList.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("ct/noReads");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_NO_READ_CHAT, listener, requestBean);
     }
 
@@ -89,8 +89,8 @@ public class ChatHandler {
         HashMap<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/chat/getOneChatByAllUser.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("ct/chat");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_ONE_CHAT_BY_ALL_USER, listener, requestBean);
     }
 }

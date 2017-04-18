@@ -291,7 +291,7 @@ public class GalleryScrollView_old extends ScrollView implements View.OnTouchLis
         params.put("first_id", first_id);
         params.putAll(getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/gallery_getGalleryPaging.action");
+        //requestBean.setServerMethod("leedane/gallery_getGalleryPaging");
         //showLoadingDialog("Gallery", "Loading, please wait。。。");
         TaskLoader.getInstance().startTaskForResult(TaskType.DO_GALLERY, this, requestBean);
     }

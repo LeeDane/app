@@ -216,7 +216,7 @@ public class BaseApplication extends Application {
      * @return
      */
     public HashMap<String, Object> getBaseRequestParams(){
-        HashMap<String, Object> params = new HashMap<>();
+        /*HashMap<String, Object> params = new HashMap<>();
         params.put("login_mothod", "android");
         params.put("froms", Build.MODEL);//手机型号
         params.put("producer", Build.MANUFACTURER);//手机厂家
@@ -236,7 +236,8 @@ public class BaseApplication extends Application {
             return params;
         }catch (Exception e){
             return null;
-        }
+        }*/
+        return new HashMap<>();
     }
 
     public int[] getScreenWidthAndHeight(){

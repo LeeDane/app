@@ -93,7 +93,7 @@ public class DetailArticleFragment extends Fragment{
             }
 
             float device_width_dp = BaseApplication.newInstance().getScreenWidthAndHeight()[0];
-            mBlogUrl = serverBasePath + "leedane/blog/getContent.action?blog_id=" + mBlogId+"&device_width="+ (DensityUtil.px2dip(mContext, device_width_dp) -20);
+            mBlogUrl = serverBasePath + "/content?blog_id=" + mBlogId+"&device_width="+ (DensityUtil.px2dip(mContext, device_width_dp) -20);
             Log.i("blogDetail", "博客的地址：" + mBlogUrl);
             mWebView.loadUrl(mBlogUrl);
             //启用支持javascript

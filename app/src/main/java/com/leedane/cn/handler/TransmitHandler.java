@@ -26,8 +26,8 @@ public class TransmitHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/transmit/paging.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("ts/transmits");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_TRANSMIT, listener, requestBean);
     }
 
@@ -43,7 +43,7 @@ public class TransmitHandler {
             params.put("content", "转发了这条信息");
         }
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/transmit/add.action");
+        requestBean.setServerMethod("ts/transmit");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_TRANSMIT, listener, requestBean);
     }
@@ -61,8 +61,8 @@ public class TransmitHandler {
         params.put("create_user_id", createUserId);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/transmit/delete.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("ts/transmit");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_TRANSMIT, listener, requestBean);
     }
 
@@ -81,8 +81,8 @@ public class TransmitHandler {
         params.put("can_transmit", canTransmit);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/transmit/updateTransmitStatus.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("ts/transmit");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_PUT);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_TRANSMIT_STATUS, listener, requestBean);
     }
 }

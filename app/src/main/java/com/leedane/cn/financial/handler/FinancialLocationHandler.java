@@ -35,7 +35,7 @@ public class FinancialLocationHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/financial/location/add.action");
+        requestBean.setServerMethod("fn/location");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_FINANCIAL_LOCATION, listener, requestBean);
     }
@@ -49,8 +49,8 @@ public class FinancialLocationHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/financial/location/update.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("fn/location");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_PUT);
         TaskLoader.getInstance().startTaskForResult(TaskType.UPDATE_FINANCIAL_LOCATION, listener, requestBean);
     }
 
@@ -65,8 +65,8 @@ public class FinancialLocationHandler {
         params.put("flid",flid);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/financial/location/delete.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("fn/location");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_FINANCIAL_LOCATION, listener, requestBean);
     }
 
@@ -79,8 +79,8 @@ public class FinancialLocationHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/financial/location/paging.action");
+        requestBean.setServerMethod("fn/locations");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_FINANCIAL_LOCATION, listener, requestBean);
     }
 

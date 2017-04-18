@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.handler.FileHandler;
 import com.leedane.cn.handler.UserHandler;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
@@ -322,20 +323,11 @@ public class UpdateUserHeaderActivity extends BaseActivity {
      */
     private void merge(){
         //启动合并操作
-        HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/filepath/mergePortFile.action");
-        requestBean.setResponseTimeOut(60000);
-        requestBean.setRequestTimeOut(60000);
         Map<String, Object> params = new HashMap<>();
         params.put("fileName", mItems.get(itemIndex).getFileName());
         params.put("uuid",mItems.get(itemIndex).getUuid());
         params.put("tableName", ConstantsUtil.UPLOAD_UPDATE_HEADER_TABLE_NAME);
-        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setParams(params);
-        requestBean.setRequestMethod("POST");
-        requestBean.setRequestTimeOut(60000);
-        requestBean.setResponseTimeOut(60000);
-        TaskLoader.getInstance().startTaskForResult(TaskType.MERGE_PORT_FILE, this, requestBean);
+        FileHandler.mergePortFile(this, params);
     }
 
     /**
@@ -343,17 +335,9 @@ public class UpdateUserHeaderActivity extends BaseActivity {
      */
     private void deletePortFile(){
         //启动合并操作
-        HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/filepath/deletePortFile.action");
-        requestBean.setResponseTimeOut(60000);
-        requestBean.setRequestTimeOut(60000);
         Map<String, Object> params = new HashMap<>();
         params.put("uuid", mItems.get(itemIndex).getUuid());
         params.put("tableName", ConstantsUtil.UPLOAD_UPDATE_HEADER_TABLE_NAME);
-        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setParams(params);
-        requestBean.setRequestTimeOut(60000);
-        requestBean.setResponseTimeOut(60000);
-        TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_PORT_FILE, this, requestBean);
+        FileHandler.deletePortFile(this, params);
     }
 }

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.customview.EyeEditText;
+import com.leedane.cn.handler.UserHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
@@ -120,21 +121,15 @@ public class RegisterActivity extends Activity implements TaskListener{
 
             @Override
             public void run() {
-                HttpRequestBean requestBean = new HttpRequestBean();
-
                 HashMap<String, Object> params = new HashMap<String, Object>();
                 params.put("account", username);
                 params.put("confirmPassword", MD5Util.compute(confirmPassword));
                 params.put("password", MD5Util.compute(password));
                 params.put("mobilePhone", mobilePhone);
-                requestBean.setParams(params);
-                requestBean.setServerMethod("leedane/user/registerByPhoneNoValidate.action");
                 showLoadingDialog("Register", "Try to register now...");
-                TaskLoader.getInstance().startTaskForResult(TaskType.REGISTER_DO, RegisterActivity.this, requestBean);
-
+                UserHandler.registerByPhoneNoValidate(RegisterActivity.this, params);
             }
         }, 100);
-
     }
 
     /**

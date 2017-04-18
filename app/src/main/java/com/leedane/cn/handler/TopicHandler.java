@@ -22,10 +22,10 @@ public class TopicHandler {
      */
     public static void paging(TaskListener listener, HashMap<String, Object> params){
         HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/mood/topic.action");
+        requestBean.setServerMethod("md/topic");
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_TOPIC, listener, requestBean);
     }
 }

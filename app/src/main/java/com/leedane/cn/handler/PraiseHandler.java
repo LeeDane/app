@@ -28,7 +28,7 @@ public class PraiseHandler {
             params.put("content", "赞了这条信息");
         }
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/zan/add.action");
+        requestBean.setServerMethod("lk/zan");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_ZAN, listener, requestBean);
     }
@@ -42,8 +42,8 @@ public class PraiseHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/zan/paging.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
+        requestBean.setServerMethod("lk/zans");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_ZAN, listener, requestBean);
     }
 
@@ -56,8 +56,8 @@ public class PraiseHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-        requestBean.setServerMethod("leedane/zan/getAllZanUser.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
+        requestBean.setServerMethod("zn/allZanUsers");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_ZAN_USER, listener, requestBean);
     }
 
@@ -74,8 +74,8 @@ public class PraiseHandler {
         params.put("create_user_id", createUserId);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/zan/delete.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("zn/delete");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_ZAN, listener, requestBean);
     }
 }

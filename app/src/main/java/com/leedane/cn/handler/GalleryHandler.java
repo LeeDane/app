@@ -25,7 +25,7 @@ public class GalleryHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         requestBean.setParams(params);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setServerMethod("leedane/gallery/addLink.action");
+        requestBean.setServerMethod("gl/photo");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_GALLERY, listener, requestBean);
     }
@@ -39,8 +39,8 @@ public class GalleryHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         requestBean.setParams(params);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setServerMethod("leedane/gallery/paging.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("gl/photos");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(TaskType.DO_GALLERY, listener, requestBean);
     }
 
@@ -55,8 +55,8 @@ public class GalleryHandler {
         params.put("gid", gid);
         requestBean.setParams(params);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setServerMethod("leedane/gallery/delete.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("gl/photo");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_GALLERY, listener, requestBean);
     }
 }

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.HttpRequestBean;
+import com.leedane.cn.handler.FileHandler;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.uploadfile.PortUpload;
@@ -265,10 +266,6 @@ public class UploadFileActivity extends BaseActivity {
         TextView desc = (TextView)mLinearLayout.getChildAt(itemIndex).findViewById(R.id.upload_desc);
         desc.setText(EnumUtil.getFileStatusValue(EnumUtil.FileStatus.合并文件.value));
         //启动合并操作
-        HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/filepath/mergePortFile.action");
-        requestBean.setResponseTimeOut(60000);
-        requestBean.setRequestTimeOut(60000);
         Map<String, Object> params = new HashMap<>();
         params.put("fileName", mItems.get(itemIndex).getFileName());
         params.put("uuid", mItems.get(itemIndex).getUuid());
@@ -282,9 +279,7 @@ public class UploadFileActivity extends BaseActivity {
             params.put("file_version", mETVersionNumber.getText().toString());
             params.put("file_desc", mETVersionDesc.getText().toString());
         }
-        requestBean.setParams(params);
-        requestBean.setRequestMethod("POST");
-        TaskLoader.getInstance().startTaskForResult(TaskType.MERGE_PORT_FILE, this, requestBean);
+        FileHandler.mergePortFile(this, params);
     }
 
     /**
@@ -294,15 +289,10 @@ public class UploadFileActivity extends BaseActivity {
         TextView desc = (TextView)mLinearLayout.getChildAt(itemIndex).findViewById(R.id.upload_desc);
         desc.setText(EnumUtil.getFileStatusValue(EnumUtil.FileStatus.删除断点文件.value));
         //启动合并操作
-        HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("leedane/filepath/deletePortFile.action");
-        requestBean.setResponseTimeOut(60000);
-        requestBean.setRequestTimeOut(60000);
         Map<String, Object> params = new HashMap<>();
         params.put("uuid", mItems.get(itemIndex).getUuid());
         params.put("tableName", tableName);
-        requestBean.setParams(params);
-        TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_PORT_FILE, this, requestBean);
+        FileHandler.deletePortFile(this, params);
     }
 
     /**

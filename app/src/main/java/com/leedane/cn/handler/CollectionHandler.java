@@ -25,7 +25,7 @@ public class CollectionHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/collection/add.action");
+        requestBean.setServerMethod("cl/collection");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_COLLECTION, listener, requestBean);
     }
@@ -39,8 +39,8 @@ public class CollectionHandler {
         HttpRequestBean requestBean = new HttpRequestBean();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/collection/paging.action");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
+        requestBean.setServerMethod("cl/collections");
         TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_COLLECTION, listener, requestBean);
     }
 
@@ -57,8 +57,8 @@ public class CollectionHandler {
         params.put("create_user_id", createUserId);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/collection/delete.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("cl/collection");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_COLLECTION, listener, requestBean);
     }
 }

@@ -41,7 +41,7 @@ public class FinancialHandler {
         Gson gson = new Gson();
         params.put("data", gson.toJson(data).toString());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/financial/save.action");
+        requestBean.setServerMethod("fn/financial");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.ADD_FINANCIAL, listener, requestBean);
     }
@@ -56,9 +56,8 @@ public class FinancialHandler {
         Map<String, Object> params = new HashMap<>();
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setRequestMethod("POST");
-        requestBean.setServerMethod("leedane/financial/getAll.action");
-
+        requestBean.setServerMethod("fn/all");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
         TaskLoader.getInstance().startTaskForResult(type, listener, requestBean);
     }
 
@@ -72,8 +71,8 @@ public class FinancialHandler {
         params.put("fid",fid);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/financial/delete.action");
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+        requestBean.setServerMethod("fn/financial");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_FINANCIAL, listener, requestBean);
     }
 
@@ -89,7 +88,7 @@ public class FinancialHandler {
         params.put("datas", gson.toJson(financialBeans).toString());
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
         requestBean.setParams(params);
-        requestBean.setServerMethod("leedane/financial/synchronous.action");
+        requestBean.setServerMethod("/fn/synchronous");
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
         TaskLoader.getInstance().startTaskForResult(TaskType.SYNCHRONOUS_FINANCIAL, listener, requestBean);
     }
