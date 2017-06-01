@@ -240,7 +240,7 @@ public class EnumUtil {
 	 * Version 1.0
 	 */
 	public enum NotificationType {
-		艾特我("@我"), 评论("评论"),转发("转发"),赞过我("赞过我"),私信("私信"),通知("通知");
+		艾特我("@我"), 评论("评论"),转发("转发"),赞过我("赞过我"),私信("私信"),通知("通知"),留言("留言");
 
 		private NotificationType(String value) {
 			this.value = value;
