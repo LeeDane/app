@@ -39,23 +39,39 @@ public class FinancialBaseFragment extends BaseFragment implements CalculateFina
 
     }
 
+    private boolean mReceiverTag = false;   //广播接受者标识
+    //代码中动态注册广播
+    private void registerReceiver() {
+        if (!mReceiverTag){     //在注册广播接受者的时候 判断是否已被注册,避免重复多次注册广播
+            mReceiverTag = true;    //标识值 赋值为 true 表示广播已被注册
+            //注册广播
+            IntentFilter counterActionFilter = new IntentFilter("com.leedane.cn.broadcast.CalculateFinancialReceiver");
+            mContext.registerReceiver(calculateFinancialReceiver, counterActionFilter);
+        }
+    }
+    //注销广播
+    private void unregisterReceiver() {
+        if (mReceiverTag) {   //判断广播是否注册
+            mReceiverTag = false;   //Tag值 赋值为false 表示该广播已被注销
+            mContext.unregisterReceiver(calculateFinancialReceiver);   //注销广播
+        }
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         calculateFinancialReceiver.setCalculateFinancialListener(FinancialBaseFragment.this);
-        //注册广播
-        IntentFilter counterActionFilter = new IntentFilter("com.leedane.cn.broadcast.CalculateFinancialReceiver");
-        mContext.registerReceiver(calculateFinancialReceiver, counterActionFilter);
+        registerReceiver();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mContext.unregisterReceiver(calculateFinancialReceiver);
     }
 
     @Override
-    public void calculate(FinancialList financialList, int model) {
+    public void calculate(int model) {
 
     }
 
@@ -73,6 +89,7 @@ public class FinancialBaseFragment extends BaseFragment implements CalculateFina
     @Override
     public void onDestroy() {
         financialDataBase.destroy();
+        unregisterReceiver();
         super.onDestroy();
     }
 

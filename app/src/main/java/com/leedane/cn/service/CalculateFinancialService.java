@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 
 import com.leedane.cn.financial.bean.FinancialList;
 import com.leedane.cn.financial.database.FinancialDataBase;
+import com.leedane.cn.financial.util.CalculateUtil;
 import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
@@ -74,7 +75,8 @@ public class CalculateFinancialService extends Service {
         financialList.setModel(EnumUtil.FinancialModel.昨日.value);
         //使用静态的方式注册广播，可以使用显示意图进行发送广播
         Intent broadcast = new Intent("com.leedane.cn.broadcast.CalculateFinancialReceiver");
-        broadcast.putExtra("data", financialList);
+        //broadcast.putExtra("data", financialList);
+        CalculateUtil.yesterDayList = financialList;
         broadcast.putExtra("model", EnumUtil.FinancialModel.昨日.value);
         sendBroadcast(broadcast, null);
     }
@@ -91,7 +93,8 @@ public class CalculateFinancialService extends Service {
         financialList.setModel(EnumUtil.FinancialModel.本周.value);
         //使用静态的方式注册广播，可以使用显示意图进行发送广播
         Intent broadcast = new Intent("com.leedane.cn.broadcast.CalculateFinancialReceiver");
-        broadcast.putExtra("data", financialList);
+        //broadcast.putExtra("data", financialList);
+        CalculateUtil.weekList = financialList;
         broadcast.putExtra("model", EnumUtil.FinancialModel.本周.value);
         sendBroadcast(broadcast, null);
     }
@@ -107,7 +110,8 @@ public class CalculateFinancialService extends Service {
         financialList.setModel(EnumUtil.FinancialModel.本月.value);
         //使用静态的方式注册广播，可以使用显示意图进行发送广播
         Intent broadcast = new Intent("com.leedane.cn.broadcast.CalculateFinancialReceiver");
-        broadcast.putExtra("data", financialList);
+        //broadcast.putExtra("data", financialList);
+        CalculateUtil.monthList = financialList;
         broadcast.putExtra("model", EnumUtil.FinancialModel.本月.value);
         sendBroadcast(broadcast, null);
     }
@@ -124,7 +128,8 @@ public class CalculateFinancialService extends Service {
         financialList.setModel(EnumUtil.FinancialModel.本年.value);
         //使用静态的方式注册广播，可以使用显示意图进行发送广播
         Intent broadcast = new Intent("com.leedane.cn.broadcast.CalculateFinancialReceiver");
-        broadcast.putExtra("data", financialList);
+        //broadcast.putExtra("data", financialList);
+        CalculateUtil.yearList = financialList;
         broadcast.putExtra("model", EnumUtil.FinancialModel.本年.value);
         sendBroadcast(broadcast, null);
     }

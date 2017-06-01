@@ -48,12 +48,13 @@ public class YearFragment extends BaseFragment {
     }
 
     @Override
-    public void calculate(FinancialList financialList, int model) {
-        super.calculate(financialList, model);
+    public void calculate(int model) {
+        super.calculate(model);
         if(model == EnumUtil.FinancialModel.本年.value){
             super.financialList =  CalculateUtil.yearList;
             Bundle bundle = new Bundle();
-            bundle.putSerializable(getFinancialListKey(), financialList);
+            //bundle.putSerializable(getFinancialListKey(), financialList);
+            bundle.putInt("model", model);
             getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
         }
     }

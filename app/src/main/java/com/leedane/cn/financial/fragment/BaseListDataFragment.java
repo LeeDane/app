@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import com.leedane.cn.financial.activity.IncomeOrSpendActivity;
 import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.financial.adapter.FinancialRecyclerViewAdapter;
 import com.leedane.cn.financial.bean.FinancialList;
+import com.leedane.cn.financial.util.CalculateUtil;
 import com.leedane.cn.util.ToastUtil;
 
 /**
@@ -67,7 +67,24 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
         if(bundle != null){
-            mFinancialList = (FinancialList) bundle.getSerializable(getFinancialListKey());
+            int model = bundle.getInt("model");
+            switch (model) {
+                case 1://今日
+                    mFinancialList = CalculateUtil.toDayList;
+                case 2://昨日
+                    mFinancialList = CalculateUtil.yesterDayList;
+                    break;
+                case 3://本周
+                    mFinancialList = CalculateUtil.weekList;
+                    break;
+                case 4://本月
+                    mFinancialList = CalculateUtil.monthList;
+                    break;
+                case 5://本年
+                    mFinancialList = CalculateUtil.yearList;
+                    break;
+            }
+            //mFinancialList = (FinancialList) bundle.getSerializable(getFinancialListKey());
         }
         if(mContext == null)
             mContext = getActivity();

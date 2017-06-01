@@ -297,8 +297,8 @@ public class MainFragment extends FinancialBaseFragment{
     }
 
     @Override
-    public void calculate(FinancialList financialList, int model) {
-        super.calculate(financialList, model);
+    public void calculate(int model) {
+        super.calculate(model);
         if(mSwipeLayout !=null && mSwipeLayout.isRefreshing())
             mSwipeLayout.setRefreshing(false);//下拉刷新组件停止刷新
 

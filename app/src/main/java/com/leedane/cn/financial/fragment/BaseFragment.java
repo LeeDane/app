@@ -85,8 +85,8 @@ public abstract class BaseFragment extends FinancialBaseFragment {
     }
 
     @Override
-    public void calculate(FinancialList financialList, int model) {
-        super.calculate(financialList, model);
+    public void calculate(int model) {
+        super.calculate(model);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(getFragmentContainerId());
         if(fragment != null){

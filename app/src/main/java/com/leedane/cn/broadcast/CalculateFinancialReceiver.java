@@ -23,7 +23,7 @@ public class CalculateFinancialReceiver extends BroadcastReceiver {
      * 用户数据有更新的接口监听器
      */
     public interface CalculateFinancialListener{
-        void calculate(FinancialList financialList, int model);
+        void calculate(int model);
     }
 
     private CalculateFinancialListener calculateFinancialListener;
@@ -37,10 +37,10 @@ public class CalculateFinancialReceiver extends BroadcastReceiver {
         if (intent == null)
             return;
         try{
-            FinancialList financialList = (FinancialList)intent.getSerializableExtra("data");
+            FinancialList financialList = null;
             int model = intent.getIntExtra("model", 0);
 
-            if(financialList != null)
+            /*if(financialList != null)
                 switch (model){
                     case 1://今日
                         CalculateUtil.toDayList = financialList;
@@ -57,10 +57,10 @@ public class CalculateFinancialReceiver extends BroadcastReceiver {
                         CalculateUtil.yearList = financialList;
                         break;
 
-                }
+                }*/
 
             if(null != calculateFinancialListener)
-                calculateFinancialListener.calculate(financialList, model);
+                calculateFinancialListener.calculate(model);
 
         } catch (Exception e) {
             e.printStackTrace();
