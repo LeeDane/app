@@ -24,6 +24,12 @@ android {
         versionCode 1
         versionName "1.0.1"
         multiDexEnabled true
+
+    }
+    lintOptions{
+        disable "ResourceType"
+        checkReleaseBuilds false
+        abortOnError false
     }
     buildTypes {
         release {
