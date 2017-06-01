@@ -1,5 +1,6 @@
 package com.leedane.cn.emoji;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import java.util.List;
  * emoji每页的显示
  * Created by LeeDane on 2016/7/5.
  */
+@SuppressLint("ValidFragment")
 public class EmojiPageFragment extends Fragment {
     private List<EmojiBean> datas;
     private GridView sGrid;

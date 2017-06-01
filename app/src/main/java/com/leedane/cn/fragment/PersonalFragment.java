@@ -1,5 +1,6 @@
 package com.leedane.cn.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import java.util.List;
  * 个人中心的frament类
  * Created by LeeDane on 2015/11/19.
  */
+@SuppressLint("ValidFragment")
 public class PersonalFragment extends Fragment{
 
 

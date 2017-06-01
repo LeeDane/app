@@ -1,5 +1,6 @@
 package com.leedane.cn.financial.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,7 @@ import com.leedane.cn.financial.bean.FinancialList;
  * 记账基本的fragment
  * Created by LeeDane on 2016/7/19.
  */
+@SuppressLint("ValidFragment")
 public abstract class BaseFragment extends FinancialBaseFragment {
 
     protected View mRootView;
