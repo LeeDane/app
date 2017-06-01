@@ -525,8 +525,8 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         mLastId = 0;
         //HttpRequestBean requestBean = new HttpRequestBean();
         HashMap<String, Object> params = new HashMap<>();
-        params.put("toUserId", mPreUid);
-        params.put("pageSize", MySettingConfigUtil.first_load);
+        params.put("to_user_id", mPreUid);
+        params.put("page_size", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
         MoodHandler.getMoods(this, params);
     }
@@ -552,10 +552,10 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.other_load);
+        params.put("page_size", MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
-        params.put("toUserId", mPreUid);
+        params.put("to_user_id", mPreUid);
         params.put("method", mPreLoadMethod);
         MoodHandler.getMoods(this, params);
     }
@@ -580,10 +580,10 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         isLoading = true;
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.other_load);
+        params.put("page_size", MySettingConfigUtil.other_load);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
-        params.put("toUserId", mPreUid);
+        params.put("to_user_id", mPreUid);
         MoodHandler.getMoods(this, params);
     }
 
@@ -601,8 +601,8 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
         taskCanceled(TaskType.PERSONAL_LOADMOODS);
         isLoading = true;
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("toUserId", mPreUid);
-        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
+        params.put("to_user_id", mPreUid);
+        params.put("page_size", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);

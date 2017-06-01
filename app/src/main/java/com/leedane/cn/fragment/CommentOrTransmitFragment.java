@@ -220,7 +220,7 @@ public class CommentOrTransmitFragment extends BaseRecyclerViewFragment implemen
         mFirstId = 0;
         mLastId = 0;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.first_load);
+        params.put("page_size", MySettingConfigUtil.first_load);
         params.put("method", mPreLoadMethod);
         if(baseRequestParams != null)
             params.putAll(baseRequestParams.getMap());
@@ -249,7 +249,7 @@ public class CommentOrTransmitFragment extends BaseRecyclerViewFragment implemen
         mPreLoadMethod = "uploading";
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.other_load);
+        params.put("page_size", MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
@@ -286,7 +286,7 @@ public class CommentOrTransmitFragment extends BaseRecyclerViewFragment implemen
         isLoading = true;
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", MySettingConfigUtil.other_load);
+        params.put("page_size", MySettingConfigUtil.other_load);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
         if(baseRequestParams != null)
@@ -313,7 +313,7 @@ public class CommentOrTransmitFragment extends BaseRecyclerViewFragment implemen
         }
         isLoading = true;
         HashMap<String, Object> params = new HashMap<>();
-        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
+        params.put("page_size", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);

@@ -89,7 +89,7 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
         if(mContext == null)
             mContext = getActivity();
 
-        if(mFinancialList == null){
+        if(mFinancialList == null || mFinancialList.getFinancialBeans() == null || mFinancialList.getFinancialBeans().size() == 0){
             ToastUtil.failure(mContext, "暂无数据");
             return;
         }
