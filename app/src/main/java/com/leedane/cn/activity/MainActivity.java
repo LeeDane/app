@@ -413,7 +413,7 @@ public class MainActivity extends NavigationActivity
         }
         dismissLoadingDialog();
         if(result == null || result instanceof Error){
-            if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
+            if(!"uploading".equalsIgnoreCase(mPreLoadMethod)){
                 //mListViewFooter.setText(getStringResource(R.string.load_more_error));
                 mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
                 mListViewFooter.setOnClickListener(this);
@@ -500,7 +500,7 @@ public class MainActivity extends NavigationActivity
                     }
                 }catch (Exception e){
                     ToastUtil.failure(MainActivity.this, "响应的数据解析异常" + result, Toast.LENGTH_SHORT);
-                    if(mPreLoadMethod.equalsIgnoreCase("lowloading")){
+                    if("lowloading".equalsIgnoreCase(mPreLoadMethod)){
                         mlistViewBlogs.removeFooterView(viewFooter);
                         mlistViewBlogs.addFooterView(viewFooter, null, false);
                         mListViewFooter.setText(JsonUtil.getErrorMessage(result) + "，" + getStringResource(R.string.click_to_load));
@@ -519,12 +519,12 @@ public class MainActivity extends NavigationActivity
                     if(blogBeans != null && blogBeans.size() > 0){
                         //临时list
                         List<BlogBean> temList = new ArrayList<>();
-                        if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
+                        if("firstloading".equalsIgnoreCase(mPreLoadMethod)){
                             mlistViewBlogs.removeAllViewsInLayout();
                             mBlogs.clear();
                         }
                         //将新的数据和以前的数据进行叠加
-                        if(mPreLoadMethod.equalsIgnoreCase("uploading")){
+                        if("uploading".equalsIgnoreCase(mPreLoadMethod)){
                             for(int i = blogBeans.size() -1; i>= 0 ; i--){
                                 temList.add(blogBeans.get(i));
                             }
@@ -547,7 +547,7 @@ public class MainActivity extends NavigationActivity
                             mLastId = mBlogs.get(size - 1).getId();
                         }
                         //将ListView的位置设置为0
-                        if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
+                        if("firstloading".equalsIgnoreCase(mPreLoadMethod)){
                             //mlistViewBlogs.smoothScrollToPosition(0);
                             //mlistViewBlogs.setSelection(0);
                         }
@@ -559,11 +559,11 @@ public class MainActivity extends NavigationActivity
                         }
 
                     }else{
-                        if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
+                        if("firstloading".equalsIgnoreCase(mPreLoadMethod)){
                             mBlogs.clear();
                             mAdapter.refreshData(new ArrayList<BlogBean>());
                         }
-                        if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
+                        if(!"uploading".equalsIgnoreCase(mPreLoadMethod)){
                             mlistViewBlogs.removeFooterView(viewFooter);
                             mlistViewBlogs.addFooterView(viewFooter, null, false);
                             mListViewFooter.setText(getStringResource(R.string.no_load_more));
@@ -572,8 +572,8 @@ public class MainActivity extends NavigationActivity
                         }
                     }
                 }else{
-                    if(!mPreLoadMethod.equalsIgnoreCase("uploading")){
-                        if(mPreLoadMethod.equalsIgnoreCase("firstloading")){
+                    if(!"uploading".equalsIgnoreCase(mPreLoadMethod)){
+                        if("firstloading".equalsIgnoreCase(mPreLoadMethod)){
                             mBlogs.clear();
                             mAdapter.refreshData(new ArrayList<BlogBean>());
                         }
@@ -743,7 +743,7 @@ public class MainActivity extends NavigationActivity
         taskCanceled(TaskType.HOME_LOADBLOGS);
         isLoading = true;
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("pageSize", mPreLoadMethod.equalsIgnoreCase("firstloading") ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
+        params.put("pageSize", "firstloading".equalsIgnoreCase(mPreLoadMethod) ? MySettingConfigUtil.first_load: MySettingConfigUtil.other_load);
         params.put("first_id", mFirstId);
         params.put("last_id", mLastId);
         params.put("method", mPreLoadMethod);
