@@ -102,7 +102,7 @@
     <string name="register">手机注册</string>
     <string name="hint_your_phone">请输入正确的手机号码</string>
     <string name="send_message">获取验证码</string>
-    <string name="hint_validation_code">请输入6位短信验证码</string>
+    <string name="hint_validation_code">请输入4位短信验证码</string>
 
     <!-- 导航相关的 -->
     <string name="nav_gallery">我的图库</string>
@@ -373,6 +373,7 @@
     <string name="spend">支出</string>
     <string name="financial">记账</string>
     <string name="financial_home">首页</string>
+    <string name="financial_today">今日</string>
     <string name="financial_yesterday">昨日</string>
     <string name="financial_week">本周</string>
     <string name="financial_month">本月</string>

@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -67,6 +66,7 @@ import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import cn.smssdk.SMSSDK;
 
 public class MainActivity extends NavigationActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
@@ -149,6 +149,7 @@ public class MainActivity extends NavigationActivity
     public static boolean isForeground = false;
 
     private DoubleClickExitHelper mDoubleClickExit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

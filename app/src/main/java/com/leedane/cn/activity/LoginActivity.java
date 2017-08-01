@@ -3,19 +3,24 @@ package com.leedane.cn.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -30,6 +35,8 @@ import com.leedane.cn.customview.EyeEditText;
 import com.leedane.cn.database.ChatDataBase;
 import com.leedane.cn.database.MySettingDataBase;
 import com.leedane.cn.database.SearchHistoryDataBase;
+import com.leedane.cn.financial.fragment.SearchListFragment;
+import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.UserHandler;
 import com.leedane.cn.task.TaskListener;
@@ -38,25 +45,42 @@ import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.MD5Util;
+import com.leedane.cn.util.RSACoder;
+import com.leedane.cn.util.RSAKeyUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.SystemUtil;
 import com.leedane.cn.util.ToastUtil;
+import com.mob.MobSDK;
+import com.qiniu.android.dns.util.Hex;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import cn.smssdk.EventHandler;
+import cn.smssdk.OnSendMessageHandler;
+import cn.smssdk.SMSSDK;
 
 /**
  * 用户登录操作activity
  * Created by LeeDane on 2015/10/15.
  */
-public class LoginActivity extends Activity implements TaskListener {
+public class LoginActivity extends Activity implements TaskListener, OnSendMessageHandler {
     AutoCompleteTextView mTextEditUsername;
     public static final String TAG = "LoginActivity";
+
+    public static final int FLAT_SEND_CODE = 1; //发送验证码
+    public static final int FLAT_SEND_CODE_SUCCESS = 2; //发送验证码成功
+    public static final int FLAT_SEND_CODE_ERROR = 3; //发送验证码失败
+    public static final int COUNT_DOWN = 4; //倒计时
     /**
      * 登录成功后返回的activity
      */
@@ -64,10 +88,101 @@ public class LoginActivity extends Activity implements TaskListener {
 
     private Intent currentIntent;
 
+    private EventHandler eventHandler;
+
+    private int time = 60; //60秒后才能重新获取验证码
+    private Timer timer;
+
+    public void runTimer(){
+        timer=new Timer();
+        TimerTask task=new TimerTask() {
+
+            @Override
+            public void run(){
+                time--;
+                Message msg = mDealHandler.obtainMessage();
+                msg.what = COUNT_DOWN;
+                mDealHandler.sendMessage(msg);
+            }
+        };
+        timer.schedule(task, 100, 1000);
+    }
+
+    //处理逻辑的handler
+    private Handler mDealHandler = new Handler(){
+        public void handleMessage(Message msg) {
+            Bundle bundle = msg.getData();
+            switch (msg.what) {
+                case FLAT_SEND_CODE:
+                    SMSSDK.getVerificationCode("86", bundle.getString("phone"));
+                    runTimer();
+                    break;
+                case FLAT_SEND_CODE_SUCCESS:
+                    // 处理你自己的逻辑
+                    ToastUtil.success(getBaseContext(), "成功---》"+ bundle.getString("success"));
+                    break;
+                case FLAT_SEND_CODE_ERROR:
+                    // 处理你自己的逻辑
+                    ToastUtil.success(getBaseContext(), "失败---》"+ bundle.getString("error"));
+                    break;
+                case COUNT_DOWN:
+                    if(time>0){
+                        loginPhoneSendMessage.setEnabled(false);
+                        loginPhoneSendMessage.setText(time+"秒后重新发送");
+                    }else{
+                        timer.cancel();
+                        time = 60;
+                        loginPhoneSendMessage.setText(getResources().getText(R.string.send_message));
+                        loginPhoneSendMessage.setEnabled(true);
+                    }
+                    break;
+            }
+
+        }
+    };
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        // 通过代码注册你的AppKey和AppSecret
+        MobSDK.init(BaseApplication.newInstance(), "1f1494a737c89", "6861f5e3c06685e06ffc07c8d06a7ba7");
+        // 如果希望在读取通信录的时候提示用户，可以添加下面的代码，并且必须在其他代码调用之前，否则不起作用；如果没这个需求，可以不加这行代码
+        SMSSDK.setAskPermisionOnReadContact(true);
+
+        // 创建EventHandler对象
+        eventHandler = new EventHandler() {
+            public void afterEvent(int event, int result, final Object data) {
+
+                Bundle bundle = new Bundle();
+                Message message = new Message();
+                if (data instanceof Throwable) {
+                    Throwable throwable = (Throwable)data;
+                    String msg = throwable.getMessage();
+                    message.what = FLAT_SEND_CODE_ERROR;
+                    try {
+                        JSONObject jsonObject = new JSONObject(msg);
+                        bundle.putString("error", jsonObject.getString("detail"));
+                    } catch (JSONException e) {
+                        bundle.putString("error", msg);
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                        bundle.putString("success", String.valueOf(data));
+                        message.what = FLAT_SEND_CODE_SUCCESS;
+                    }
+                }
+                message.setData(bundle);
+                //55毫秒秒后进行
+                mDealHandler.sendMessageDelayed(message, 55);
+            }
+        };
+
+        // 注册监听器
+        SMSSDK.registerEventHandler(eventHandler);
         //检查是否登录
         checkedIsLogin();
         setContentView(R.layout.activity_login);
@@ -118,24 +233,33 @@ public class LoginActivity extends Activity implements TaskListener {
             return;
         }
 
-        new Handler().postDelayed(new Runnable() {
+        try{
+            //final byte[] encodedData = RSACoder.encryptByPublicKey(MD5Util.compute(password), RSAKeyUtil.getInstance().getPublicKey());
+            new Handler().postDelayed(new Runnable() {
 
-            @Override
-            public void run() {
-                HttpRequestBean requestBean = new HttpRequestBean();
+                @Override
+                public void run() {
+                    HttpRequestBean requestBean = new HttpRequestBean();
 
-                HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("account", username);
-                params.put("pwd", MD5Util.compute(password));
-                requestBean.setParams(params);
-                requestBean.setServerMethod("us/login");
-                requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
-                showLoadingDialog("Login", "Try to login now...");
-                TaskLoader.getInstance().startTaskForResult(TaskType.LOGIN_DO, LoginActivity.this, requestBean);
+                    HashMap<String, Object> params = new HashMap<String, Object>();
+                    params.put("account", username);
+                    //ToastUtil.failure(LoginActivity.this, new String(Hex.encodeHex(encodedData)), Toast.LENGTH_SHORT);
+                   // try {
+                        params.put("pwd",  MD5Util.compute(password));
+                    /*} catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }*/
+                    requestBean.setParams(params);
+                    requestBean.setServerMethod("us/login");
+                    requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
+                    showLoadingDialog("Login", "Try to login now...");
+                    TaskLoader.getInstance().startTaskForResult(TaskType.LOGIN_DO, LoginActivity.this, requestBean);
 
-            }
-        }, 500);
-
+                }
+            }, 500);
+        }catch (Exception e){
+            ToastUtil.failure(LoginActivity.this, "密码加密出现异常", Toast.LENGTH_LONG);
+        }
     }
 
     @Override
@@ -349,8 +473,8 @@ public class LoginActivity extends Activity implements TaskListener {
 
         String validationCode = loginPhoneCode.getText().toString();
 
-        if(StringUtil.isNull(validationCode) || validationCode.length() != 6){
-            ToastUtil.failure(LoginActivity.this, "请输入正确的6位验证码");
+        if(StringUtil.isNull(validationCode) || validationCode.length() != 4){
+            ToastUtil.failure(LoginActivity.this, "请输入正确的4位验证码");
             loginPhoneCode.setFocusable(true);
             return;
         }
@@ -375,10 +499,17 @@ public class LoginActivity extends Activity implements TaskListener {
             return;
         }
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("mobilePhone", phoneNumber);
+        Bundle bundle = new Bundle();
+        bundle.putString("phone", phoneNumber);
+        Message message = new Message();
+        message.setData(bundle);
+        message.what = FLAT_SEND_CODE;
+        //55毫秒秒后进行
+        mDealHandler.sendMessageDelayed(message, 55);
+        //Map<String, Object> params = new HashMap<>();
+        //params.put("mobilePhone", phoneNumber);
         //loginPhoneSendMessage.setBackgroundResource(R.drawable.btn_disable_setting_loginoutbg);
-        UserHandler.getPhoneLoginCode(this, params);
+       // UserHandler.getPhoneLoginCode(this, params);
     }
 
 
@@ -415,7 +546,7 @@ public class LoginActivity extends Activity implements TaskListener {
                 dismissPopPhoneLoginDialog();
             }
         });
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(screenWidth-100, 800);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(screenWidth-100, ViewGroup.LayoutParams.WRAP_CONTENT);
         mDialog.setContentView(view, params);
         mDialog.show();
     }
@@ -428,5 +559,18 @@ public class LoginActivity extends Activity implements TaskListener {
             mDialog.dismiss();
     }
 
+    @Override
+    public boolean onSendMessage(String s, String s1) {
+        return false;
+    }
+
     /************************手机登录相关结束*******************************************/
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SMSSDK.unregisterEventHandler(eventHandler);
+        if(mDealHandler != null)
+            mDealHandler.removeCallbacksAndMessages(null);
+    }
 }

@@ -22,6 +22,17 @@
             android:textColor="@color/colorPrimary"
             android:text="@string/financial_home"/>
         <com.leedane.cn.customview.RightBorderTextView
+            android:id="@+id/financial_today"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="30dp"
+            android:clickable="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:onClick="tabClick"
+            android:textColor="@color/default_font"
+            android:text="@string/financial_today"/>
+        <com.leedane.cn.customview.RightBorderTextView
             android:id="@+id/financial_yesterday"
             android:layout_width="0dp"
             android:layout_weight="1"

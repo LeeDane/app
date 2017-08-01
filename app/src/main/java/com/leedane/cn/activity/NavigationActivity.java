@@ -21,8 +21,6 @@ import com.leedane.cn.util.ToastUtil;
 
 import java.util.HashMap;
 
-import cn.sharesdk.onekeyshare.OnekeyShare;
-
 /**
  * 带导航的activity
  * Created by LeeDane on 2015/10/6.
@@ -162,7 +160,7 @@ public class NavigationActivity extends AppCompatActivity
                 CommonHandler.startUserInfoActivity(NavigationActivity.this);
                 break;
             case R.id.nav_share:  //分享
-                OnekeyShare oks = new OnekeyShare();
+                /*OnekeyShare oks = new OnekeyShare();
                //关闭sso授权
                 oks.disableSSOWhenAuthorize();
 
@@ -185,7 +183,7 @@ public class NavigationActivity extends AppCompatActivity
                 oks.setTitleUrl("http://www.baidu.com");  //网友点进链接后，可以看到分享的详情
 
                 // 启动分享GUI
-                oks.show(this);
+                oks.show(this);*/
                 break;
             case R.id.nav_help:  //帮助
                 break;
