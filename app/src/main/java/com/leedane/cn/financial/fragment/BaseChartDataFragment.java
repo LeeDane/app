@@ -23,6 +23,7 @@ import com.leedane.cn.financial.charts.bar.MultipleBarObject;
 import com.leedane.cn.financial.charts.pie.PieObject;
 import com.leedane.cn.financial.handler.MultipleBarHandler;
 import com.leedane.cn.financial.handler.PieHandler;
+import com.leedane.cn.financial.util.CalculateUtil;
 import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.StringUtil;
@@ -98,7 +99,27 @@ public abstract class BaseChartDataFragment extends FinancialBaseFragment {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
         if(bundle != null){
-            mFinancialList = (FinancialList) bundle.getSerializable(getFinancialListKey());
+            int model = bundle.getInt("model");
+            switch (model) {
+                case 1://今日
+                    mFinancialList = CalculateUtil.toDayList;
+                    break;
+                case 2://昨日
+                    mFinancialList = CalculateUtil.yesterDayList;
+                    break;
+                case 3://本周
+                    mFinancialList = CalculateUtil.weekList;
+                    break;
+                case 4://本月
+                    mFinancialList = CalculateUtil.monthList;
+                    break;
+                case 5://本年
+                    mFinancialList = CalculateUtil.yearList;
+                    break;
+                default:
+                    mFinancialList = (FinancialList) bundle.getSerializable(getFinancialListKey());
+            }
+            //mFinancialList = (FinancialList) bundle.getSerializable(getFinancialListKey());
         }else{
             Log.i("BaseChartData", "bundle为空");
 

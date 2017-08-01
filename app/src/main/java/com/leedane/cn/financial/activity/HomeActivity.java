@@ -42,6 +42,7 @@ import com.leedane.cn.financial.adapter.FragmentPagerAdapter;
 import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.fragment.MainFragment;
 import com.leedane.cn.financial.fragment.MonthFragment;
+import com.leedane.cn.financial.fragment.TodayFragment;
 import com.leedane.cn.financial.fragment.WeekFragment;
 import com.leedane.cn.financial.fragment.YearFragment;
 import com.leedane.cn.financial.fragment.YesterDayFragment;
@@ -157,6 +158,9 @@ public class HomeActivity extends ActionBarBaseActivity {
             if(tabText.equalsIgnoreCase(getStringResource(R.string.financial_home))){//首页
                 Bundle bundle = new Bundle();
                 mFragments.add(MainFragment.newInstance(bundle));
+            }else if(tabText.equalsIgnoreCase(getStringResource(R.string.financial_today))) {//今日
+                Bundle bundle = new Bundle();
+                mFragments.add(TodayFragment.newInstance(bundle));
             }else if(tabText.equalsIgnoreCase(getStringResource(R.string.financial_yesterday))) {//昨日
                 Bundle bundle = new Bundle();
                 mFragments.add(YesterDayFragment.newInstance(bundle));
@@ -244,7 +248,7 @@ public class HomeActivity extends ActionBarBaseActivity {
                 magicIndicator.onPageScrollStateChanged(state);
             }
         });
-        mViewPager.setOffscreenPageLimit(5);
+        mViewPager.setOffscreenPageLimit(6);
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(), getBaseContext(), mFragments));
         mViewPager.setCurrentItem(mCurrentTab);
         ViewPagerHelper.bind(magicIndicator, mViewPager);
@@ -258,6 +262,9 @@ public class HomeActivity extends ActionBarBaseActivity {
         switch (view.getId()){
             case R.id.financial_home:  //首页
                ((MainFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
+                break;
+            case R.id.financial_today: //今日
+                // ((CommentOrTransmitFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
                 break;
             case R.id.financial_yesterday: //昨日
                // ((CommentOrTransmitFragment)mFragments.get(mCurrentTab)).smoothScrollToTop();
@@ -281,6 +288,7 @@ public class HomeActivity extends ActionBarBaseActivity {
         mCurrentTab = getIntent().getIntExtra("currentTab", 0);
         mTitleList = new ArrayList<>();
         mTitleList.add(getStringResource(R.string.financial_home));
+        mTitleList.add(getStringResource(R.string.financial_today));
         mTitleList.add(getStringResource(R.string.financial_yesterday));
         mTitleList.add(getStringResource(R.string.financial_week));
         mTitleList.add(getStringResource(R.string.financial_month));

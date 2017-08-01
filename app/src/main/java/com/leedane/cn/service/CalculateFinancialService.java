@@ -53,7 +53,7 @@ public class CalculateFinancialService extends Service {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                //generateTodayData();
+                generateTodayData();
                 generateYesterDayData();
                 generateWeekData();
                 generateMonthData();
@@ -61,6 +61,24 @@ public class CalculateFinancialService extends Service {
             }
         }, 500);
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    /**
+     * 获取今日初始数据
+     * @return
+     */
+    private void generateTodayData(){
+        String startTime = DateUtil.DateToString(DateUtil.getTodayStart());
+        String endTime = DateUtil.DateToString(DateUtil.getTodayEnd());
+        FinancialList financialList = new FinancialList();
+        financialList.setFinancialBeans(financialDataBase.query(" where status="+ConstantsUtil.STATUS_NORMAL+" and datetime(addition_time) between datetime('"+startTime+"') and datetime('"+ endTime+"') order by datetime(addition_time) desc"));
+        financialList.setModel(EnumUtil.FinancialModel.今日.value);
+        //使用静态的方式注册广播，可以使用显示意图进行发送广播
+        Intent broadcast = new Intent("com.leedane.cn.broadcast.CalculateFinancialReceiver");
+        //broadcast.putExtra("data", financialList);
+        CalculateUtil.toDayList = financialList;
+        broadcast.putExtra("model", EnumUtil.FinancialModel.今日.value);
+        sendBroadcast(broadcast, null);
     }
 
     /**

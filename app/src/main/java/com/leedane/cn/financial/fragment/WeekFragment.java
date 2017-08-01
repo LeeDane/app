@@ -7,6 +7,7 @@ import com.leedane.cn.app.R;
 import com.leedane.cn.financial.bean.FinancialList;
 import com.leedane.cn.financial.util.CalculateUtil;
 import com.leedane.cn.financial.util.EnumUtil;
+import com.leedane.cn.util.ToastUtil;
 
 /**
  * 记账本周的fragment
@@ -48,9 +49,14 @@ public class WeekFragment extends BaseFragment {
     }
 
     @Override
+    protected int getModel() {
+        return EnumUtil.FinancialModel.本周.value;
+    }
+
+    @Override
     public void calculate(int model) {
         super.calculate(model);
-        if(model == EnumUtil.FinancialModel.本周.value){
+        if(model == getModel()){
             super.financialList =  CalculateUtil.weekList;
             Bundle bundle = new Bundle();
             //bundle.putSerializable(getFinancialListKey(), financialList);

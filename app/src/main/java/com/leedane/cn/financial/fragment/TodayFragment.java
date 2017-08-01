@@ -4,60 +4,59 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.leedane.cn.app.R;
-import com.leedane.cn.financial.bean.FinancialList;
 import com.leedane.cn.financial.util.CalculateUtil;
 import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.util.ToastUtil;
 
 /**
- * 记账本年的fragment
- * Created by LeeDane on 2016/7/19.
+ * 记账今日的fragment
+ * Created by LeeDane on 2017/8/1.
  */
-public class YearFragment extends BaseFragment {
-    public YearFragment(){
+public class TodayFragment extends BaseFragment {
+    public TodayFragment(){
     }
-
-    public static final YearFragment newInstance(Bundle bundle){
-        YearFragment fragment = new YearFragment();
+    public static final TodayFragment newInstance(Bundle bundle){
+        TodayFragment fragment = new TodayFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     protected int getContainerId() {
-        return R.layout.fragment_financial_year_list_or_chart;
+        return R.layout.fragment_financial_today_list_or_chart;
     }
 
     @Override
     protected int getFragmentContainerId() {
-        return R.id.year_container;
+        return R.id.today_container;
     }
 
     @Override
     protected String getFinancialListKey() {
-        return "financialYearList";
+        return "financialTodayList";
     }
 
     @Override
     protected Fragment getListDataFragment(Bundle bundle) {
-        return YearListDataFragment.newInstance(bundle);
+        return TodayListDataFragment.newInstance(bundle);
     }
 
     @Override
     protected Fragment getChartDataFragment(Bundle bundle) {
-        return YearChartDataFragment.newInstance(bundle);
+        return TodayChartDataFragment.newInstance(bundle);
     }
 
     @Override
     protected int getModel() {
-        return EnumUtil.FinancialModel.本年.value;
+        return EnumUtil.FinancialModel.今日.value;
     }
+
 
     @Override
     public void calculate(int model) {
         super.calculate(model);
         if(model == getModel()){
-            super.financialList =  CalculateUtil.yearList;
+            super.financialList =  CalculateUtil.yesterDayList;
             Bundle bundle = new Bundle();
             //bundle.putSerializable(getFinancialListKey(), financialList);
             bundle.putInt("model", model);

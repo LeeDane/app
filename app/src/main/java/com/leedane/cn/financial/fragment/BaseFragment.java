@@ -39,10 +39,25 @@ public abstract class BaseFragment extends FinancialBaseFragment {
 
     protected abstract String getFinancialListKey();
 
-
+    /**
+     * 列表展示的fragment
+     * @param bundle
+     * @return
+     */
     protected abstract Fragment getListDataFragment(Bundle bundle);
 
+    /**
+     * 图标展示的fragment
+     * @param bundle
+     * @return
+     */
     protected abstract Fragment getChartDataFragment(Bundle bundle);
+
+    /**
+     * 获取当前的模型类型（如：昨日、本周、本月、本年）
+     * @return
+     */
+    protected abstract int getModel();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -75,7 +90,7 @@ public abstract class BaseFragment extends FinancialBaseFragment {
                     fragmentManager .beginTransaction().remove(fragment).commit();
                 }
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(getFinancialListKey(), financialList);
+                bundle.putInt("model", getModel());
                 if(isChecked){
                     getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), getListDataFragment(bundle)).commit();
                 }else{

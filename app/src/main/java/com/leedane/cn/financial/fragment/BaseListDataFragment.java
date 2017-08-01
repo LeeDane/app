@@ -17,6 +17,7 @@ import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
 import com.leedane.cn.financial.adapter.FinancialRecyclerViewAdapter;
 import com.leedane.cn.financial.bean.FinancialList;
 import com.leedane.cn.financial.util.CalculateUtil;
+import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.ToastUtil;
 
 /**
@@ -71,6 +72,7 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
             switch (model) {
                 case 1://今日
                     mFinancialList = CalculateUtil.toDayList;
+                    break;
                 case 2://昨日
                     mFinancialList = CalculateUtil.yesterDayList;
                     break;
@@ -83,13 +85,15 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
                 case 5://本年
                     mFinancialList = CalculateUtil.yearList;
                     break;
+                default:
+                    mFinancialList = (FinancialList) bundle.getSerializable(getFinancialListKey());
             }
             //mFinancialList = (FinancialList) bundle.getSerializable(getFinancialListKey());
         }
         if(mContext == null)
             mContext = getActivity();
 
-        if(mFinancialList == null || mFinancialList.getFinancialBeans() == null || mFinancialList.getFinancialBeans().size() == 0){
+        if(mFinancialList == null || CommonUtil.isEmpty(mFinancialList.getFinancialBeans())){
             ToastUtil.failure(mContext, "暂无数据");
             return;
         }
