@@ -185,7 +185,6 @@ public class AttentionFragment extends BaseRecyclerViewFragment implements BaseR
      */
     @Override
     public void sendFirstLoading(){
-
         mPreLoadMethod = "firstloading";
         mFirstId = 0;
         mLastId = 0;

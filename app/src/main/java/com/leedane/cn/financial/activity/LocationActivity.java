@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.leedane.cn.activity.BaseActivity;
+import com.leedane.cn.activity.BaseRecyclerViewActivity;
 import com.leedane.cn.activity.LoginActivity;
 import com.leedane.cn.adapter.SimpleListAdapter;
 import com.leedane.cn.app.R;
@@ -54,23 +55,15 @@ import java.util.List;
 /**
  * 记账位置activity
  */
-public class LocationActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,
+public class LocationActivity extends BaseRecyclerViewActivity implements SwipeRefreshLayout.OnRefreshListener,
         BaseRecyclerViewAdapter.OnItemClickListener , BaseRecyclerViewAdapter.OnItemLongClickListener{
     public static final String TAG = "LocationActivity";
 
-    protected String mPreLoadMethod = "firstloading";//当前的操作方式
-    protected boolean isLoading; //标记当前是否在加载数据
-    protected int mFirstId;  //页面上第一条数据的ID
-    protected int mLastId; //页面上第一条数据的ID
-
     private RecyclerView mRecyclerView;
-    private View mFooterView;
-    private TextView mRecyclerViewFooter;
     private FinancialLocationAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
     private List<FinancialLocationBean> mDatas = new ArrayList<>();;
-    private SwipeRefreshLayout mSwipeLayout;
     private FinancialLocationDataBase financialLocationDataBase;
 
     /**
@@ -110,17 +103,20 @@ public class LocationActivity extends BaseActivity implements SwipeRefreshLayout
         mRightImg.setVisibility(View.VISIBLE);
         mRightImg.setOnClickListener(this);
 
+        mAdapter = new FinancialLocationAdapter(this, mDatas);
+
         mRecyclerView = (RecyclerView)findViewById(R.id.financial_location_list);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL));
-        mAdapter = new FinancialLocationAdapter(this, mDatas);
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerViewOnScrollListener(mAdapter));
 
         mFooterView = LayoutInflater.from(LocationActivity.this).inflate(R.layout.fragment_financial_main_footer, null);
         mAdapter.setFooterView(mFooterView);
         mRecyclerViewFooter = (TextView)mFooterView.findViewById(R.id.financial_footer);
+        mRecyclerViewFooter.setText(getStringResource(R.string.loading));
+        mRecyclerViewFooter.setOnClickListener(this);//添加点击事件
 
         mSwipeLayout = (SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
         mSwipeLayout.setOnRefreshListener(this);
@@ -130,15 +126,15 @@ public class LocationActivity extends BaseActivity implements SwipeRefreshLayout
 
         mAdapter.setOnItemClickListener(this);
         mAdapter.setOnItemLongClickListener(this);
-
-        mDatas = financialLocationDataBase.query(" order by id desc ");
-        if(mDatas.size() > 0){
+        mRecyclerView.setAdapter(mAdapter);
+        sendFirstLoading();
+        /*if(mDatas.size() > 0){
             mFirstId = mDatas.get(0).getId();
             mLastId = mDatas.get(mDatas.size() - 1).getId();
             mAdapter.addDatas(mDatas);
         }else{
             sendFirstLoading();
-        }
+        }*/
     }
 
     @Override
@@ -147,6 +143,14 @@ public class LocationActivity extends BaseActivity implements SwipeRefreshLayout
         if(result instanceof Error){
             if((type == TaskType.LOAD_FINANCIAL_LOCATION) && !mPreLoadMethod.equalsIgnoreCase("uploading")){
                 mRecyclerViewFooter.setText(getStringResource(R.string.no_load_more));
+            }
+            if(type == TaskType.LOAD_FINANCIAL_LOCATION && mPreLoadMethod.equalsIgnoreCase("firstloading")){
+                mDatas = financialLocationDataBase.query(" order by id desc ");
+                if(mDatas != null && mDatas.size() > 0 ){
+                    mFirstId = mDatas.get(0).getId();
+                    mLastId = mDatas.get(mDatas.size() - 1).getId();
+                    mAdapter.addDatas(mDatas);
+                }
             }
         }
         super.taskFinished(type, result);
@@ -181,8 +185,7 @@ public class LocationActivity extends BaseActivity implements SwipeRefreshLayout
                             mRecyclerView.setAdapter(mAdapter);
                         }
                         mAdapter.addDatas(temList);
-
-                        mDatas = mAdapter.getmDatas();
+                        //mDatas = mAdapter.getmDatas();
                         int size = mDatas.size();
 
                         mFirstId = mDatas.get(0).getId();
@@ -251,7 +254,6 @@ public class LocationActivity extends BaseActivity implements SwipeRefreshLayout
      * 发送第一次刷新的任务
      */
     public void sendFirstLoading(){
-
         //清空所有的数据
         mDatas.clear();
         mAdapter.notifyDataSetChanged();
@@ -272,6 +274,7 @@ public class LocationActivity extends BaseActivity implements SwipeRefreshLayout
         params.put("method", mPreLoadMethod);
         //第一次操作取消全部数据
         taskCanceled(TaskType.LOAD_FINANCIAL_LOCATION);
+        isLoading = true;
         FinancialLocationHandler.paging(this, params);
     }
     /**
@@ -302,6 +305,7 @@ public class LocationActivity extends BaseActivity implements SwipeRefreshLayout
         if(getStringResource(R.string.no_load_more).equalsIgnoreCase(mRecyclerViewFooter.getText().toString()) || isLoading) {
             return;
         }
+        //ToastUtil.success(getBaseContext(), "mLastId"+mLastId +", ");
         //没有lastID时当作第一次请求加载
         if(mLastId == 0){
             sendFirstLoading();
@@ -430,6 +434,9 @@ public class LocationActivity extends BaseActivity implements SwipeRefreshLayout
             case R.id.view_right_img:
                 showOperateLocationDialog(false, null);
                 break;
+            case R.id.financial_footer:
+                sendLoadAgain(v);
+                break;
         }
     }
 
@@ -516,48 +523,6 @@ public class LocationActivity extends BaseActivity implements SwipeRefreshLayout
     public void dismissListItemMenuDialog(){
         if(mDialog != null && mDialog.isShowing())
             mDialog.dismiss();
-    }
-    protected class RecyclerViewOnScrollListener<T> extends RecyclerView.OnScrollListener{
-        RecyclerView recyclerView;
-        int lastVisibleItem;
-        BaseRecyclerViewAdapter<T> mAdapter;
-        boolean isScrooll;
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
-            lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-            this.recyclerView = recyclerView;
-            isScrooll = true;
-
-        }
-
-        public RecyclerViewOnScrollListener(BaseRecyclerViewAdapter<T> adapter) {
-            super();
-            mAdapter = adapter;
-        }
-
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-            LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
-            int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-            if (lastVisibleItemPosition + 1 == mAdapter.getItemCount()) {
-                Log.i("test", "loading executed");
-
-                if(mSwipeLayout != null){
-                    boolean isRefreshing = mSwipeLayout.isRefreshing();
-                    if (isRefreshing) {
-                        mAdapter.notifyItemRemoved(mAdapter.getItemCount());
-                        return;
-                    }
-                }
-
-                if (!isLoading) {
-                    sendLowLoading();
-                }
-            }
-        }
     }
 
     @Override
