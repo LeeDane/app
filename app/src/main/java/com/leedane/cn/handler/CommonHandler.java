@@ -298,6 +298,20 @@ public class CommonHandler {
     }
 
     /**
+     * 获取公钥的请求
+     * @param listener
+     */
+    public static void getPublicKeyRequest(TaskListener listener){
+        HttpRequestBean requestBean = new HttpRequestBean();
+        HashMap<String, Object> params = new HashMap<>();
+        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
+        requestBean.setParams(params);
+        requestBean.setServerMethod("tl/publicKey");
+        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
+        TaskLoader.getInstance().startTaskForResult(TaskType.GET_PUBLIC_KEY, listener, requestBean);
+    }
+
+    /**
      * 获取七牛云存储token的请求
      * @param listener
      */

@@ -108,4 +108,5 @@ public enum TaskType {
     SMART_ALL, //智能与云端同步
     SCAN_LOGIN, //扫码登陆
     CANCEL_SCAN_LOGIN, //取消二维码登录
+    GET_PUBLIC_KEY, //获取公钥
 }

@@ -3,24 +3,20 @@ package com.leedane.cn.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -33,34 +29,25 @@ import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.HttpRequestBean;
 import com.leedane.cn.customview.EyeEditText;
 import com.leedane.cn.database.ChatDataBase;
-import com.leedane.cn.database.MySettingDataBase;
 import com.leedane.cn.database.SearchHistoryDataBase;
-import com.leedane.cn.financial.fragment.SearchListFragment;
-import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.UserHandler;
 import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
-import com.leedane.cn.util.EnumUtil;
 import com.leedane.cn.util.MD5Util;
-import com.leedane.cn.util.RSACoder;
-import com.leedane.cn.util.RSAKeyUtil;
+import com.leedane.cn.util.RSACoderUtil;
 import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.SystemUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.mob.MobSDK;
-import com.qiniu.android.dns.util.Hex;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -93,6 +80,8 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
     private int time = 60; //60秒后才能重新获取验证码
     private Timer timer;
 
+    private String mPublicKey; //公钥
+
     public void runTimer(){
         timer=new Timer();
         TimerTask task=new TimerTask() {
@@ -119,7 +108,7 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
                     break;
                 case FLAT_SEND_CODE_SUCCESS:
                     // 处理你自己的逻辑
-                    ToastUtil.success(getBaseContext(), "成功---》"+ bundle.getString("success"));
+                    ToastUtil.success(getBaseContext(), "验证码已发送，请注意查收！");
                     break;
                 case FLAT_SEND_CODE_ERROR:
                     // 处理你自己的逻辑
@@ -205,6 +194,8 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
                     mUsernameHistorys);
             mTextEditUsername.setAdapter(adapt);
         }
+
+        CommonHandler.getPublicKeyRequest(this);
     }
 
     /**
@@ -233,8 +224,11 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
             return;
         }
 
+        if(StringUtil.isNull(mPublicKey)){
+            ToastUtil.failure(LoginActivity.this, "获取不到服务器上的公钥!", Toast.LENGTH_SHORT);
+            return;
+        }
         try{
-            //final byte[] encodedData = RSACoder.encryptByPublicKey(MD5Util.compute(password), RSAKeyUtil.getInstance().getPublicKey());
             new Handler().postDelayed(new Runnable() {
 
                 @Override
@@ -243,12 +237,19 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
 
                     HashMap<String, Object> params = new HashMap<String, Object>();
                     params.put("account", username);
-                    //ToastUtil.failure(LoginActivity.this, new String(Hex.encodeHex(encodedData)), Toast.LENGTH_SHORT);
-                   // try {
-                        params.put("pwd",  MD5Util.compute(password));
-                    /*} catch (UnsupportedEncodingException e) {
+                    String rsaPassword = null;
+                    try {
+                        rsaPassword = RSACoderUtil.encryptWithRSA(mPublicKey, MD5Util.compute(password));
+                    } catch (Exception e) {
                         e.printStackTrace();
-                    }*/
+                    }
+                    if(StringUtil.isNull(rsaPassword)){
+                        ToastUtil.failure(LoginActivity.this, "公钥解析失败！请联系管理员！", Toast.LENGTH_SHORT);
+                        return;
+                    }
+                    rsaPassword = rsaPassword.replaceAll("\n", "");
+                    rsaPassword = rsaPassword.replaceAll("\r", "");
+                    params.put("pwd",  rsaPassword);
                     requestBean.setParams(params);
                     requestBean.setServerMethod("us/login");
                     requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_POST);
@@ -334,6 +335,13 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
                 }else{
                     ToastUtil.failure(LoginActivity.this, resultObject);
                 }
+            }else if(TaskType.GET_PUBLIC_KEY == type && resultObject != null){//获取公钥
+                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                    mPublicKey  = resultObject.getString("message");
+                    //ToastUtil.success(LoginActivity.this, "获取服务器上的公钥成功："+ mPublicKey, Toast.LENGTH_SHORT);
+                }else{
+                    ToastUtil.failure(LoginActivity.this, "获取服务器上的公钥失败", Toast.LENGTH_SHORT);
+                }
             }
         } catch (Exception e) {
             ToastUtil.failure(LoginActivity.this, getResources().getString(R.string.login_error), Toast.LENGTH_SHORT);
@@ -343,7 +351,6 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
 
     @Override
     public void taskCanceled(TaskType type) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -455,6 +462,7 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
      */
     public void registerClick(View view){
         Intent it = new Intent(LoginActivity.this, RegisterActivity.class);
+        it.putExtra("publicKey", mPublicKey); //把公钥传递过去
         startActivity(it);
         finish();
     }
@@ -464,6 +472,11 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
      * @param view
      */
     public void onLoginPhoneClick(View view){
+        if(StringUtil.isNull(mPublicKey)){
+            ToastUtil.failure(LoginActivity.this, "获取不到服务器上的公钥!", Toast.LENGTH_SHORT);
+            return;
+        }
+
         String phoneNumber = loginPhoneNumber.getText().toString();
         if(StringUtil.isNull(phoneNumber) || phoneNumber.length() != 11){
             ToastUtil.failure(LoginActivity.this, "请输入正确的11位手机号码");
@@ -480,9 +493,20 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
         }
 
         showLoadingDialog("Logining", "try to login, please wait...");
-
+        String rsaPhone = null;
+        try {
+            rsaPhone = RSACoderUtil.encryptWithRSA(mPublicKey, phoneNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(StringUtil.isNull(rsaPhone)){
+            ToastUtil.failure(LoginActivity.this, "公钥解析失败！请联系管理员！", Toast.LENGTH_SHORT);
+            return;
+        }
+        rsaPhone = rsaPhone.replaceAll("\n", "");
+        rsaPhone = rsaPhone.replaceAll("\r", "");
         Map<String, Object> params = new HashMap<>();
-        params.put("mobilePhone", phoneNumber);
+        params.put("mobilePhone", rsaPhone);
         params.put("validationCode", validationCode);
         UserHandler.loginByPhone(this, params);
     }

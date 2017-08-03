@@ -22,6 +22,15 @@ public class TodayFragment extends BaseFragment {
     }
 
     @Override
+    protected void initData() {
+        super.financialList =  CalculateUtil.todayList;
+        Bundle bundle = new Bundle();
+        //bundle.putSerializable(getFinancialListKey(), financialList);
+        bundle.putInt("model", EnumUtil.FinancialModel.今日.value);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), getListDataFragment(bundle)).commit();
+    }
+
+    @Override
     protected int getContainerId() {
         return R.layout.fragment_financial_today_list_or_chart;
     }
@@ -60,7 +69,7 @@ public class TodayFragment extends BaseFragment {
             Bundle bundle = new Bundle();
             //bundle.putSerializable(getFinancialListKey(), financialList);
             bundle.putInt("model", model);
-            getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), getListDataFragment(bundle)).commit();
         }
     }
 }

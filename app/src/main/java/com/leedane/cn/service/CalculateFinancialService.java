@@ -76,7 +76,7 @@ public class CalculateFinancialService extends Service {
         //使用静态的方式注册广播，可以使用显示意图进行发送广播
         Intent broadcast = new Intent("com.leedane.cn.broadcast.CalculateFinancialReceiver");
         //broadcast.putExtra("data", financialList);
-        CalculateUtil.toDayList = financialList;
+        CalculateUtil.todayList = financialList;
         broadcast.putExtra("model", EnumUtil.FinancialModel.今日.value);
         sendBroadcast(broadcast, null);
     }

@@ -59,7 +59,7 @@
         android:singleLine="true"
         android:textSize="17dp"
         android:textColor="#f6fafb"
-        android:hint="@string/info_mobile_phone" />
+        android:hint="@string/mobile_phone_null" />
 
    <com.leedane.cn.customview.EyeEditText
        	android:id="@+id/register_password"

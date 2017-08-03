@@ -12,7 +12,7 @@ public class CalculateUtil {
     //private static CalculateUtil calculateUtil = null;
 
     //今日的记账列表
-    public static FinancialList toDayList = new FinancialList();
+    public static FinancialList todayList = new FinancialList();
 
     //昨日的记账列表
     public static FinancialList yesterDayList = new FinancialList();

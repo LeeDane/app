@@ -102,7 +102,7 @@ public abstract class BaseChartDataFragment extends FinancialBaseFragment {
             int model = bundle.getInt("model");
             switch (model) {
                 case 1://今日
-                    mFinancialList = CalculateUtil.toDayList;
+                    mFinancialList = CalculateUtil.todayList;
                     break;
                 case 2://昨日
                     mFinancialList = CalculateUtil.yesterDayList;

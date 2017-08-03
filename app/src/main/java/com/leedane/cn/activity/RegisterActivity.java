@@ -21,6 +21,7 @@ import com.leedane.cn.task.TaskListener;
 import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.MD5Util;
+import com.leedane.cn.util.RSACoderUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.SystemUtil;
 import com.leedane.cn.util.ToastUtil;
@@ -41,13 +42,19 @@ public class RegisterActivity extends Activity implements TaskListener{
     private EditText mRegisterMobilePhone;
     private TextView mRegisterButton;
 
+    private String mPublicKey; //公钥
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_register);
         setImmerseLayout(findViewById(R.id.register_linearLayout));
-
+        mPublicKey = this.getIntent().getExtras().getString("publicKey");
+        if(StringUtil.isNull(mPublicKey)){
+            ToastUtil.failure(RegisterActivity.this, "获取不到服务器上的公钥!", Toast.LENGTH_SHORT);
+            return;
+        }
         initView();
         //ButterKnife.bind(this);
 
@@ -121,11 +128,33 @@ public class RegisterActivity extends Activity implements TaskListener{
 
             @Override
             public void run() {
+                String rsaConfirmPassword = null, rsaPassword = null, rsaMobilePhone = null;
+                try {
+                    rsaConfirmPassword = RSACoderUtil.encryptWithRSA(mPublicKey, MD5Util.compute(confirmPassword));
+                    rsaPassword = RSACoderUtil.encryptWithRSA(mPublicKey, MD5Util.compute(password));
+                    rsaMobilePhone = RSACoderUtil.encryptWithRSA(mPublicKey, mobilePhone);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rsaConfirmPassword = rsaConfirmPassword.replaceAll("\n", "");
+                rsaConfirmPassword = rsaConfirmPassword.replaceAll("\r", "");
+
+                rsaPassword = rsaPassword.replaceAll("\n", "");
+                rsaPassword = rsaPassword.replaceAll("\r", "");
+
+                rsaMobilePhone = rsaMobilePhone.replaceAll("\n", "");
+                rsaMobilePhone = rsaMobilePhone.replaceAll("\r", "");
+
+                if(StringUtil.isNull(rsaConfirmPassword) || StringUtil.isNull(rsaPassword) || StringUtil.isNull(rsaMobilePhone)){
+                    ToastUtil.failure(RegisterActivity.this, "公钥解析失败！请联系管理员！", Toast.LENGTH_SHORT);
+                    return;
+                }
+
                 HashMap<String, Object> params = new HashMap<String, Object>();
                 params.put("account", username);
-                params.put("confirmPassword", MD5Util.compute(confirmPassword));
-                params.put("password", MD5Util.compute(password));
-                params.put("mobilePhone", mobilePhone);
+                params.put("confirmPassword", rsaConfirmPassword);
+                params.put("password", rsaPassword);
+                params.put("mobilePhone", rsaMobilePhone);
                 showLoadingDialog("Register", "Try to register now...");
                 UserHandler.registerByPhoneNoValidate(RegisterActivity.this, params);
             }

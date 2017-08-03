@@ -43,7 +43,7 @@ public class CalculateFinancialReceiver extends BroadcastReceiver {
             /*if(financialList != null)
                 switch (model){
                     case 1://今日
-                        CalculateUtil.toDayList = financialList;
+                        CalculateUtil.todayList = financialList;
                     case 2://昨日
                         CalculateUtil.yesterDayList = financialList;
                         break;

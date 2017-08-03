@@ -9,7 +9,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Vibrator;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -210,12 +212,12 @@ public class BaseApplication extends Application {
      * @return
      */
     public HashMap<String, Object> getBaseRequestParams(){
-        /*HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("login_mothod", "android");
         params.put("froms", Build.MODEL);//手机型号
         params.put("producer", Build.MANUFACTURER);//手机厂家
         try{
-            JSONObject userInfo = getLoginUserInfo();
+            /*JSONObject userInfo = getLoginUserInfo();
             if(userInfo != null){
                 if(userInfo.has("no_login_code"))
                     params.put("no_login_code", userInfo.getString("no_login_code"));
@@ -223,15 +225,14 @@ public class BaseApplication extends Application {
                     params.put("account", userInfo.getString("account"));
                 if(userInfo.has("id"))
                     params.put("id", userInfo.getString("id"));
-            }
+            }*/
             TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
             String szImei = telephonyManager.getDeviceId();
             params.put("imei", szImei);
             return params;
         }catch (Exception e){
             return null;
-        }*/
-        return new HashMap<>();
+        }
     }
 
     public int[] getScreenWidthAndHeight(){

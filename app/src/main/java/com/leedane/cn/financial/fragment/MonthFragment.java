@@ -18,10 +18,19 @@ public class MonthFragment extends BaseFragment {
     public MonthFragment(){
     }
 
-    public static final MonthFragment newInstance(Bundle bundle){
+    public static final MonthFragment newInstance(Bundle bundle) {
         MonthFragment fragment = new MonthFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    protected void initData() {
+        super.financialList =  CalculateUtil.monthList;
+        Bundle bundle = new Bundle();
+        //bundle.putSerializable(getFinancialListKey(), financialList);
+        bundle.putInt("model", EnumUtil.FinancialModel.本月.value);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), getListDataFragment(bundle)).commit();
     }
 
     @Override
@@ -62,7 +71,7 @@ public class MonthFragment extends BaseFragment {
             Bundle bundle = new Bundle();
             //bundle.putSerializable(getFinancialListKey(), financialList);
             bundle.putInt("model", model);
-            getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), getListDataFragment(bundle)).commit();
         }
     }
 }

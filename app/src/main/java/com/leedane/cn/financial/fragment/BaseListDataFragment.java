@@ -71,7 +71,7 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
             int model = bundle.getInt("model");
             switch (model) {
                 case 1://今日
-                    mFinancialList = CalculateUtil.toDayList;
+                    mFinancialList = CalculateUtil.todayList;
                     break;
                 case 2://昨日
                     mFinancialList = CalculateUtil.yesterDayList;
@@ -93,10 +93,8 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
         if(mContext == null)
             mContext = getActivity();
 
-        if(mFinancialList == null || CommonUtil.isEmpty(mFinancialList.getFinancialBeans())){
-            ToastUtil.failure(mContext, "暂无数据");
-            return;
-        }
+        mFooterView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_footer, null);
+        View v = mFooterView.findViewById(R.id.financial_footer);
 
         this.mRecyclerView = (RecyclerView)mRootView.findViewById(getRecyclerViewId());
         mLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
@@ -106,18 +104,20 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
         mAdapter = new FinancialRecyclerViewAdapter(mContext, mFinancialList.getFinancialBeans());
         mRecyclerView.setAdapter(mAdapter);
 
-        mFooterView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_footer, null);
-        View v = mFooterView.findViewById(R.id.financial_footer);
         if(v != null && v instanceof TextView){
             TextView tv = (TextView)v;
-            tv.setText(getStringResource(mContext, R.string.footer)+ "(一共"+ mFinancialList.getFinancialBeans().size()+"条记录)");
+            if(mFinancialList == null || CommonUtil.isEmpty(mFinancialList.getFinancialBeans())){
+                tv.setText(getStringResource(mContext, R.string.no_load_more));
+            }else{
+                tv.setText(getStringResource(mContext, R.string.footer)+ "(一共"+ mFinancialList.getFinancialBeans().size()+"条记录)");
+            }
         }
         mAdapter.setFooterView(mFooterView);
 
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, Object data) {
-                if(mFinancialList != null && mFinancialList.getFinancialBeans() != null && mFinancialList.getFinancialBeans().size() > 0){
+                if(mFinancialList != null && CommonUtil.isNotEmpty(mFinancialList.getFinancialBeans())){
                     Intent it = new Intent(mContext, IncomeOrSpendActivity.class);
                     it.putExtra("local_id", mFinancialList.getFinancialBeans().get(position).getLocalId());
                     mContext.startActivity(it);

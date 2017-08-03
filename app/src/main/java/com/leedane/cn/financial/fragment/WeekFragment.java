@@ -22,6 +22,14 @@ public class WeekFragment extends BaseFragment {
         fragment.setArguments(bundle);
         return fragment;
     }
+    @Override
+    protected void initData() {
+        super.financialList =  CalculateUtil.weekList;
+        Bundle bundle = new Bundle();
+        //bundle.putSerializable(getFinancialListKey(), financialList);
+        bundle.putInt("model", EnumUtil.FinancialModel.本周.value);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), getListDataFragment(bundle)).commit();
+    }
 
     @Override
     protected int getContainerId() {
@@ -61,7 +69,7 @@ public class WeekFragment extends BaseFragment {
             Bundle bundle = new Bundle();
             //bundle.putSerializable(getFinancialListKey(), financialList);
             bundle.putInt("model", model);
-            getActivity().getSupportFragmentManager().beginTransaction().add(getFragmentContainerId(), getListDataFragment(bundle)).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(getFragmentContainerId(), getListDataFragment(bundle)).commit();
         }
     }
 }
