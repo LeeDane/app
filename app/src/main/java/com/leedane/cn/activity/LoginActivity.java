@@ -129,8 +129,8 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
 
         }
     };
-    @Override
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

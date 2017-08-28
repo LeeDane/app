@@ -416,6 +416,13 @@
         </activity>
 
         <activity
+            android:name="com.leedane.cn.financial.activity.FinancialListActivity"
+            android:label="@string/financial_list"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
             android:name="com.leedane.cn.activity.LoginByQrCodeActivity"
             android:label="@string/scan_login"
             android:screenOrientation="portrait"

@@ -39,8 +39,6 @@ import java.util.Map;
  * Created by LeeDane on 2016/9/7.
  */
 public abstract class BaseChartDataFragment extends FinancialBaseFragment {
-
-    protected FinancialList mFinancialList;
     protected View mRootView;
     protected Context mContext;
     protected float showTotalIncome;
@@ -82,6 +80,12 @@ public abstract class BaseChartDataFragment extends FinancialBaseFragment {
      * @return
      */
     protected abstract int additionTimeSubstringEnd();
+
+    /**
+     * 获取柱状图X轴的类型
+     * @return
+     */
+    protected abstract int getBarXType();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -168,6 +172,8 @@ public abstract class BaseChartDataFragment extends FinancialBaseFragment {
         });
         pieHandler.showPie(pieChart);
 
+        //设置柱状图X轴的类型
+        setBarType(getBarXType());
         barChart = (BarChart)mRootView.findViewById(getBarId());
         barChart.setOnChartValueSelectedListener(this);
         MultipleBarHandler handler = new MultipleBarHandler(mContext, getMultipleBarObject(mFinancialList));

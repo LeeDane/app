@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -179,6 +180,9 @@ public class MainFragment extends FinancialBaseFragment{
                 android.R.color.holo_orange_light,
                 android.R.color.holo_green_light);
         //refreshHeaderData();
+        //((ImageView)mHeaderView.findViewById(R.id.financial_header_income_bg)).setImageAlpha(0);
+        //((ImageView)mHeaderView.findViewById(R.id.financial_header_spend_bg)).setImageAlpha(0);
+       // ((ImageView)mHeaderView.findViewById(R.id.financial_header_budget_bg)).setImageAlpha(0);
     }
 
     /**

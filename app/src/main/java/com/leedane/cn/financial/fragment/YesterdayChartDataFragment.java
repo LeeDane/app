@@ -56,6 +56,11 @@ public class YesterdayChartDataFragment extends BaseChartDataFragment {
     }
 
     @Override
+    protected int getBarXType() {
+        return 3;
+    }
+
+    @Override
     protected ArrayList<String> getMultipleBarXValues(FinancialList financialList){
         ArrayList<String> xValues = new ArrayList<>();  //xVals用来表示每个饼块上的内容
         Set<String> days = new HashSet<>();

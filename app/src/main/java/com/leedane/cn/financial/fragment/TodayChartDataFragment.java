@@ -7,10 +7,13 @@ import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.bean.FinancialList;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.DateUtil;
+import com.leedane.cn.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 今日图表数据的fragment
@@ -48,47 +51,79 @@ public class TodayChartDataFragment extends BaseChartDataFragment {
 
     @Override
     protected int additionTimeSubstringStart() {
-        return 8;
+        return 11;
     }
 
     @Override
     protected int additionTimeSubstringEnd() {
-        return 10;
+        return 13;
+    }
+
+    @Override
+    protected int getBarXType() {
+        return 3;
     }
 
     @Override
     protected ArrayList<String> getMultipleBarXValues(FinancialList financialList){
         ArrayList<String> xValues = new ArrayList<>();  //xVals用来表示每个饼块上的内容
-        List<FinancialBean> financialBeanList = financialList.getFinancialBeans();
-        if(CommonUtil.isEmpty(financialBeanList)){
-            return xValues;
+        Set<String> days = new HashSet<>();
+        for(FinancialBean financialBean: financialList.getFinancialBeans()){
+            if(StringUtil.isNotNull(financialBean.getAdditionTime())){
+                days.add(financialBean.getAdditionTime().substring(11, 13));
+            }
         }
-        //根据最新和最旧的时间获取时间差
-        List<Date> dates = DateUtil.findDates(DateUtil.stringToDate(financialBeanList.get(financialBeanList.size() - 1).getAdditionTime(), "yyyy-MM-dd"),
-                DateUtil.stringToDate(financialBeanList.get(0).getAdditionTime(), "yyyy-MM-dd"));
-
-        String date;
-        for(Date d: dates){
-            date = DateUtil.DateToString(d, "yyyyMMdd");
-            xValues.add(date.substring(6, 8));
+        int max = 0;
+        int min = 0;
+        if(days.size() > 0){
+            int i = 0;
+            for(String s: days){
+                if(i == 0){
+                    max = Integer.parseInt(s);
+                    min = Integer.parseInt(s);
+                }else{
+                    max = Math.max(max, Integer.parseInt(s));
+                    min = Math.min(min, Integer.parseInt(s));
+                }
+                i ++;
+            }
+        }
+        for(int i = min; i <= max; i++){
+            xValues.add(i < 10 ? "0"+i: String.valueOf(i));
         }
         return xValues;
     }
+
     @Override
     protected ArrayList<String> getMultipleBarXLabels(FinancialList financialList){
         ArrayList<String> xValues = new ArrayList<>();  //xVals用来表示每个饼块上的内容
-        List<FinancialBean> financialBeanList = financialList.getFinancialBeans();
-        if(CommonUtil.isEmpty(financialBeanList)){
-            return xValues;
+        Set<String> days = new HashSet<>();
+        for(FinancialBean financialBean: financialList.getFinancialBeans()){
+            if(StringUtil.isNotNull(financialBean.getAdditionTime())){
+                days.add(financialBean.getAdditionTime().substring(11, 13));
+            }
         }
-        //根据最新和最旧的时间获取时间差
-        List<Date> dates = DateUtil.findDates(DateUtil.stringToDate(financialBeanList.get(financialBeanList.size() - 1).getAdditionTime(), "yyyy-MM-dd"),
-                DateUtil.stringToDate(financialBeanList.get(0).getAdditionTime(), "yyyy-MM-dd"));
-
-        String date;
-        for(Date d: dates){
-            date = DateUtil.DateToString(d, "yyyyMMdd");
-                xValues.add(date.substring(4, 6) + "月"+ date.substring(6, 8) +"日");
+        int max = 0;
+        int min = 0;
+        if(days.size() > 0){
+            int i = 0;
+            for(String s: days){
+                if(i == 0){
+                    max = Integer.parseInt(s);
+                    min = Integer.parseInt(s);
+                }else{
+                    max = Math.max(max, Integer.parseInt(s));
+                    min = Math.min(min, Integer.parseInt(s));
+                }
+                i ++;
+            }
+        }
+        int size = days.size();
+        for(int i = min; i <= max; i++){
+            if(size > 9)
+                xValues.add(i+"");
+            else
+                xValues.add(i + "时");
         }
         return xValues;
     }

@@ -25,7 +25,6 @@ import com.leedane.cn.financial.charts.bar.MultipleBarObject;
 import com.leedane.cn.financial.charts.pie.PieObject;
 import com.leedane.cn.financial.handler.MultipleBarHandler;
 import com.leedane.cn.financial.handler.PieHandler;
-import com.leedane.cn.financial.util.EnumUtil;
 import com.leedane.cn.util.CommonUtil;
 import com.leedane.cn.util.DateUtil;
 import com.leedane.cn.util.StringUtil;
@@ -34,10 +33,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,13 +44,12 @@ import java.util.Set;
  * Created by LeeDane on 2016/12/7.
  */
 public class SearchChartDataFragment extends FinancialBaseFragment {
-    private FinancialList mFinancialList;
     private View mRootView;
     private Context mContext;
     private float showTotalIncome;
     private float showTotalSpend;
     private BarChart barChart;
-    private int barType = 0;
+
     private String startTime = null, endTime = null;
     private int additionTimeSubstringStart = 0, additionTimeSubstringEnd = 0;
 
@@ -126,7 +122,8 @@ public class SearchChartDataFragment extends FinancialBaseFragment {
 
         if(mFinancialList == null || CommonUtil.isEmpty(mFinancialList.getFinancialBeans()))
             return;
-        getBarType();
+        //构建柱状图的类型
+        buildBarType();
         if(mContext == null)
             mContext = getActivity();
         Log.i("BaseChartData", "展示BaseChartData的");
@@ -186,7 +183,7 @@ public class SearchChartDataFragment extends FinancialBaseFragment {
     /**
      * 获取列表的类型，0：天轴，1是月轴，2是年轴，3：小时轴,以及开始和结束时间
      */
-    private void getBarType() {
+    private void buildBarType() {
         List<FinancialBean> financialBeans = mFinancialList.getFinancialBeans();
         if(!CommonUtil.isEmpty(financialBeans)){
             Set<Integer> years = new HashSet<>();//年的集合
@@ -228,6 +225,7 @@ public class SearchChartDataFragment extends FinancialBaseFragment {
         startTime = DateUtil.DateToString(DateUtil.stringToDate(financialBeans.get(financialBeans.size() - 1).getAdditionTime()), "dd日HH时");
         additionTimeSubstringStart = 11;
         additionTimeSubstringEnd = 13;
+        setBarType(barType);
         return;
     }
 

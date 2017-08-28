@@ -419,6 +419,7 @@
     <string name="financial_menu_category">编辑分类</string>
     <string name="financial_menu_settings">基本设置</string>
     <string name="financial_menu_cloud">云端同步</string>
+    <string name="financial_list">记账列表详情</string>
     <!--   记账检索  -->
     <string name="search_select_title">请选择条件</string>
     <string name="search_start_time">开始时间：</string>
