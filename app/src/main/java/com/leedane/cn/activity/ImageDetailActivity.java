@@ -15,7 +15,8 @@ import com.google.gson.reflect.TypeToken;
 import com.leedane.cn.adapter.ImageDetailFragmentPagerAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.bean.ImageDetailBean;
-import com.leedane.cn.fragment.ImageDetailFragment;
+import com.leedane.cn.fragment.ImageGifFragment;
+import com.leedane.cn.fragment.ImageNormalFragment;
 import com.leedane.cn.util.ToastUtil;
 
 import java.lang.reflect.Type;
@@ -96,11 +97,15 @@ public class ImageDetailActivity extends BaseActivity {
         List< Fragment> framents = new ArrayList<>();
         for(int i = 0; i < mTotalTabs; i++){
             if(mCurrentTab == i){
-                //framents.add(new ImageDetailFragment(i, ImageDetailActivity.this, mImageDetailBeans.get(i)));
+                //framents.add(new ImageNormalFragment(i, ImageActivity.this, mImageDetailBeans.get(i)));
                 Bundle bundle = new Bundle();
                 bundle.putInt("current", i);
                 bundle.putSerializable("imageDetailBean", mImageDetailBeans.get(i));
-                framents.add(ImageDetailFragment.newInstance(bundle));
+                if(!(mImageDetailBeans.get(i) != null && mImageDetailBeans.get(i).getPath().endsWith(".gif")))
+                    framents.add(ImageNormalFragment.newInstance(bundle));
+                else{
+                    framents.add(ImageGifFragment.newInstance(bundle));
+                }
             }
             else
                 framents.add(null);

@@ -3,6 +3,7 @@ package com.leedane.cn.util;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Base64;
 import android.widget.Toast;
 
 import com.leedane.cn.app.R;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +41,12 @@ public class FileUtil {
     private static FileUtil fileUtil;
     //默认的每次上传的数据最大的值
     public static final long MAX_EACH_UPLOAD_SIZE = 1024*200;
+
+    //临时后缀名称的标记
+    public static final String TEMP_NAME_FLAG = ".temp";
+
+    //混入的字节
+    public static final String BYTE_KEY = "MyByteggdfdfdsgfgfdsdf";
 
     private FileUtil(){}
     public static synchronized FileUtil getInstance(){
@@ -368,11 +376,21 @@ public class FileUtil {
     }
 
     /**
-     * 获取网络图片的宽和高以及大小
+     * 获取网络图片的宽和高以及大小(不加密)
      * @param imgUrl
      * @return 返回数组，依次是：宽，高，大小
      */
-    public static Map<String, Object> saveNetWorkLinkToFile(Context context, String imgUrl) {
+    public static Map<String, Object> saveNetWorkLinkToFile(String imgUrl) {
+        return  saveNetWorkLinkToFile(imgUrl, false);
+    }
+
+    /**
+     * 获取网络图片的宽和高以及大小
+     * @param imgUrl 图像的地址
+     * @param isEncrypt 是否对路径进行加密
+     * @return
+     */
+    public static Map<String, Object> saveNetWorkLinkToFile(String imgUrl, boolean isEncrypt) {
 
         Map<String, Object> b = new HashMap<>();
         b.put("isSuccess", false);
@@ -386,7 +404,13 @@ public class FileUtil {
 
             saveFilePath.append(ff.getAbsolutePath());
             saveFilePath.append(File.separator);
-            saveFilePath.append(StringUtil.getFileName(imgUrl));
+
+            //加密生成的文件
+            if(isEncrypt){
+                saveFilePath.append(new String(Base64.encode(StringUtil.getFileName(imgUrl).getBytes(), Base64.DEFAULT)) + TEMP_NAME_FLAG);
+            }else
+                saveFilePath.append(StringUtil.getFileName(imgUrl));
+
             File saveFile = new File(saveFilePath.toString());
             if(!saveFile.exists()){
                 try {
@@ -398,6 +422,7 @@ public class FileUtil {
                         byte[] bytes = new byte[1024];
                         //设置写入路径以及图片名称
                         OutputStream bos = new FileOutputStream(saveFile);
+                        bos.write(BYTE_KEY.getBytes());//插入混字节
                         int len;
                         while ((len = bis.read(bytes)) > 0) {
                             bos.write(bytes, 0, len);
@@ -428,5 +453,37 @@ public class FileUtil {
         }
         return b;
 
+    }
+
+    /**
+     * 获取加密过的文件的字节
+     * @param filePath
+     * @return
+     */
+    public static byte[] getEncryptFile(String filePath){
+        try {
+            FileInputStream stream = null;
+            stream = new FileInputStream(new File(filePath));
+            ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+            byte[] b = new byte[1024];
+            int n;
+            int i=0;
+            while ((n = stream.read(b)) != -1) {
+                if(i==0){
+                    //第一次写文件流的时候，移除我们之前混入的字节
+                    out.write(b, BYTE_KEY.length(), n-BYTE_KEY.length());
+                }else{
+                    out.write(b, 0, n);
+                }
+                i++;
+            }
+            stream.close();
+            out.close();
+            //获取字节流显示图片
+            return out.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

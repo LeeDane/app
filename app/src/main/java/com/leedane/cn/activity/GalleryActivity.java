@@ -173,7 +173,7 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Map<String, Object> map = FileUtil.saveNetWorkLinkToFile(GalleryActivity.this, galleryNetworkLink.getText().toString());
+                            Map<String, Object> map = FileUtil.saveNetWorkLinkToFile(galleryNetworkLink.getText().toString());
                             Message message = new Message();
                             message.what = LOAD_NETWORK_IMG_CODE;
                             Bundle bundle = new Bundle();

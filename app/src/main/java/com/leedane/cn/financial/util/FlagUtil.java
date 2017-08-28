@@ -42,4 +42,10 @@ public final class FlagUtil {
     //附近人的清除位置退出
     public static final int NEARBY_CLEAR_LOCATION = 66;
 
+    //记账查询的动作
+    public static final int FINANCIAL_FINANCIAL_LIST = 67;
+
+    //图库加载网络图片
+    public static final int GALLERY_LOAD_NETWORK_IMAGE = 68;
+
 }

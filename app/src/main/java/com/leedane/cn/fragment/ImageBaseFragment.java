@@ -52,143 +52,42 @@ import java.util.Map;
  * 多图像详情的frament类
  * Created by LeeDane on 2015/11/16.
  */
-public class ImageDetailFragment extends Fragment implements TaskListener {
+public abstract class ImageBaseFragment extends Fragment implements TaskListener {
 
-    public static final String TAG = "ImageDetailFragment";
+    public static final String TAG = "ImageBaseFragment";
     public static final int LOAD_NETWORK_IMG_CODE = 33;
-    private Context mContext;
-    private int mCurrent;
-    private ImageDetailBean mImageDetailBean;
+    protected Context mContext;
+    protected int mCurrent;
+    protected ImageDetailBean mImageDetailBean;
 
-    private NetworkImageLoader mNetworkImageLoader;
-    private int acreenWidth;
-    private int screenHeight;
-    private SubsamplingScaleImageView mScaleImageView; //图像对象
+    protected NetworkImageLoader mNetworkImageLoader;
+    protected int acreenWidth;
+    protected int screenHeight;
 
-    public ImageDetailFragment(){
+    public ImageBaseFragment(){
         mNetworkImageLoader = new NetworkImageLoader();
         int[] widthAndHeight = BaseApplication.newInstance().getScreenWidthAndHeight();
         this.acreenWidth = widthAndHeight[0];
         this.screenHeight = widthAndHeight[1]*3/4;
     }
 
-    /*public ImageDetailFragment(int current, Context context, String currentImageUrl, int width, int height){
-        this.mNetworkImageLoader = new NetworkImageLoader();
-        int[] widthAndHeight = BaseApplication.newInstance().getScreenWidthAndHeight();
-        if(width > 0){
-            this.acreenWidth = width;
-        }else{
-            this.acreenWidth = widthAndHeight[0];
-        }
-        if(height >0){
-            this.screenHeight = height;
-        }else{
-            this.screenHeight = widthAndHeight[1]*3/4;
-        }
-    }*/
-
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-    }
-
-    public static final ImageDetailFragment newInstance(Bundle bundle){
-        ImageDetailFragment fragment = new ImageDetailFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
+    /**
+     * 获取fragmentId
+     * @return
+     */
+    protected abstract int fragmentId();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_image_detail, container,
+        return inflater.inflate(fragmentId(), container,
                 false);
     }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        Bundle bundle = getArguments();
-        if(bundle != null){
-            this.mCurrent = bundle.getInt("current");
-            this.mImageDetailBean = (ImageDetailBean)bundle.getSerializable("imageDetailBean");
-            this.mNetworkImageLoader = new NetworkImageLoader();
-            int[] widthAndHeight = BaseApplication.newInstance().getScreenWidthAndHeight();
-            this.acreenWidth = widthAndHeight[0];
-            this.screenHeight = widthAndHeight[1]*3/4;
-        }
-
-        if(mContext == null)
-            mContext = getActivity();
-
-        String currentImageUrl = getImageUrl();
-        if(currentImageUrl.startsWith("http://") || currentImageUrl.startsWith("https://")){
-            //ImageCacheManager.loadImage(currentImageUrl, (ImageView) getView().findViewById(R.id.image_detail_imageview), width, height);
-            mScaleImageView = (SubsamplingScaleImageView)getView().findViewById(R.id.image_detail_imageview);
-            ImageCacheManager.loadImage(currentImageUrl, mScaleImageView, getImageWidth(), getImageHeight());
-            mScaleImageView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    showListItemMenuDialog();
-                    return true;
-                }
-            });
-            mScaleImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(getActivity() != null)
-                        ((ImageDetailActivity)getActivity()).itemClick();
-                }
-            });
-
-            /*PhotoView photoView = (PhotoView )getView().findViewById(R.id.image_detail_imageview);
-            final PhotoViewAttacher attacher = new PhotoViewAttacher(photoView);
-
-            Picasso.with(mContext)
-                    .load(currentImageUrl)
-                    .into(photoView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            attacher.update();
-                        }
-
-                        @Override
-                        public void onError() {
-                        }
-                    });*/
-        }else{
-            Map<String, Object> map = new HashMap<>();
-
-            //请求的文件的名称(这里是图片)
-            map.put("filename", currentImageUrl);
-            //获取所有的请求基本参数
-            map.putAll(BaseApplication.newInstance().getBaseRequestParams());
-            String imageUrl = SharedPreferenceUtil.getSettingBean(mContext, ConstantsUtil.STRING_SETTING_BEAN_SERVER).getContent() + "leedane/download/getLocalBase64Image.action";
-            String imageTag = "imagedetail" + currentImageUrl;
-            //执行网络加载post请求图片
-            mNetworkImageLoader.loadNetBitmap(imageTag, imageUrl, new NetworkImageLoader.ImageCallback() {
-                @Override
-                public void imageLoaded(Bitmap imageBitmap, String tag) {
-                    ImageView imageView = (ImageView) getView().findViewById(R.id.image_detail_imageview);
-                    if (imageBitmap == null && imageView != null) {
-                        imageView.setImageResource(R.drawable.error_cat);
-                        return;
-                    }
-
-                    if (imageView != null) {
-                        imageView.setImageBitmap(imageBitmap);
-                    }
-                }
-            }, ConstantsUtil.REQUEST_METHOD_POST, map);
-        }
-    }
-
     /**
      * 获取当前图片的链接
      * @return
      */
-    private String getImageUrl(){
+    protected String getImageUrl(){
         return mImageDetailBean.getPath();
     }
 
@@ -196,7 +95,7 @@ public class ImageDetailFragment extends Fragment implements TaskListener {
      * 获取当前图片的宽度
      * @return
      */
-    private int getImageWidth(){
+    protected int getImageWidth(){
         return mImageDetailBean.getWidth() == 0 ||  mImageDetailBean.getWidth() > acreenWidth ? acreenWidth: mImageDetailBean.getWidth();
     }
 
@@ -204,7 +103,7 @@ public class ImageDetailFragment extends Fragment implements TaskListener {
      * 获取当前图片的高度
      * @return
      */
-    private int getImageHeight(){
+    protected int getImageHeight(){
         return mImageDetailBean.getHeight() == 0 ||  mImageDetailBean.getHeight() > screenHeight ? screenHeight: mImageDetailBean.getHeight();
     }
     /**
@@ -212,7 +111,7 @@ public class ImageDetailFragment extends Fragment implements TaskListener {
      * @param resourseId
      * @return
      */
-    public String getStringResource(int resourseId){
+    protected String getStringResource(int resourseId){
         if(mContext == null){
             return BaseApplication.newInstance().getResources().getString(resourseId);
         }else{
@@ -291,7 +190,7 @@ public class ImageDetailFragment extends Fragment implements TaskListener {
                                         params.put("height", mImageDetailBean.getHeight());
                                         params.put("lenght", mImageDetailBean.getLenght());
                                         params.put("desc", "androidApp图库查看器上加入");
-                                        GalleryHandler.add(ImageDetailFragment.this, params);
+                                        GalleryHandler.add(ImageBaseFragment.this, params);
                                     }
                                 })
                                 .setNegativeButton("放弃",new DialogInterface.OnClickListener() {
@@ -333,16 +232,6 @@ public class ImageDetailFragment extends Fragment implements TaskListener {
     };
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void taskStarted(TaskType type) {
-
-    }
-
-    @Override
     public void taskFinished(TaskType type, Object result) {
         if(result instanceof Error){
             ToastUtil.failure(mContext, ((Error) result).getMessage(), Toast.LENGTH_SHORT);
@@ -368,14 +257,9 @@ public class ImageDetailFragment extends Fragment implements TaskListener {
         }
     }
 
-    @Override
-    public void taskCanceled(TaskType type) {
-
-    }
-
     class myThread implements Runnable {
         public void run() {
-            Map<String, Object> rs = FileUtil.saveNetWorkLinkToFile(mContext, mImageDetailBean.getPath());
+            Map<String, Object> rs = FileUtil.saveNetWorkLinkToFile(mImageDetailBean.getPath());
             Message message = new Message();
             message.what = LOAD_NETWORK_IMG_CODE;
             Bundle bundle = new Bundle();
@@ -415,5 +299,15 @@ public class ImageDetailFragment extends Fragment implements TaskListener {
         if(mProgressDialog != null && mProgressDialog.isShowing()){
             mProgressDialog.dismiss();
         }
+    }
+
+    @Override
+    public void taskStarted(TaskType type) {
+
+    }
+
+    @Override
+    public void taskCanceled(TaskType type) {
+
     }
 }

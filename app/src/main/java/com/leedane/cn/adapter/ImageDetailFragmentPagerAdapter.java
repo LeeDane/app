@@ -8,7 +8,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
 import com.leedane.cn.bean.ImageDetailBean;
-import com.leedane.cn.fragment.ImageDetailFragment;
+import com.leedane.cn.fragment.ImageGifFragment;
+import com.leedane.cn.fragment.ImageNormalFragment;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class ImageDetailFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private static final String TAG = "ImageDetailFragment";
+    private static final String TAG = "多图查看的适配器";
 
     private List<Fragment> mFraments;
 
@@ -37,12 +38,18 @@ public class ImageDetailFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if(this.mFraments.get(position) == null){
-            //ImageDetailFragment frament = new ImageDetailFragment(position, mContext, mImageDetailBeans.get(position));
+            //ImageNormalFragment frament = new ImageNormalFragment(position, mContext, mImageDetailBeans.get(position));
             Bundle bundle = new Bundle();
             bundle.putInt("current", position);
             bundle.putSerializable("imageDetailBean", mImageDetailBeans.get(position));
-            this.mFraments.set(position, ImageDetailFragment.newInstance(bundle));
-            Log.i(TAG, "当前frament为空，重新创建" + position);
+            if(!(mImageDetailBeans.get(position) != null && mImageDetailBeans.get(position).getPath().endsWith(".gif")))
+                this.mFraments.set(position, ImageNormalFragment.newInstance(bundle));
+            else{
+                this.mFraments.set(position, ImageGifFragment.newInstance(bundle));
+            }
+
+
+            Log.i(TAG, "frament空，重新创建" + position);
         }
         return this.mFraments.get(position);
     }

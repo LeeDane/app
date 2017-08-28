@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/image_detail_imageview"
+        android:id="@+id/image_normal_imageview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/error_cat"
