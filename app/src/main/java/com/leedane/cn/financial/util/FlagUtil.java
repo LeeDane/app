@@ -21,6 +21,9 @@ public final class FlagUtil {
     //记账模块首页对初始化数据的监听
     public static final int INIT_DATA_SUCCESS = 19;
 
+    //记账模块首页获取未上传到云端数据的监听
+    public static final int LOAD_NO_CLOUD_NUMBER = 20;
+
     //记账一级分类编辑返回的code
     public static final int ONE_LEVEL_CATEGORY_EDIT_CODE = 57;
 

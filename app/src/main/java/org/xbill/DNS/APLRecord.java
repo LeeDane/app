@@ -100,10 +100,8 @@ private static boolean
 validatePrefixLength(int family, int prefixLength) {
 	if (prefixLength < 0 || prefixLength >= 256)
 		return false;
-	if ((family == Address.IPv4 && prefixLength > 32) ||
-	    (family == Address.IPv6 && prefixLength > 128))
-		return false;
-	return true;
+	return !((family == Address.IPv4 && prefixLength > 32) ||
+			(family == Address.IPv6 && prefixLength > 128));
 }
 
 /**

@@ -86,6 +86,8 @@ public class HomeActivity extends ActionBarBaseActivity {
     private List<Fragment> mFragments = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
         //检查是否登录
         if(!checkedIsLogin()){
             Intent it = new Intent(HomeActivity.this, LoginActivity.class);
@@ -96,7 +98,7 @@ public class HomeActivity extends ActionBarBaseActivity {
             finish();
             return;
         }
-        super.onCreate(savedInstanceState);
+
         init();
         initView();
     }

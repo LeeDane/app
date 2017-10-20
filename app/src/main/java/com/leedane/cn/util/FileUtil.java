@@ -317,10 +317,7 @@ public class FileUtil {
                 return false;
             }
             File file = new File(fileName);
-            if (file.exists() && file.isFile()) {
-                return true;
-            }
-            return false;
+            return file.exists() && file.isFile();
         } catch (Exception ex) {
             return false;
         }

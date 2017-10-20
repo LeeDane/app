@@ -39,10 +39,7 @@ public class BaseActivity extends FragmentActivity implements TaskListener, View
      */
     protected boolean checkedIsLogin() {
         //判断是否有缓存用户信息
-        if(BaseApplication.getLoginUserId() < 1){
-            return false;
-        }
-        return true;
+        return BaseApplication.getLoginUserId() >= 1;
     }
     /**
      * 弹出加载ProgressDiaLog

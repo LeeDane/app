@@ -153,6 +153,7 @@ public class MainActivity extends NavigationActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ToastUtil.success(this);
         checkedIsLogin();
         //初始化控件
         initView();

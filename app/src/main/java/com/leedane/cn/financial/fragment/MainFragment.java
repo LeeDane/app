@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +77,10 @@ public class MainFragment extends FinancialBaseFragment{
      */
     private View mHeaderView;
     private View mFooterView;
+
+    private LinearLayout mNoClouldTip;
+    private TextView mNoClouldText;
+    private ImageView mNoClouldClose;
 
     public MainFragment(){
     }
@@ -145,6 +150,23 @@ public class MainFragment extends FinancialBaseFragment{
         mHeaderView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_header, null);
         mFooterView = LayoutInflater.from(mContext).inflate(R.layout.fragment_financial_main_footer, null);
 
+        mNoClouldTip = (LinearLayout)mHeaderView.findViewById(R.id.no_clould_tip_linearlayout);
+        mNoClouldText = (TextView)mHeaderView.findViewById(R.id.no_clould_text);
+        mNoClouldClose = (ImageView) mHeaderView.findViewById(R.id.no_clould_close);
+        mNoClouldText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, CloudActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+        mNoClouldClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNoClouldTip.setVisibility(View.GONE);
+            }
+        });
+
         mAddFinancial = (TextView)mHeaderView.findViewById(R.id.add_financial);
         mAddFinancial.setOnClickListener(this);
 
@@ -159,6 +181,7 @@ public class MainFragment extends FinancialBaseFragment{
         mAdapter = new FinancialRecyclerViewAdapter(mContext, mFinancialBeans);
         mRecyclerView.setAdapter(mAdapter);
         generateData();
+        loadNoClould();
         setHeader();
         setFooter();
         mAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
@@ -196,6 +219,15 @@ public class MainFragment extends FinancialBaseFragment{
                     mAdapter.addDatas(mFinancialBeans);
                     if(mListViewFooter != null){
                         mListViewFooter.setText(getStringResource(mContext, R.string.footer)+ "(一共"+ mFinancialBeans.size()+"条记录)");
+                    }
+                    break;
+                case FlagUtil.LOAD_NO_CLOUD_NUMBER:
+                    int number = msg.getData().getInt("number");
+                    if(number > 0 ){
+                        mNoClouldTip.setVisibility(View.VISIBLE);
+                        mNoClouldText.setText(Html.fromHtml("您还有<font color=\"#ff0000\">"+ number +"</font>条数据未上传到云端！"));
+                    }else{
+                        mNoClouldTip.setVisibility(View.GONE);
                     }
                     break;
             }
@@ -259,8 +291,34 @@ public class MainFragment extends FinancialBaseFragment{
                 Message message = new Message();
                 message.what = FlagUtil.INIT_DATA_SUCCESS;
                 //55毫秒秒后进行
-                firstHandler.sendMessageDelayed(message, 55);
+                firstHandler.sendMessageDelayed(message, 1000);
+            }
+        }).start();
 
+    }
+
+    /**
+     * 加载没有上传到云端的数据
+     * @return
+     */
+    public void loadNoClould(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //休息1秒钟
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                List<FinancialBean> financialBeans = financialDataBase.query(" where (id = 0 or synchronous = "+ ConstantsUtil.STATUS_DISABLE +") and status !="+ ConstantsUtil.STATUS_DRAFT +" order by datetime(addition_time) asc");
+                Message message = new Message();
+                message.what = FlagUtil.LOAD_NO_CLOUD_NUMBER;
+                Bundle bundle = new Bundle();
+                bundle.putInt("number", financialBeans != null && financialBeans.size() > 0 ? financialBeans.size(): 0);
+                message.setData(bundle);
+                //55毫秒秒后进行
+                firstHandler.sendMessageDelayed(message, 100);
             }
         }).start();
 
@@ -305,6 +363,15 @@ public class MainFragment extends FinancialBaseFragment{
         super.calculate(model);
         if(mSwipeLayout !=null && mSwipeLayout.isRefreshing())
             mSwipeLayout.setRefreshing(false);//下拉刷新组件停止刷新
+
+        //获取未上传的数据
+        Message message = new Message();
+        message.what = FlagUtil.LOAD_NO_CLOUD_NUMBER;
+        Bundle bundle = new Bundle();
+        bundle.putInt("number", CalculateUtil.noClouldNumber);
+        message.setData(bundle);
+        //55毫秒秒后进行
+        firstHandler.sendMessageDelayed(message, 55);
 
         if(model == EnumUtil.FinancialModel.本月.value){
             this.mMonthFinancialList = CalculateUtil.monthList;

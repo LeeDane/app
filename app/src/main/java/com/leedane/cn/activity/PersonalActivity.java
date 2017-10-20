@@ -588,7 +588,7 @@ public class PersonalActivity extends BaseActivity {
                 if(mUserInfo.has("personal_introduction"))
                     ((TextView)view.findViewById(R.id.base_user_info_personal_introduction)).setText(StringUtil.changeNotNull(mUserInfo.getString("personal_introduction")));
                 if(mUserInfo.has("last_request_time")){
-                    ((LinearLayout)view.findViewById(R.id.base_user_info_personal_last_request)).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.base_user_info_personal_last_request).setVisibility(View.VISIBLE);
                     ((TextView)view.findViewById(R.id.base_user_info_personal_last_request_time)).setText(StringUtil.changeNotNull(mUserInfo.getString("last_request_time")));
                 }
             }catch (JSONException e){

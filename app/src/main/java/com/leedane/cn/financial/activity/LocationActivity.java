@@ -63,7 +63,7 @@ public class LocationActivity extends BaseRecyclerViewActivity implements SwipeR
     private FinancialLocationAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
-    private List<FinancialLocationBean> mDatas = new ArrayList<>();;
+    private List<FinancialLocationBean> mDatas = new ArrayList<>();
     private FinancialLocationDataBase financialLocationDataBase;
 
     /**

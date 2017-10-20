@@ -10,7 +10,7 @@ public interface TaskListener {
      * 任务启动
      * @param type  任务的类型
      */
-    public void taskStarted(TaskType type);
+    void taskStarted(TaskType type);
 
 
     /**
@@ -18,12 +18,12 @@ public interface TaskListener {
      * @param type  任务类型
      * @param result  返回的结果集
      */
-    public void taskFinished(TaskType type, Object result);
+    void taskFinished(TaskType type, Object result);
 
     /**
      * 任务的取消
      * @param type  任务的类型
      */
-    public void taskCanceled(TaskType type);
+    void taskCanceled(TaskType type);
 
 }

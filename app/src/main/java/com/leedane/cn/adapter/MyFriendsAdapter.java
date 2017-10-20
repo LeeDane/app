@@ -34,7 +34,7 @@ public class MyFriendsAdapter extends MyFriendsRecyclerviewBaseAdapter<MyFriends
 
         private Context mContext;
 
-        public static interface OnCheckedChangedListener {
+        public interface OnCheckedChangedListener {
                 void select(int position, boolean isChecked);
         }
 

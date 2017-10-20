@@ -429,10 +429,7 @@ public class OneLevelCategoryDataBase {
     public static boolean isIncome(int oneLevelId){
         for(OneLevelCategory oneLevelCategory: BaseApplication.oneLevelCategories){
             if(oneLevelCategory.getId() == oneLevelId)
-                if(oneLevelCategory.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME)
-                    return true;
-                else
-                    return false;
+                return oneLevelCategory.getModel() == IncomeOrSpendActivity.FINANCIAL_MODEL_INCOME;
         }
         return false;
     }

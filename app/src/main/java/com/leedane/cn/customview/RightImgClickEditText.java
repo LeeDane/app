@@ -107,7 +107,7 @@ public class RightImgClickEditText extends EditText implements
     }
 
     public interface OnEmojiImgClickListener{
-        public void afterEmojiImgClick(boolean showEmoji);
+        void afterEmojiImgClick(boolean showEmoji);
     }
 
     public OnEmojiImgClickListener onEmojiImgClickListener;

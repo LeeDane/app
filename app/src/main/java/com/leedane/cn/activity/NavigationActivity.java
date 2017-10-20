@@ -133,7 +133,7 @@ public class NavigationActivity extends AppCompatActivity
                     }
 
                 it.putExtra("userId", mUserId);
-                startActivity(it)*/;
+                startActivity(it)*/
                 Intent it_find = new Intent(NavigationActivity.this, FindActivity.class);
                 startActivity(it_find);
                 break;

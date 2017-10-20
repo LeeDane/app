@@ -26,6 +26,9 @@ public class CalculateUtil {
     //本年的记账列表
     public static FinancialList yearList = new FinancialList();
 
+    //未上传到云端的数据数量
+    public static int noClouldNumber = 0;
+
     private CalculateUtil(){
 
     }

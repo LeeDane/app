@@ -62,8 +62,8 @@ public class FinancialDataBase {
         
         String sql = "insert into " + FINANCIAL_TABLE_NAME;
 
-        sql += "(id, status, model, money, one_level, two_level, has_img, path,location, longitude,latitude,financial_desc,synchronous,create_user_id, create_time, addition_time) " +
-                "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        sql += "(local_id, id, status, model, money, one_level, two_level, has_img, path,location, longitude,latitude,financial_desc,synchronous,create_user_id, create_time, addition_time) " +
+                "values((select (max(t1.local_id) +1) from "+ FINANCIAL_TABLE_NAME +" t1), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         sqlite.execSQL(sql, new String[] {
                 data.getId() + "", data.getStatus() +"", data.getModel() +"", data.getMoney() +"",
@@ -115,8 +115,8 @@ public class FinancialDataBase {
 
         String sql = "insert into " + FINANCIAL_TABLE_NAME;
 
-        sql += "(id, status, model, money, one_level, two_level, has_img, path,location, longitude,latitude,financial_desc,synchronous,create_user_id, create_time, addition_time) " +
-                "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        sql += "(local_id, id, status, model, money, one_level, two_level, has_img, path,location, longitude,latitude,financial_desc,synchronous,create_user_id, create_time, addition_time) " +
+                "values((select (max(t1.local_id) +1) from "+ FINANCIAL_TABLE_NAME +" t1), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteDatabase sqlite = dbHelper.getWritableDatabase();
         sqlite.execSQL(sql, new String[]{
                 data.getId() + "", data.getStatus() + "", data.getModel() + "", data.getMoney() + "",
@@ -255,7 +255,7 @@ public class FinancialDataBase {
      * @param where
      * @return
      */
-    public List<FinancialBean> query(String where) {
+    public synchronized List<FinancialBean> query(String where) {
         SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
         ArrayList<FinancialBean> data = new ArrayList<>();
         Cursor cursor = sqlite.rawQuery("select local_id, id, status, model, money, one_level, two_level, has_img, path, " +

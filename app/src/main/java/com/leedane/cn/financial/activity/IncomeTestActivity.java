@@ -52,7 +52,7 @@ public class IncomeTestActivity extends BaseActivity {
     private void initView() {
         ColorTemplate mCt;
         mCt = new ColorTemplate();
-        mCt.createColors(ColorTemplate.PASTEL_COLORS);
+        ColorTemplate.createColors(ColorTemplate.PASTEL_COLORS);
         mChart = (PieChart) findViewById(R.id.spread_pie_chart);
         PieData mPieData = getPieData(4, 100);
         showChart(mChart, mPieData);

@@ -2,14 +2,18 @@ package com.leedane.cn.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 
+import com.leedane.cn.financial.bean.FinancialBean;
 import com.leedane.cn.financial.bean.FinancialList;
 import com.leedane.cn.financial.database.FinancialDataBase;
 import com.leedane.cn.financial.util.CalculateUtil;
 import com.leedane.cn.financial.util.EnumUtil;
+import com.leedane.cn.financial.util.FlagUtil;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.ConstantsUtil;
 import com.leedane.cn.util.DateUtil;
@@ -21,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 计算记账的数据
@@ -53,6 +58,7 @@ public class CalculateFinancialService extends Service {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                generateNoClould();
                 generateTodayData();
                 generateYesterDayData();
                 generateWeekData();
@@ -150,5 +156,15 @@ public class CalculateFinancialService extends Service {
         CalculateUtil.yearList = financialList;
         broadcast.putExtra("model", EnumUtil.FinancialModel.本年.value);
         sendBroadcast(broadcast, null);
+    }
+
+    /**
+     * 获取未上传到云端的数据数量
+     * @return
+     */
+    private void generateNoClould(){
+        CalculateUtil.noClouldNumber = 0;
+        List<FinancialBean> financialBeans = financialDataBase.query(" where (id = 0 or synchronous = "+ ConstantsUtil.STATUS_DISABLE +") and status !="+ ConstantsUtil.STATUS_DRAFT +" order by datetime(addition_time) asc");
+        CalculateUtil.noClouldNumber = financialBeans != null && financialBeans.size() > 0 ? financialBeans.size(): 0;
     }
 }

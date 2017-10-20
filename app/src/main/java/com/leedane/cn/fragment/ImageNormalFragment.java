@@ -79,6 +79,9 @@ public class ImageNormalFragment extends ImageBaseFragment {
         if(currentImageUrl.startsWith("http://") || currentImageUrl.startsWith("https://")){
             //ImageCacheManager.loadImage(currentImageUrl, (ImageView) getView().findViewById(R.id.image_detail_imageview), width, height);
             mScaleImageView = (SubsamplingScaleImageView)getView().findViewById(R.id.image_normal_imageview);
+            //mScaleImageView.setQuickScaleEnabled(true);
+            mScaleImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
+            mScaleImageView.setMinScale(1.8F);
             ImageCacheManager.loadImage(currentImageUrl, mScaleImageView, getImageWidth(), getImageHeight());
             mScaleImageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -108,6 +111,7 @@ public class ImageNormalFragment extends ImageBaseFragment {
                 @Override
                 public void imageLoaded(Bitmap imageBitmap, String tag) {
                     ImageView imageView = (ImageView) getView().findViewById(R.id.image_normal_imageview);
+                    mScaleImageView.setQuickScaleEnabled(true);
                     if (imageBitmap == null && imageView != null) {
                         imageView.setImageResource(R.drawable.error_cat);
                         return;

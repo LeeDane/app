@@ -169,19 +169,17 @@ class TokenParser extends Object
     boolean isValidTokenChar(
         char c)
     {
-        if ( ( (c >= '\u0000') && (c <='\u0020') ) ||
-             ( (c >= '\u003a') && (c <= '\u0040') ) ||
-             ( (c >= '\u005b') && (c <= '\u005d') ) ||
-             ('\u002c' == c) ||
-             ('\u0025' == c) ||
-             ('\u0028' == c) ||
-             ('\u0029' == c) ||
-             ('\u007b' == c) ||
-             ('\u007d' == c) ||
-             ('\u007f' == c) )
-            return false;
+        return !(((c >= '\u0000') && (c <= '\u0020')) ||
+                ((c >= '\u003a') && (c <= '\u0040')) ||
+                ((c >= '\u005b') && (c <= '\u005d')) ||
+                ('\u002c' == c) ||
+                ('\u0025' == c) ||
+                ('\u0028' == c) ||
+                ('\u0029' == c) ||
+                ('\u007b' == c) ||
+                ('\u007d' == c) ||
+                ('\u007f' == c));
 
-        return true;
     }
 
     /**
@@ -195,13 +193,11 @@ class TokenParser extends Object
     boolean isWhiteSpace(
         char c)
     {
-        if ( ('\t' == c) || // HORIZONTAL TABULATION.
-             ('\n' == c) || // LINE FEED.
-             ('\r' == c) || // CARRIAGE RETURN.
-             ('\u0020' == c) )
-            return true;
+        return ('\t' == c) || // HORIZONTAL TABULATION.
+                ('\n' == c) || // LINE FEED.
+                ('\r' == c) || // CARRIAGE RETURN.
+                ('\u0020' == c);
 
-        return false;
     }
 
 }

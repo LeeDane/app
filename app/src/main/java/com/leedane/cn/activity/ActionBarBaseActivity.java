@@ -105,27 +105,26 @@ public abstract class ActionBarBaseActivity extends AppCompatActivity implements
     /**
      * 发送第一次刷新的任务
      */
-    protected void sendFirstLoading(){};
+    protected void sendFirstLoading(){}
+
     /**
      * 发送向上刷新的任务
      */
-    protected void sendUpLoading(){};
+    protected void sendUpLoading(){}
+
     /**
      * 发送向下刷新的任务
      */
-    protected void sendLowLoading(){};
+    protected void sendLowLoading(){}
 
-    protected void sendLoadAgain(View view){};
+    protected void sendLoadAgain(View view){}
 
     /**
      * 检查是否登录
      */
     protected boolean checkedIsLogin() {
         //判断是否有缓存用户信息
-        if(BaseApplication.getLoginUserId() < 1){
-            return false;
-        }
-        return true;
+        return BaseApplication.getLoginUserId() >= 1;
     }
     /**
      * 弹出加载ProgressDiaLog

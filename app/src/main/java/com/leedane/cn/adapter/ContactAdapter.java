@@ -41,7 +41,7 @@ public class ContactAdapter extends RecyclerviewBaseAdapter<ContactAdapter.Conta
         public static final String CREATER = "1";
         //public static final String STUDENT = "student";
 
-        public static interface OnRecyclerViewListener {
+        public interface OnRecyclerViewListener {
                 void onItemClick(int position);
                 boolean onItemLongClick(int position);
         }

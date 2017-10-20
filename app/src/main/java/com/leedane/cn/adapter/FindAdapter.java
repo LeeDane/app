@@ -21,7 +21,7 @@ public class FindAdapter extends RecyclerView.Adapter{
 
     private List<MenuBean> list;
 
-    public static interface OnRecyclerViewListener {
+    public interface OnRecyclerViewListener {
         void onItemClick(int position);
         boolean onItemLongClick(int position);
     }

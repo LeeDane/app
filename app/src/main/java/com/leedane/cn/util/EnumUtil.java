@@ -212,7 +212,7 @@ public class EnumUtil {
 		非正常登录状态(3088)
 		;
 
-		private ResponseCode(int value) {
+		ResponseCode(int value) {
 			this.value = value;
 		}
 
@@ -242,7 +242,7 @@ public class EnumUtil {
 	public enum NotificationType {
 		艾特我("@我"), 评论("评论"),转发("转发"),赞过我("赞过我"),私信("私信"),通知("通知"),留言("留言");
 
-		private NotificationType(String value) {
+		NotificationType(String value) {
 			this.value = value;
 		}
 
@@ -259,7 +259,7 @@ public class EnumUtil {
 	public enum SearchType {
 		用户名("user"), 心情("mood"), 博客("blog"), 记账("financial");
 
-		private SearchType(String value) {
+		SearchType(String value) {
 			this.value = value;
 		}
 

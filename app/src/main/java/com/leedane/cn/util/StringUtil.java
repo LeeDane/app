@@ -30,6 +30,24 @@ public class StringUtil {
     }
 
     /**
+     * 要是null，则不展示前面的str，并返回""
+     * @param str 注意：这个一定会在origin前面
+     * @param origin
+     * @return
+     */
+    public static String changeNotNull(String str, Object origin){
+        if(origin == null){
+            return "";
+        }else{
+            String s = String.valueOf(origin);
+            if(s.equals("null")){
+                return "";
+            }
+            return str + s;
+        }
+    }
+
+    /**
      * 判断字符串是否为空，为空返回true
      * @param origin 源字符串
      * @return
@@ -56,10 +74,7 @@ public class StringUtil {
     public static boolean isIntNumeric(String origin){
         Pattern pattern = Pattern.compile("^-?[0-9]+");
         Matcher isNum = pattern.matcher(origin);
-        if( !isNum.matches() ){
-            return false;
-        }
-        return true;
+        return isNum.matches();
     }
 
     /**
@@ -70,10 +85,7 @@ public class StringUtil {
     public static boolean isNumeric(String origin){
         Pattern pattern = Pattern.compile("-?[0-9]+.?[0-9]*");
         Matcher isNum = pattern.matcher(origin);
-        if( !isNum.matches() ){
-            return false;
-        }
-        return true;
+        return isNum.matches();
     }
 
     /**
@@ -361,9 +373,7 @@ public class StringUtil {
      * @return
      */
     public static boolean changeIntToTrueOrFalse(int i){
-        if(i == 1)
-            return true;
-        return false;
+        return i == 1;
     }
 
     /**

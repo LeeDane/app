@@ -27,6 +27,6 @@ public interface Animation {
 	 * @param diffTime
 	 * @return true if this animation should remain active.  False otherwise.
 	 */
-	public boolean update(GestureImageView view, long time);
+	boolean update(GestureImageView view, long time);
 	
 }

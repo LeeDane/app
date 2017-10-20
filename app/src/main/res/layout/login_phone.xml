@@ -4,53 +4,62 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="10dp"
+    android:padding="@dimen/default_10dp"
     android:layout_marginTop="20dp">
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/phone_login"
+        android:textColor="@color/bluePrimary"
+        android:layout_marginBottom="@dimen/default_10dp"
+        android:textSize="22sp" />
+    <EditText
+        android:id="@+id/login_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:textColor="@color/colorPrimary"
+        android:hint="@string/hint_your_phone"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
         <EditText
-            android:id="@+id/login_phone_number"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:hint="@string/hint_your_phone"/>
-        <Button
-            android:id="@+id/login_phone_send_message"
+            android:id="@+id/login_phone_validation_code"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:textColor="@color/colorPrimary"
+            android:hint="@string/hint_validation_code"/>
+        <Button
+            android:id="@+id/login_phone_send_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:onClick="getValidationCodeClick"
+            android:layout_marginLeft="@dimen/default_10dp"
             android:text="@string/send_message"
-            android:textSize="17dp" />
+            android:textSize="15sp" />
     </LinearLayout>
-    <EditText
-        android:id="@+id/login_phone_validation_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:minWidth="250dp"
-        android:hint="@string/hint_validation_code"/>
+
     <TextView
         android:id="@+id/login_phone_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/btn_setting_loginoutbg"
         android:clickable="true"
-        android:minWidth="250dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:onClick="onLoginPhoneClick"
         android:text="@string/hint_login"
-        android:textColor="#000"
+        android:textColor="#ffffff"
         android:layout_marginBottom="@dimen/default_10dp"
-        android:textSize="17dp" />
+        android:textSize="20sp" />
 
 </LinearLayout>

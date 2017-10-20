@@ -3,14 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5dp"
-    android:padding="15dp"
+    android:padding="@dimen/default_10dp"
     android:orientation="vertical">
-
     <EditText
         android:id="@+id/gallery_add_network_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary"
         android:hint="@string/gallery_add_network_link"/>
 
     <EditText
@@ -19,6 +20,8 @@
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:inputType="number"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary"
         android:hint="@string/gallery_add_width"/>
     <EditText
         android:id="@+id/gallery_add_height"
@@ -26,6 +29,8 @@
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:inputType="number"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary"
         android:hint="@string/gallery_add_height"/>
 
     <EditText
@@ -34,21 +39,20 @@
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:inputType="number"
+        android:textSize="14sp"
+        android:textColor="@color/colorPrimary"
         android:hint="@string/gallery_add_length"/>
 
     <TextView
         android:id="@+id/gallery_add_submit"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/btn_login_seletorbg"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_setting_loginoutbg"
         android:clickable="true"
-        android:minWidth="250dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/gallery_add_submit"
-        android:textColor="#000"
-        android:textSize="17dp" />
+        android:textColor="#ffffff"
+        android:textSize="22sp" />
 </LinearLayout>

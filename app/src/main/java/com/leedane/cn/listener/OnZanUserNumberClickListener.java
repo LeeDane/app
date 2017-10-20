@@ -7,6 +7,6 @@ import android.text.TextPaint;
  * Created by leedane on 2016/5/21.
  */
 public interface OnZanUserNumberClickListener {
-    public void clickTextView(int number, String tableName, int tableId);
-    public void setStyle(TextPaint ds);
+    void clickTextView(int number, String tableName, int tableId);
+    void setStyle(TextPaint ds);
 }

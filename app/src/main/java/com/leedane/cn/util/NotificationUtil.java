@@ -32,7 +32,7 @@ public class NotificationUtil {
         Intent resultIntent = new Intent();
         resultIntent.setAction(CLEAR_NOTI_ACTION);
         PendingIntent resultPendingIntent = PendingIntent.getBroadcast(mContext, 0, resultIntent, 0);
-        NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext);
         mBuilder.setContentTitle(title)//设置通知栏标题
                 .setContentText(content1) //<span style="font-family: Arial;">/设置通知栏显示内容</span>

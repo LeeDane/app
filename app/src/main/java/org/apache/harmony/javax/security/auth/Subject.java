@@ -308,12 +308,9 @@ public final class Subject implements Serializable {
 
         Subject that = (Subject) obj;
 
-        if (principals.equals(that.principals)
+        return principals.equals(that.principals)
                 && publicCredentials.equals(that.publicCredentials)
-                && privateCredentials.equals(that.privateCredentials)) {
-            return true;
-        }
-        return false;
+                && privateCredentials.equals(that.privateCredentials);
     }
 
     /**

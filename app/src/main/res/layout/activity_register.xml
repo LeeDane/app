@@ -40,8 +40,8 @@
     	android:minWidth="250dp"
     	android:layout_gravity="center"
     	android:singleLine="true"
-    	android:textSize="17dp"
-    	android:textColor="#f6fafb"
+    	android:textSize="17sp"
+		android:textColor="@color/colorPrimary"
         android:hint="@string/hint_username" />
 
     <EditText
@@ -57,8 +57,8 @@
         android:minWidth="250dp"
         android:layout_gravity="center"
         android:singleLine="true"
-        android:textSize="17dp"
-        android:textColor="#f6fafb"
+        android:textSize="17sp"
+		android:textColor="@color/colorPrimary"
         android:hint="@string/mobile_phone_null" />
 
    <com.leedane.cn.customview.EyeEditText
@@ -74,8 +74,8 @@
     	android:minWidth="250dp"
     	android:layout_gravity="center"
     	android:singleLine="true"
-    	android:textSize="17dp"
-    	android:textColor="#f6fafb"
+    	android:textSize="17sp"
+	   android:textColor="@color/colorPrimary"
     	android:inputType="textPassword"
        android:drawableRight="@drawable/eye"
         android:hint="@string/hint_password" />
@@ -92,8 +92,8 @@
         android:minWidth="250dp"
         android:layout_gravity="center"
         android:singleLine="true"
-        android:textSize="17dp"
-        android:textColor="#f6fafb"
+        android:textSize="17sp"
+		android:textColor="@color/colorPrimary"
         android:inputType="textPassword"
         android:drawableRight="@drawable/eye"
         android:hint="@string/hint_confirm_password" />

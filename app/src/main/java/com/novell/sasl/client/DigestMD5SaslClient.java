@@ -205,12 +205,9 @@ public class DigestMD5SaslClient implements SaslClient
      */
     public boolean isComplete()
     {
-        if ((m_state == STATE_VALID_SERVER_RESPONSE) ||
-            (m_state == STATE_INVALID_SERVER_RESPONSE) ||
-            (m_state == STATE_DISPOSED))
-            return true;
-        else
-            return false;
+        return (m_state == STATE_VALID_SERVER_RESPONSE) ||
+                (m_state == STATE_INVALID_SERVER_RESPONSE) ||
+                (m_state == STATE_DISPOSED);
     }
 
     /**

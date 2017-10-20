@@ -23,7 +23,7 @@ import java.util.List;
 public class ChatContactAdapter extends MyFriendsRecyclerviewBaseAdapter<ChatContactAdapter.ContactViewHolder>
         implements StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
-        public static interface OnRecyclerViewListener {
+        public interface OnRecyclerViewListener {
                 void onItemClick(int position);
         }
 

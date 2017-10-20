@@ -218,7 +218,7 @@ public class MipcaActivityCapture extends Activity implements Callback, TaskList
 							finish();
 							return;
 						}else{
-							String cid = params.get("scan_login");;
+							String cid = params.get("scan_login");
 							Intent it = new Intent(MipcaActivityCapture.this, LoginByQrCodeActivity.class);
 							//设置跳转的activity
 							it.putExtra("returnClass", "com.leedane.cn.activity.MipcaActivityCapture");

@@ -158,7 +158,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
         loadLocalData();
 
         //清空通知栏相应的信息
-        NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(mContext.NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancel(ChatActivity.BASE_USER_CHAT_DETAIL_CODE + toUserId);
     }
 

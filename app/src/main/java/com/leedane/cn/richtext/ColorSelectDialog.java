@@ -108,7 +108,7 @@ public class ColorSelectDialog {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 if(mOnItemClickListener != null){
-                    mOnItemClickListener.onItemClick(parent, view, position, id);;
+                    mOnItemClickListener.onItemClick(parent, view, position, id);
                 }
                 mSelectIndex = position;
                 cancel();

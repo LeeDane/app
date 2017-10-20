@@ -20,9 +20,9 @@ import java.util.*;
 public class Cache {
 
 private interface Element {
-	public boolean expired();
-	public int compareCredibility(int cred);
-	public int getType();
+	boolean expired();
+	int compareCredibility(int cred);
+	int getType();
 }
 
 private static int

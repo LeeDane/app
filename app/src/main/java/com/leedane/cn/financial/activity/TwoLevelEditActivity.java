@@ -244,10 +244,7 @@ public class TwoLevelEditActivity extends BaseActivity {
         mDefaultGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == R.id.two_level_edit_default){
-                    isDefault = true;
-                }else
-                    isDefault = false;
+                isDefault = checkedId == R.id.two_level_edit_default;
             }
         });
 

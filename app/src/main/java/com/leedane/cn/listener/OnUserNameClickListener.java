@@ -7,6 +7,6 @@ import android.text.TextPaint;
  * Created by leedane on 2016/5/21.
  */
 public interface OnUserNameClickListener {
-    public void clickTextView(int toUserId, String username);
-    public void setStyle(TextPaint ds);
+    void clickTextView(int toUserId, String username);
+    void setStyle(TextPaint ds);
 }

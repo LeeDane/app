@@ -230,7 +230,7 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
     @Override
     protected void onDestroy() {
         isCancel = true;
-        super.onDestroy();;
+        super.onDestroy();
         scrollView.destroy();
     }
 

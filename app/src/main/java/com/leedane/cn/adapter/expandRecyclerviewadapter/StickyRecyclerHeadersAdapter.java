@@ -14,7 +14,7 @@ public interface StickyRecyclerHeadersAdapter<VH extends RecyclerView.ViewHolder
    * @param position
    * @return
    */
-  public long getHeaderId(int position);
+  long getHeaderId(int position);
 
   /**
    * Creates a new ViewHolder for a header.  This works the same way onCreateViewHolder in
@@ -24,7 +24,7 @@ public interface StickyRecyclerHeadersAdapter<VH extends RecyclerView.ViewHolder
    * @param parent
    * @return
    */
-  public VH onCreateHeaderViewHolder(ViewGroup parent);
+  VH onCreateHeaderViewHolder(ViewGroup parent);
 
   /**
    * Binds an existing ViewHolder to the specified adapter position.
@@ -32,7 +32,7 @@ public interface StickyRecyclerHeadersAdapter<VH extends RecyclerView.ViewHolder
    * @param holder
    * @param position
    */
-  public void onBindHeaderViewHolder(VH holder, int position);
+  void onBindHeaderViewHolder(VH holder, int position);
 
-  public int getItemCount();
+  int getItemCount();
 }

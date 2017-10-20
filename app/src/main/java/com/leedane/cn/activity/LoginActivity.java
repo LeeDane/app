@@ -117,7 +117,7 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
                 case COUNT_DOWN:
                     if(time>0){
                         loginPhoneSendMessage.setEnabled(false);
-                        loginPhoneSendMessage.setText(time+"秒后重新发送");
+                        loginPhoneSendMessage.setText(time+"秒后重发");
                     }else{
                         timer.cancel();
                         time = 60;
@@ -570,7 +570,7 @@ public class LoginActivity extends Activity implements TaskListener, OnSendMessa
                 dismissPopPhoneLoginDialog();
             }
         });
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(screenWidth-100, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(screenWidth-160, ViewGroup.LayoutParams.WRAP_CONTENT);
         mDialog.setContentView(view, params);
         mDialog.show();
     }

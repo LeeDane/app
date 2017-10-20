@@ -3,6 +3,7 @@ package com.leedane.cn.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -79,7 +80,7 @@ public class CommentOrTransmitAdapter extends BaseRecyclerViewAdapter<CommentOrT
             holder.content.setText(AppUtil.textParsing(mContext, commentOrTransmitBean.getContent()));
 
             holder.from.setTypeface(typeface);
-            holder.from.setText("来自：" + StringUtil.changeNotNull(commentOrTransmitBean.getFroms()));
+            holder.from.setText(StringUtil.changeNotNull("来自：", commentOrTransmitBean.getFroms()));
 
             holder.time.setTypeface(typeface);
             holder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(commentOrTransmitBean.getCreateTime())));

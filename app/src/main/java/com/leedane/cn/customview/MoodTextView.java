@@ -62,14 +62,10 @@ public class MoodTextView extends TextView {
 				Spannable span = (Spannable) getText();
 				ClickableSpan[] clickSpan = span.getSpans(offset, offset,
 						ClickableSpan.class);
-				if (clickSpan == null || clickSpan.length == 0) {
-					//am[] aam = span.getSpans(offset, offset, am.class);
-					//if (aam != null && aam.length != 0)
-						//return false;
-					return true;
-				} else {
-					return false;
-				}
+				//am[] aam = span.getSpans(offset, offset, am.class);
+//if (aam != null && aam.length != 0)
+//return false;
+				return clickSpan == null || clickSpan.length == 0;
 			}
 		}
 	}

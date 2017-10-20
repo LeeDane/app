@@ -20,10 +20,7 @@ public class CommonUtil {
      * @return
      */
     public static boolean isEmpty(List<?> array){
-        if(array == null || array.size() == 0){
-            return true;
-        }
-        return false;
+        return array == null || array.size() == 0;
     }
 
     /**

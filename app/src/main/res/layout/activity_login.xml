@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="#5858FA">
+    android:background="@drawable/login_bg">
 
     <TextView
        android:layout_width="wrap_content"
@@ -40,8 +40,8 @@
     	android:minWidth="250dp"
     	android:layout_gravity="center"
     	android:singleLine="true"
-    	android:textSize="17dp"
-    	android:textColor="#f6fafb"
+    	android:textSize="17sp"
+		android:textColor="@color/colorPrimary"
         android:hint="@string/hint_username" />
         
    <com.leedane.cn.customview.EyeEditText
@@ -57,10 +57,10 @@
     	android:minWidth="250dp"
     	android:layout_gravity="center"
     	android:singleLine="true"
-    	android:textSize="17dp"
-    	android:textColor="#f6fafb"
+    	android:textSize="17sp"
+	   	android:textColor="@color/colorPrimary"
     	android:inputType="textPassword"
-       android:drawableRight="@drawable/eye"
+       	android:drawableRight="@drawable/eye"
         android:hint="@string/hint_password" />
    <TextView
        android:id="@+id/login_btn"
@@ -69,14 +69,14 @@
        android:layout_marginLeft="15dp"
        android:layout_marginRight="15dp"
        android:layout_marginTop="25dp"
-       android:background="@drawable/btn_login_seletorbg"
+       android:background="@drawable/btn_setting_loginoutbg"
        android:clickable="true"
        android:minWidth="250dp"
        android:layout_gravity="center"
        android:gravity="center"
        android:onClick="onDoneClick"
        android:text="@string/hint_login"
-       android:textColor="#000"
+       android:textColor="#ffffff"
        android:textSize="17dp" />
     <LinearLayout
         android:layout_width="wrap_content"

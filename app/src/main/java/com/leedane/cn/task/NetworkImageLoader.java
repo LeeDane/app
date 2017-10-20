@@ -164,6 +164,6 @@ public class NetworkImageLoader {
         return bitmap;
     }
     public interface ImageCallback {
-        public void imageLoaded(Bitmap imageBitmap, String imageTag);
+        void imageLoaded(Bitmap imageBitmap, String imageTag);
     }
 }

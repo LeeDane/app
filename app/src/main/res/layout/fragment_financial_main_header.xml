@@ -5,6 +5,31 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <LinearLayout
+        android:id="@+id/no_clould_tip_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/no_clould_text"
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="wrap_content"
+            android:text="@string/no_clould_tip"
+            android:layout_marginLeft="@dimen/default_10dp"
+            android:layout_marginTop="@dimen/default_5dp"
+            android:layout_marginBottom="@dimen/default_5dp"/>
+        <ImageView
+            android:id="@+id/no_clould_close"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/default_10dp"
+            android:src="@drawable/ic_close_red_600_18dp"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -115,8 +140,8 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="@drawable/bg_login_edittext"
-            android:textSize="30sp"
+            android:background="@drawable/financial_main_bg_edittext"
+            android:textSize="25sp"
             android:layout_marginRight="@dimen/default_3dp"
             android:text="记\n一\n笔"/>
     </LinearLayout>

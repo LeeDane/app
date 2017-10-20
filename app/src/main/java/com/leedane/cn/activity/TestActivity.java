@@ -41,7 +41,7 @@ public class TestActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_test);
         //启动新谷app，传递参数
        /* String packageName = "com.xingu.policeservice";
         //要调用另一个APP的activity名字
