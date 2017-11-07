@@ -404,6 +404,9 @@ public class MainActivity extends NavigationActivity
 
     @Override
     public void taskFinished(TaskType type, Object result) {
+        if(mySwipeRefreshLayout.isRefreshing()){
+            mySwipeRefreshLayout.setRefreshing(false);
+        }
         if(type == TaskType.HOME_LOADBLOGS){
             isLoading = false;
             if(mySwipeRefreshLayout !=null && mySwipeRefreshLayout.isRefreshing());
