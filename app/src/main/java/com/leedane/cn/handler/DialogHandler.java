@@ -2,6 +2,7 @@ package com.leedane.cn.handler;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.Html;
 
 import com.leedane.cn.app.R;
 
@@ -32,7 +33,7 @@ public class DialogHandler {
             builder.setCancelable(true);
             builder.setIcon(R.drawable.menu_feedback);
             builder.setTitle("发现新版本号"+version);
-            builder.setMessage(desc);
+            builder.setMessage(Html.fromHtml(desc));
             builder.setPositiveButton(size,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {

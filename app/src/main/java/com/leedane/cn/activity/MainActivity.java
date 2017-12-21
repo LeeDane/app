@@ -66,7 +66,6 @@ import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
-import cn.smssdk.SMSSDK;
 
 public class MainActivity extends NavigationActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
@@ -153,8 +152,20 @@ public class MainActivity extends NavigationActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ToastUtil.success(this);
         checkedIsLogin();
+
+        /*new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PushClient client = new PushClient();
+                    client.connect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);*/
+
         //初始化控件
         initView();
     }
@@ -186,7 +197,8 @@ public class MainActivity extends NavigationActivity
         JPushInterface.setAlias(getApplicationContext(), "leedane_user_" + mLoginAccountId, new TagAliasCallback() {
             @Override
             public void gotResult(int responseCode, String s, Set<String> set) {
-                ToastUtil.success(getApplicationContext(), mLoginAccountId + ",responseCode=" + responseCode + ",s=" + s + ",set=" + set);
+                //ToastUtil.success(getApplicationContext(), mLoginAccountId + ",responseCode=" + responseCode + ",s=" + s + ",set=" + set);
+                ToastUtil.success(getApplicationContext(), "消息推送已连接！");
             }
         });
     }
@@ -486,7 +498,7 @@ public class MainActivity extends NavigationActivity
                                 JSONArray jsonArray = jsonObject.getJSONArray("message");
                                 DialogHandler.showNewestVersion(MainActivity.this, jsonArray.getJSONObject(0));
                             }else{
-                                ToastUtil.failure(MainActivity.this, "获取新版本失败", Toast.LENGTH_SHORT);
+                                ToastUtil.failure(MainActivity.this, jsonObject, Toast.LENGTH_SHORT);
                             }
                             return;
                         }else if(type == TaskType.ADD_TAG){

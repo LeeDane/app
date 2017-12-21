@@ -22,7 +22,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0.1"
+        versionName "1.0.5"
         multiDexEnabled true
 
     }
@@ -112,4 +112,8 @@ dependencies {
         compile 'com.android.support:support-v4:25.3.1'
         annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'*/
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.5'
+
+    /*compile 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56'*/
+
+    compile 'io.netty:netty-all:4.0.0.Final'
 }

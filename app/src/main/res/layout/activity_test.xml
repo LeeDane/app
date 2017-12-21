@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <pl.droidsonroids.gif.GifImageView
+    <Button
+        android:id="@+id/click"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent"
+        android:text="点击连接服务器"/>
 </LinearLayout>
