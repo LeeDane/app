@@ -33,7 +33,7 @@ import java.util.List;
  * 通讯录activity
  * Created by LeeDane on 2016/4/21.
  */
-public class AddressListActivity extends Activity implements ContactAdapter.OnRecyclerViewListener{
+public class AddressListActivity extends BaseSwipeBackActivity implements ContactAdapter.OnRecyclerViewListener{
     public static final String TAG = "AddressListActivity";
     private SideBar mSideBar;
     private TextView mUserDialog;

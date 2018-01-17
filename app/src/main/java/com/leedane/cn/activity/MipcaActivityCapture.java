@@ -65,7 +65,7 @@ import java.util.Vector;
  * 我的扫码activity
  * Created by LeeDane on 2016/4/14.
  */
-public class MipcaActivityCapture extends Activity implements Callback, TaskListener {
+public class MipcaActivityCapture extends BaseSwipeBackActivity implements Callback, TaskListener {
 
 	private static final int GET_SYSTEM_IMAGE_CODE = 1034;
 	private CaptureActivityHandler handler;

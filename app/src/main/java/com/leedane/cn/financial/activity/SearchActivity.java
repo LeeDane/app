@@ -3,6 +3,7 @@ package com.leedane.cn.financial.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,8 +23,10 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.leedane.cn.activity.BaseActivity;
@@ -100,6 +103,17 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
         setImmerseLayout(findViewById(R.id.baeselayout_navbar));
         setTitleViewText(R.string.search);
         backLayoutVisible();
+
+        ImageView searchByDateImageView =  ((ImageView)findViewById(R.id.view_right_img));
+        searchByDateImageView.setVisibility(View.VISIBLE);
+        searchByDateImageView.setImageDrawable(getDrawable(R.drawable.ic_date_range_white_18dp));
+        searchByDateImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SearchActivity.this, SearchDateRangeActivity.class);
+                startActivityForResult(intent, FlagUtil.CALENDAR_RANGE_CODE);
+            }
+        });
         initData();
         initView();
     }
@@ -472,5 +486,27 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
         String start;
         String end;
         String level;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case FlagUtil.CALENDAR_RANGE_CODE:
+                if(FlagUtil.SYSTEM_RESULT_CODE == resultCode && data != null){
+                    int year = data.getIntExtra("year", 0);
+                    int month = data.getIntExtra("month", 0);
+                    int day = data.getIntExtra("day", 0);
+                    Calendar theDay = Calendar.getInstance();
+                    theDay.set(year, month, day);
+                    Date tDay = theDay.getTime();
+                    theDay.add(Calendar.DAY_OF_MONTH, 1);
+                    Date nDay = theDay.getTime();
+                    searchCondition.start = DateUtil.DateToString(tDay, "yyyy-MM-dd");
+                    searchCondition.end = DateUtil.DateToString(nDay, "yyyy-MM-dd");
+                    goSearch();
+                }
+                break;
+        }
     }
 }

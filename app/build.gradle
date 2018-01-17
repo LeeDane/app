@@ -116,4 +116,8 @@ dependencies {
     /*compile 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56'*/
 
     compile 'io.netty:netty-all:4.0.0.Final'
+
+    compile 'com.prolificinteractive:material-calendarview:1.4.3'
+
+    compile 'me.imid.swipebacklayout.lib:library:1.1.0'
 }

@@ -190,7 +190,6 @@ public class Task extends AsyncTask{
                     .connectTimeout(mRequestBean.getRequestTimeOut()  > 0 ? mRequestBean.getRequestTimeOut() : ConstantsUtil.DEFAULT_REQUEST_TIME_OUT, TimeUnit.MILLISECONDS)
                     .readTimeout(mRequestBean.getResponseTimeOut()  > 0 ? mRequestBean.getResponseTimeOut() : ConstantsUtil.DEFAULT_RESPONSE_TIME_OUT, TimeUnit.MILLISECONDS)
                     .build();
-
             //对get或者delete请求，拼接参数
             if(mRequestBean.getRequestMethod().equalsIgnoreCase(ConstantsUtil.REQUEST_METHOD_GET) ||
                     mRequestBean.getRequestMethod().equalsIgnoreCase(ConstantsUtil.REQUEST_METHOD_DELETE)){

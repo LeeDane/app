@@ -30,7 +30,7 @@ import java.io.Serializable;
  * 基本的activity
  * Created by LeeDane on 2015/10/17.
  */
-public class BaseActivity extends FragmentActivity implements TaskListener, View.OnClickListener, Serializable {
+public class BaseActivity extends LeeSwipeBackActivity implements TaskListener, View.OnClickListener, Serializable {
 
     private LinearLayout mMainLayout;
 

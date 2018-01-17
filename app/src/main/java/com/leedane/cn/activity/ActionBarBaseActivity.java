@@ -33,11 +33,13 @@ import com.leedane.cn.util.ToastUtil;
 
 import java.io.Serializable;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
+
 /**
  * 基本的activity
  * Created by LeeDane on 2015/10/17.
  */
-public abstract class ActionBarBaseActivity extends AppCompatActivity implements TaskListener, View.OnClickListener, Serializable, SwipeRefreshLayout.OnRefreshListener{
+public abstract class ActionBarBaseActivity extends SwipeBackActivity implements TaskListener, View.OnClickListener, Serializable, SwipeRefreshLayout.OnRefreshListener{
 
     protected String mPreLoadMethod = "firstloading";//当前的操作方式
     protected boolean isLoading; //标记当前是否在加载数据

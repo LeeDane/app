@@ -424,6 +424,7 @@
     <string name="financial_select_category">选择分类</string>
     <string name="financial_select_pay">支付方式</string>
     <string name="financial_select_location">选择地点</string>
+    <string name="search_calendar_range">日历搜索</string>
     <!--   记账检索  -->
     <string name="search_select_title">请选择条件</string>
     <string name="search_start_time">开始时间：</string>

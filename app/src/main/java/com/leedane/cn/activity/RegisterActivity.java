@@ -30,11 +30,13 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
+
 /**
  * 手机注册的activity
  * Created by LeeDane on 2016/4/29.
  */
-public class RegisterActivity extends Activity implements TaskListener{
+public class RegisterActivity extends SwipeBackActivity implements TaskListener{
 
     private EditText mRegisterUsername;
     private EditText mRegisterPassword;

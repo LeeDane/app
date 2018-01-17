@@ -51,4 +51,12 @@ public final class FlagUtil {
     //图库加载网络图片
     public static final int GALLERY_LOAD_NETWORK_IMAGE = 68;
 
+    //记账日历搜索的code
+    public static final int CALENDAR_RANGE_CODE = 69;
+
+    /**
+     * 系统统一结果码
+     */
+    public static final int SYSTEM_RESULT_CODE = 200;
+
 }

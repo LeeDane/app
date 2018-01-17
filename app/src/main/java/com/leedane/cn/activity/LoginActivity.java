@@ -60,7 +60,7 @@ import cn.smssdk.SMSSDK;
  * 用户登录操作activity
  * Created by LeeDane on 2015/10/15.
  */
-public class LoginActivity extends Activity implements TaskListener, OnSendMessageHandler {
+public class LoginActivity extends BaseSwipeBackActivity implements TaskListener, OnSendMessageHandler {
     AutoCompleteTextView mTextEditUsername;
     public static final String TAG = "LoginActivity";
 
