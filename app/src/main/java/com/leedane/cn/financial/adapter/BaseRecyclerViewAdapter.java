@@ -224,4 +224,11 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
     public interface OnItemLongClickListener {
         void onItemLongClick(int position);
     }
+
+    /**
+     * item的单击事件
+     */
+    public interface OnAfterDragListener {
+        void after(int position, Object data);
+    }
 }

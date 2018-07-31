@@ -5,14 +5,22 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.SettingBean;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -289,5 +297,55 @@ public class SharedPreferenceUtil {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 保存桌面数据
+     *
+     * @param context
+     * @param desktop
+     * @throws Exception
+     */
+    public static void saveDesktopData(Context context, String desktop) throws Exception {
+        SharedPreferences preferences = context.getSharedPreferences(ConstantsUtil.STRING_DESKTOPDATA, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(ConstantsUtil.DESKTOPDATA, desktop);
+        editor.commit();
+    }
+
+    /**
+     * 获取桌面的数据
+     *
+     * @param context
+     * @return
+     */
+    public static List<Map<String, Object>> getDesktopData(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(ConstantsUtil.STRING_DESKTOPDATA, Context.MODE_PRIVATE);
+        String desktop = preferences.getString(ConstantsUtil.DESKTOPDATA, null);
+        if (StringUtil.isNull(desktop)) {
+            return null;
+        }
+
+        try {
+            JSONArray jsonArray = new JSONArray(desktop);
+            if (jsonArray != null && jsonArray.length() > 0) {
+                List<Map<String, Object>> list = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Iterator it = jsonObject.keys();
+                    Map<String, Object> mp = new HashMap<>();
+                    while (it.hasNext()) {
+                        String key = StringUtil.changeNotNull(it.next());
+                        mp.put(key, jsonObject.get(key));
+                    }
+                    list.add(mp);
+                }
+                return list;
+            }
+        }catch (JSONException e){
+            Log.i(TAG, "获取缓存的桌面信息出现异常");
+            e.printStackTrace();
+        }
+        return null;
     }
 }

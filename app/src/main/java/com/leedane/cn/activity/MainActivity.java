@@ -29,7 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leedane.cn.adapter.HomeAdapter;
+import com.leedane.cn.adapter.MainAdapter;
 import com.leedane.cn.app.R;
 import com.leedane.cn.application.BaseApplication;
 import com.leedane.cn.bean.BlogBean;
@@ -111,7 +111,7 @@ public class MainActivity extends NavigationActivity
     private ListView mlistViewBlogs;
 
     //自定义的适配器对象
-    HomeAdapter mAdapter;
+    MainAdapter mAdapter;
 
     //所有的博客对象
     private List<BlogBean> mBlogs = new ArrayList<BlogBean>();
@@ -290,7 +290,7 @@ public class MainActivity extends NavigationActivity
         }else{
             sendFirstLoading();
         }
-        mAdapter = new HomeAdapter(mBlogs, MainActivity.this, mlistViewBlogs);
+        mAdapter = new MainAdapter(mBlogs, MainActivity.this, mlistViewBlogs);
         mlistViewBlogs.setAdapter(mAdapter);
         mlistViewBlogs.setOnScrollListener(new ListViewOnScrollListener());
         mlistViewBlogs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -549,7 +549,7 @@ public class MainActivity extends NavigationActivity
                         }
                         //Log.i(TAG, "原来的大小：" + mBlogs.size());
                         if(mAdapter == null) {
-                            mAdapter = new HomeAdapter(mBlogs, MainActivity.this, mlistViewBlogs);
+                            mAdapter = new MainAdapter(mBlogs, MainActivity.this, mlistViewBlogs);
                             mlistViewBlogs.setAdapter(mAdapter);
                         }
                         mAdapter.refreshData(temList);

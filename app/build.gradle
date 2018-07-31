@@ -81,8 +81,8 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     compile files('libs/gson-1.7.1.jar')
     compile files('libs/json-lib-2.4-jdk15-sources.jar')
-    compile 'com.qiniu:qiniu-android-sdk:7.2.+'
-    compile 'io.realm:realm-android:0.84.1'
+    compile 'com.qiniu:qiniu-android-sdk:7.2.3'
+    //compile 'io.realm:realm-android:0.84.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
     compile files('libs/json-lib-2.2.2-jdk15.jar')
     compile files('libs/commons-collections-3.2.jar')
@@ -120,4 +120,10 @@ dependencies {
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
 
     compile 'me.imid.swipebacklayout.lib:library:1.1.0'
+
+    /*compile 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'*/
+
+    compile 'com.jakewharton:butterknife:7.0.1'
+
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }

@@ -111,7 +111,6 @@ public class FinancialRecyclerViewAdapter extends BaseRecyclerViewAdapter<Financ
                     mOnItemClickListener.onItemClick(pos, String.valueOf(data.getMoney()));
                 }
             });
-
             //setAnimation(holder.itemView, position);
         }
     }

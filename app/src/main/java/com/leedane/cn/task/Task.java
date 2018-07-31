@@ -173,6 +173,7 @@ public class Task extends AsyncTask{
             }
             if(StringUtil.isNull(mRequestBean.getUrl())){
                 serverPath = BaseApplication.getBaseServerUrl() + serverMethod;
+                //serverPath = "http://192.168.12.176/" + serverMethod;
             }else{
                 String url = mRequestBean.getUrl();
                 if(url.endsWith("/")){

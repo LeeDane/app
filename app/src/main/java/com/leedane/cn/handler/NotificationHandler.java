@@ -14,21 +14,6 @@ import java.util.HashMap;
  * Created by LeeDane on 2016/4/27.
  */
 public class NotificationHandler {
-
-    /**
-     * 获取通知消息的请求
-     * @param listener
-     * @param params
-     */
-    public static void getNotificationsRequest(TaskListener listener, HashMap<String, Object> params){
-        HttpRequestBean requestBean = new HttpRequestBean();
-        requestBean.setServerMethod("nf/notifications");
-        params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setParams(params);
-        requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_GET);
-        TaskLoader.getInstance().startTaskForResult(TaskType.LOAD_NOTIFICATION, listener, requestBean);
-    }
-
     /**
      * 删除服务器上的通知
      * @param listener

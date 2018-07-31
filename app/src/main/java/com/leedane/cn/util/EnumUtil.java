@@ -1,5 +1,8 @@
 package com.leedane.cn.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 枚举工具类
  * Created by LeeDane on 2016/1/29.
@@ -271,14 +274,14 @@ public class EnumUtil {
 	 * 获取NotificationType列表
 	 * @return
 	 */
-	public static String[] getNotificationTypeList(){
-		String[] array = new String[NotificationType.values().length];
+	public static List<String> getNotificationTypeList(){
+		List<String> list = new ArrayList<>();
 		int i = 0;
  		for(NotificationType nt: NotificationType.values()){
-			array[i] = nt.value ;
+			list.add(nt.value);
 			i++;
 		}
-		return array;
+		return list;
 	}
 	public static void main(String[] args) {
 		System.out.println(getResponseValue(1001));

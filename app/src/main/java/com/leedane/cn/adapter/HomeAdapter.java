@@ -2,192 +2,221 @@ package com.leedane.cn.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.text.Html;
-import android.text.SpannableString;
-import android.util.Log;
-import android.view.Gravity;
+import android.graphics.Color;
+import android.support.v4.view.MotionEventCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import com.leedane.cn.activity.ChatActivity;
+import com.leedane.cn.activity.CircleOfFriendActivity;
+import com.leedane.cn.activity.FriendActivity;
+import com.leedane.cn.activity.GalleryActivity;
 import com.leedane.cn.activity.MainActivity;
-import com.leedane.cn.activity.PersonalActivity;
-import com.leedane.cn.adapter.BaseAdapter.BaseListAdapter;
+import com.leedane.cn.activity.MoodActivity;
+import com.leedane.cn.activity.NotificationActivity;
+import com.leedane.cn.activity.SettingActivity;
+import com.leedane.cn.activity.UserInfoActivity;
 import com.leedane.cn.app.R;
-import com.leedane.cn.application.BaseApplication;
-import com.leedane.cn.bean.BlogBean;
-import com.leedane.cn.bean.ImageDetailBean;
-import com.leedane.cn.handler.CommonHandler;
-import com.leedane.cn.task.NetworkImageLoader;
-import com.leedane.cn.util.DateUtil;
-import com.leedane.cn.util.RelativeDateFormat;
+import com.leedane.cn.financial.Helper.ItemTouchHelperAdapter;
+import com.leedane.cn.financial.Helper.ItemTouchHelperViewHolder;
+import com.leedane.cn.financial.Helper.OnStartDragListener;
+import com.leedane.cn.financial.adapter.BaseRecyclerViewAdapter;
+import com.leedane.cn.util.CommonUtil;
+import com.leedane.cn.util.SharedPreferenceUtil;
 import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
-import com.leedane.cn.volley.ImageCacheManager;
+import com.readystatesoftware.viewbadger.BadgeView;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
- * 首页显示文章列表的适配器类
- * Created by LeeDane on 2015/10/6.
+ * 首页适配器的adapter对象
+ * Created by LeeDane on 2018/1/18.
  */
-public class HomeAdapter extends BaseListAdapter<BlogBean>{
-
-    public static final String TAG = "HomeAdapter";
-    private NetworkImageLoader mNetworkImageLoader = null;
-    private ListView mListView ;
-
-    private SpannableString mSpanTitle;
-    private int lastPosition = -1;
-
-
-    public  HomeAdapter(List<BlogBean> list, Context context, ListView listView){
-        super(context, list);
-        this.mListView = listView;
-        mNetworkImageLoader = new NetworkImageLoader();
+public class HomeAdapter extends BaseRecyclerViewAdapter<Map<String, Object>> implements ItemTouchHelperAdapter {
+    private Context mContext;
+    private OnStartDragListener mDragStartListener;
+    private boolean isLogin;
+    public HomeAdapter(Context context, List<Map<String, Object>> itemList, boolean isLogin, OnStartDragListener dragStartListener){
+        super(context, itemList);
+        this.mContext = context;
+        this.isLogin = isLogin;
+        this.mDragStartListener = dragStartListener;
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        MyHolder myHolder;
-        if(view == null){
-            view = LayoutInflater.from(mContext).inflate(R.layout.item_home_listview, null);
-            myHolder = new MyHolder();
-            myHolder.title = (TextView) view.findViewById(R.id.home_item_title);
-            myHolder.img = (ImageView) view.findViewById(R.id.home_item_img);
-            myHolder.account = (TextView) view.findViewById(R.id.home_item_account);
-            myHolder.time = (TextView) view.findViewById(R.id.home_item_time);
-            myHolder.from = (TextView) view.findViewById(R.id.home_item_from);
-            myHolder.digest = (TextView) view.findViewById(R.id.home_item_digest);
-            myHolder.tags = (LinearLayout)view.findViewById(R.id.home_item_tags);
-            view.setTag(myHolder);
-        }else{
-            myHolder = (MyHolder)view.getTag();
-        }
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_home_gridview_item, parent, false);
+        return new MyViewHolder(layout);
+    }
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+        final Map<String, Object> data = mDatas.get(position);
+        if((viewHolder instanceof MyViewHolder) && !CommonUtil.isEmpty(mDatas)) {
+            final MyViewHolder holder = ((MyViewHolder) viewHolder);
+            holder.img.setBackgroundResource((int)data.get("img"));
+            holder.tip.setText(String.valueOf(data.get("label")));
+            /*holder.root.setOnClickListener(new View.OnClickListener() {
 
-        //setAnimation(convertView, position);
-        final BlogBean blogBean = mDatas.get(position);
-        Log.i(TAG, "执行了getView()方法");
-        String title = blogBean.getTitle();
-       //mSpanTitle = new SpannableString(title);
+                @Override
+                public void onClick(View arg0) {
+                    switch ((int)data.get("id")) {
+                        case 1: //
+                            mContext.startActivity(new Intent(mContext, MainActivity.class));
+                            break;
+                        case 2: //
+                            mContext.startActivity(new Intent(mContext, MoodActivity.class));
+                            break;
+                        case 3: //
+                            mContext.startActivity(new Intent(mContext, com.leedane.cn.financial.activity.HomeActivity.class));
+                            break;
+                        case 4: //
+                            mContext.startActivity(new Intent(mContext, NotificationActivity.class));
+                            break;
+                        case 5: //
+                            mContext.startActivity(new Intent(mContext, UserInfoActivity.class));
+                            break;
+                        case 6: //
+                            mContext.startActivity(new Intent(mContext, GalleryActivity.class));
+                            break;
+                        case 7: //
+                            mContext.startActivity(new Intent(mContext, CircleOfFriendActivity.class));
+                            break;
+                        case 8: //
+                            mContext.startActivity(new Intent(mContext, ChatActivity.class));
+                            break;
+                        case 9: //
+                            mContext.startActivity(new Intent(mContext, FriendActivity.class));
+                            break;
+                        case 10: //
+                            mContext.startActivity(new Intent(mContext, SettingActivity.class));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });*/
+            //holder.img.setBackgroundColor(mContext.getResources().getColor(R.color.black));
+            //holder.badge.setBackgroundColor(mContext.getResources().getColor(R.color.red));
+            int num = StringUtil.changeObjectToInt(data.get("num"));
+            if(num > 0){
+                BadgeView badge = new BadgeView(mContext, holder.badge);
+                badge.setText(num + "");
+                badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);// 设置在右上角
+                badge.show();
+            }
 
-        //设置字体大小（绝对值,单位：像素）
-        //mSpanTitle.setSpan(new AbsoluteSizeSpan(70), 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        //设置字体
-        //mSpanTitle.setSpan(new TypefaceSpan("monospace"), 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        myHolder.title.setText(title);
-
-        int bid = blogBean.getId();
-        final String imgUrl = blogBean.getImgUrl();
-        //final String imgUrl = ConstantsUtil.QINIU_CLOUD_SERVER + "head.jpg";
-        //final String imgUrl = ConstantsUtil.DEFAULT_SERVER_URL + "leedane/download/executeDown.action";
-
-        if(StringUtil.isNotNull(imgUrl)){
-            //myHolder.getmImg().setVisibility(View.VISIBLE);
-            if(imgUrl.startsWith("http://") || imgUrl.startsWith("https://")){
-                ImageCacheManager.loadImage(imgUrl, myHolder.img, BaseApplication.getDefaultImage(), BaseApplication.getErrorImage());
-            }else{
-                //从base64格式的字符串中截取
-                String imageTag = imgUrl.substring(10,30) + blogBean.getId();
-                mNetworkImageLoader.loadBase64Bitmap(imageTag, imgUrl, new NetworkImageLoader.ImageCallback() {
+            // 对必须登录确不能登录的标记为灰色并且不能点击
+            if(StringUtil.changeObjectToBoolean(data.get("mustLogin")) && !isLogin){
+                holder.itemView.setBackgroundColor(Color.LTGRAY);
+                /*holder.itemView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void imageLoaded(Bitmap imageBitmap, String imageTag) {
-                        ImageView imageView = (ImageView) mListView.findViewWithTag(imageTag);
-                        if (imageBitmap == null && imageView != null) {
-                            imageView.setImageResource(R.drawable.no_pic);
-                            return;
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                            mDragStartListener.onStartDrag(holder);
                         }
-                        if (imageView != null) {
-                            imageView.setImageBitmap(imageBitmap);
+                        return true;
+                    }
+                });*/
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtil.failure(mContext, "请先登录");
+                    }
+                });
+            }else{
+                holder.itemView.setBackgroundColor(0);
+                /*holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                       if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                            mDragStartListener.onStartDrag(holder);
                         }
+                        return false;
+                    }
+                });*/
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null)
+                            mOnItemClickListener.onItemClick(position, StringUtil.changeObjectToInt(data.get("id")));
                     }
                 });
             }
-            myHolder.img.setOnClickListener(new View.OnClickListener() {
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
-                    String picPath = blogBean.getImgUrl();
-                    if (StringUtil.isNotNull(picPath)) {
-                        List<ImageDetailBean> list = new ArrayList<ImageDetailBean>();
-                        ImageDetailBean imageDetailBean = new ImageDetailBean();
-                        imageDetailBean.setPath(picPath);
-                        list.add(imageDetailBean);
-                        CommonHandler.startImageDetailActivity(mContext, list, 0);
-                    } else {
-                        ToastUtil.success(mContext, "暂无图片");
+                public boolean onLongClick(View v) {
+                    if(StringUtil.isNotNull(StringUtil.changeNotNull(data.get("desc")))){
+                        ToastUtil.success(mContext, StringUtil.changeNotNull(data.get("desc")));
                     }
+                    return true;
                 }
             });
-        }else{
-            myHolder.img.setClickable(false);
-            //myHolder.getmImg().setVisibility(View.GONE);
-            myHolder.img.setImageBitmap(BaseApplication.getNotPicImage());
+            setAnimation(holder.root, position);
         }
-
-
-        final int userId = blogBean.getCreateUserId();
-        myHolder.account.setText(Html.fromHtml("<font color=\"blue\">" + StringUtil.changeNotNull(blogBean.getAccount()) + "</font>"));
-        myHolder.account.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(mContext, PersonalActivity.class);
-                it.putExtra("userId", userId);
-                mContext.startActivity(it);
-            }
-        });
-
-        myHolder.from.setText("来自：" + StringUtil.changeNotNull(blogBean.getFroms()));
-
-        String createTime = blogBean.getCreateTime();
-        if(StringUtil.isNull(createTime)){
-            myHolder.time.setText("");
-        }else{
-            myHolder.time.setText(RelativeDateFormat.format(DateUtil.stringToDate(createTime)));
-        }
-
-        myHolder.digest.setText(StringUtil.changeNotNull(blogBean.getDigest()) + "...");
-        myHolder.tags.removeAllViewsInLayout();
-        if(StringUtil.isNotNull(blogBean.getTag())){
-            String[] tagArray = blogBean.getTag().split(",");
-            for(int i = 0; i< tagArray.length; i++){
-                myHolder.tags.addView(buildTagTextView(tagArray[i]), i);
-            }
-        }
-        return view;
     }
 
-    private TextView buildTagTextView(String tag){
-        TextView textView = new TextView(mContext);
-        textView.setGravity(Gravity.CENTER);
-        //这里的Textview的父layout是ListView，所以要用ListView.LayoutParams
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = 10;
-        layoutParams.rightMargin = 45;
-        textView.setLayoutParams(layoutParams);
-        textView.setPadding(20, 10, 20, 10);
-        textView.setText(tag);
-        int rn = (int) (Math.random() * MainActivity.bgColors.length);
-        textView.setTextColor(mContext.getResources().getColor(R.color.white));
-        textView.setBackgroundResource(MainActivity.bgColors[rn]);
-        textView.setTextSize(14);
 
-        return textView;
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        //ToastUtil.success(mContext, "onItemMove:fromPosition->"+fromPosition+",toPosition->"+toPosition);
+        Collections.swap(mDatas, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        try {
+            SharedPreferenceUtil.saveDesktopData(mContext, new JSONArray(mDatas).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
-    static class MyHolder{
-        TextView title;
+    @Override
+    public void onItemDismiss(int position) {
+        //ToastUtil.success(mContext, "onItemDismiss:position->"+position);
+        mDatas.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements
+            ItemTouchHelperViewHolder {
         ImageView img;
-        TextView account;
-        TextView from;
-        TextView time;
-        TextView digest;
-        LinearLayout tags;
+        TextView tip;
+        LinearLayout badge;
+        LinearLayout root;
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            if(itemView == mHeaderView || itemView == mFooterView)
+                return;
+            badge = (LinearLayout)itemView.findViewById(R.id.grid_view_badge);
+            img = (ImageView)itemView.findViewById(R.id.grid_view_img);
+            tip = (TextView) itemView.findViewById(R.id.grid_view_tip);
+            root = (LinearLayout)itemView.findViewById(R.id.grid_view_root);
+        }
+
+        @Override
+        public void onItemSelected(int position) {
+            //ToastUtil.success(mContext, "select:"+position);
+            //right.setImageResource(R.drawable.ic_list_white_18dp);
+            //itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear(int oldPosition , int position) {
+
+            //right.setImageResource(R.mipmap.right_sign);
+            //itemView.setBackgroundColor(0);
+        }
     }
 }

@@ -89,7 +89,6 @@ public class SearchDateRangeActivity extends BaseActivity{
         //mcv.setRightArrowMask(getBaseContext().getResources().getDrawable(R.drawable.app_bg));
 
         //mcv.showContextMenu()
-
         mcv.setSelectedDate(Calendar.getInstance());//当日选中
         mcv.state().edit()
                 .setFirstDayOfWeek(MONDAY)

@@ -70,6 +70,7 @@
     <string name="close">关闭</string>
     <string name="home">首页</string>
 
+    <string name="blog">博客</string>
     <!-- 异常相关 -->
     <string name="crash_file_path">"/crash"</string>
     <string name="crash_toast_message">程序出现异常,即将退出</string>
@@ -247,6 +248,7 @@
     <string name="fan_to_fans">Ta的粉丝</string>
     <string name="fan_my_attention">我的关注</string>
     <string name="fan_to_attention">Ta的关注</string>
+    <string name="add_attention">加关注</string>
     <string name="fan_each_other">互相关注</string>
 
     <!--  用户中心  -->
@@ -461,6 +463,11 @@
     <string name="nearby_man">只看男生</string>
     <string name="nearby_all">查看全部</string>
     <string name="route">线路</string>
+
+    <string name="webview">web浏览</string>
+
+    <!--   圈子  -->
+    <string name="circle">圈子</string>
 
     <string-array name="colors">
         <item>#CA4443</item>

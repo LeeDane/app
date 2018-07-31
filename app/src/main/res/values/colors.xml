@@ -35,4 +35,9 @@
     <color name="material_deep">#303F9F</color>
 
     <color name="default_bg_color">#f5f5f5</color>
+    <color name="custom_gray">#EEEEEE</color>
+
+    <color name="title_color">#4E8CEE</color>
+
+    <color name="line_color">#F6F6F6</color>
 </resources>

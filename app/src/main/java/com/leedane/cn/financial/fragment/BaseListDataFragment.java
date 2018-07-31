@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 
 import com.leedane.cn.app.R;
@@ -98,11 +100,16 @@ public abstract class BaseListDataFragment extends FinancialBaseFragment {
 
         this.mRecyclerView = (RecyclerView)mRootView.findViewById(getRecyclerViewId());
         mLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+
+        //LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(mContext, R.anim.layout_animation_fall_down);
+        //mRecyclerView.setLayoutAnimation(animation);
+
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new RecycleViewDivider(mContext, LinearLayoutManager.VERTICAL));
         mAdapter = new FinancialRecyclerViewAdapter(mContext, mFinancialList.getFinancialBeans());
         mRecyclerView.setAdapter(mAdapter);
+        //mRecyclerView.scheduleLayoutAnimation();
 
         if(v != null && v instanceof TextView){
             TextView tv = (TextView)v;

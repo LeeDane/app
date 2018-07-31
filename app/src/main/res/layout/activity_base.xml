@@ -8,7 +8,7 @@
 	    android:id="@+id/baeselayout_navbar"
 	    android:layout_width="match_parent"
 	    android:layout_height="70dp"
-	    android:background="#3f51b5">
+	    android:background="@color/title_color">
 	    <LinearLayout
 	        android:id="@+id/base_backlayout"
 	        android:layout_width="50dp"

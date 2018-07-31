@@ -69,7 +69,7 @@ public class FindActivity extends BaseActivity implements FindAdapter.OnRecycler
         findBeans.add(new MenuBean(R.drawable.menu_circle_of_friends, getStringResource(R.string.circle_of_friend)));
         findBeans.add(new MenuBean(R.drawable.menu_chat, getStringResource(R.string.chat)));
         findBeans.add(new MenuBean(R.drawable.menu_friends, getStringResource(R.string.my_friends)));
-        findBeans.add(new MenuBean(R.drawable.menu_search, getStringResource(R.string.search)));
+        //findBeans.add(new MenuBean(R.drawable.ic_search_blue_300_18dp, getStringResource(R.string.search)));
         findBeans.add(new MenuBean(R.drawable.qr_code, getStringResource(R.string.sao_yi_sao)));
         findBeans.add(new MenuBean(R.drawable.no_user, getStringResource(R.string.yao_yi_yao)));
         findBeans.add(new MenuBean(R.drawable.menu_security, getStringResource(R.string.nearby)));
