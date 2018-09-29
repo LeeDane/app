@@ -443,7 +443,7 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
                     return;
                 }
                 JSONObject resultObject = new JSONObject(String.valueOf(result));
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                if(resultObject.optBoolean("isSuccess")){
                     detail = resultObject.getJSONArray("message").getJSONObject(0);
                     mDetailInfoShowLinearLayout.setVisibility(View.VISIBLE);
                     init();
@@ -457,8 +457,8 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
                 }
             }else if(type == TaskType.DETAIL_MOOD_IMAGE){
                 JSONObject resultObject = new JSONObject(String.valueOf(result));
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess") && resultObject.has("imgs") &&
-                        StringUtil.isNotNull(resultObject.getString("imgs"))){
+                if(resultObject.optBoolean("isSuccess") &&
+                        StringUtil.isNotNull(resultObject.optString("imgs"))){
                     String imgs = resultObject.getString("imgs");
                     if(imgs.endsWith(";")){
                         imgs = imgs.substring(0, imgs.length() -1);
@@ -471,7 +471,7 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
             }else if(type == TaskType.ADD_GALLERY){
                 dismissLoadingDialog();
                 JSONObject resultObject = new JSONObject(String.valueOf(result));
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                if(resultObject.optBoolean("isSuccess")){
                     Toast.makeText(mContext, "该图片已成功加入我的图库" +resultObject, Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(mContext, "加入我的图库失败"+(resultObject.has("message") ? ",原因是：" + resultObject.getString("message"):""), Toast.LENGTH_LONG).show();
@@ -542,7 +542,7 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
             }else if(type == TaskType.ADD_COMMENT || type == TaskType.ADD_TRANSMIT){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     new NotificationUtil(1, mContext).sendTipNotification("信息提示", "您的"+(type == TaskType.ADD_COMMENT? "评论": "转发")+"发表成功", "测试", 1, 0);
                     if(type == TaskType.ADD_COMMENT){
                         int commentNumber = detail.getInt("comment_number");
@@ -568,7 +568,7 @@ public class MoodDetailFragment extends BaseRecyclerViewFragment implements Base
                 }
             } else if (type == TaskType.ADD_ZAN) {
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     Toast.makeText(mContext, "点赞成功", Toast.LENGTH_SHORT).show();
                     int zanNumber = detail.getInt("zan_number");
                     detail.put("zan_number", (zanNumber + 1));

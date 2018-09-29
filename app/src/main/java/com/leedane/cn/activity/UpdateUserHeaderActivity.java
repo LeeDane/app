@@ -249,7 +249,7 @@ public class UpdateUserHeaderActivity extends BaseActivity {
 
                 UploadItem item = mItems.get(itemIndex);
                 //返回成功
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject.optBoolean("isSuccess")){
                     for(PortUpload portUpload: item.getPortUploads()){
                         if(!portUpload.isFinish() && portUpload.getUrl().equalsIgnoreCase(url) && !StringUtil.isNull(url) && !isCancel){
                             portUpload.setIsFinish(true);
@@ -270,7 +270,7 @@ public class UpdateUserHeaderActivity extends BaseActivity {
 
             }else if(type == TaskType.MERGE_PORT_FILE && !isCancel){//合并文件
                 //合并完成
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject.optBoolean("isSuccess")){
                     mItems.get(itemIndex).setStatus(EnumUtil.FileStatus.删除断点文件.value);
                     //删除断点文件
                     deletePortFile();
@@ -280,7 +280,7 @@ public class UpdateUserHeaderActivity extends BaseActivity {
                 }
             }else if(type == TaskType.DELETE_PORT_FILE && !isCancel){//删除断点文件
                 //合并完成
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject.optBoolean("isSuccess")){
                     mItems.get(itemIndex).setStatus(EnumUtil.FileStatus.完成.value);
                     //获取用户最新头像的路径
                     UserHandler.getHeadPath(UpdateUserHeaderActivity.this);
@@ -291,7 +291,7 @@ public class UpdateUserHeaderActivity extends BaseActivity {
             }else if(type == TaskType.LOAD_HEAD_PATH){
 
                 //获取用户新的头像
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject.optBoolean("isSuccess")){
                     mItems.get(itemIndex).setStatus(EnumUtil.FileStatus.完成.value);
                     JSONObject json = SharedPreferenceUtil.getUserInfo(getApplicationContext());
                     if(json != null && jsonObject.has("message") && StringUtil.isNotNull(jsonObject.getString("message"))){

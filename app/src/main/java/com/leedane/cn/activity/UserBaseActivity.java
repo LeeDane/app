@@ -261,7 +261,7 @@ public class UserBaseActivity extends BaseActivity{
         try {
             JSONObject resultObject = new JSONObject(String.valueOf(result));
             if(TaskType.UPDATE_USER_BASE == type && resultObject != null){
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                if(resultObject.optBoolean("isSuccess")){
                     String userinfo = resultObject.getString("userinfo");
                     //获取旧的值
                     JSONObject json = SharedPreferenceUtil.getUserInfo(getApplicationContext());

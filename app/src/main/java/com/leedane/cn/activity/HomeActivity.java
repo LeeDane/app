@@ -1,11 +1,15 @@
 package com.leedane.cn.activity;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +19,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -92,7 +97,7 @@ public class HomeActivity extends BaseActivity
     public static final int TYPE_STOCK_ID = 12;
     public static final int TYPE_MATERIAL_ID = 13;
 
-
+    public final static int MY_PERMISSIONS_REQUEST_ROLE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,12 +105,47 @@ public class HomeActivity extends BaseActivity
         setImmerseLayout(findViewById(R.id.home_root));
         //setTitleViewText(R.string.chat);
         findViewById(R.id.baeselayout_navbar).setVisibility(View.GONE);
+
+        checkRole();
+
         //初始化控件
-        initView();
-        initJPush();
+       // initView();
+       // initJPush();
     }
 
+    /**
+     * 检查读取手机状态权限
+     * 检查写入文件的权限
+     * 检查往SD操作的权限
+     */
+    private void checkRole(){
+        //
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this,
+                Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS)
+                != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED)
+        {
 
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_PHONE_STATE
+                            ,Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            ,Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS
+                            ,Manifest.permission.READ_CONTACTS},
+                    MY_PERMISSIONS_REQUEST_ROLE);
+        } else
+        {
+            initView();
+            initJPush();
+        }
+    }
     /**
      * 初始化极光推送
      */
@@ -457,6 +497,9 @@ public class HomeActivity extends BaseActivity
             System.out.print(li.get(0));
             int i = 0;
         }*/
+        //控件还没有加载完成
+        if(mUserLogin == null )
+            return;
         //判断是否有缓存用户信息
         if(mUserInfo != null && mUserInfo.has("account")){
             mUserLogin.setVisibility(View.GONE);
@@ -654,5 +697,40 @@ public class HomeActivity extends BaseActivity
         }
         Log.i(TAG, "onStartDragonStartDragonStartDrag");
         //ToastUtil.success(HomeActivity.this, "onStartDrag");
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_ROLE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initView();
+                    initJPush();
+                } else {
+                    ToastUtil.failure(HomeActivity.this, "您已取消授权，将无法继续使用本APP");
+                    checkRole();
+                }
+                return;
+            }
+        }
+    }
+
+    /**
+     * 搜索的点击事件
+     * @param v
+     */
+    public void onSearchClick(View v){
+        EditText vKey = (EditText) findViewById(R.id.searck_key);
+        if(StringUtil.isNull(vKey.getText().toString())){
+            findViewById(R.id.searck_key).requestFocus();
+            ToastUtil.failure(HomeActivity.this, "请输入搜索关键字！");
+            return;
+        }
+
+        Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+        intent.putExtra("key", vKey.getText().toString());
+        startActivity(intent);
     }
 }

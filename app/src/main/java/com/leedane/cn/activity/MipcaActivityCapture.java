@@ -466,7 +466,7 @@ public class MipcaActivityCapture extends BaseSwipeBackActivity implements Callb
 			//执行添加关注操作
 			if(type == TaskType.ADD_FAN){
 				dismissLoadingDialog();
-				if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+				if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
 					ToastUtil.success(MipcaActivityCapture.this, jsonObject);
 					if(mUserInfoAttention != null){
 						//设置不可点击

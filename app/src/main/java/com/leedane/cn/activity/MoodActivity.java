@@ -553,14 +553,14 @@ public class MoodActivity extends BaseActivity {
             dismissLoadingDialog();
             //发表心情
             if(type == TaskType.SEND_MOOD_NORMAL || type == TaskType.ADD_COMMENT || type == TaskType.ADD_TRANSMIT){
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(MoodActivity.this, "您的心情" + getNameByType()+ "成功");
                     Intent intent = new Intent(MoodActivity.this, PersonalActivity.class);
                     intent.putExtra("type", mOperateType);
                     setResult(PersonalActivity.MOOD_UPDATE_REQUEST_CODE, intent);
                     finish();//关闭当前activity
                 }else{
-                    ToastUtil.failure(MoodActivity.this, "心情" + getNameByType()+ "失败" + ":" + (jsonObject.has("message") ? jsonObject.getString("message") : ""));
+                    ToastUtil.failure(MoodActivity.this, "心情" + getNameByType()+ "失败" + ":" + jsonObject.optString("message"));
                 }
             }
         }catch (Exception e){

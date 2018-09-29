@@ -154,7 +154,7 @@ public class ZanFragment extends BaseRecyclerViewFragment implements BaseRecycle
             }else if(type == TaskType.DELETE_ZAN){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(mContext, "删除赞成功", Toast.LENGTH_SHORT);
                     sendFirstLoading();
                 }else{

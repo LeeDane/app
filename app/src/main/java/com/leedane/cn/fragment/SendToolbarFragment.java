@@ -302,7 +302,7 @@ public class SendToolbarFragment extends Fragment implements View.OnClickListene
             if(type == TaskType.ADD_COMMENT || type == TaskType.ADD_TRANSMIT){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
 
                     //隐藏输入法
                     InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);

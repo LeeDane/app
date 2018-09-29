@@ -239,8 +239,8 @@ public class LocationActivity extends BaseRecyclerViewActivity implements SwipeR
                 dismissOperateLocationDialog();
                 dismissListItemMenuDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
-                    ToastUtil.success(LocationActivity.this, jsonObject.getString("message"));
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
+                    ToastUtil.success(LocationActivity.this, jsonObject.optString("message"));
                     sendFirstLoading();
                 }else{
                     ToastUtil.failure(LocationActivity.this, JsonUtil.getErrorMessage(result));

@@ -166,14 +166,14 @@ public class PushBlogActivity extends BaseActivity {
             dismissLoadingDialog();
             //发表心情
             if(type == TaskType.ADD_BLOG){
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     ToastUtil.success(this, "成功"+jsonObject, Toast.LENGTH_SHORT);
                 }else{
                     ToastUtil.failure(this, "失败"+jsonObject, Toast.LENGTH_SHORT);
                 }
             }else if(type == TaskType.QINIU_TOKEN){
                 dismissLoadingDialog();
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     token = jsonObject.getString("message");
                     uploadImg();
                 }else{

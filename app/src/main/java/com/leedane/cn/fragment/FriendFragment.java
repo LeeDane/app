@@ -165,7 +165,7 @@ public class FriendFragment extends BaseFragment{
             }else if(type == TaskType.CANCEL_FRIEND){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     //异步去加载用户的好友数据
                     String friendsStr = SharedPreferenceUtil.getFriends(mContext);
                     int fid = mFriendBeans.get(clickListItemPosition).getFid();

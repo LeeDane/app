@@ -51,12 +51,12 @@ public class JsonUtil {
         try{
             JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
             if(jsonObject.has("isSuccess")){
-                if(jsonObject.getBoolean("isSuccess")){
-                    tip = jsonObject.getString("message");
+                if(jsonObject.optBoolean("isSuccess")){
+                    tip = jsonObject.optString("message");
                 }else{
-                    tip = EnumUtil.getResponseValue(jsonObject.getInt("responseCode"));
+                    tip = EnumUtil.getResponseValue(jsonObject.optInt("responseCode"));
                     if(StringUtil.isNull(tip))
-                        tip = jsonObject.getString("message");
+                        tip = jsonObject.optString("message");
                 }
             }else{
                 tip = jsonObject.toString();

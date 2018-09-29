@@ -190,7 +190,7 @@ public class CommentOrTransmitFragment extends BaseRecyclerViewFragment implemen
             }else if(type == TaskType.DELETE_COMMENT || type == TaskType.DELETE_TRANSMIT){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(mContext, "删除成功", Toast.LENGTH_SHORT);
                     sendFirstLoading();
                 }else{

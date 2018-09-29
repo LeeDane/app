@@ -139,35 +139,31 @@ public class UploadFileActivity extends BaseActivity {
         mAllStart.setOnClickListener(this);
         mAllStop.setOnClickListener(this);
         mHidden_linearLayout = (LinearLayout)findViewById(R.id.hidden_linearLayout);
-        try{
-            if(mUserInfo.has("is_admin") && mUserInfo.getBoolean("is_admin")){
-                mHidden_linearLayout.setVisibility(View.VISIBLE);
-                mETVersionNumber = (EditText)findViewById(R.id.app_version_number);
-                mETVersionDesc = (EditText)findViewById(R.id.app_version_desc);
+        if(mUserInfo.optBoolean("is_admin")){
+            mHidden_linearLayout.setVisibility(View.VISIBLE);
+            mETVersionNumber = (EditText)findViewById(R.id.app_version_number);
+            mETVersionDesc = (EditText)findViewById(R.id.app_version_desc);
 
-                RadioGroup radioGroup = (RadioGroup)findViewById(R.id.upload_file_group);
-                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        switch (checkedId){
-                            case R.id.upload_file_app_version:
-                                isAppVersion = true;
-                                mETVersionNumber.setVisibility(View.VISIBLE);
-                                mETVersionDesc.setVisibility(View.VISIBLE);
-                                tableName = ConstantsUtil.UPLOAD_APP_VERSION_TABLE_NAME;
-                                break;
-                            case R.id.upload_file_normal:
-                                isAppVersion = false;
-                                tableName = ConstantsUtil.UPLOAD_FILE_TABLE_NAME;
-                                mETVersionNumber.setVisibility(View.GONE);
-                                mETVersionDesc.setVisibility(View.GONE);
-                                break;
-                        }
+            RadioGroup radioGroup = (RadioGroup)findViewById(R.id.upload_file_group);
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    switch (checkedId){
+                        case R.id.upload_file_app_version:
+                            isAppVersion = true;
+                            mETVersionNumber.setVisibility(View.VISIBLE);
+                            mETVersionDesc.setVisibility(View.VISIBLE);
+                            tableName = ConstantsUtil.UPLOAD_APP_VERSION_TABLE_NAME;
+                            break;
+                        case R.id.upload_file_normal:
+                            isAppVersion = false;
+                            tableName = ConstantsUtil.UPLOAD_FILE_TABLE_NAME;
+                            mETVersionNumber.setVisibility(View.GONE);
+                            mETVersionDesc.setVisibility(View.GONE);
+                            break;
                     }
-                });
-            }
-        }catch (JSONException e){
-            e.printStackTrace();
+                }
+            });
         }
     }
 
@@ -187,7 +183,7 @@ public class UploadFileActivity extends BaseActivity {
 
                 UploadItem item = mItems.get(itemIndex);
                 //返回成功
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject.optBoolean("isSuccess")){
                     for(PortUpload portUpload: item.getPortUploads()){
                         if(!portUpload.isFinish() && portUpload.getUrl().equalsIgnoreCase(url) && !StringUtil.isNull(url) && !isStop){
                             Log.i(TAG, portUpload.getUrl()+"上传完成");
@@ -226,7 +222,7 @@ public class UploadFileActivity extends BaseActivity {
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
 
                 //合并完成
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject.optBoolean("isSuccess")){
                     mItems.get(itemIndex).setStatus(EnumUtil.FileStatus.删除断点文件.value);
                     //删除断点文件
                     deletePortFile();
@@ -238,7 +234,7 @@ public class UploadFileActivity extends BaseActivity {
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 TextView desc = (TextView)mLinearLayout.getChildAt(itemIndex).findViewById(R.id.upload_desc);
                 //合并完成
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject.optBoolean("isSuccess")){
                     mItems.get(itemIndex).setStatus(EnumUtil.FileStatus.完成.value);
                     isItemFinish = true;
                     ProgressBar progressBar = (ProgressBar)mLinearLayout.getChildAt(itemIndex).findViewById(R.id.upload_progress);

@@ -178,7 +178,7 @@ public class NotificationFragment extends BaseRecyclerViewLazyFragment implement
             }else if(type == TaskType.DELETE_NOTIFICATION){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(mContext, jsonObject);
                     sendFirstLoading();
                 }else{

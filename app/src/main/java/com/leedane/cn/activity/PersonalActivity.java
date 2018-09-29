@@ -439,7 +439,7 @@ public class PersonalActivity extends BaseActivity {
             //判断是否是好友或者是签到
             if(type == TaskType.IS_SIGN_IN || type == TaskType.IS_FAN){
                 isCheckFanOrSignIn = false;
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     if(mIsLoginUser){
                         mPersonalSignIn.setText(getStringResource(R.string.personal_is_sign_in));
                         mPersonalSignIn.setVisibility(View.VISIBLE);
@@ -456,7 +456,7 @@ public class PersonalActivity extends BaseActivity {
                     return;
                 }
                 mPersonalSignIn.setClickable(true);
-                if(mIsLoginUser && jsonObject != null && jsonObject.has("isSuccess") && !jsonObject.getBoolean("isSuccess")){
+                if(mIsLoginUser && jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     mPersonalSignIn.setText(getStringResource(R.string.personal_sign_in));
                     mPersonalSignIn.setVisibility(View.VISIBLE);
                     mPersonalFan.setVisibility(View.GONE);
@@ -464,7 +464,7 @@ public class PersonalActivity extends BaseActivity {
                     return;
                 }
 
-                if(!mIsLoginUser && jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == false){
+                if(!mIsLoginUser && jsonObject != null && !jsonObject.optBoolean("isSuccess")){
                     mPersonalFan.setText(getStringResource(R.string.personal_add_fan));
                     mPersonalFan.setVisibility(View.VISIBLE);
                     mPersonalSignIn.setVisibility(View.GONE);
@@ -476,7 +476,7 @@ public class PersonalActivity extends BaseActivity {
             //执行签到操作
             if(type == TaskType.DO_SIGN_IN){
                 dismissLoadingDialog();
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     //ToastUtil.success(PersonalActivity.this, "签到成功");
                     //设置不可点击
                     mPersonalSignIn.setClickable(false);
@@ -489,7 +489,7 @@ public class PersonalActivity extends BaseActivity {
             //执行添加关注操作
             if(type == TaskType.ADD_FAN){
                 dismissLoadingDialog();
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(PersonalActivity.this,jsonObject);
                     //设置不可点击
                     mPersonalFan.setClickable(false);
@@ -502,7 +502,7 @@ public class PersonalActivity extends BaseActivity {
             //获取非登录用户的基本信息
             if(type == TaskType.LOAD_USER_INFO){
                 dismissLoadingDialog();
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     mUserInfo = new JSONObject(jsonObject.getString("userinfo"));
                     mUserId = mUserInfo.getInt("id");
                     initView();

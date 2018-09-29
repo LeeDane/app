@@ -177,8 +177,8 @@ public class CloudActivity extends BaseActivity{
         try{
             if(type == TaskType.SYNCHRONOUS_FINANCIAL){
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
-                    dealResult(jsonObject.getJSONObject("message"));
+                if(jsonObject.optBoolean("isSuccess")){
+                    dealResult(jsonObject.optJSONObject("message"));
                 }else{
                     ToastUtil.success(this, JsonUtil.getTipMessage(result));
                     mFinancialBeans.get(endIndex).setSynchronousTip("<font color='red'>" + JsonUtil.getTipMessage(result) + "</font>");

@@ -160,7 +160,7 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
                     if(mDialog != null && mDialog.isShowing()){
                         mDialog.dismiss();
                     }
-                    if(jsonObject.getBoolean("isSuccess"))
+                    if(jsonObject.optBoolean("isSuccess"))
                         addGalleryShowAlertDialog();
                     else
                         ToastUtil.failure(this, JsonUtil.getErrorMessage(result));
@@ -168,7 +168,7 @@ public class GalleryActivity extends BaseActivity implements SwipeRefreshLayout.
                     ToastUtil.failure(GalleryActivity.this, "添加入图库失败", Toast.LENGTH_LONG);
                 }
             }else if (type == TaskType.QINIU_TOKEN && !isCancel) {//获取凭证
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     token = jsonObject.getString("message");
                     new Thread(new Runnable() {
                         @Override

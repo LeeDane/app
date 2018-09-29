@@ -177,7 +177,7 @@ public class FriendNotYetFragment extends BaseFragment{
             }else if(type == TaskType.AGREE_FRIEND){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     /**
                      * 延迟100毫钟后去加载数据
                      */
@@ -237,7 +237,7 @@ public class FriendNotYetFragment extends BaseFragment{
             }else if(type == TaskType.SEND_EMAIL){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     dismissItemMenuDialog();
                     ToastUtil.success(mContext, jsonObject);
                 }else {
@@ -247,7 +247,7 @@ public class FriendNotYetFragment extends BaseFragment{
             }else if(type == TaskType.CANCEL_FRIEND){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     dismissItemMenuDialog();
                     ToastUtil.success(mContext, jsonObject);
                 }else{

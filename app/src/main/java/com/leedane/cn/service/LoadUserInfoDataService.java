@@ -77,7 +77,7 @@ public class LoadUserInfoDataService  extends Service implements TaskListener {
             try{
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 //获取到数据
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject.optBoolean("isSuccess")){
                     //saveError(jsonObject.getString("message"));
                     SharedPreferenceUtil.saveUserInfoData(getApplicationContext(), jsonObject.getJSONArray("message").getJSONObject(0).toString());
                     //使用静态的方式注册广播，可以使用显示意图进行发送广播

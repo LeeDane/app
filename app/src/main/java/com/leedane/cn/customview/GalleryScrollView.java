@@ -43,7 +43,6 @@ import com.leedane.cn.handler.CommonHandler;
 import com.leedane.cn.handler.GalleryHandler;
 import com.leedane.cn.handler.ReportHandler;
 import com.leedane.cn.task.TaskListener;
-import com.leedane.cn.task.TaskLoader;
 import com.leedane.cn.task.TaskType;
 import com.leedane.cn.util.BeanConvertUtil;
 import com.leedane.cn.util.MySettingConfigUtil;
@@ -51,7 +50,6 @@ import com.leedane.cn.util.StringUtil;
 import com.leedane.cn.util.ToastUtil;
 import com.leedane.cn.volley.ImageCacheManager;
 import com.leedane.cn.volley.ImageCacheUtil;
-import com.readystatesoftware.viewbadger.BadgeView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -480,7 +478,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                     }
                 }else if(type == TaskType.DELETE_GALLERY){
                     JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
-                    if(jsonObject != null && jsonObject.has("isSuccess")){
+                    if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                         ToastUtil.success(getContext(), "移出图库成功!");
                         loadMoreImage("firstloading", null);
                     }else{
@@ -488,7 +486,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                     }
                 }else if(type == TaskType.ADD_REPORT){
                     JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
-                    if(jsonObject != null && jsonObject.has("isSuccess")){
+                    if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                         ToastUtil.success(getContext(), "已成功举报，我们会尽快处理");
                         //Toast.makeText(getContext(), "举报失败，请稍后重试"+(jsonObject.has("message") ? ",原因是：" + jsonObject.getString("message"):""), Toast.LENGTH_LONG).show();
                     }else{
@@ -499,7 +497,7 @@ public class GalleryScrollView extends ScrollView implements View.OnTouchListene
                     JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
                     if(jsonObject != null && jsonObject.has("isSuccess")){
                         ToastUtil.success(getContext(), jsonObject);
-                        if(jsonObject.getBoolean("isSuccess")){
+                        if(jsonObject.optBoolean("isSuccess")){
                             dismissPublishChatBgDialog();
                         }
                     }

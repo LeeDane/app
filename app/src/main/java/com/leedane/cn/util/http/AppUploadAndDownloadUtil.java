@@ -75,13 +75,13 @@ public class AppUploadAndDownloadUtil {
             conn.disconnect();
             JSONObject object = new JSONObject(sb.toString());
             if(object.has("isSuccess")){
-                jsonObject.put("isSuccess", object.getBoolean("isSuccess"));
+                jsonObject.put("isSuccess", object.optBoolean("isSuccess"));
             }
             if(object.has("message")){
-                jsonObject.put("message", object.getString("message"));
+                jsonObject.put("message", object.optString("message"));
             }
             if(object.has("responseCode")){
-                jsonObject.put("responseCode", object.getInt("responseCode"));
+                jsonObject.put("responseCode", object.optInt("responseCode"));
             }
             return jsonObject.toString();
         } catch (Exception e) {

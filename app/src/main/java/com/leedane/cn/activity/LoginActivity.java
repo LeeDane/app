@@ -279,7 +279,7 @@ public class LoginActivity extends BaseSwipeBackActivity implements TaskListener
         try {
             JSONObject resultObject = new JSONObject(String.valueOf(result));
             if(TaskType.LOGIN_DO == type && resultObject != null){
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                if(resultObject.optBoolean("isSuccess")){
                     SharedPreferenceUtil.saveUserInfo(getApplicationContext(), resultObject.getString("userinfo"));
                     ToastUtil.success(LoginActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT);
                     CommonHandler.startUserFreidnsService(getApplicationContext(), true);
@@ -305,14 +305,14 @@ public class LoginActivity extends BaseSwipeBackActivity implements TaskListener
                 }
                 return;
             }else if(TaskType.DO_GET_LOGIN_CODE == type && resultObject != null){//获取手机验证码完成
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                if(resultObject.optBoolean("isSuccess")){
                     ToastUtil.success(LoginActivity.this, "验证码发送成功，1小时内有效", Toast.LENGTH_SHORT);
                     loginPhoneSendMessage.setEnabled(false);
                 }else{
                     ToastUtil.failure(LoginActivity.this, "验证码发送失败", Toast.LENGTH_SHORT);
                 }
             }else if(type ==TaskType.DO_LOGIN_PHONE){
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                if(resultObject.optBoolean("isSuccess")){
                     SharedPreferenceUtil.saveUserInfo(getApplicationContext(), resultObject.getString("userinfo"));
                     ToastUtil.success(LoginActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT);
                     CommonHandler.startUserFreidnsService(getApplicationContext(), true);
@@ -336,7 +336,7 @@ public class LoginActivity extends BaseSwipeBackActivity implements TaskListener
                     ToastUtil.failure(LoginActivity.this, resultObject);
                 }
             }else if(TaskType.GET_PUBLIC_KEY == type && resultObject != null){//获取公钥
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                if(resultObject.optBoolean("isSuccess")){
                     mPublicKey  = resultObject.getString("message");
                     //ToastUtil.success(LoginActivity.this, "获取服务器上的公钥成功："+ mPublicKey, Toast.LENGTH_SHORT);
                 }else{

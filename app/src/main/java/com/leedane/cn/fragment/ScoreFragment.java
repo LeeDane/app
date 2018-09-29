@@ -145,7 +145,7 @@ public class ScoreFragment extends BaseRecyclerViewFragment{
             }else if(type == TaskType.DELETE_COLLECTION){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(mContext, "删除收藏成功", Toast.LENGTH_SHORT);
                     sendFirstLoading();
                 }else{

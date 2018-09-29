@@ -73,12 +73,11 @@ public class LoadUserFriendService extends Service implements TaskListener {
             try{
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
                 //获取到数据
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
-                    if(jsonObject.has("message"))
-                        SharedPreferenceUtil.saveFriends(getApplicationContext(), jsonObject.toString());
+                if(jsonObject.optBoolean("isSuccess")){
+                    SharedPreferenceUtil.saveFriends(getApplicationContext(), jsonObject.optString("message"));
                 }else{
                     ToastUtil.failure(LoadUserFriendService.this, jsonObject);
-                    saveError(jsonObject.getString("message"));
+                    saveError(jsonObject.optString("message"));
                 }
             }catch (Exception e){
                 e.printStackTrace();

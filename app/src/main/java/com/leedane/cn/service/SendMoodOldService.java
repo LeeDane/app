@@ -269,7 +269,7 @@ public class SendMoodOldService extends Service implements TaskListener {
 
                 UploadItem item = mItems.get(itemIndex);
                 //返回成功
-                if (jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject.optBoolean("isSuccess")) {
                     for (PortUpload portUpload : item.getPortUploads()) {
                         if (!portUpload.isFinish() && portUpload.getUrl().equalsIgnoreCase(url) && !StringUtil.isNull(url) && !isCancel) {
                             portUpload.setIsFinish(true);
@@ -294,7 +294,7 @@ public class SendMoodOldService extends Service implements TaskListener {
 
             } else if (type == TaskType.MERGE_PORT_FILE && !isCancel) {//合并文件
                 //合并完成
-                if (jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject.optBoolean("isSuccess")) {
                     mItems.get(itemIndex).setStatus(EnumUtil.FileStatus.删除断点文件.value);
 
                     //简单的发送
@@ -319,7 +319,7 @@ public class SendMoodOldService extends Service implements TaskListener {
                 }
             } else if (type == TaskType.DELETE_PORT_FILE && !isCancel) {//删除断点文件
                 //合并完成
-                if (jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject.optBoolean("isSuccess")) {
                     mItems.get(itemIndex).setStatus(EnumUtil.FileStatus.完成.value);
                     isItemFinish = true;
                     uploadOneFile();
@@ -327,7 +327,7 @@ public class SendMoodOldService extends Service implements TaskListener {
                     saveError("删除断点文件过程中");
                 }
             } else if (type == TaskType.SEND_MOOD_NORMAL && !isCancel) {//发表心情
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     new NotificationUtil(1, SendMoodOldService.this).sendTipNotification("信息提示", "您的发表的心情发送成功", "测试", 1, 0);
                 } else {
                     saveError("发表文字过程中");

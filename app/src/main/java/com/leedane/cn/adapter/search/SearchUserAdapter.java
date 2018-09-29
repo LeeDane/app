@@ -191,27 +191,27 @@ public class SearchUserAdapter extends BaseAdapter implements TaskListener{
             dismissLoadingDialog();
             if(type == TaskType.ADD_FAN){ //添加关注
 
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(mContext, jsonObject);
                 }else{
                     ToastUtil.failure(mContext, jsonObject);
                 }
             }else  if(type == TaskType.CANCEL_FAN){//取消关注
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(mContext, jsonObject);
 
                 }else{
                     ToastUtil.failure(mContext, jsonObject);
                 }
             }else  if(type == TaskType.ADD_FRIEND){//添加好友
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(mContext, jsonObject);
 
                 }else{
                     ToastUtil.failure(mContext, jsonObject);
                 }
             }else  if(type == TaskType.CANCEL_FRIEND){//解除好友关系
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(mContext, jsonObject);
 
                 }else{

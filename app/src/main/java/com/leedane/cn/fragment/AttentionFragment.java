@@ -159,7 +159,7 @@ public class AttentionFragment extends BaseRecyclerViewFragment implements BaseR
             }else if(type == TaskType.DELETE_ATTENTION){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(mContext, "删除关注成功", Toast.LENGTH_SHORT);
                     sendFirstLoading();
                 }else{

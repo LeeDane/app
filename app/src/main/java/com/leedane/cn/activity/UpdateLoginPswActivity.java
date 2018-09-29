@@ -71,7 +71,7 @@ public class UpdateLoginPswActivity extends BaseActivity{
         try {
             JSONObject resultObject = new JSONObject(String.valueOf(result));
             if(TaskType.UPDATE_LOGIN_PSW == type && resultObject != null){
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                if(resultObject.optBoolean("isSuccess")){
                     ToastUtil.success(UpdateLoginPswActivity.this, resultObject.getString("message"), Toast.LENGTH_SHORT);
 
                     Intent intent = new Intent();

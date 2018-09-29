@@ -319,7 +319,7 @@ public class ChatDetailListFragment extends Fragment implements TaskListener, Vi
             }else if(type == TaskType.ADD_CHAT){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(mContext, "聊天信息发送成功");
                     /**
                      * 延迟1秒钟后去加载数据

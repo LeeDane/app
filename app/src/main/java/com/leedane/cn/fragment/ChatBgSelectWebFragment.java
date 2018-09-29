@@ -172,7 +172,7 @@ public class ChatBgSelectWebFragment extends BaseFragment{
             }else if(type == TaskType.VERIFY_CHAT_BG){
 
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     /*if (selectWebBean.getType() == 1) {
 
                     }else{

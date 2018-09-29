@@ -195,7 +195,7 @@ public class ShakeActivity extends BaseActivity{
             countNumber ++;
             ((TextView)findViewById(R.id.countdown)).setText("今天您还可以免费摇"+ (6 - countNumber)+"次！");
             if((TaskType.LOAD_SHAKE_BLOG == type || TaskType.LOAD_SHAKE_USER == type ||  TaskType.LOAD_SHAKE_MOOD == type )&& jsonObject != null){
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject.optBoolean("isSuccess")){
                     //ToastUtil.success(ShakeActivity.this, jsonObject);
                     Message message = new Message();
                     message.what = FlagUtil.YAOYIYAO_RESULT_HANDLER;

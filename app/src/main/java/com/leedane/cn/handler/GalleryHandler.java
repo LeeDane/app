@@ -52,10 +52,9 @@ public class GalleryHandler {
     public static void delete(TaskListener listener, int gid){
         HttpRequestBean requestBean = new HttpRequestBean();
         Map<String, Object> params = new HashMap<>();
-        params.put("gid", gid);
         requestBean.setParams(params);
         params.putAll(BaseApplication.newInstance().getBaseRequestParams());
-        requestBean.setServerMethod("gl/photo");
+        requestBean.setServerMethod("gl/photo/"+ gid);
         requestBean.setRequestMethod(ConstantsUtil.REQUEST_METHOD_DELETE);
         TaskLoader.getInstance().startTaskForResult(TaskType.DELETE_GALLERY, listener, requestBean);
     }

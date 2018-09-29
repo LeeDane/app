@@ -4,88 +4,105 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android" >-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.leedane.cn.activity.PersonalActivity">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="105dp"
-        android:background="@drawable/personal_bg"
-        android:orientation="vertical">
-        <com.leedane.cn.customview.CircularImageView
-            android:id="@+id/personal_pic"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="12dp"
-            android:layout_gravity="center"
-            android:src="@drawable/no_pic"
-            app:border_width="2dp"
-            />
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_below="@id/personal_pic"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/personal_sign_in"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:enabled="true"
-                android:visibility="gone"
-                android:text="@string/personal_sign_in"/>
-            <TextView
-                android:id="@+id/personal_add_fan"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:enabled="true"
-                android:text="@string/personal_add_fan"/>
-            <TextView
-                android:id="@+id/personal_info"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/personal_info"/>
-            <TextView
-                android:id="@+id/personal_fans"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:clickable="true"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/personal_fans"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:minHeight="@dimen/default_40dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="115dp"
+                android:background="@drawable/personal_bg"
+                android:orientation="vertical">
+                <com.leedane.cn.customview.CircularImageView
+                    android:id="@+id/personal_pic"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="@dimen/default_22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/no_pic"
+                    app:border_width="2dp"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_below="@id/personal_pic"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/personal_sign_in"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:clickable="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:enabled="true"
+                        android:visibility="gone"
+                        android:text="@string/personal_sign_in"/>
+                    <TextView
+                        android:id="@+id/personal_add_fan"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:clickable="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:enabled="true"
+                        android:text="@string/personal_add_fan"/>
+                    <TextView
+                        android:id="@+id/personal_info"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:clickable="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/personal_info"/>
+                    <TextView
+                        android:id="@+id/personal_fans"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:clickable="true"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/personal_fans"/>
+                </LinearLayout>
+            </LinearLayout>
+            <net.lucode.hackware.magicindicator.MagicIndicator
+                android:id="@+id/magic_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_40dp"
+                android:background="@color/default_bg_color" />
         </LinearLayout>
-    </LinearLayout>
-    <net.lucode.hackware.magicindicator.MagicIndicator
-        android:id="@+id/magic_indicator"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_40dp"
-        android:background="@color/default_bg_color" />
+    </android.support.design.widget.AppBarLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/personal_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </android.support.v4.view.ViewPager>
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
 <!--
 </ScrollView>-->

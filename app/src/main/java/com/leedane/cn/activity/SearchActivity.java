@@ -123,6 +123,30 @@ public class SearchActivity extends BaseActivity implements SearchHistoryFragmen
         });
         mSearchType.setText(selectType);
         mSearchType.setOnClickListener(this);
+
+        String key = getIntent().getStringExtra("key");
+        if(StringUtil.isNotNull(key)){
+            mSearchKey.setText(key);
+            SearchHistoryDataBase searchHistoryDataBase = new SearchHistoryDataBase(SearchActivity.this);
+            SearchHistoryBean searchHistoryBean = new SearchHistoryBean();
+            searchHistoryBean.setCreateTime(DateUtil.DateToString(new Date()));
+            searchHistoryBean.setSearchType(selectType);
+            searchHistoryBean.setSearchKey(key);
+            searchHistoryDataBase.insert(searchHistoryBean);
+            searchHistoryDataBase.destroy();
+            Bundle bundle = new Bundle();
+            bundle.putString("searchKey", key);
+            if(selectType.equalsIgnoreCase(EnumUtil.SearchType.用户名.name())){//搜索用户
+                SearchUserFragment searchUserFragment = SearchUserFragment.newInstance(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchUserFragment).commit();
+            }else if(selectType.equalsIgnoreCase(EnumUtil.SearchType.博客.name())){//搜索博客
+                SearchBlogFragment searchBlogFragment = SearchBlogFragment.newInstance(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchBlogFragment).commit();
+            }else if(selectType.equalsIgnoreCase(EnumUtil.SearchType.心情.name())){//搜索心情
+                SearchMoodFragment searchMoodFragment = SearchMoodFragment.newInstance(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.search_container, searchMoodFragment).commit();
+            }
+        }
     }
 
     /**

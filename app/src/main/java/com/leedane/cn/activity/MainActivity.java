@@ -438,10 +438,10 @@ public class MainActivity extends NavigationActivity
             if(result instanceof String){
                 try{
                     JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                    if(jsonObject.has("isSuccess")){
+                    if(jsonObject != null && jsonObject.has("isSuccess")){
                         //删除
                         if(TaskType.DELETE_BLOG == type){
-                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                            if(jsonObject.optBoolean("isSuccess")){
                                 ToastUtil.success(MainActivity.this, "删除成功");
                                 List<BlogBean> temList = new ArrayList<>();
                                 for(BlogBean blogBean: mBlogs){
@@ -461,7 +461,7 @@ public class MainActivity extends NavigationActivity
                         if(TaskType.ADD_COMMENT == type){
                             dismissLoadingDialog();
                             dismissTextDialog();
-                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                            if(jsonObject.optBoolean("isSuccess")){
                                 ToastUtil.success(MainActivity.this, "评论成功");
                             }else{
                                 ToastUtil.failure(MainActivity.this, "评论发表失败"+(jsonObject.has("message")? ":" +jsonObject.getString("message"):""));
@@ -471,7 +471,7 @@ public class MainActivity extends NavigationActivity
                         if(TaskType.ADD_TRANSMIT == type){
                             dismissLoadingDialog();
                             dismissTextDialog();
-                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                            if(jsonObject.optBoolean("isSuccess")){
                                 ToastUtil.success(MainActivity.this, "转发成功");
                             }else{
                                 ToastUtil.failure(MainActivity.this, "转发失败"+(jsonObject.has("message")? ":"+jsonObject.getString("message"):""));
@@ -480,20 +480,20 @@ public class MainActivity extends NavigationActivity
 
                         //收藏
                         if(TaskType.ADD_COLLECTION == type){
-                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                            if(jsonObject.optBoolean("isSuccess")){
                                 ToastUtil.success(MainActivity.this, "收藏成功");
                             }else{
                                 ToastUtil.failure(MainActivity.this, jsonObject);
                             }
                             //关注
                         }else if(TaskType.ADD_ATTENTION == type){
-                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                            if(jsonObject.optBoolean("isSuccess")){
                                 ToastUtil.success(MainActivity.this, "关注成功");
                             }else{
                                 ToastUtil.failure(MainActivity.this, jsonObject);
                             }
                         }else if(type == TaskType.GET_APP_VERSION){
-                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                            if(jsonObject.optBoolean("isSuccess")){
                                 //ToastUtil.success(MainActivity.this, "获取新版本成功" + jsonObject.toString(), Toast.LENGTH_SHORT);
                                 JSONArray jsonArray = jsonObject.getJSONArray("message");
                                 DialogHandler.showNewestVersion(MainActivity.this, jsonArray.getJSONObject(0));
@@ -504,7 +504,7 @@ public class MainActivity extends NavigationActivity
                         }else if(type == TaskType.ADD_TAG){
                             dismissLoadingDialog();
                             dismissTextDialog();
-                            if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                            if(jsonObject.optBoolean("isSuccess")){
                                 ToastUtil.success(MainActivity.this, jsonObject);
                             }else{
                                 ToastUtil.failure(MainActivity.this, jsonObject);

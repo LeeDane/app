@@ -419,13 +419,12 @@ public class BeanConvertUtil {
         try{
             HttpResponseSearchUserBean httpResponseSearchUserBean = null;
             JSONObject jsonObject = new JSONObject(str);
-            boolean isSuccess = jsonObject.getBoolean("isSuccess");
-            if(isSuccess){
-                JSONObject object = jsonObject.getJSONObject("message");
+            if(jsonObject.optBoolean("isSuccess")){
+                JSONObject object = jsonObject.optJSONObject("message");
                 JSONArray array = object.getJSONArray(ConstantsUtil.SEARCH_TYPE_USER + "");
                 Map<String, Object> map = new HashMap<>();
                 map.put("message", array.toString());
-                map.put("isSuccess", isSuccess);
+                map.put("isSuccess", true);
                 httpResponseSearchUserBean = gson.fromJson(map.toString(), HttpResponseSearchUserBean.class);
             }
             Log.d(TAG, "响应HttpResponseSearchUserBean对象开始转换。。。");

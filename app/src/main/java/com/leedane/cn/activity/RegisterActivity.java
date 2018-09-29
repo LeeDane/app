@@ -222,7 +222,7 @@ public class RegisterActivity extends SwipeBackActivity implements TaskListener{
         try {
             JSONObject jsonObject = new JSONObject(String.valueOf(result));
             if(TaskType.REGISTER_DO == type && jsonObject != null){
-                if(jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")){
+                if(jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(RegisterActivity.this, jsonObject);
                 }else{
                     ToastUtil.failure(RegisterActivity.this, jsonObject, Toast.LENGTH_SHORT);

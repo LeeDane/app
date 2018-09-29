@@ -233,7 +233,7 @@ public class SendChatToolbarFragment extends Fragment implements View.OnClickLis
         try{
             if(type == TaskType.ADD_CHAT){
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     try{
                         Gson gson = new GsonBuilder()
                                 .enableComplexMapKeySerialization()

@@ -811,7 +811,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
             if(type == TaskType.ADD_FINANCIAL){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(IncomeOrSpendActivity.this, jsonObject);
                     //更新本地数据为已经同步状态
                     JSONObject object = jsonObject.getJSONObject("message");
@@ -829,7 +829,7 @@ public class IncomeOrSpendActivity extends BaseActivity {
             }else if(type == TaskType.QINIU_TOKEN){
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(IncomeOrSpendActivity.this, jsonObject);
                     token = jsonObject.getString("message");
                     uploadImg();

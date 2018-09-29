@@ -184,7 +184,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
             }else  if(type == TaskType.ADD_ZAN) {
                 dismissMoodListItemMenuDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     ToastUtil.success(mContext, "点赞成功", Toast.LENGTH_SHORT);
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
@@ -193,7 +193,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
                 dismissMoodListItemMenuDialog();
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     ToastUtil.success(mContext, "关注成功", Toast.LENGTH_SHORT);
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
@@ -202,7 +202,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
                 dismissMoodListItemMenuDialog();
                 dismissLoadingDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     ToastUtil.success(mContext, "添加收藏成功", Toast.LENGTH_SHORT);
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
@@ -211,7 +211,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
                 dismissMoodListItemMenuDialog();
 
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     ToastUtil.success(mContext, "删除心情成功", Toast.LENGTH_SHORT);
                     List<MoodBean> tempList = new ArrayList<>();
                     for(int i = 0;i < mMoodBeans.size(); i++){
@@ -230,7 +230,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
             }else  if(type == TaskType.FANYI) { //翻译
                 dismissMoodListItemMenuDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     showFanyiDialog(jsonObject.getString("message"));
                 }else{
                     ToastUtil.failure(mContext, jsonObject, Toast.LENGTH_SHORT);
@@ -239,7 +239,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
             }else if(type == TaskType.UPDATE_COMMENT_STATUS){//更新评论状态
                 dismissMoodListItemMenuDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     ToastUtil.success(mContext, "更新评论状态成功");
                     boolean canComment = mMoodBeans.get(clickListItemPosition).isCanComment();
                     mMoodBeans.get(clickListItemPosition).setCanComment(!canComment);
@@ -251,7 +251,7 @@ public class PersonalMoodFragment extends BaseRecyclerViewFragment  implements B
             }else if(type == TaskType.UPDATE_TRANSMIT_STATUS){//更新转发状态
                 dismissMoodListItemMenuDialog();
                 JSONObject jsonObject = new JSONObject(String.valueOf(result));
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess")) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     ToastUtil.failure(mContext, "更新转发状态成功");
                     boolean canTransmit = mMoodBeans.get(clickListItemPosition).isCanTransmit();
                     mMoodBeans.get(clickListItemPosition).setCanTransmit(!canTransmit);

@@ -178,7 +178,7 @@ public abstract class ImageBaseFragment extends Fragment implements TaskListener
                 }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.browser_imgage))){
                     CommonHandler.openLink(mContext, mImageDetailBean.getPath());
                 }else if(textView.getText().toString().equalsIgnoreCase(getStringResource(R.string.gallery_add))){
-                    if(StringUtil.isLink(getImageUrl()) && getImageUrl().indexOf(ConstantsUtil.QINIU_CLOUD_SERVER) >= 0){
+                    if(/*StringUtil.isLink(getImageUrl()) &&*/ getImageUrl().indexOf(ConstantsUtil.QINIU_CLOUD_SERVER) >= 0){
                         AlertDialog alertDialog = new AlertDialog.Builder(mContext).setTitle("添加图库")
                                 .setMessage("把该图片加入我的图库？")
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -243,7 +243,7 @@ public abstract class ImageBaseFragment extends Fragment implements TaskListener
             if(type == TaskType.ADD_GALLERY){
                 JSONObject jsonObject = new JSONObject(StringUtil.changeNotNull(result));
                 if(jsonObject != null && jsonObject.has("isSuccess")){
-                    if(jsonObject.getBoolean("isSuccess"))
+                    if(jsonObject.optBoolean("isSuccess"))
                         //隐藏掉添加的弹出框
                         ToastUtil.success(mContext, "添加入图库成功");
                     else

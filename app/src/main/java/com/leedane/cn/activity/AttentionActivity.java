@@ -119,7 +119,7 @@ public class AttentionActivity extends BaseActivity {
             if(type == TaskType.IS_SIGN_IN || type == TaskType.IS_FRIEND){
                 Log.i(TAG, "签到返回的数据"+String.valueOf(result));
 
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
 
                     return;
                 }

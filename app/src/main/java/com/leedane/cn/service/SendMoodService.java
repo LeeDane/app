@@ -197,7 +197,7 @@ public class SendMoodService extends Service implements TaskListener {
         try {
             JSONObject jsonObject = new JSONObject(String.valueOf(result));
             if (type == TaskType.QINIU_TOKEN && !isCancel) {//获取凭证
-                if(jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true){
+                if(jsonObject != null && jsonObject.optBoolean("isSuccess")){
                     ToastUtil.success(SendMoodService.this, jsonObject);
                     token = jsonObject.getString("message");
                     isCancel = false;
@@ -278,7 +278,7 @@ public class SendMoodService extends Service implements TaskListener {
                     new NotificationUtil(SEND_MOOD_NOTIFICATION_ID, SendMoodService.this).sendActionNotification("心情发表失败", "上传图片的凭证获取失败", "测试", 1, 0, MoodActivity.class);
                 }
             }else if (type == TaskType.SEND_MOOD_NORMAL && !isCancel) {//发表心情
-                if (jsonObject != null && jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") == true) {
+                if (jsonObject != null && jsonObject.optBoolean("isSuccess")) {
                     new NotificationUtil(1, SendMoodService.this).sendTipNotification("信息提示", "您的发表的心情发送成功", "测试", 1, 0);
                 } else {
                     saveError("发表文字过程中");

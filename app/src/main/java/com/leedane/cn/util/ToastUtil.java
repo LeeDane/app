@@ -60,11 +60,7 @@ public class ToastUtil {
      * @param times
      */
     public static void success(Context context, JSONObject jsonObject, int times){
-        try{
-            show(context, jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") && jsonObject.has("message") ? jsonObject.getString("message") : SUCCESS_TIP, times);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+        show(context, jsonObject.optBoolean("isSuccess") && jsonObject.has("message") ? jsonObject.optString("message") : SUCCESS_TIP, times);
     }
 
     /**
@@ -73,11 +69,7 @@ public class ToastUtil {
      * @param jsonObject
      */
     public static void success(Context context, JSONObject jsonObject){
-        try{
-            show(context, jsonObject.has("isSuccess") && jsonObject.getBoolean("isSuccess") && jsonObject.has("message")? jsonObject.getString("message"):SUCCESS_TIP, Toast.LENGTH_SHORT);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+        show(context, jsonObject.optBoolean("isSuccess") && jsonObject.has("message")? jsonObject.optString("message"):SUCCESS_TIP, Toast.LENGTH_SHORT);
     }
 
     /**
@@ -122,11 +114,7 @@ public class ToastUtil {
      * @param times
      */
     public static void failure(Context context, JSONObject jsonObject, int times){
-        try{
-            show(context, jsonObject.has("isSuccess") && !jsonObject.getBoolean("isSuccess") && jsonObject.has("message") ? jsonObject.getString("message") : FAILURE_TIP, times);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+        show(context, !jsonObject.optBoolean("isSuccess") && jsonObject.has("message") ? jsonObject.optString("message") : FAILURE_TIP, times);
     }
 
     /**
@@ -135,11 +123,7 @@ public class ToastUtil {
      * @param jsonObject
      */
     public static void failure(Context context, JSONObject jsonObject){
-        try{
-            show(context, jsonObject.has("isSuccess") && !jsonObject.getBoolean("isSuccess") && jsonObject.has("message") ? jsonObject.getString("message") : FAILURE_TIP, Toast.LENGTH_LONG);
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+        show(context, !jsonObject.optBoolean("isSuccess") && jsonObject.has("message") ? jsonObject.optString("message") : FAILURE_TIP, Toast.LENGTH_LONG);
     }
 
     /**

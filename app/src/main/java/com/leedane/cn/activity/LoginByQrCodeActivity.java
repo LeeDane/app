@@ -90,7 +90,7 @@ public class LoginByQrCodeActivity extends BaseActivity {
         try {
             JSONObject resultObject = new JSONObject(String.valueOf(result));
             if(TaskType.SCAN_LOGIN == type && resultObject != null){
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                if(resultObject.optBoolean("isSuccess")){
                     scanLoginTip.setText("扫码登录成功");
                     scanLoginCconfim.setBackgroundResource(R.drawable.btn_default_p);
                     scanLoginCconfim.setFocusable(false);
@@ -102,7 +102,7 @@ public class LoginByQrCodeActivity extends BaseActivity {
                 }
                 return;
             }else if(TaskType.CANCEL_SCAN_LOGIN == type && resultObject != null){//取消二维码登录
-                if(resultObject.has("isSuccess") && resultObject.getBoolean("isSuccess")){
+                if(resultObject.optBoolean("isSuccess")){
                     ToastUtil.success(LoginByQrCodeActivity.this, "已取消登录");
                     finish();
                 }else{
